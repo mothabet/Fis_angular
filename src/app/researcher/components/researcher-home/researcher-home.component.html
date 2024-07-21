@@ -1,0 +1,284 @@
+<!-- main content -->
+<div class="main-content p-4 main card" style="flex: 1">
+  <!-- header -->
+  <div
+    class="header d-flex flex-wrap justify-content-between align-items-center"
+  >
+    <h4 class="title">الباحثين</h4>
+    <div class="user d-flex justify-content-between align-items-center">
+      <div class="dropdown">
+        <button
+          type="button"
+          class="btn lang"
+          id="dropdownlang"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          عربي
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+          <li><a class="dropdown-item" href="#">En</a></li>
+        </ul>
+      </div>
+      <a href="./notification.html" class="notification active">
+        <i class="fa-solid fa-bell"></i>
+      </a>
+      <div class="user-img">
+        <img src="../../../../assets/images/avatar.PNG" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+  <!-- end-header -->
+
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة الباحثين</div>
+      <div class="btns d-flex">
+        <div class="search" id="research-search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button
+            type="button"
+            class="btn btn-add"
+            data-bs-toggle="modal"
+            data-bs-target="#addResearcher"
+          >
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+            إضافة باحث
+          </button>
+          <button type="button" class="btn btn-download">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">رقم</th>
+            <th class="text-center" scope="col">اسم المستخدم</th>
+            <th class="text-center" scope="col">البريد الإلكتروني</th>
+            <th class="text-center" scope="col">النشاط</th>
+            <th style="min-width: 150px" class="text-center" scope="col">
+              الحالة
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input type="checkbox" name="Name1" id="Name1" />
+              <label for="Name1">1</label>
+            </td>
+            <td class="text-center">محمد إبراهيم</td>
+            <td class="text-center">mohamedgmail.com</td>
+            <td class="text-center active">نشط</td>
+            <td class="text-center td-actions">
+              <a
+                class="icon"
+                data-bs-toggle="modal"
+                data-bs-target="#companyLink"
+              >
+                <img src="../../../../assets/images/link.png" alt="" />
+              </a>
+              <a routerLink="/Researcher-Details" class="icon">
+                <img src="../../../../assets/images/eye-outline.png" alt="" />
+              </a>
+              <button class="icon">
+                <img
+                  src="../../../../assets/images/trash-can-outline.png"
+                  alt=""
+                  class="trash"
+                />
+              </button>
+              <button
+                class="icon"
+                data-bs-toggle="modal"
+                data-bs-target="#addResearcher"
+              >
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+
+<!--start modal -->
+
+<!--start add researcher modal -->
+<div
+  class="modal company-modal fade"
+  id="addResearcher"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add">إضافة باحث</h5>
+      </div>
+      <form>
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="اسم المستخدم"
+              />
+            </div>
+            <div class="col-sm-6 mb-2" id="researcherPass">
+              <input
+                class="form-control input-modal"
+                type="password"
+                placeholder="كلمة المرور"
+              />
+              <button type="button" id="reload">
+                <img src="../../../../assets/images/refresh.png" alt="" />
+              </button>
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="القطاع"
+              />
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="رقم الشركة"
+              />
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="تفاصيل الدور"
+              />
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="email"
+                placeholder="عنوان البريد الإلكتروني"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-reset">إعادة ملء</button>
+          <button type="button" class="btn btn-save">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end add researcher modal -->
+
+<!--start linked company modal -->
+<div
+  class="modal company-modal fade"
+  id="companyLink"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div
+        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
+      >
+        <h5>ربط بالشركة</h5>
+        <div class="search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="table-responsive company-modal-table mx-2">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName1" id="companyName1" />
+                <label for="companyName1">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName2" id="companyName2" />
+                <label for="companyName2">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr class="last">
+              <td>
+                <input type="checkbox" name="companyName3" id="companyName3" />
+                <label for="companyName3">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+          إلغاء
+        </button>
+        <button type="button" class="btn btn-add">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end linked company modal -->
+
+<!--end modal -->

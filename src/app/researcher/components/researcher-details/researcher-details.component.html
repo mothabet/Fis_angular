@@ -1,0 +1,217 @@
+<!-- main content -->
+<div class="p-4 main card " style="flex: 1;     min-height: 100vb;">
+
+    <!--start header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            عرض تفاصيل الباحث
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    عربي
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!--end header -->
+
+    <!-- start researcher header -->
+    <div class="card-box d-flex align-items-center mb-3 company-card">
+        <div class="image-box" style="width:50px;">
+            <img class="researcher-image " src="../../../../assets/images/avatar.PNG" alt="">
+        </div>
+
+        <div class="researcher-info">
+            <h6 class="user">محمد إبراهيم</h6>
+            <div class="details d-flex flex-wrap">
+                <div class="detail-box d-flex">
+                    <p class="m-0 mx-2 name">اسم المستخدم :</p>
+                    <p class="data m-0">user45454</p>
+                </div>
+                <div class="detail-box d-flex">
+                    <p class="m-0 mx-2 name">رقم الشركة :</p>
+                    <p class="data m-0">12</p>
+                </div>
+                <div class="detail-box d-flex">
+                    <p class="m-0 mx-2 name">البريد الإلكترونى :</p>
+                    <p class="data m-0">emailgmail.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end researcher header -->
+
+    <!-- start filter section -->
+    <div class="filter-section d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div class="first-section search d-flex align-items-center">
+            <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
+            <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+
+            <div class="form-check form-switch me-3">
+                <input class="form-check-input" type="checkbox" id="seeAll">
+                <label class="form-check-label text-nowrap" for="seeAll">عرض الكل</label>
+            </div>
+        </div>
+
+        <div class="last-section  d-flex align-items-center">
+            <button class="btn">
+                <img src="../../../../assets/images/Combined Shape.png" alt="">
+            </button>
+            <button class="btn">
+                <img src="../../../../assets/images/printer.png" alt="">
+            </button>
+
+            <select class="form-select" style="width: 150px;">
+                <option selected>Jul 2023 - Aug 2023</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+                <img src="../../../../assets/images/square.png" alt="">
+            </select>
+
+        </div>
+
+    </div>
+    <!-- end filter section -->
+
+    <!--start total -->
+    <div class="row totals">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <div class="card company text-center">
+                <div class="header py-3">
+                    <div class="total-num">
+                        2,895,547
+                    </div>
+                    <div class="total-title">
+                        إجمالي عدد الشركات
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <div class="card invest text-center">
+                <div class="header py-3">
+                    <div class="total-num">
+                        6,214,665
+                    </div>
+                    <div class="total-title">
+                        إجمالي الشركات التى تم مسحها
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <div class="card researcher text-center">
+                <div class="header py-3">
+                    <div class="total-num">
+                        43,533,547
+                    </div>
+                    <div class="total-title">
+                        إجمالي الشركات التى تم الإنتهاء منها
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end total -->
+
+    <!--start table -->
+    <div class="tab-content precise">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="card-box">
+                <div class="header d-flex align-items-center justify-content-between">
+                    <h4 class="title">
+                        قائمة الشركات
+                    </h4>
+                </div>
+                <div class="table-responsive research-details-table">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="t-header">
+                                <th scope="col">اسم الشركة</th>
+                                <th class="text-center" scope="col">رقم السجل التجارى</th>
+                                <th class="text-center" scope="col">رقم الشركة</th>
+                                <th class="text-center" scope="col">رمز النشاط</th>
+                                <th class="text-center" scope="col">النشاط</th>
+                                <th class="text-center" scope="col">عنوان الشركة</th>
+                                <th class="text-center" scope="col">ملاحظات</th>
+                                <th class="text-center" scope="col">الحالة</th>
+                                <th class="text-center" scope="col">الأستمارات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>شركة الابداع</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">86431</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">الخوير، مسقط</td>
+                                <td class="text-center notes">
+                                    ملاحظات
+                                    <img src="../../../../assets/images/information-slab-cir.png" alt="">
+                                </td>
+                                <td class="text-center status-active">نشط</td>
+                                <td class="text-center">
+                                    <button class="btn btn-form">
+                                        <a href="./form-details.html">إستماره</a>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>شركة الابداع</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">86431</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">الخوير، مسقط</td>
+                                <td class="text-center">لا يوجد</td>
+                                <td class="text-center status-active">نشط</td>
+                                <td class="text-center">
+                                    <button class="btn btn-form"><a
+                                            href="./form-details.html">إستماره</a></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>شركة الابداع</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">86431</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">الخوير، مسقط</td>
+                                <td class="text-center notes">
+                                    ملاحظات
+                                    <img src="../../../../assets/images/information-slab-cir.png" alt="">
+                                </td>
+                                <td class="text-center status-inactive">غير نشط</td>
+                                <td class="text-center">
+                                    <button class="btn btn-form"><a
+                                            href="./form-details.html">إستماره</a></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--end table -->
+
+
+</div>
+<!-- end main content -->

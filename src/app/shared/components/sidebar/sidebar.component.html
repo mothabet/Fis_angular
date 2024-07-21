@@ -1,0 +1,142 @@
+<!-- menu -->
+<div class="home">
+  <aside id="sidebar" class="expand">
+    <!-- logo -->
+    <div class="px-2 mt-3 d-flex justify-content-between align-items-center">
+      <div class="sidebar-logo" id="logo">
+        <img
+          src="../../../../assets/images/NationalCenterStatisticsLogoList.png"
+          class="img-fluid"
+          alt=""
+        />
+      </div>
+      <button class="toggle-btn d-flex p-1" type="button">
+        <i class="fa-solid fa-bars align-self-center"></i>
+      </button>
+    </div>
+
+    <!-- menu list -->
+    <ul class="sidebar-nav">
+      <li class="sidebar-item mb-3" id="searchList">
+        <div class="d-flex justify-content-between align-items-center flex-nowrap">
+          <div class="sidebar-link d-flex justify-content-between" id="navSearch">
+            <input class="form-control" type="text" placeholder="البحث" />
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div>
+          <button class="filter text-center">
+            <i class="fa-solid fa-sliders fa-rotate-90 icon" id="filter-icon"></i>
+          </button>
+        </div>
+      </li>
+
+      <li class="sidebar-item"  routerLink="/Home" routerLinkActive="active">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-house icon"></i>
+          <span class="">الرئيسية</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <div class="has-dropdown">
+          <a href="./forms.html" class="sidebar-link">
+            <i class="fa-solid fa-file-lines icon"></i>
+            <span>الاستمارات</span>
+          </a>
+          <span
+            class="fa-solid fa-caret-down drop-dowm-icon collapsed"
+            data-bs-toggle="collapse"
+            data-bs-target="#forms"
+            aria-expanded="false"
+            aria-controls="forms"
+          ></span>
+        </div>
+        <ul id="forms" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+          <li class="sidebar-item">
+            <a href="#" class="sidebar-link">
+              <i class="fa-solid fa-file-lines icon"> </i>
+              <span>استمارات سنوية</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="#" class="sidebar-link">
+              <i class="fa-solid fa-file-lines icon"> </i>
+              <span>استمارات ربعية</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="sidebar-item">
+        <a routerLink="Auditing-Rules" class="sidebar-link">
+          <i class="fa-solid fa-database icon"></i>
+          <span>قواعد التدقيق</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" >
+        <a class="sidebar-link"  routerLink="/Companies">
+          <i class="fa-solid fa-building icon"></i>
+          <span>الشركات</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
+          <span>الباحثين</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fa-solid fa-chart-line icon"></i>
+          <span>التقارير</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fa-solid fa-chart-simple icon"></i>
+          <span>تكبير البيانات</span>
+        </a>
+      </li>
+
+      <li class="sidebar-item">
+        <div class="has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting">
+          <a class="sidebar-link" id="setting-icon">
+            <i class="fa-solid fa-gear icon"></i>
+            <span class="">الإعدادات</span>
+          </a>
+          <span class="drop-dowm-icon fa-solid fa-caret-down collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting"></span>
+        </div>
+        <ul id="setting" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+          <li class="sidebar-item">
+            <a href="./settings-requesting.html" class="sidebar-link inactive">
+              <i class="fa-solid fa-file-lines icon inactive"></i>
+              <span>الطلبات</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="./settings-messages.html" class="sidebar-link inactive">
+              <i class="fa-solid fa-envelope icon inactive"></i>
+              <span>الرسائل</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="./settings-auth.html" class="sidebar-link inactive">
+              <i class="fa-solid fa-address-card icon inactive"></i>
+              <span>الصلاحيات</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="./settings-home.html" class="sidebar-link inactive">
+              <i class="fa-solid fa-file-pen icon inactive"></i>
+              <span>الصفحة الرئيسية</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+  <!-- end-menu -->
+</div>
