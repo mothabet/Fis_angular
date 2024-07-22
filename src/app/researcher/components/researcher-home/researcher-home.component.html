@@ -1,35 +1,7 @@
 <!-- main content -->
 <div class="main-content p-4 main card" style="flex: 1">
-  <!-- header -->
-  <div
-    class="header d-flex flex-wrap justify-content-between align-items-center"
-  >
-    <h4 class="title">الباحثين</h4>
-    <div class="user d-flex justify-content-between align-items-center">
-      <div class="dropdown">
-        <button
-          type="button"
-          class="btn lang"
-          id="dropdownlang"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          عربي
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-          <li><a class="dropdown-item" href="#">En</a></li>
-        </ul>
-      </div>
-      <a href="./notification.html" class="notification active">
-        <i class="fa-solid fa-bell"></i>
-      </a>
-      <div class="user-img">
-        <img src="../../../../assets/images/avatar.PNG" class="img-fluid" />
-      </div>
-    </div>
-  </div>
-  <!-- end-header -->
+  <app-top-screen [title]="'الباحثين'"></app-top-screen>
+
 
   <!-- start content -->
   <div class="content companies researcher">
@@ -142,15 +114,19 @@
                 class="form-control input-modal"
                 type="text"
                 placeholder="اسم المستخدم"
+                [(ngModel)]="username"
+                name="username"
               />
             </div>
             <div class="col-sm-6 mb-2" id="researcherPass">
               <input
                 class="form-control input-modal"
-                type="password"
+                type="text"
                 placeholder="كلمة المرور"
+                [(ngModel)]="password"
+                name="password"
               />
-              <button type="button" id="reload">
+              <button type="button" id="reload" (click)="generateRandomCredentials()">
                 <img src="../../../../assets/images/refresh.png" alt="" />
               </button>
             </div>
@@ -189,9 +165,10 @@
             إلغاء
           </button>
           <button type="button" class="btn btn-reset">إعادة ملء</button>
-          <button type="button" class="btn btn-save">حفظ</button>
+          <button type="button" class="btn btn-save" (click)="saveResearcher()">حفظ</button>
         </div>
       </form>
+      
     </div>
   </div>
 </div>

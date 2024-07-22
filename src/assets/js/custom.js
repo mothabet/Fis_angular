@@ -1,15 +1,15 @@
-window.addEventListener('load', () => {
-    const loader = document.querySelector('.loader')
-    const body = document.querySelector('.home')
+// window.addEventListener('load', () => {
+//     const loader = document.querySelector('.loader')
+//     const body = document.querySelector('.home')
 
-    loader.classList.add('loader-hidden');
-    body.classList.remove('loader-hidden');
+//     loader.classList.add('loader-hidden');
+//     body.classList.remove('loader-hidden');
 
-    loader.addEventListener('transitionend', () => {
-        document.body.removeChild("loader")
-    })
+//     loader.addEventListener('transitionend', () => {
+//         document.body.removeChild("loader")
+//     })
 
-})
+// })
 
 $(document).ready(function () {
 

@@ -6,6 +6,7 @@ import { ResearcherHomeComponent } from './researcher/components/researcher-home
 import { ResearcherDetailsComponent } from './researcher/components/researcher-details/researcher-details.component';
 import { CompaniesDetailsComponent } from './companies/components/companies-details/companies-details.component';
 import { AuditingRulesHomeComponent } from './auditing-rules/components/auditing-rules-home/auditing-rules-home.component';
+import { LoginComponent } from './auth/components/login/login.component';
 
 const routes: Routes = [
   { path: 'Companies', component: CompaniesHomeComponent },
@@ -13,9 +14,10 @@ const routes: Routes = [
   { path: 'Researcher', component: ResearcherHomeComponent },
   { path: 'Researcher-Details', component: ResearcherDetailsComponent },
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent },
+  { path: 'Login', component: LoginComponent },
   { path: 'Home', component: HomeComponent },
-  { path: '', redirectTo: 'Home', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
-  { path: '**', redirectTo: 'Home', pathMatch: 'full' }
+  { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
+  { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];
 
 @NgModule({

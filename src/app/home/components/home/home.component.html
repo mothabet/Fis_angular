@@ -1,31 +1,7 @@
 <!-- main content -->
         <div class="main-content p-4 main card ">
 
-            <!-- header -->
-            <div class="header d-flex flex-wrap justify-content-between align-items-center">
-                <h4 class="title">
-                    الرئيسية
-                </h4>
-                <div class="user d-flex justify-content-between align-items-center">
-                    <div class="dropdown">
-                        <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            عربي
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                            <li><a class="dropdown-item" href="#">En</a></li>
-                        </ul>
-                    </div>
-                    <a href="./notification.html" class="notification  active">
-                        <i class="fa-solid fa-bell"></i>
-                    </a>
-                    <div class="user-img">
-                        <img src=".././../../../assets/images/avatar.PNG" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-
+            <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
             <!-- tabs -->
             <div class="tabs">
                 <ul class="nav nav-pills mb-3">
