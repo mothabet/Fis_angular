@@ -6,11 +6,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { TopScreenComponent } from './components/top-screen/top-screen.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
     SidebarComponent,
-    TopScreenComponent
+    TopScreenComponent,
+    LoaderComponent
   ],
   imports: [
     CommonModule,
@@ -23,6 +25,7 @@ import { TopScreenComponent } from './components/top-screen/top-screen.component
   exports: [
     SidebarComponent,
     TopScreenComponent,
+    LoaderComponent,
     AppRoutingModule, 
     FormsModule,
     BrowserModule,

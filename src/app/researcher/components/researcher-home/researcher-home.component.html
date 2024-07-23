@@ -1,7 +1,7 @@
+<app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
 <div class="main-content p-4 main card" style="flex: 1">
   <app-top-screen [title]="'الباحثين'"></app-top-screen>
-
 
   <!-- start content -->
   <div class="content companies researcher">
@@ -24,7 +24,11 @@
             data-bs-toggle="modal"
             data-bs-target="#addResearcher"
           >
-            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+            <img
+              src="../../../../assets/images/briefcase-plus-outli.png"
+              alt=""
+              id="addResearcherBtn"
+            />
             إضافة باحث
           </button>
           <button type="button" class="btn btn-download">
@@ -42,27 +46,23 @@
             <th scope="col">رقم</th>
             <th class="text-center" scope="col">اسم المستخدم</th>
             <th class="text-center" scope="col">البريد الإلكتروني</th>
-            <th class="text-center" scope="col">النشاط</th>
-            <th style="min-width: 150px" class="text-center" scope="col">
-              الحالة
-            </th>
+            <th class="text-center" scope="col">الحالة</th>
+            <th class="text-center" scope="col"></th>
           </tr>
         </thead>
+
         <tbody>
-          <tr *ngFor="let item of researcher; let i = index">
+          <tr *ngFor="let item of researchers; let i = index">
             <td>
-              <input type="checkbox" name="Name1" id="Name1" />
-              <label for="Name1">{{i+1}}</label>
+              <label for="Name1">{{ i + 1 }}</label>
             </td>
-            <td class="text-center">{{item.fullName}}</td>
-            <td class="text-center">{{item.email}}</td>
+            <td class="text-center">{{ item.fullName }}</td>
+            <td class="text-center">{{ item.email }}</td>
             <td class="text-center active">
               <ng-container *ngIf="item.status; else inactive">
                 نشط
               </ng-container>
-              <ng-template #inactive>
-                غير نشط
-              </ng-template>
+              <ng-template #inactive> غير نشط </ng-template>
             </td>
             <td class="text-center td-actions">
               <a
@@ -75,22 +75,35 @@
               <a routerLink="/Researcher-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a>
-              <button class="icon">
+              <button class="icon" (click)="showAlert(item.id)">
                 <img
                   src="../../../../assets/images/trash-can-outline.png"
                   alt=""
-                  class="trash"
                 />
               </button>
               <button
                 class="icon"
-                
+                (click)="editResearcher(item.id)"
               >
-                <img src="../../../../assets/images/pencil-outline.png" alt="" />
+                <img
+                  src="../../../../assets/images/pencil-outline.png"
+                  alt=""
+                />
               </button>
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
@@ -106,11 +119,15 @@
   tabindex="-1"
   aria-labelledby="add"
   aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
 >
+
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add">إضافة باحث</h5>
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة باحث</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الباحث</h5>
       </div>
       <form [formGroup]="researcherForm">
         <div class="modal-body pb-1">
@@ -120,10 +137,9 @@
                 class="form-control input-modal input-disabled"
                 type="text"
                 placeholder="اسم المستخدم"
-                [(ngModel)]="username"
+                [(ngModel)]="researcherForm.value.userName"
                 formControlName="userName"
                 name="username"
-                
               />
             </div>
             <div class="col-sm-6 mb-2" id="researcherPass">
@@ -131,12 +147,16 @@
                 class="form-control input-modal input-disabled"
                 type="text"
                 placeholder="كلمة المرور"
-                [(ngModel)]="password"
+                [(ngModel)]="researcherForm.value.password"
                 formControlName="password"
                 name="password"
-                
               />
-              <button type="button" id="reload" (click)="generateRandomCredentials()">
+              <button
+                type="button"
+                id="reload"
+                (click)="generateRandomCredentials()"
+                *ngIf="add"
+              >
                 <img src="../../../../assets/images/refresh.png" alt="" />
               </button>
             </div>
@@ -144,6 +164,7 @@
               <input
                 class="form-control input-modal"
                 type="text"
+                [(ngModel)]="researcherForm.value.fullName"
                 placeholder="الاسم بالكامل"
                 formControlName="fullName"
               />
@@ -152,22 +173,29 @@
               <input
                 class="form-control input-modal"
                 type="text"
+                [(ngModel)]="researcherForm.value.enfullName"
                 placeholder="English Full Name"
                 formControlName="enfullName"
               />
             </div>
             <div class="col-sm-6 mb-2">
-              <select class="form-control" style="width: 100%;" formControlName="status">
+              <select
+                class="form-control"
+                style="width: 100%"
+                formControlName="status"
+                [(ngModel)]="researcherForm.value.status"
+              >
                 <option value="" selected>الحاله</option>
                 <option [ngValue]="true">نشط</option>
                 <option [ngValue]="false">غير نشط</option>
               </select>
-          </div>
+            </div>
             <div class="col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
                 placeholder="رقم الهاتف"
+                [(ngModel)]="researcherForm.value.phone"
                 formControlName="phone"
               />
             </div>
@@ -176,20 +204,33 @@
                 class="form-control input-modal"
                 type="email"
                 placeholder="عنوان البريد الإلكتروني"
+                [(ngModel)]="researcherForm.value.email"
                 formControlName="email"
               />
             </div>
           </div>
         </div>
         <div class="modal-footer pt-0">
-          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            data-bs-dismiss="modal"
+            id="btnCancel"
+            (click)="reset()"
+          >
             إلغاء
           </button>
-          <button type="button" class="btn btn-reset" (click)="resetForm()">إعادة ملء</button>
-          <button type="button" class="btn btn-save" (click)="saveResearcher()">حفظ</button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button type="button" class="btn btn-save" (click)="saveResearcher()" *ngIf="add">
+            حفظ
+          </button>
+          <button type="button" class="btn btn-save" (click)="updateResearcher()" *ngIf="!add">
+            تعديل
+          </button>
         </div>
       </form>
-      
     </div>
   </div>
 </div>

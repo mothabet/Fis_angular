@@ -8,12 +8,12 @@ export interface IAddResearcher {
     email: string,
 }
 export interface IResearcher {
+    id:number,
     fullName: string,
     enfullName: string,
     userName: string,
     status: boolean,
     email: string,
     phone: number,
-    password: string,
     UserId: number
 }

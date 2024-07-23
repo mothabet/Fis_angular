@@ -11,7 +11,6 @@ export class ResearcherHomeService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   addResearcher(Model: IAddResearcher){
-    debugger
    var headers= this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl+`Researcher/AddReseacher`, Model, { headers });
     return resopnse;
@@ -24,6 +23,21 @@ export class ResearcherHomeService {
    GetAllReseachers(){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetAllReseachers`, { headers });
+     return resopnse;
+   }
+   DeleteReseacher(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.delete(environment.apiUrl+`Researcher/DeleteReseacher?id=${id}`, { headers });
+     return resopnse;
+   }
+   GetResearcherById(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}`, { headers });
+     return resopnse;
+   }
+   updateResearcher(id:number,Model: IAddResearcher){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}`, Model, { headers });
      return resopnse;
    }
 }
