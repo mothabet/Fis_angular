@@ -31,14 +31,11 @@ export class LoginComponent {
 
   }
   Login(){
-    console.log(this.logInForm.value)
     if (this.logInForm.valid) {
-      debugger
       const Model: ILogin = {
         UserName: this.logInForm.value.UserName,
         password: this.logInForm.value.password
       }
-      console.log(Model)
       const observer = {
         next: (res: any) => {
           if (res.Data) {

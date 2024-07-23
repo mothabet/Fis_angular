@@ -49,14 +49,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr *ngFor="let item of researcher; let i = index">
             <td>
               <input type="checkbox" name="Name1" id="Name1" />
-              <label for="Name1">1</label>
+              <label for="Name1">{{i+1}}</label>
             </td>
-            <td class="text-center">محمد إبراهيم</td>
-            <td class="text-center">mohamedgmail.com</td>
-            <td class="text-center active">نشط</td>
+            <td class="text-center">{{item.fullName}}</td>
+            <td class="text-center">{{item.email}}</td>
+            <td class="text-center active">
+              <ng-container *ngIf="item.status; else inactive">
+                نشط
+              </ng-container>
+              <ng-template #inactive>
+                غير نشط
+              </ng-template>
+            </td>
             <td class="text-center td-actions">
               <a
                 class="icon"
@@ -77,8 +84,7 @@
               </button>
               <button
                 class="icon"
-                data-bs-toggle="modal"
-                data-bs-target="#addResearcher"
+                
               >
                 <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
@@ -106,25 +112,29 @@
       <div class="modal-header pb-0">
         <h5 class="modal-title" id="add">إضافة باحث</h5>
       </div>
-      <form>
+      <form [formGroup]="researcherForm">
         <div class="modal-body pb-1">
           <div class="row">
             <div class="col-sm-6 mb-2">
               <input
-                class="form-control input-modal"
+                class="form-control input-modal input-disabled"
                 type="text"
                 placeholder="اسم المستخدم"
                 [(ngModel)]="username"
+                formControlName="userName"
                 name="username"
+                
               />
             </div>
             <div class="col-sm-6 mb-2" id="researcherPass">
               <input
-                class="form-control input-modal"
+                class="form-control input-modal input-disabled"
                 type="text"
                 placeholder="كلمة المرور"
                 [(ngModel)]="password"
+                formControlName="password"
                 name="password"
+                
               />
               <button type="button" id="reload" (click)="generateRandomCredentials()">
                 <img src="../../../../assets/images/refresh.png" alt="" />
@@ -134,21 +144,31 @@
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="القطاع"
+                placeholder="الاسم بالكامل"
+                formControlName="fullName"
               />
             </div>
             <div class="col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="رقم الشركة"
+                placeholder="English Full Name"
+                formControlName="enfullName"
               />
             </div>
+            <div class="col-sm-6 mb-2">
+              <select class="form-control" style="width: 100%;" formControlName="status">
+                <option value="" selected>الحاله</option>
+                <option [ngValue]="true">نشط</option>
+                <option [ngValue]="false">غير نشط</option>
+              </select>
+          </div>
             <div class="col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="تفاصيل الدور"
+                placeholder="رقم الهاتف"
+                formControlName="phone"
               />
             </div>
             <div class="col-sm-6 mb-2">
@@ -156,6 +176,7 @@
                 class="form-control input-modal"
                 type="email"
                 placeholder="عنوان البريد الإلكتروني"
+                formControlName="email"
               />
             </div>
           </div>
@@ -164,7 +185,7 @@
           <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
             إلغاء
           </button>
-          <button type="button" class="btn btn-reset">إعادة ملء</button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">إعادة ملء</button>
           <button type="button" class="btn btn-save" (click)="saveResearcher()">حفظ</button>
         </div>
       </form>

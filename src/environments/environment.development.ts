@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://ncsi.somee.com/api/'
+    apiUrl: 'https://localhost:44326/api/'
 };
