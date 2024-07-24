@@ -56,7 +56,7 @@
             <td>
               <label for="Name1">{{ i + 1 }}</label>
             </td>
-            <td class="text-center">{{ item.fullName }}</td>
+            <td class="text-center">{{ item.arName }}</td>
             <td class="text-center">{{ item.email }}</td>
             <td class="text-center active">
               <ng-container *ngIf="item.status; else inactive">
@@ -106,7 +106,13 @@
   </div>
   <!-- end content -->
 </div>
-
+<app-pagination
+    [pageNumber]="currentPage"
+    [lastPage]="isLastPage"
+    [emptyData]="noData"
+    [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"
+    ></app-pagination>
 <!--start modal -->
 
 <!--start add researcher modal -->
@@ -160,19 +166,19 @@
               <input
                 class="form-control input-modal"
                 type="text"
-                [(ngModel)]="researcherForm.value.fullName"
+                [(ngModel)]="researcherForm.value.arName"
                 placeholder="الاسم بالكامل"
-                formControlName="fullName"
+                formControlName="arName"
               />
               <div
                 *ngIf="
-                  researcherForm.controls['fullName'].invalid &&
-                  (researcherForm.controls['fullName'].dirty ||
-                    researcherForm.controls['fullName'].touched)
+                  researcherForm.controls['arName'].invalid &&
+                  (researcherForm.controls['arName'].dirty ||
+                    researcherForm.controls['arName'].touched)
                 "
               >
                 <small
-                  *ngIf="researcherForm.controls['fullName'].errors?.['required']"
+                  *ngIf="researcherForm.controls['arName'].errors?.['required']"
                   class="text-danger"
                 >
                   يجب ادخال الاسم بالكامل.
@@ -184,17 +190,17 @@
                 class="form-control input-modal"
                 type="text"
                 placeholder="English Full Name"
-                formControlName="enfullName"
+                formControlName="enName"
               />
               <div
                 *ngIf="
-                  researcherForm.controls['enfullName'].invalid &&
-                  (researcherForm.controls['enfullName'].dirty ||
-                    researcherForm.controls['enfullName'].touched)
+                  researcherForm.controls['enName'].invalid &&
+                  (researcherForm.controls['enName'].dirty ||
+                    researcherForm.controls['enName'].touched)
                 "
               >
                 <small
-                  *ngIf="researcherForm.controls['enfullName'].errors?.['required']"
+                  *ngIf="researcherForm.controls['enName'].errors?.['required']"
                   class="text-danger"
                 >
                   English Full Name is required.
@@ -248,12 +254,6 @@
                   researcherForm.controls['phone'].invalid
                 "
               >
-                <small
-                  *ngIf="researcherForm.controls['phone'].errors?.['pattern']"
-                  class="text-danger"
-                >
-                  يجب ادخال ارقام فقط
-                </small>
                 <small
                   *ngIf="researcherForm.controls['phone'].errors?.['minlength']"
                   class="text-danger"
