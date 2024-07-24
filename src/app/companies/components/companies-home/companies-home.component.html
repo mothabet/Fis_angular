@@ -71,6 +71,17 @@
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot *ngIf="companies.length == 0">
+                        <tr>
+                          <th colspan="7">
+                            <div class="alert alert-warning">
+                              <i class="fa-solid fa-triangle-exclamation"></i>
+                              <br />
+                              <span> لا يوجد بيانات </span>
+                            </div>
+                          </th>
+                        </tr>
+                      </tfoot>
                 </table>
             </div>
         </div>
