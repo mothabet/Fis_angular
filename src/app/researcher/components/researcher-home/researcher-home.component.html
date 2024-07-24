@@ -81,10 +81,7 @@
                   alt=""
                 />
               </button>
-              <button
-                class="icon"
-                (click)="editResearcher(item.id)"
-              >
+              <button class="icon" (click)="editResearcher(item.id)">
                 <img
                   src="../../../../assets/images/pencil-outline.png"
                   alt=""
@@ -122,7 +119,6 @@
   data-bs-backdrop="static"
   data-bs-keyboard="false"
 >
-
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
@@ -168,16 +164,44 @@
                 placeholder="الاسم بالكامل"
                 formControlName="fullName"
               />
+              <div
+                *ngIf="
+                  researcherForm.controls['fullName'].invalid &&
+                  (researcherForm.controls['fullName'].dirty ||
+                    researcherForm.controls['fullName'].touched)
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['fullName'].errors?.['required']"
+                  class="text-danger"
+                >
+                  يجب ادخال الاسم بالكامل.
+                </small>
+              </div>
             </div>
             <div class="col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                [(ngModel)]="researcherForm.value.enfullName"
                 placeholder="English Full Name"
                 formControlName="enfullName"
               />
+              <div
+                *ngIf="
+                  researcherForm.controls['enfullName'].invalid &&
+                  (researcherForm.controls['enfullName'].dirty ||
+                    researcherForm.controls['enfullName'].touched)
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['enfullName'].errors?.['required']"
+                  class="text-danger"
+                >
+                  English Full Name is required.
+                </small>
+              </div>
             </div>
+
             <div class="col-sm-6 mb-2">
               <select
                 class="form-control"
@@ -185,18 +209,65 @@
                 formControlName="status"
                 [(ngModel)]="researcherForm.value.status"
               >
-                <option value="" selected>الحاله</option>
+                <option value="" disabled selected>الحاله</option>
                 <option [ngValue]="true">نشط</option>
                 <option [ngValue]="false">غير نشط</option>
               </select>
+              <div
+                *ngIf="
+                  researcherForm.controls['status'].invalid &&
+                  (researcherForm.controls['status'].dirty ||
+                    researcherForm.controls['status'].touched)
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['status'].errors?.['required']"
+                  class="text-danger"
+                >
+                  Status is required.
+                </small>
+              </div>
             </div>
-            <div class="col-sm-6 mb-2">
+
+            <div class="col-10 col-sm-4 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
                 placeholder="رقم الهاتف"
-                [(ngModel)]="researcherForm.value.phone"
                 formControlName="phone"
+                maxlength="8"
+                minlength="8"
+                pattern="[0-9]*"
+                (input)="onlyNumber($event)"
+              />
+              <div
+                *ngIf="
+                  researcherForm.controls['phone'].touched &&
+                  researcherForm.controls['phone'].dirty &&
+                  researcherForm.controls['phone'].value !== '' &&
+                  researcherForm.controls['phone'].invalid
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['phone'].errors?.['pattern']"
+                  class="text-danger"
+                >
+                  يجب ادخال ارقام فقط
+                </small>
+                <small
+                  *ngIf="researcherForm.controls['phone'].errors?.['minlength']"
+                  class="text-danger"
+                >
+                  يجب ان يكون رقم الهاتف 8 ارقام.
+                </small>
+              </div>
+            </div>
+            <div class="col-2 mb-2">
+              <input
+                class="form-control input-modal input-disabled"
+                type="text"
+                placeholder="كود الهاتف"
+                value="{{ phoneCode }}"
               />
             </div>
             <div class="col-sm-6 mb-2">
@@ -207,6 +278,26 @@
                 [(ngModel)]="researcherForm.value.email"
                 formControlName="email"
               />
+              <div
+                *ngIf="
+                  researcherForm.controls['email'].invalid &&
+                  (researcherForm.controls['email'].dirty ||
+                    researcherForm.controls['email'].touched)
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['email'].errors?.['required']"
+                  class="text-danger"
+                >
+                  يجب ادخال البريد الاليكتروني.
+                </small>
+                <small
+                  *ngIf="researcherForm.controls['email'].errors?.['email']"
+                  class="text-danger"
+                >
+                  البريد الاليكتروني غير صحيح.
+                </small>
+              </div>
             </div>
           </div>
         </div>
@@ -223,10 +314,22 @@
           <button type="button" class="btn btn-reset" (click)="resetForm()">
             إعادة ملء
           </button>
-          <button type="button" class="btn btn-save" (click)="saveResearcher()" *ngIf="add">
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="saveResearcher()"
+            *ngIf="add"
+            [disabled]="!researcherForm.valid"
+          >
             حفظ
           </button>
-          <button type="button" class="btn btn-save" (click)="updateResearcher()" *ngIf="!add">
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="updateResearcher()"
+            *ngIf="!add"
+            [disabled]="!researcherForm.valid"
+          >
             تعديل
           </button>
         </div>

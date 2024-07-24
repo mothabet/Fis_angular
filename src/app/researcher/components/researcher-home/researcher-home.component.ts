@@ -23,7 +23,8 @@ export class ResearcherHomeComponent {
   showLoader: boolean = false;
   noData: boolean = false;
   add: boolean = true;
-  id:number = 0;
+  id: number = 0;
+  phoneCode: number = 968;
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -38,12 +39,20 @@ export class ResearcherHomeComponent {
       fullName: ['', Validators.required],
       enfullName: ['', Validators.required],
       status: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
+      phone: [
+        '',
+        [
+          Validators.pattern('^[0-9]*$'),
+          Validators.minLength(8)
+        ]
+      ],
+      email: ['', [Validators.required, Validators.email]],
     });
+
     this.generateRandomCredentials();
     this.GetAllReseachers();
   }
+
 
   generateRandomCredentials(): void {
     this.showLoader = true;
@@ -56,6 +65,7 @@ export class ResearcherHomeComponent {
 
   saveResearcher(): void {
     this.showLoader = true;
+    debugger
     if (this.researcherForm.valid) {
       const Model: IAddResearcher = {
         userName: this.researcherForm.value.userName,
@@ -63,7 +73,7 @@ export class ResearcherHomeComponent {
         fullName: this.researcherForm.value.fullName,
         enfullName: this.researcherForm.value.enfullName,
         status: this.researcherForm.value.status,
-        phone: this.researcherForm.value.phone,
+        phone: this.phoneCode + this.researcherForm.value.phone,
         email: this.researcherForm.value.email,
       };
       const observer = {
@@ -180,7 +190,6 @@ export class ResearcherHomeComponent {
     };
     this.researcherService.DeleteReseacher(id).subscribe(observer);
   }
-
   editResearcher(id: number): void {
     this.showLoader = true;
     const observer = {
@@ -188,6 +197,8 @@ export class ResearcherHomeComponent {
         debugger
         if (res.Data) {
           this.researcher = res.Data;
+          this.researcher.phone = this.researcher.phone.replace(this.phoneCode.toString(), '');
+          debugger
           this.researcherForm.patchValue({
             userName: this.researcher.userName,
             password: this.researcher.password,
@@ -214,6 +225,7 @@ export class ResearcherHomeComponent {
     this.researcherService.GetResearcherById(id).subscribe(observer);
   }
   updateResearcher() {
+    debugger
     this.showLoader = true;
     if (this.researcherForm.valid) {
       const Model: IAddResearcher = {
@@ -222,11 +234,12 @@ export class ResearcherHomeComponent {
         fullName: this.researcherForm.value.fullName,
         enfullName: this.researcherForm.value.enfullName,
         status: this.researcherForm.value.status,
-        phone: this.researcherForm.value.phone,
+        phone: this.phoneCode + this.researcherForm.value.phone,
         email: this.researcherForm.value.email,
       };
       const observer = {
         next: (res: any) => {
+          debugger
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -242,17 +255,18 @@ export class ResearcherHomeComponent {
           });
         },
         error: (err: any) => {
+          debugger
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
       };
-      this.researcherService.updateResearcher(this.id,Model).subscribe(observer);
+      this.researcherService.updateResearcher(this.id, Model).subscribe(observer);
     } else {
       this.toastr.error('يجب ادخال البيانات بشكل صحيح');
       this.showLoader = false;
     }
   }
-  reset(){
+  reset() {
     this.add = true;
     this.researcherForm = this.formBuilder.group({
       userName: ['', Validators.required],
@@ -264,5 +278,9 @@ export class ResearcherHomeComponent {
       email: ['', Validators.required],
     });
     this.generateRandomCredentials();
+  }
+  onlyNumber(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
   }
 }
