@@ -20,9 +20,9 @@ export class ResearcherHomeService {
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherCode`, { headers });
      return resopnse;
    }
-   GetAllReseachers(){
+   GetAllReseachers(pageNumber:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetAllReseachers`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetAllReseachers?pageNumber=${pageNumber}&lang=1`, { headers });
      return resopnse;
    }
    DeleteReseacher(id:number){

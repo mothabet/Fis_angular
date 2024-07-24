@@ -6,7 +6,7 @@
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة الباحثين</div>
+      <div class="title">قائمة الكواد</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
           <input
@@ -22,14 +22,14 @@
             type="button"
             class="btn btn-add"
             data-bs-toggle="modal"
-            data-bs-target="#addResearcher"
+            data-bs-target="#addCode"
           >
             <img
               src="../../../../assets/images/briefcase-plus-outli.png"
               alt=""
-              id="addResearcherBtn"
+              id="addCodeBtn"
             />
-            إضافة باحث
+            إضافة كود
           </button>
           <button type="button" class="btn btn-download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
@@ -44,44 +44,32 @@
         <thead>
           <tr class="t-header">
             <th scope="col">رقم</th>
-            <th class="text-center" scope="col">اسم المستخدم</th>
-            <th class="text-center" scope="col">البريد الإلكتروني</th>
-            <th class="text-center" scope="col">الحالة</th>
+            <th class="text-center" scope="col">الرمز</th>
+            <th class="text-center" scope="col">الاسم</th>
+            <th class="text-center" scope="col">Name</th>
             <th class="text-center" scope="col"></th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let item of researchers; let i = index">
+          <tr *ngFor="let item of codes; let i = index">
             <td>
               <label for="Name1">{{ i + 1 }}</label>
             </td>
+            <td class="text-center">{{ item.QuestionCode }}</td>
             <td class="text-center">{{ item.arName }}</td>
-            <td class="text-center">{{ item.email }}</td>
-            <td class="text-center active">
-              <ng-container *ngIf="item.status; else inactive">
-                نشط
-              </ng-container>
-              <ng-template #inactive> غير نشط </ng-template>
-            </td>
+            <td class="text-center">{{ item.enName }}</td>
             <td class="text-center td-actions">
-              <a
-                class="icon"
-                data-bs-toggle="modal"
-                data-bs-target="#companyLink"
-              >
-                <img src="../../../../assets/images/link.png" alt="" />
-              </a>
-              <a routerLink="/Researcher-Details" class="icon">
+              <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
-              </a>
-              <button class="icon" (click)="showAlert(item.id)">
+              </a> -->
+              <button class="icon" (click)="showAlert(item.Id)">
                 <img
                   src="../../../../assets/images/trash-can-outline.png"
                   alt=""
                 />
               </button>
-              <button class="icon" (click)="editResearcher(item.id)">
+              <button class="icon" (click)="editCode(item.Id)">
                 <img
                   src="../../../../assets/images/pencil-outline.png"
                   alt=""
@@ -118,7 +106,7 @@
 <!--start add researcher modal -->
 <div
   class="modal company-modal fade"
-  id="addResearcher"
+  id="addCode"
   tabindex="-1"
   aria-labelledby="add"
   aria-hidden="true"
@@ -128,60 +116,32 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add" *ngIf="add">إضافة باحث</h5>
-        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الباحث</h5>
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة رمز</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الرمز</h5>
       </div>
-      <form [formGroup]="researcherForm">
+      <form [formGroup]="codeForm">
         <div class="modal-body pb-1">
           <div class="row">
             <div class="col-sm-6 mb-2">
               <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="اسم المستخدم"
-                [(ngModel)]="researcherForm.value.userName"
-                formControlName="userName"
-                name="username"
-              />
-            </div>
-            <div class="col-sm-6 mb-2" id="researcherPass">
-              <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="كلمة المرور"
-                [(ngModel)]="researcherForm.value.password"
-                formControlName="password"
-                name="password"
-              />
-              <button
-                type="button"
-                id="reload"
-                (click)="generateRandomCredentials()"
-                *ngIf="add"
-              >
-                <img src="../../../../assets/images/refresh.png" alt="" />
-              </button>
-            </div>
-            <div class="col-sm-6 mb-2">
-              <input
                 class="form-control input-modal"
                 type="text"
-                [(ngModel)]="researcherForm.value.arName"
+                [(ngModel)]="codeForm.value.arName"
                 placeholder="الاسم بالكامل"
                 formControlName="arName"
               />
               <div
                 *ngIf="
-                  researcherForm.controls['arName'].invalid &&
-                  (researcherForm.controls['arName'].dirty ||
-                    researcherForm.controls['arName'].touched)
+                codeForm.controls['arName'].invalid &&
+                  (codeForm.controls['arName'].dirty ||
+                  codeForm.controls['arName'].touched)
                 "
               >
                 <small
-                  *ngIf="researcherForm.controls['arName'].errors?.['required']"
+                  *ngIf="codeForm.controls['arName'].errors?.['required']"
                   class="text-danger"
                 >
-                  يجب ادخال الاسم بالكامل.
+                  يجب ادخال الاسم
                 </small>
               </div>
             </div>
@@ -194,113 +154,30 @@
               />
               <div
                 *ngIf="
-                  researcherForm.controls['enName'].invalid &&
-                  (researcherForm.controls['enName'].dirty ||
-                    researcherForm.controls['enName'].touched)
+                codeForm.controls['enName'].invalid &&
+                  (codeForm.controls['enName'].dirty ||
+                  codeForm.controls['enName'].touched)
                 "
               >
                 <small
-                  *ngIf="researcherForm.controls['enName'].errors?.['required']"
+                  *ngIf="codeForm.controls['enName'].errors?.['required']"
                   class="text-danger"
                 >
-                  English Full Name is required.
+                  English Name is required.
                 </small>
               </div>
             </div>
-
             <div class="col-sm-6 mb-2">
-              <select
-                class="form-control"
-                style="width: 100%"
-                formControlName="status"
-                [(ngModel)]="researcherForm.value.status"
-              >
-                <option value="" disabled selected>الحاله</option>
-                <option [ngValue]="true">نشط</option>
-                <option [ngValue]="false">غير نشط</option>
-              </select>
-              <div
-                *ngIf="
-                  researcherForm.controls['status'].invalid &&
-                  (researcherForm.controls['status'].dirty ||
-                    researcherForm.controls['status'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['status'].errors?.['required']"
-                  class="text-danger"
-                >
-                  Status is required.
-                </small>
-              </div>
-            </div>
-
-            <div class="col-10 col-sm-4 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="رقم الهاتف"
-                formControlName="phone"
-                maxlength="8"
-                minlength="8"
-                pattern="[0-9]*"
+                placeholder="الرمز"
+                formControlName="QuestionCode"
                 (input)="onlyNumber($event)"
               />
-              <div
-                *ngIf="
-                  researcherForm.controls['phone'].touched &&
-                  researcherForm.controls['phone'].dirty &&
-                  researcherForm.controls['phone'].value !== '' &&
-                  researcherForm.controls['phone'].invalid
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['phone'].errors?.['minlength']"
-                  class="text-danger"
-                >
-                  يجب ان يكون رقم الهاتف 8 ارقام.
-                </small>
-              </div>
-            </div>
-            <div class="col-2 mb-2">
-              <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="كود الهاتف"
-                value="{{ phoneCode }}"
-              />
-            </div>
-            <div class="col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="email"
-                placeholder="عنوان البريد الإلكتروني"
-                [(ngModel)]="researcherForm.value.email"
-                formControlName="email"
-              />
-              <div
-                *ngIf="
-                  researcherForm.controls['email'].invalid &&
-                  (researcherForm.controls['email'].dirty ||
-                    researcherForm.controls['email'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['email'].errors?.['required']"
-                  class="text-danger"
-                >
-                  يجب ادخال البريد الاليكتروني.
-                </small>
-                <small
-                  *ngIf="researcherForm.controls['email'].errors?.['email']"
-                  class="text-danger"
-                >
-                  البريد الاليكتروني غير صحيح.
-                </small>
               </div>
             </div>
           </div>
-        </div>
         <div class="modal-footer pt-0">
           <button
             type="button"
@@ -317,18 +194,18 @@
           <button
             type="button"
             class="btn btn-save"
-            (click)="saveResearcher()"
+            (click)="saveCode()"
             *ngIf="add"
-            [disabled]="!researcherForm.valid"
+            [disabled]="!codeForm.valid"
           >
             حفظ
           </button>
           <button
             type="button"
             class="btn btn-save"
-            (click)="updateResearcher()"
+            (click)="updateCode()"
             *ngIf="!add"
-            [disabled]="!researcherForm.valid"
+            [disabled]="!codeForm.valid"
           >
             تعديل
           </button>

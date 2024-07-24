@@ -1,0 +1,11 @@
+<div class="pagination" *ngIf="!emptyData">
+    <ul>
+      <li (click)="Pagination(1)" [class.disabled]="pageNumber===1">&laquo;&laquo;</li>
+      <li (click)="Pagination(pageNumber - 1)" [class.disabled]="pageNumber === 1">&laquo;</li>
+      <li *ngIf="pageNumber > 1" (click)="Pagination(pageNumber - 1)">{{ pageNumber - 1 }}</li>
+      <li class="active">{{ pageNumber }}</li>
+      <li *ngIf="!lastPage" (click)="Pagination(pageNumber + 1)">{{ pageNumber + 1 }}</li>
+      <li (click)="Pagination(pageNumber + 1)" [class.disabled]="lastPage">&raquo;</li>
+      <li (click)="Pagination(pagesCount)" [class.disabled]="pageNumber===pagesCount">&raquo;&raquo;</li>
+    </ul>
+  </div>

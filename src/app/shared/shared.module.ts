@@ -7,12 +7,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { TopScreenComponent } from './components/top-screen/top-screen.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
     SidebarComponent,
     TopScreenComponent,
-    LoaderComponent
+    LoaderComponent,
+    PaginationComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +28,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     SidebarComponent,
     TopScreenComponent,
     LoaderComponent,
+    PaginationComponent,
     AppRoutingModule, 
     FormsModule,
     BrowserModule,

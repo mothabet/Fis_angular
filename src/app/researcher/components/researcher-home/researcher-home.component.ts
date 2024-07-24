@@ -25,6 +25,9 @@ export class ResearcherHomeComponent {
   add: boolean = true;
   id: number = 0;
   phoneCode: number = 968;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -36,8 +39,8 @@ export class ResearcherHomeComponent {
     this.researcherForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
-      fullName: ['', Validators.required],
-      enfullName: ['', Validators.required],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
       status: ['', Validators.required],
       phone: [
         '',
@@ -50,9 +53,13 @@ export class ResearcherHomeComponent {
     });
 
     this.generateRandomCredentials();
-    this.GetAllReseachers();
+    this.GetAllReseachers(this.currentPage);
   }
-
+  onPageChange(page: number) {
+    debugger
+    this.currentPage = page;
+    this.GetAllReseachers(page);
+  }
 
   generateRandomCredentials(): void {
     this.showLoader = true;
@@ -70,8 +77,8 @@ export class ResearcherHomeComponent {
       const Model: IAddResearcher = {
         userName: this.researcherForm.value.userName,
         password: this.researcherForm.value.password,
-        fullName: this.researcherForm.value.fullName,
-        enfullName: this.researcherForm.value.enfullName,
+        arName: this.researcherForm.value.arName,
+        enName: this.researcherForm.value.enName,
         status: this.researcherForm.value.status,
         phone: this.phoneCode + this.researcherForm.value.phone,
         email: this.researcherForm.value.email,
@@ -83,7 +90,7 @@ export class ResearcherHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllReseachers();
+          this.GetAllReseachers(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -127,8 +134,8 @@ export class ResearcherHomeComponent {
     this.researcherForm.reset({
       userName: '',
       password: '',
-      fullName: '',
-      enfullName: '',
+      arName: '',
+      enName: '',
       status: '', // Default value for status after reset
       phone: '',
       email: ''
@@ -136,21 +143,30 @@ export class ResearcherHomeComponent {
     this.generateRandomCredentials();
   }
 
-  GetAllReseachers(): void {
+  GetAllReseachers(page: number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.researchers = res.Data;
-        this.showLoader = false;
+        debugger
         this.noData = !res.Data || res.Data.length === 0;
-        this.resetForm();
+        this.showLoader = false;
+        if(res.Data){
+          this.researchers = res.Data.getResearcherDtos;
+          this.currentPage = page;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.resetForm();
+        }
+        else{
+          this.researchers=[];
+        }
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
     };
-    this.researcherService.GetAllReseachers().subscribe(observer);
+    this.researcherService.GetAllReseachers(page).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -174,7 +190,7 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllReseachers();
+        this.GetAllReseachers(1);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -202,8 +218,8 @@ export class ResearcherHomeComponent {
           this.researcherForm.patchValue({
             userName: this.researcher.userName,
             password: this.researcher.password,
-            fullName: this.researcher.fullName,
-            enfullName: this.researcher.enfullName,
+            arName: this.researcher.arName,
+            enName: this.researcher.enName,
             status: this.researcher.status,
             phone: this.researcher.phone,
             email: this.researcher.email
@@ -231,8 +247,8 @@ export class ResearcherHomeComponent {
       const Model: IAddResearcher = {
         userName: this.researcherForm.value.userName,
         password: this.researcherForm.value.password,
-        fullName: this.researcherForm.value.fullName,
-        enfullName: this.researcherForm.value.enfullName,
+        arName: this.researcherForm.value.arName,
+        enName: this.researcherForm.value.enName,
         status: this.researcherForm.value.status,
         phone: this.phoneCode + this.researcherForm.value.phone,
         email: this.researcherForm.value.email,
@@ -245,7 +261,7 @@ export class ResearcherHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllReseachers();
+          this.GetAllReseachers(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -271,8 +287,8 @@ export class ResearcherHomeComponent {
     this.researcherForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
-      fullName: ['', Validators.required],
-      enfullName: ['', Validators.required],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
       status: ['', Validators.required],
       phone: ['', Validators.required],
       email: ['', Validators.required],
