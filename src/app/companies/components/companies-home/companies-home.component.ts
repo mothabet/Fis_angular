@@ -151,6 +151,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
           this.showLoader = false;
           this.companies = res.Data;
