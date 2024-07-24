@@ -7,6 +7,7 @@ import { ResearcherDetailsComponent } from './researcher/components/researcher-d
 import { CompaniesDetailsComponent } from './companies/components/companies-details/companies-details.component';
 import { AuditingRulesHomeComponent } from './auditing-rules/components/auditing-rules-home/auditing-rules-home.component';
 import { LoginComponent } from './auth/components/login/login.component';
+import { CodeHomeComponent } from './code/Components/code-home/code-home.component';
 
 const routes: Routes = [
   { path: 'Companies', component: CompaniesHomeComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'Researcher', component: ResearcherHomeComponent },
   { path: 'Researcher-Details', component: ResearcherDetailsComponent },
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent },
+  { path: 'Codes', component: CodeHomeComponent },
   { path: 'Login', component: LoginComponent },
   { path: 'Home', component: HomeComponent },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided

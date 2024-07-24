@@ -78,7 +78,7 @@ export class ResearcherHomeComponent {
         userName: this.researcherForm.value.userName,
         password: this.researcherForm.value.password,
         arName: this.researcherForm.value.arName,
-        enName: this.researcherForm.value.enNames,
+        enName: this.researcherForm.value.enName,
         status: this.researcherForm.value.status,
         phone: this.phoneCode + this.researcherForm.value.phone,
         email: this.researcherForm.value.email,
@@ -149,14 +149,16 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
+        this.showLoader = false;
         if(res.Data){
-          debugger
           this.researchers = res.Data.getResearcherDtos;
-          this.showLoader = false;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.resetForm();
+        }
+        else{
+          this.researchers=[];
         }
       },
       error: (err: any) => {
@@ -245,7 +247,7 @@ export class ResearcherHomeComponent {
       const Model: IAddResearcher = {
         userName: this.researcherForm.value.userName,
         password: this.researcherForm.value.password,
-        arName: this.researcherForm.value.arNames,
+        arName: this.researcherForm.value.arName,
         enName: this.researcherForm.value.enName,
         status: this.researcherForm.value.status,
         phone: this.phoneCode + this.researcherForm.value.phone,

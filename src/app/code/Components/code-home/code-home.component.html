@@ -1,0 +1,303 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="main-content p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'الباحثين'"></app-top-screen>
+
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة الكواد</div>
+      <div class="btns d-flex">
+        <div class="search" id="research-search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button
+            type="button"
+            class="btn btn-add"
+            data-bs-toggle="modal"
+            data-bs-target="#addCode"
+          >
+            <img
+              src="../../../../assets/images/briefcase-plus-outli.png"
+              alt=""
+              id="addCodeBtn"
+            />
+            إضافة كود
+          </button>
+          <button type="button" class="btn btn-download">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">رقم</th>
+            <th class="text-center" scope="col">الرمز</th>
+            <th class="text-center" scope="col">الاسم</th>
+            <th class="text-center" scope="col">Name</th>
+            <th class="text-center" scope="col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of codes; let i = index">
+            <td>
+              <label for="Name1">{{ i + 1 }}</label>
+            </td>
+            <td class="text-center">{{ item.QuestionCode }}</td>
+            <td class="text-center">{{ item.arName }}</td>
+            <td class="text-center">{{ item.enName }}</td>
+            <td class="text-center td-actions">
+              <!-- <a routerLink="/Code-Details" class="icon">
+                <img src="../../../../assets/images/eye-outline.png" alt="" />
+              </a> -->
+              <button class="icon" (click)="showAlert(item.Id)">
+                <img
+                  src="../../../../assets/images/trash-can-outline.png"
+                  alt=""
+                />
+              </button>
+              <button class="icon" (click)="editCode(item.Id)">
+                <img
+                  src="../../../../assets/images/pencil-outline.png"
+                  alt=""
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+<app-pagination
+    [pageNumber]="currentPage"
+    [lastPage]="isLastPage"
+    [emptyData]="noData"
+    [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"
+    ></app-pagination>
+<!--start modal -->
+
+<!--start add researcher modal -->
+<div
+  class="modal company-modal fade"
+  id="addCode"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة رمز</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الرمز</h5>
+      </div>
+      <form [formGroup]="codeForm">
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="codeForm.value.arName"
+                placeholder="الاسم بالكامل"
+                formControlName="arName"
+              />
+              <div
+                *ngIf="
+                codeForm.controls['arName'].invalid &&
+                  (codeForm.controls['arName'].dirty ||
+                  codeForm.controls['arName'].touched)
+                "
+              >
+                <small
+                  *ngIf="codeForm.controls['arName'].errors?.['required']"
+                  class="text-danger"
+                >
+                  يجب ادخال الاسم
+                </small>
+              </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="English Full Name"
+                formControlName="enName"
+              />
+              <div
+                *ngIf="
+                codeForm.controls['enName'].invalid &&
+                  (codeForm.controls['enName'].dirty ||
+                  codeForm.controls['enName'].touched)
+                "
+              >
+                <small
+                  *ngIf="codeForm.controls['enName'].errors?.['required']"
+                  class="text-danger"
+                >
+                  English Name is required.
+                </small>
+              </div>
+            </div>
+            <div class="col-sm-6 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="الرمز"
+                formControlName="QuestionCode"
+                (input)="onlyNumber($event)"
+              />
+              </div>
+            </div>
+          </div>
+        <div class="modal-footer pt-0">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            data-bs-dismiss="modal"
+            id="btnCancel"
+            (click)="reset()"
+          >
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="saveCode()"
+            *ngIf="add"
+            [disabled]="!codeForm.valid"
+          >
+            حفظ
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="updateCode()"
+            *ngIf="!add"
+            [disabled]="!codeForm.valid"
+          >
+            تعديل
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end add researcher modal -->
+
+<!--start linked company modal -->
+<div
+  class="modal company-modal fade"
+  id="companyLink"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div
+        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
+      >
+        <h5>ربط بالشركة</h5>
+        <div class="search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="table-responsive company-modal-table mx-2">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName1" id="companyName1" />
+                <label for="companyName1">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName2" id="companyName2" />
+                <label for="companyName2">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr class="last">
+              <td>
+                <input type="checkbox" name="companyName3" id="companyName3" />
+                <label for="companyName3">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+          إلغاء
+        </button>
+        <button type="button" class="btn btn-add">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end linked company modal -->
+
+<!--end modal -->
