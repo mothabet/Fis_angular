@@ -88,4 +88,12 @@ export class SharedService {
       });
     }
   }
+
+  validateInput(event: KeyboardEvent): void {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // Allow only numeric characters (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
 }

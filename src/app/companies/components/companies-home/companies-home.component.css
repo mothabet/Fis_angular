@@ -1,0 +1,9 @@
+.input-disabled {
+    background-color: #e9ecef; /* Light gray background */
+    color: #6c757d; /* Gray text color */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
+    border: 1px solid #ced4da; /* Light border */
+    opacity: 1; /* Ensure full opacity */
+    pointer-events: none; /* Disable mouse events */
+    user-select: none; /* Prevent text selection */
+  }
