@@ -23,10 +23,15 @@ export class CompaniesHomeComponent implements OnInit {
   username: string = '';
   CompanyCode: string = '';
   Wilaya: string = '';
+  Govenorates: string = '';
   sectorId: number = 0;
   companyForm!: FormGroup;
   showLoader: boolean = false;
   companyEmails: FormArray | null = null;
+  company!: IAddCompany;
+  add: boolean = true;
+  id: number = 0;
+  searchText : string ='';
   constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
@@ -35,31 +40,31 @@ export class CompaniesHomeComponent implements OnInit {
       password: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      municipalityNumber: ['', Validators.required],
-      compRegNumber: ['', Validators.required],
+      municipalityNumber: [''],
+      compRegNumber: [''],
       accountingPeriod: [''],
-      completionAccPeriod: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
-      telNumber: ['', Validators.required],
-      fax: ['', Validators.required],
-      webSite: ['', Validators.required],
-      address: ['', Validators.required],
-      mailBox: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      dateOfWork: ['', Validators.required],
-      legalType: ['', Validators.required],
-      institutionVlaue: ['', Validators.required],
-      institutionHeadquarters: ['', Validators.required],
-      sectorId: [0, Validators.required],
-      activityId: [0, Validators.required],
-      subActivityId: [0, Validators.required],
-      governoratesId: [0, Validators.required],
-      wilayatId: [0, Validators.required],
-      compEmails: this.formBuilder.array([
-        this.formBuilder.group({
-          Email: ['', [Validators.required, Validators.email]]
-        })
-      ])
+      completionAccPeriod: [''],
+      phoneNumber: [''],
+      telNumber: [''],
+      fax: [''],
+      webSite: [''],
+      address: [''],
+      mailBox: [''],
+      postalCode: [''],
+      dateOfWork: [''],
+      legalType: [''],
+      institutionVlaue: [''],
+      institutionHeadquarters: [''],
+      sectorId: [0],
+      activityId: [0],
+      subActivityId: [0],
+      governoratesId: [0],
+      wilayatId: [0],
+      // compEmails: this.formBuilder.array([
+      //   this.formBuilder.group({
+      //     Email: ['', [Validators.required, Validators.email]]
+      //   })
+      // ])
     });
     this.GetCompanies();
   }
@@ -70,15 +75,13 @@ export class CompaniesHomeComponent implements OnInit {
     this.compEmails.push(this.formBuilder.control('', [Validators.required, Validators.email]));
   }
   removeEmail(): void {
-    this.compEmails.removeAt(this.compEmails.length-1)
+    this.compEmails.removeAt(this.compEmails.length - 1)
   }
   GetSectorActvities(sectorId: number) {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
           this.Activities = res.Data;
-          console.log(this.Activities)
         }
       },
       error: (err: any) => {
@@ -147,7 +150,7 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
   }
-  GetCompanies() {
+  GetCompanies(textSearch : string='') {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -155,7 +158,10 @@ export class CompaniesHomeComponent implements OnInit {
         if (res.Data) {
           this.showLoader = false;
           this.companies = res.Data;
+        }else{
+          this.companies = [];
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         debugger
@@ -185,7 +191,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
     };
-    this.companyHomeServices.GetCompanies().subscribe(observer);
+    this.companyHomeServices.GetCompanies(textSearch).subscribe(observer);
   }
   GetSectors() {
     const observer = {
@@ -262,7 +268,6 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetWilayat().subscribe(observer);
   }
   GetGovernorates(wilayaId: number) {
-    debugger
     const observer = {
       next: (res: any) => {
         if (res.Data) {
@@ -270,7 +275,6 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
         if (err.status) {
           switch (err.status) {
             case 400:
@@ -367,13 +371,15 @@ export class CompaniesHomeComponent implements OnInit {
         wilayatId: this.companyForm.value.wilayatId,
         companyEmails: this.companyForm.value.companyEmails
       }
-      debugger
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
           this.GetCompanies();
           this.resetForm();
-          this.GetCompanyCode();
           this.showLoader = false;
         },
         error: (err: any) => {
@@ -439,6 +445,7 @@ export class CompaniesHomeComponent implements OnInit {
       webSite: '',
     });
     this.generateRandomCredentials();
+    this.GetCompanyCode();
   }
   popAddCompany() {
     this.GetSectors();
@@ -446,12 +453,22 @@ export class CompaniesHomeComponent implements OnInit {
     this.generateRandomCredentials();
     this.GetCompanyCode();
     this.companyForm.get('sectorId')!.valueChanges.subscribe(value => {
+      if (value != 0) {
+        this.clearActivity();
+        this.clearSubActivity();
+      }
       this.GetSectorActvities(value);
     });
     this.companyForm.get('activityId')!.valueChanges.subscribe(value => {
+      if (value != 0) {
+        this.clearSubActivity();
+      }
       this.GetSubActivities(value);
     });
     this.companyForm.get('wilayatId')!.valueChanges.subscribe(value => {
+      if (value != 0) {
+        this.clearGov();
+      }
       this.GetGovernorates(value);
     });
   }
@@ -496,5 +513,141 @@ export class CompaniesHomeComponent implements OnInit {
   }
   validateInput(event: KeyboardEvent) {
     this.sharedService.validateInput(event);
+  }
+  onWilayaChange(): void {
+    const selectedWilayaId = this.companyForm.get('wilayatId')?.value;
+    const selectedWilaya = this.Wilayat.find(w => w.id = selectedWilayaId);
+    if (selectedWilaya)
+      this.Wilaya = selectedWilaya.arName
+  }
+  onGovenoratesChange(): void {
+    const selectedGovenoratesId = this.companyForm.get('governoratesId')?.value;
+    const selectedGovenorates = this.Governorates.find(w => w.id = selectedGovenoratesId);
+    if (selectedGovenorates)
+      this.Govenorates = selectedGovenorates.arName
+  }
+  editCompany(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.company = res.Data;
+          this.companyForm.patchValue({
+            arName: this.company.arName,
+            enName: this.company.enName,
+            userName: this.company.userName,
+            password: this.company.password,
+            municipalityNumber: this.company.municipalityNumber,
+            compRegNumber: this.company.compRegNumber,
+            accountingPeriod: this.company.accountingPeriod,
+            completionAccPeriod: this.company.completionAccPeriod,
+            phoneNumber: this.company.phoneNumber,
+            telNumber: this.company.telNumber,
+            fax: this.company.fax,
+            webSite: this.company.webSite,
+            address: this.company.address,
+            mailBox: this.company.mailBox,
+            postalCode: this.company.postalCode,
+            institutionHeadquarters: this.company.institutionHeadquarters,
+            institutionVlaue: this.company.institutionVlaue,
+            dateOfWork: this.company.dateOfWork,
+            legalType: this.company.legalType,
+            sectorId: this.company.sectorId,
+            subActivityId: this.company.subActivityId,
+            governoratesId: this.company.governoratesId,
+            wilayatId: this.company.wilayatId,
+          });
+          this.GetSectorActvities(this.company.sectorId)
+          this.GetSubActivities(this.company.activityId)
+          this.GetGovernorates(this.company.wilayatId)
+          this.onWilayaChange();
+          this.onGovenoratesChange();
+          this.showLoader = false;
+          this.add = false;
+          const button = document.getElementById('addCompanyBtn');
+          if (button) {
+            button.click();
+          }
+          this.id = id;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.companyHomeServices.GetCompanyById(id).subscribe(observer);
+  }
+  updateCompany() {
+    this.showLoader = true;
+    if (this.companyForm.valid) {
+      const Model: IAddCompany = {
+        userName: this.companyForm.value.userName,
+        password: this.companyForm.value.password,
+        arName: this.companyForm.value.arName,
+        enName: this.companyForm.value.enName,
+        municipalityNumber: this.companyForm.value.municipalityNumber,
+        compRegNumber: this.companyForm.value.compRegNumber,
+        accountingPeriod: this.companyForm.value.accountingPeriod,
+        completionAccPeriod: this.companyForm.value.completionAccPeriod,
+        phoneNumber: this.companyForm.value.phoneNumber,
+        telNumber: this.companyForm.value.telNumber,
+        fax: this.companyForm.value.fax,
+        webSite: this.companyForm.value.webSite,
+        address: this.companyForm.value.address,
+        mailBox: this.companyForm.value.mailBox,
+        postalCode: this.companyForm.value.postalCode,
+        dateOfWork: this.companyForm.value.dateOfWork,
+        institutionHeadquarters: this.companyForm.value.institutionHeadquarters,
+        institutionVlaue: this.companyForm.value.institutionVlaue,
+        legalType: this.companyForm.value.legalType,
+        sectorId: this.companyForm.value.sectorId,
+        activityId: this.companyForm.value.activityId,
+        subActivityId: this.companyForm.value.subActivityId,
+        governoratesId: this.companyForm.get('governoratesId')?.value,
+        wilayatId: this.companyForm.value.wilayatId,
+        companyEmails: this.companyForm.value.companyEmails
+      }
+      const observer = {
+        next: (res: any) => {
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.GetCompanies();
+          this.showLoader = false;
+          this.add = true;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+
+        },
+        error: (err: any) => {
+          debugger
+          this.sharedService.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.companyHomeServices.UpdateCompany(this.id, Model).subscribe(observer);
+    } else {
+      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
+      this.showLoader = false;
+    }
+  }
+  clearActivity() {
+    this.companyForm.get('activityId')?.setValue('');
+  }
+  clearSubActivity() {
+    this.companyForm.get('subActivityId')?.setValue('');
+  }
+  clearGov() {
+    this.companyForm.get('governoratesId')?.setValue('');
+  }
+  companiesSearch(){
+    this.GetCompanies(this.searchText);
   }
 }

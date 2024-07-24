@@ -7,3 +7,16 @@
     pointer-events: none; /* Disable mouse events */
     user-select: none; /* Prevent text selection */
   }
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }

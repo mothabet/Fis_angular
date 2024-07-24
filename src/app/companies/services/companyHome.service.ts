@@ -10,9 +10,9 @@ import { IAddCompany } from '../Dtos/CompanyHomeDto';
 export class CompanyHomeService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
-  GetCompanies() {
+  GetCompanies(textSearch : string | null) {
     var headers = this.sharedService.getHeaders();
-    var response = this.http.get(environment.apiUrl + `Company/GetCompanies`, { headers });
+    var response = this.http.get(environment.apiUrl + `Company/GetCompanies?textSearch=${textSearch}`, { headers });
     return response;
   }
   GetSectorActvities(sectorId : number) {
@@ -52,7 +52,17 @@ export class CompanyHomeService {
   }
   DeleteCompany(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.delete(environment.apiUrl+`Company/DeleteCompany?id=${id}`, { headers });
-     return resopnse;
+     var response = this.http.delete(environment.apiUrl+`Company/DeleteCompany?id=${id}`, { headers });
+     return response;
+   }
+   GetCompanyById(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Company/GetCompany?id=${id}`, { headers });
+     return response;
+   }
+   UpdateCompany(id:number,Model: IAddCompany){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });
+     return response;
    }
 }
