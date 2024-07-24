@@ -27,6 +27,7 @@ export class SharedService {
     return result;
   }
   handleError(err: any): void {
+    debugger
     if (err.status) {
       switch (err.status) {
         case 400:
@@ -34,6 +35,14 @@ export class SharedService {
             Swal.fire({
               icon: 'error',
               title: err.error.Errors[0],
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+          else{
+            Swal.fire({
+              icon: 'error',
+              title: err.error.Message,
               showConfirmButton: false,
               timer: 1500
             });

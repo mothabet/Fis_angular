@@ -17,3 +17,6 @@
   tfoot tr th .alert span {
     font-size: 20px;
   }
+  small{
+    display: block;
+  }

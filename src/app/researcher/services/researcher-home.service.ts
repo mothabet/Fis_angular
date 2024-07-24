@@ -36,6 +36,7 @@ export class ResearcherHomeService {
      return resopnse;
    }
    updateResearcher(id:number,Model: IAddResearcher){
+    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}`, Model, { headers });
      return resopnse;
