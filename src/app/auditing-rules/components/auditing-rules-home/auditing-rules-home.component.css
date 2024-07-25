@@ -1,0 +1,5 @@
+.modal-header {
+    display: flex;
+    justify-content: space-between; /* Distributes space between children */
+    align-items: center; /* Vertically centers children */
+  }

@@ -1,302 +1,252 @@
-<div class="main-content p-4 main card " style="flex: 1;">
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="main-content p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'الباحثين'"></app-top-screen>
 
-    <app-top-screen [title]="'قواعد التدقيق'"></app-top-screen>
-
-    <!-- start content -->
-    <div class="content companies">
-        <div class="header d-flex mb-0">
-            <div class="title">
-                قائمة قواعد التدفق
-            </div>
-            <div class="btns d-flex">
-                <div class="search">
-                    <input class="form-control" type="text" name="search" placeholder="البحث">
-                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
-                </div>
-                <div class="d-flex flex-grow-1 gap-1">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal"
-                        data-bs-target="#addCompany">
-                        <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-                        إضافة شركة
-                    </button>
-                </div>
-            </div>
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة الكواد</div>
+      <div class="btns d-flex">
+        <div class="search" id="research-search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
-        <div>
-            <div class="table-responsive company-table">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr class="t-header">
-                            <th style="min-width: 150px;" scope="col">اسم الشركة</th>
-                            <th class="text-center" scope="col">رقم السجل التجاري</th>
-                            <th class="text-center" scope="col">رقم الشركة</th>
-                            <th class="text-center" scope="col">رمز النشاط</th>
-                            <th class="text-center" scope="col">النشاط</th>
-                            <th class="text-center" scope="col">عنوان الشركة</th>
-                            <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-
-                                <input type="checkbox" name="Name1" id="Name1">
-                                <label for="Name1">شركة الابداع</label>
-
-                            </td>
-                            <td class="text-center">021124444</td>
-                            <td class="text-center">86431</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">الخوير، مسقط</td>
-                            <td class="text-center td-actions">
-                                <a routerLink="/Companies-Details" class="icon">
-                                    <img src="../../../../assets/images/eye-outline.png" alt="">
-                                </a>
-                                <button class="icon">
-                                    <img src="../../../../assets/images/trash-can-outline.png" alt="" class="trash">
-                                </button>
-                                <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany">
-                                    <img src="../../../../assets/images/pencil-outline.png" alt="">
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button
+            type="button"
+            class="btn btn-add"
+            data-bs-toggle="modal"
+            data-bs-target="#addCode"
+          >
+            <img
+              src="../../../../assets/images/briefcase-plus-outli.png"
+              alt=""
+              id="addCodeBtn"
+            />
+            إضافة كود
+          </button>
+          <button type="button" class="btn btn-download">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
         </div>
+      </div>
     </div>
-    <!-- end content -->
 
-</div>
-<!--start add company modal -->
-<div class="modal company-modal fade" id="addCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة شركة</h5>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="رمز الشركة">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="اسم الشركة بالعربى">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="اسم الشركة بالإنجليزي">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="رمز القطاع">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text"
-                                placeholder="النشاط الاقتصادي الرئيسي">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <select class="form-select add-company-select" style="width: 100%;">
-                                <option selected value="0">النشاط الاقتصادي الرئيسي</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="رقم البلدية">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="رقم تسجيل الشركة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="مدة المحاسبة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="الانتهاء مدة المحاسبة">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="رقم الهاتف">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="الهاتف الثابت">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="number" placeholder="فاكس">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="email" placeholder="الموقع الإلكتروني">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="العنوان">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="صندوق البريد">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="الرمز البريدي">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <select class="form-select add-company-select" style="width: 100%;">
-                                <option selected value="0">رقم المنطقة</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="المنطقة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <select class="form-select add-company-select" style="width: 100%;">
-                                <option selected value="0">رقم الولاية</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="الولاية">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <select class="form-select add-company-select" style="width: 100%;">
-                                <option value="0">مقر إقامة المؤسسة</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input class="form-control input-modal" type="date" placeholder="تاريخ مزاولة العمل">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <select class="form-select add-company-select" style="width: 100%;">
-                                <option value="0">قيمة المؤسسة</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="النوع القانوني">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" type="email" placeholder="البريد الإلكتروني">
-                        </div>
-                        <div class="col-sm-6 mb-2 d-flex" style="gap: 8px;">
-                            <input class="form-control input-modal" type="email" placeholder="البريد الإلكتروني">
-                            <button class="btn btn-add " style="min-width: 90px">
-                                أضف
-                                <img src="./images/plus-circle-outline.png" alt=""></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer pt-0" style="border-top: none;">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-reset">إعادة ملء</button>
-                    <button type="button" class="btn btn-save">حفظ</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!--end add company modal -->
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">رقم</th>
+            <th class="text-center" scope="col">الرمز</th>
+            <th class="text-center" scope="col">الاسم</th>
+            <th class="text-center" scope="col">Name</th>
+            <th class="text-center" scope="col"></th>
+          </tr>
+        </thead>
 
-<!--start send form company modal -->
-<div class="modal company-modal fade" id="sendFormCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg ">
-        <div class="modal-content">
-            <div class="modal-header pb-1">
-                <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
-            </div>
-            <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
-                <h6 class="m-0" style="width: calc(100% - 130px);">الشركات</h6>
-                <div class="search">
-                    <input class="form-control" type="text" name="search" placeholder="البحث">
-                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
-                </div>
-            </div>
-            <div class="table-responsive company-modal-table mx-2">
-                <table class="table table-borderless ">
-                    <thead>
-                        <tr class="t-header">
-                            <th scope="col">اسم الشركة</th>
-                            <th class="text-center" scope="col">رقم السجل التجاري</th>
-                            <th class="text-center" scope="col">رقم الشركة</th>
-                            <th class="text-center" scope="col">رمز النشاط</th>
-                            <th class="text-center" scope="col">النشاط</th>
-                            <th class="text-center" scope="col">عنوان الشركة</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="companyName1" id="companyName1">
-                                <label for="companyName1">شركة الابداع</label>
-                            </td>
-                            <td class="text-center">021124444</td>
-                            <td class="text-center">86431</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">الخوير، مسقط</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="companyName2" id="companyName2">
-                                <label for="companyName2">شركة الابداع</label>
-                            </td>
-                            <td class="text-center">021124444</td>
-                            <td class="text-center">86431</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">الخوير، مسقط</td>
-                        </tr>
-                        <tr class="last">
-                            <td>
-                                <input type="checkbox" name="companyName3" id="companyName3">
-                                <label for="companyName3">شركة الابداع</label>
-                            </td>
-                            <td class="text-center">021124444</td>
-                            <td class="text-center">86431</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">الخوير، مسقط</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <form>
-                <div class="modal-body pb-1">
-                    <div class="form-title mb-3">
-                        تفاصيل الرسالة
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            <div class=" input-floating-label mb-0">
-                                <select class="form-select send-company-select" style="width: 100%;">
-                                    <option selected value="0" id="messageType" name="messageType">النشاط الاقتصادي
-                                        الرئيسي</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <label for="user">نوع الرسالة</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة">
-                        </div>
-                        <div class="col-sm-12 mb-2">
-                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer pt-0" style="border-top: none;">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-save">إرسال</button>
-                </div>
-            </form>
-        </div>
+        <tbody>
+          <tr>
+            <td>
+              <label for="Name1">1</label>
+            </td>
+            <td class="text-center">hhhhhh</td>
+            <td class="text-center">hhhhh</td>
+            <td class="text-center">hhhhhh</td>
+            <td class="text-center td-actions">
+              <!-- <a routerLink="/Code-Details" class="icon">
+                <img src="../../../../assets/images/eye-outline.png" alt="" />
+              </a> -->
+              <button class="icon">
+                <img
+                  src="../../../../assets/images/trash-can-outline.png"
+                  alt=""
+                />
+              </button>
+              <button class="icon">
+                <img
+                  src="../../../../assets/images/pencil-outline.png"
+                  alt=""
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <!-- <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot> -->
+      </table>
     </div>
+  </div>
+  <!-- end content -->
 </div>
-<!--end send form company modal -->
+<!-- <app-pagination
+    [pageNumber]="currentPage"
+    [lastPage]="isLastPage"
+    [emptyData]="noData"
+    [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"
+    ></app-pagination> -->
+<!--start modal -->
+
+<!--start add researcher modal -->
+<div
+  class="modal company-modal fade"
+  id="addCode"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <div class="header-right">
+          <h5 class="modal-title" id="add">إضافة قاعدة تدقيق</h5>
+        </div>
+        <div class="header-left">
+          <button (click)="addSelect()" class="btn btn-save">اضافه</button>
+        </div>
+      </div>
+      <form [formGroup]="auditForm">
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="col-sm-12 mb-2">
+              <div class="row">
+                <select class="col-4" *ngFor="let select of selects; let i = index"
+                        [disabled]="select.disabled" (change)="onSelectChange($event, i)">
+                  <option value="" disabled selected>اختر قيمة</option>
+                  <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-12 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="قاعدة الندقيق"
+                formControlName="Rule"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            data-bs-dismiss="modal"
+            id="btnCancel"
+            (click)="resetForm()"
+          >
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-save" [disabled]="!isEquationValid()" (click)="SaveAuditRule()">حفظ</button>
+        </div>
+      </form>
+      
+      
+    </div>
+  </div>
+</div>
+<!--end add researcher modal -->
+
+<!--start linked company modal -->
+<div
+  class="modal company-modal fade"
+  id="companyLink"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div
+        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
+      >
+        <h5>ربط بالشركة</h5>
+        <div class="search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="table-responsive company-modal-table mx-2">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName1" id="companyName1" />
+                <label for="companyName1">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName2" id="companyName2" />
+                <label for="companyName2">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr class="last">
+              <td>
+                <input type="checkbox" name="companyName3" id="companyName3" />
+                <label for="companyName3">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+          إلغاء
+        </button>
+        <button type="button" class="btn btn-add">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end linked company modal -->
+
+<!--end modal -->
