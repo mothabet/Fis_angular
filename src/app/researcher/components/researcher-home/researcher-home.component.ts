@@ -5,6 +5,9 @@ import { IAddResearcher, IResearcher } from '../../Dtos/ResearcherHomeDto';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
 
 @Component({
   selector: 'app-researcher-home',
@@ -12,10 +15,17 @@ import Swal from 'sweetalert2';
   styleUrls: ['./researcher-home.component.css']
 })
 export class ResearcherHomeComponent {
+  private arabicCharMap: { [key: string]: string } = {
+    'ء': 'ﺀ', 'آ': 'ﺁ', 'أ': 'ﺃ', 'ؤ': 'ﺅ', 'إ': 'ﺇ', 'ئ': 'ﺉ', 'ا': 'ﺍ', 'ب': 'ﺏ', 'ة': 'ﺓ', 'ت': 'ﺕ',
+    'ث': 'ﺙ', 'ج': 'ﺝ', 'ح': 'ﺡ', 'خ': 'ﺥ', 'د': 'ﺩ', 'ذ': 'ﺫ', 'ر': 'ﺭ', 'ز': 'ﺯ', 'س': 'ﺱ', 'ش': 'ﺵ',
+    'ص': 'ﺹ', 'ض': 'ﺽ', 'ط': 'ﻁ', 'ظ': 'ﻅ', 'ع': 'ﻉ', 'غ': 'ﻍ', 'ف': 'ﻑ', 'ق': 'ﻕ', 'ك': 'ﻙ', 'ل': 'ﻝ',
+    'م': 'ﻡ', 'ن': 'ﻥ', 'ه': 'ﻩ', 'و': 'ﻭ', 'ي': 'ﻱ'
+  };
   @ViewChild('addResearcher') addResearcherModal!: ElementRef;
   researcherForm!: FormGroup;
   isDisabled: boolean = true;
   username: string = '';
+  searchText: string = '';
   password: string = '';
   researcherCode: number = 0;
   researchers: IResearcher[] = [];
@@ -28,6 +38,7 @@ export class ResearcherHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
+  tableColumns = ['البريد الالكتروني', 'الاسم', 'الرقم'];
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -143,7 +154,7 @@ export class ResearcherHomeComponent {
     this.generateRandomCredentials();
   }
 
-  GetAllReseachers(page: number): void {
+  GetAllReseachers(page: number , textSearch : string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -166,7 +177,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.researcherService.GetAllReseachers(page).subscribe(observer);
+    this.researcherService.GetAllReseachers(page , textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -298,5 +309,52 @@ export class ResearcherHomeComponent {
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+  }
+  researcherSearch(){
+    this.GetAllReseachers(this.currentPage,this.searchText);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('الباحثين', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        item.email,
+        item.arName,
+        index +1,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('researchers.pdf');
+  }
+  fixArabic(text: string): string {
+    return text.split('').map(char => this.arabicCharMap[char] || char).join('');
+  }
+  printPdf() {
+    this.generatePdf(this.researchers, this.tableColumns);
   }
 }
