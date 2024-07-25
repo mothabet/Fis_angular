@@ -30,14 +30,14 @@ export class CompanyHomeService {
     var response = this.http.get(environment.apiUrl + `Sector/GetSectors`, { headers });
     return response;
   }
-  GetWilayat() {
+  GetWilayat(govId:number) {
     var headers = this.sharedService.getHeaders();
-    var response = this.http.get(environment.apiUrl + `Wilayat/GetWilayat`, { headers });
+    var response = this.http.get(environment.apiUrl + `Wilayat/GetWilayat?governorateId=${govId}`, { headers });
     return response;
   }
-  GetGovernorates(wilayaId :number) {
+  GetGovernorates() {
     var headers = this.sharedService.getHeaders();
-    var response = this.http.get(environment.apiUrl + `Governorates/GetGovernorates?wilayaId=${wilayaId}`, { headers });
+    var response = this.http.get(environment.apiUrl + `Governorates/GetGovernorates`, { headers });
     return response;
   }
   GetCompanyCode() {

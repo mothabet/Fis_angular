@@ -53,8 +53,8 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
-      arName: ['', Validators.required],
-      enName: ['', Validators.required],
+      arName: [''],
+      enName: [''],
       municipalityNumber: [''],
       compRegNumber: [''],
       accountingPeriod: [''],
@@ -257,7 +257,7 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetSectors().subscribe(observer);
   }
-  GetWilayat() {
+  GetWilayat(govId:number) {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
@@ -290,9 +290,9 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
     };
-    this.companyHomeServices.GetWilayat().subscribe(observer);
+    this.companyHomeServices.GetWilayat(govId).subscribe(observer);
   }
-  GetGovernorates(wilayaId: number) {
+  GetGovernorates() {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
@@ -325,7 +325,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
     };
-    this.companyHomeServices.GetGovernorates(wilayaId).subscribe(observer);
+    this.companyHomeServices.GetGovernorates().subscribe(observer);
   }
   GetCompanyCode() {
     const observer = {
@@ -474,7 +474,7 @@ export class CompaniesHomeComponent implements OnInit {
   }
   popAddCompany() {
     this.GetSectors();
-    this.GetWilayat();
+    this.GetGovernorates();
     this.generateRandomCredentials();
     this.GetCompanyCode();
     this.companyForm.get('sectorId')!.valueChanges.subscribe(value => {
@@ -490,11 +490,11 @@ export class CompaniesHomeComponent implements OnInit {
       }
       this.GetSubActivities(value);
     });
-    this.companyForm.get('wilayatId')!.valueChanges.subscribe(value => {
+    this.companyForm.get('governoratesId')!.valueChanges.subscribe(value => {
       if (value != 0) {
-        this.clearGov();
+        this.clearWilayat();
       }
-      this.GetGovernorates(value);
+      this.GetWilayat(value);
     });
   }
   DeleteCompany(id: number): void {
@@ -560,7 +560,7 @@ export class CompaniesHomeComponent implements OnInit {
           this.company = res.Data;
           
           this.GetSectorActivities_UpdatePop(this.company.sectorId , this.company.activityId);
-          this.GetGovernorates(this.company.wilayatId)
+          this.GetWilayat(this.company.governoratesId)
           this.onWilayaChange();
           this.onGovenoratesChange();
           this.showLoader = false;
@@ -670,8 +670,8 @@ export class CompaniesHomeComponent implements OnInit {
   clearSubActivity() {
     this.companyForm.get('subActivityId')?.setValue('');
   }
-  clearGov() {
-    this.companyForm.get('governoratesId')?.setValue('');
+  clearWilayat() {
+    this.companyForm.get('wilayatId')?.setValue('');
   }
   companiesSearch(){
     this.GetCompanies(this.searchText,1);
