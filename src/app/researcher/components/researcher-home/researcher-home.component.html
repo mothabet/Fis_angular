@@ -8,27 +8,14 @@
     <div class="header d-flex mb-0">
       <div class="title">قائمة الباحثين</div>
       <div class="btns d-flex">
-        <div class="search" id="research-search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        <div class="search">
+          <input (keydown.enter)="researcherSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+            name="search" placeholder="البحث">
+          <i (click)="researcherSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button
-            type="button"
-            class="btn btn-add"
-            data-bs-toggle="modal"
-            data-bs-target="#addResearcher"
-          >
-            <img
-              src="../../../../assets/images/briefcase-plus-outli.png"
-              alt=""
-              id="addResearcherBtn"
-            />
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addResearcherBtn" />
             إضافة باحث
           </button>
           <button type="button" class="btn btn-download">
@@ -44,7 +31,7 @@
         <thead>
           <tr class="t-header">
             <th scope="col">رقم</th>
-            <th class="text-center" scope="col">اسم المستخدم</th>
+            <th class="text-center" scope="col">الاسم</th>
             <th class="text-center" scope="col">البريد الإلكتروني</th>
             <th class="text-center" scope="col">الحالة</th>
             <th class="text-center" scope="col"></th>
@@ -65,27 +52,17 @@
               <ng-template #inactive> غير نشط </ng-template>
             </td>
             <td class="text-center td-actions">
-              <a
-                class="icon"
-                data-bs-toggle="modal"
-                data-bs-target="#companyLink"
-              >
+              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink">
                 <img src="../../../../assets/images/link.png" alt="" />
               </a>
               <a routerLink="/Researcher-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a>
               <button class="icon" (click)="showAlert(item.id)">
-                <img
-                  src="../../../../assets/images/trash-can-outline.png"
-                  alt=""
-                />
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
               </button>
               <button class="icon" (click)="editResearcher(item.id)">
-                <img
-                  src="../../../../assets/images/pencil-outline.png"
-                  alt=""
-                />
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
             </td>
           </tr>
@@ -106,25 +83,13 @@
   </div>
   <!-- end content -->
 </div>
-<app-pagination
-    [pageNumber]="currentPage"
-    [lastPage]="isLastPage"
-    [emptyData]="noData"
-    [pagesCount]="totalPages"
-    (pageChange)="onPageChange($event)"
-    ></app-pagination>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <!--start modal -->
 
 <!--start add researcher modal -->
-<div
-  class="modal company-modal fade"
-  id="addResearcher"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
->
+<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
@@ -135,166 +100,91 @@
         <div class="modal-body pb-1">
           <div class="row">
             <div class="col-sm-6 mb-2">
-              <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="اسم المستخدم"
-                [(ngModel)]="researcherForm.value.userName"
-                formControlName="userName"
-                name="username"
-              />
+              <input class="form-control input-modal input-disabled" type="text" placeholder="اسم المستخدم"
+                [(ngModel)]="researcherForm.value.userName" formControlName="userName" name="username" />
             </div>
             <div class="col-sm-6 mb-2" id="researcherPass">
-              <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="كلمة المرور"
-                [(ngModel)]="researcherForm.value.password"
-                formControlName="password"
-                name="password"
-              />
-              <button
-                type="button"
-                id="reload"
-                (click)="generateRandomCredentials()"
-                *ngIf="add"
-              >
+              <input class="form-control input-modal input-disabled" type="text" placeholder="كلمة المرور"
+                [(ngModel)]="researcherForm.value.password" formControlName="password" name="password" />
+              <button type="button" id="reload" (click)="generateRandomCredentials()" *ngIf="add">
                 <img src="../../../../assets/images/refresh.png" alt="" />
               </button>
             </div>
             <div class="col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                [(ngModel)]="researcherForm.value.arName"
-                placeholder="الاسم بالكامل"
-                formControlName="arName"
-              />
-              <div
-                *ngIf="
+              <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.arName"
+                placeholder="الاسم بالكامل" formControlName="arName" />
+              <div *ngIf="
                   researcherForm.controls['arName'].invalid &&
                   (researcherForm.controls['arName'].dirty ||
                     researcherForm.controls['arName'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['arName'].errors?.['required']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="researcherForm.controls['arName'].errors?.['required']" class="text-danger">
                   يجب ادخال الاسم بالكامل.
                 </small>
               </div>
             </div>
             <div class="col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                placeholder="English Full Name"
-                formControlName="enName"
-              />
-              <div
-                *ngIf="
+              <input class="form-control input-modal" type="text" placeholder="English Full Name"
+                formControlName="enName" />
+              <div *ngIf="
                   researcherForm.controls['enName'].invalid &&
                   (researcherForm.controls['enName'].dirty ||
                     researcherForm.controls['enName'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['enName'].errors?.['required']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="researcherForm.controls['enName'].errors?.['required']" class="text-danger">
                   English Full Name is required.
                 </small>
               </div>
             </div>
 
             <div class="col-sm-6 mb-2">
-              <select
-                class="form-control"
-                style="width: 100%"
-                formControlName="status"
-                [(ngModel)]="researcherForm.value.status"
-              >
+              <select class="form-control" style="width: 100%" formControlName="status"
+                [(ngModel)]="researcherForm.value.status">
                 <option value="" disabled selected>الحاله</option>
                 <option [ngValue]="true">نشط</option>
                 <option [ngValue]="false">غير نشط</option>
               </select>
-              <div
-                *ngIf="
+              <div *ngIf="
                   researcherForm.controls['status'].invalid &&
                   (researcherForm.controls['status'].dirty ||
                     researcherForm.controls['status'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['status'].errors?.['required']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="researcherForm.controls['status'].errors?.['required']" class="text-danger">
                   Status is required.
                 </small>
               </div>
             </div>
 
             <div class="col-10 col-sm-4 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                placeholder="رقم الهاتف"
-                formControlName="phone"
-                maxlength="8"
-                minlength="8"
-                pattern="[0-9]*"
-                (input)="onlyNumber($event)"
-              />
-              <div
-                *ngIf="
+              <input class="form-control input-modal" type="text" placeholder="رقم الهاتف" formControlName="phone"
+                maxlength="8" minlength="8" pattern="[0-9]*" (input)="onlyNumber($event)" />
+              <div *ngIf="
                   researcherForm.controls['phone'].touched &&
                   researcherForm.controls['phone'].dirty &&
                   researcherForm.controls['phone'].value !== '' &&
                   researcherForm.controls['phone'].invalid
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['phone'].errors?.['minlength']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="researcherForm.controls['phone'].errors?.['minlength']" class="text-danger">
                   يجب ان يكون رقم الهاتف 8 ارقام.
                 </small>
               </div>
             </div>
             <div class="col-2 mb-2">
-              <input
-                class="form-control input-modal input-disabled"
-                type="text"
-                placeholder="كود الهاتف"
-                value="{{ phoneCode }}"
-              />
+              <input class="form-control input-modal input-disabled" type="text" placeholder="كود الهاتف"
+                value="{{ phoneCode }}" />
             </div>
             <div class="col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="email"
-                placeholder="عنوان البريد الإلكتروني"
-                [(ngModel)]="researcherForm.value.email"
-                formControlName="email"
-              />
-              <div
-                *ngIf="
+              <input class="form-control input-modal" type="email" placeholder="عنوان البريد الإلكتروني"
+                [(ngModel)]="researcherForm.value.email" formControlName="email" />
+              <div *ngIf="
                   researcherForm.controls['email'].invalid &&
                   (researcherForm.controls['email'].dirty ||
                     researcherForm.controls['email'].touched)
-                "
-              >
-                <small
-                  *ngIf="researcherForm.controls['email'].errors?.['required']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="researcherForm.controls['email'].errors?.['required']" class="text-danger">
                   يجب ادخال البريد الاليكتروني.
                 </small>
-                <small
-                  *ngIf="researcherForm.controls['email'].errors?.['email']"
-                  class="text-danger"
-                >
+                <small *ngIf="researcherForm.controls['email'].errors?.['email']" class="text-danger">
                   البريد الاليكتروني غير صحيح.
                 </small>
               </div>
@@ -302,34 +192,18 @@
           </div>
         </div>
         <div class="modal-footer pt-0">
-          <button
-            type="button"
-            class="btn btn-cancel"
-            data-bs-dismiss="modal"
-            id="btnCancel"
-            (click)="reset()"
-          >
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="reset()">
             إلغاء
           </button>
           <button type="button" class="btn btn-reset" (click)="resetForm()">
             إعادة ملء
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="saveResearcher()"
-            *ngIf="add"
-            [disabled]="!researcherForm.valid"
-          >
+          <button type="button" class="btn btn-save" (click)="saveResearcher()" *ngIf="add"
+            [disabled]="!researcherForm.valid">
             حفظ
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="updateResearcher()"
-            *ngIf="!add"
-            [disabled]="!researcherForm.valid"
-          >
+          <button type="button" class="btn btn-save" (click)="updateResearcher()" *ngIf="!add"
+            [disabled]="!researcherForm.valid">
             تعديل
           </button>
         </div>
@@ -340,26 +214,13 @@
 <!--end add researcher modal -->
 
 <!--start linked company modal -->
-<div
-  class="modal company-modal fade"
-  id="companyLink"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
->
+<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <div
-        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
-      >
+      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
         <h5>ربط بالشركة</h5>
         <div class="search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
       </div>

@@ -11,9 +11,9 @@
             </div>
             <div class="btns d-flex">
                 <div class="search">
-                    <input (keydown.enter)="companiesSearch()" [(ngModel)]="searchText" class="form-control" type="text" name="search" placeholder="البحث">
-  <i (click)="companiesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-
+                    <input (keydown.enter)="companiesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+                        name="search" placeholder="البحث">
+                    <i (click)="companiesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex flex-grow-1 gap-1">
                     <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
@@ -255,11 +255,9 @@
                 <div class="modal-footer pt-0" style="border-top: none;">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
                     <button type="button" class="btn btn-reset" (click)="resetForm()">إعادة ملء</button>
-                    <button type="button" class="btn btn-save" (click)="saveCompany()" *ngIf="add"
-                       > حفظ
+                    <button type="button" class="btn btn-save" (click)="saveCompany()" *ngIf="add"> حفظ
                     </button>
-                    <button type="button" class="btn btn-save" (click)="updateCompany()" *ngIf="!add"
-                        >
+                    <button type="button" class="btn btn-save" (click)="updateCompany()" *ngIf="!add">
                         تعديل
                     </button>
                 </div>

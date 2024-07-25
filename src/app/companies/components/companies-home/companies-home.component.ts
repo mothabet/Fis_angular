@@ -531,34 +531,10 @@ export class CompaniesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.company = res.Data;
-          this.companyForm.patchValue({
-            arName: this.company.arName,
-            enName: this.company.enName,
-            userName: this.company.userName,
-            password: this.company.password,
-            municipalityNumber: this.company.municipalityNumber,
-            compRegNumber: this.company.compRegNumber,
-            accountingPeriod: this.company.accountingPeriod,
-            completionAccPeriod: this.company.completionAccPeriod,
-            phoneNumber: this.company.phoneNumber,
-            telNumber: this.company.telNumber,
-            fax: this.company.fax,
-            webSite: this.company.webSite,
-            address: this.company.address,
-            mailBox: this.company.mailBox,
-            postalCode: this.company.postalCode,
-            institutionHeadquarters: this.company.institutionHeadquarters,
-            institutionVlaue: this.company.institutionVlaue,
-            dateOfWork: this.company.dateOfWork,
-            legalType: this.company.legalType,
-            sectorId: this.company.sectorId,
-            subActivityId: this.company.subActivityId,
-            governoratesId: this.company.governoratesId,
-            wilayatId: this.company.wilayatId,
-          });
-          this.GetSectorActvities(this.company.sectorId)
-          this.GetSubActivities(this.company.activityId)
+          
+          this.GetSectorActivities_UpdatePop(this.company.sectorId , this.company.activityId);
           this.GetGovernorates(this.company.wilayatId)
           this.onWilayaChange();
           this.onGovenoratesChange();
@@ -567,6 +543,31 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
+            this.companyForm.patchValue({
+              arName: this.company.arName,
+              enName: this.company.enName,
+              userName: this.company.userName,
+              password: this.company.password,
+              municipalityNumber: this.company.municipalityNumber,
+              compRegNumber: this.company.compRegNumber,
+              accountingPeriod: this.company.accountingPeriod,
+              completionAccPeriod: this.company.completionAccPeriod,
+              phoneNumber: this.company.phoneNumber,
+              telNumber: this.company.telNumber,
+              fax: this.company.fax,
+              webSite: this.company.webSite,
+              address: this.company.address,
+              mailBox: this.company.mailBox,
+              postalCode: this.company.postalCode,
+              institutionHeadquarters: this.company.institutionHeadquarters,
+              institutionVlaue: this.company.institutionVlaue,
+              dateOfWork: this.company.dateOfWork,
+              legalType: this.company.legalType,
+              sectorId: this.company.sectorId,
+              subActivityId: this.company.subActivityId,
+              governoratesId: this.company.governoratesId,
+              wilayatId: this.company.wilayatId,
+            });
           }
           this.id = id;
         }
@@ -649,5 +650,14 @@ export class CompaniesHomeComponent implements OnInit {
   }
   companiesSearch(){
     this.GetCompanies(this.searchText);
+  }
+
+  GetSectorActivities_UpdatePop(sectorId : number , activityId : number){
+    debugger
+    this.GetSectorActvities(sectorId)
+    this.GetSubActivities_UpdatePop(activityId)
+  }
+  GetSubActivities_UpdatePop(activityId : number){
+    this.GetSubActivities(this.company.activityId)
   }
 }

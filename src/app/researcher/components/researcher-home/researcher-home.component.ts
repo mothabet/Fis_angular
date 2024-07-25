@@ -16,6 +16,7 @@ export class ResearcherHomeComponent {
   researcherForm!: FormGroup;
   isDisabled: boolean = true;
   username: string = '';
+  searchText: string = '';
   password: string = '';
   researcherCode: number = 0;
   researchers: IResearcher[] = [];
@@ -143,7 +144,7 @@ export class ResearcherHomeComponent {
     this.generateRandomCredentials();
   }
 
-  GetAllReseachers(page: number): void {
+  GetAllReseachers(page: number , textSearch : string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -166,7 +167,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.researcherService.GetAllReseachers(page).subscribe(observer);
+    this.researcherService.GetAllReseachers(page , textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -298,5 +299,8 @@ export class ResearcherHomeComponent {
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+  }
+  researcherSearch(){
+    this.GetAllReseachers(this.currentPage,this.searchText);
   }
 }
