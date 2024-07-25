@@ -101,7 +101,6 @@ export class CodeHomeComponent {
       next: (res: any) => {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
-        this.showLoader = false;
         if(res.Data){
           this.codes = res.Data.getCodeDtos;
           this.currentPage = page;
@@ -112,6 +111,7 @@ export class CodeHomeComponent {
         else{
           this.codes=[];
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);

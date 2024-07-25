@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ILogin } from '../../Dtos/AuthDto';
-import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/shared/services/sidebar.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +14,9 @@ import { SidebarService } from 'src/app/shared/services/sidebar.service';
 })
 export class LoginComponent {
   logInForm!: FormGroup;
-  
-  constructor(private formBuilder: FormBuilder,private toastr: ToastrService, private loginService:LoginService, 
-    private router: Router, private sidebarService: SidebarService) {
+  showLoader: boolean = false;
+  constructor(private formBuilder: FormBuilder, private loginService:LoginService, 
+    private router: Router, private sidebarService: SidebarService,private sharedService: SharedService) {
     
   }
   ngOnInit() {
@@ -31,6 +32,7 @@ export class LoginComponent {
 
   }
   Login(){
+    this.showLoader = true;
     if (this.logInForm.valid) {
       const Model: ILogin = {
         UserName: this.logInForm.value.UserName,
@@ -40,39 +42,24 @@ export class LoginComponent {
         next: (res: any) => {
           if (res.Data) {
             this.loginService.saveToken(res.Data.Token);
+            this.showLoader = false;
             this.router.navigate(['/Home']);
           }
         },
         error: (err: any) => {
-          if (err.status) {
-            switch (err.status) {
-              case 400:
-                this.toastr.error(err.error.Errors[0]);
-                break;
-              case 401:
-                this.toastr.error('Unauthorized', err.message);
-                break;
-              case 403:
-                this.toastr.error('Forbidden', err.message);
-                break;
-              case 404:
-                this.toastr.error('Not Found', err.message);
-                break;
-              case 500:
-                this.toastr.error('Internal Server Error', err.message);
-                break;
-              default:
-                this.toastr.error('An unexpected error occurred', err.message);
-            }
-          } else {
-            this.toastr.error('An unknown error occurred', err.message);
-          }
+          this.sharedService.handleError(err);
+          this.showLoader = false;
         },
       };
       this.loginService.LogIn(Model).subscribe(observer);
     }
     else {
-      this.toastr.error("يجب ادخال البيانات بشكل صحيح");
+      Swal.fire({
+        icon: 'error',
+        title:"يجب ادخال البيانات بشكل صحيح",
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
   }
 }

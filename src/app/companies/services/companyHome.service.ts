@@ -10,9 +10,9 @@ import { IAddCompany } from '../Dtos/CompanyHomeDto';
 export class CompanyHomeService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
-  GetCompanies(textSearch : string | null) {
+  GetCompanies(textSearch : string | null,pageNumber:number) {
     var headers = this.sharedService.getHeaders();
-    var response = this.http.get(environment.apiUrl + `Company/GetCompanies?textSearch=${textSearch}`, { headers });
+    var response = this.http.get(environment.apiUrl + `Company/GetCompanies?textSearch=${textSearch}&pageNumber=${pageNumber}`, { headers });
     return response;
   }
   GetSectorActvities(sectorId : number) {

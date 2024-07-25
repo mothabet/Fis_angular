@@ -160,7 +160,6 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
-        this.showLoader = false;
         if(res.Data){
           this.researchers = res.Data.getResearcherDtos;
           this.currentPage = page;
@@ -171,6 +170,7 @@ export class ResearcherHomeComponent {
         else{
           this.researchers=[];
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);

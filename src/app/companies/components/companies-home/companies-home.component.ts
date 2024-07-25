@@ -42,6 +42,10 @@ export class CompaniesHomeComponent implements OnInit {
   add: boolean = true;
   id: number = 0;
   searchText : string ='';
+  phoneCode: number = 968;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
   tableColumns = ['عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
@@ -77,10 +81,15 @@ export class CompaniesHomeComponent implements OnInit {
       //   })
       // ])
     });
-    this.GetCompanies();
+    this.GetCompanies('',1);
   }
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;
+  }
+  onPageChange(page: number) {
+    debugger
+    this.currentPage = page;
+    this.GetCompanies('',page);
   }
   addEmail(): void {
     this.compEmails.push(this.formBuilder.control('', [Validators.required, Validators.email]));
@@ -161,16 +170,21 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
   }
-  GetCompanies(textSearch : string='') {
+  GetCompanies(textSearch : string='',page:number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
-        if (res.Data) {
-          this.showLoader = false;
-          this.companies = res.Data;
-        }else{
-          this.companies = [];
+        this.showLoader = false;
+        if(res.Data){
+          this.companies = res.Data.getCompaniesDtos;
+          this.currentPage = page;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.resetForm();
+        }
+        else{
+          this.companies=[];
         }
         this.showLoader = false;
       },
@@ -202,7 +216,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
     };
-    this.companyHomeServices.GetCompanies(textSearch).subscribe(observer);
+    this.companyHomeServices.GetCompanies(textSearch,page).subscribe(observer);
   }
   GetSectors() {
     const observer = {
@@ -389,7 +403,7 @@ export class CompaniesHomeComponent implements OnInit {
           if (button) {
             button.click();
           }
-          this.GetCompanies();
+          this.GetCompanies('',1);
           this.resetForm();
           this.showLoader = false;
         },
@@ -488,7 +502,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetCompanies();
+        this.GetCompanies('',1);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -627,7 +641,7 @@ export class CompaniesHomeComponent implements OnInit {
             button.click();
           }
           this.resetForm();
-          this.GetCompanies();
+          this.GetCompanies('',1);
           this.showLoader = false;
           this.add = true;
           Swal.fire({
@@ -660,7 +674,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyForm.get('governoratesId')?.setValue('');
   }
   companiesSearch(){
-    this.GetCompanies(this.searchText);
+    this.GetCompanies(this.searchText,1);
   }
   GetSectorActivities_UpdatePop(sectorId : number , activityId : number){
     debugger

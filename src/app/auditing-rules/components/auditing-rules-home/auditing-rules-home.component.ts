@@ -4,7 +4,7 @@ import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
-import { IAddAuditRule } from '../../Dtos/CodeHomeDto';
+import { IAddAuditRule, IAuditRule } from '../../Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from '../../Services/audit-rule-home.service';
 
 @Component({
@@ -15,10 +15,14 @@ import { AuditRuleHomeService } from '../../Services/audit-rule-home.service';
 export class AuditingRulesHomeComponent implements OnInit {
   auditForm!: FormGroup;
   codes: ICode[] = [];
+  auditRules: IAuditRule[] = [];
   showLoader: boolean = false;
   selects: { options: ICode[], disabled: boolean }[] = [];
   usedOptions: Set<string> = new Set(); // لتتبع القيم المستخدمة
-
+  noData: boolean = false;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private sharedService: SharedService, private auditRuleHomeService:AuditRuleHomeService) { }
 
@@ -27,8 +31,13 @@ export class AuditingRulesHomeComponent implements OnInit {
       Rule: ['']
     });
     this.GetAllCodes(1); // لتحميل البيانات عند البدء
+    this.GetAuditRules(1); // لتحميل البيانات عند البدء
   }
-
+  onPageChange(page: number) {
+    debugger
+    this.currentPage = page;
+    this.GetAllCodes(page);
+  }
   addSelect() {
     const availableOptions = this.getAvailableOptions();
 
@@ -118,6 +127,7 @@ export class AuditingRulesHomeComponent implements OnInit {
             button.click();
           }
           this.resetForm();
+          this.GetAuditRules(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -141,5 +151,67 @@ export class AuditingRulesHomeComponent implements OnInit {
       });
       this.showLoader = false;
     }
+  }
+  GetAuditRules(page: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.noData = !res.Data || res.Data.length === 0;
+        if(res.Data){
+          this.auditRules = res.Data.getAuditRuleDtos;
+          this.currentPage = page;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.resetForm();
+        }
+        else{
+          this.auditRules=[];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.auditRuleHomeService.GetAllAuditRules(page).subscribe(observer);
+  }
+  showAlert(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeleteAuditRule(id);
+      }
+    });
+  }
+
+  DeleteAuditRule(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetAuditRules(1);
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.auditRuleHomeService.DeleteAuditRule(id).subscribe(observer);
   }
 }

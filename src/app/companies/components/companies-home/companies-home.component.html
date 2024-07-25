@@ -88,7 +88,8 @@
         </div>
     </div>
     <!-- end content -->
-
+    <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination>
 </div>
 <!--start add company modal -->
 <div class="modal company-modal fade" id="addCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">

@@ -8,16 +8,18 @@ import { CompaniesDetailsComponent } from './companies/components/companies-deta
 import { AuditingRulesHomeComponent } from './auditing-rules/components/auditing-rules-home/auditing-rules-home.component';
 import { LoginComponent } from './auth/components/login/login.component';
 import { CodeHomeComponent } from './code/Components/code-home/code-home.component';
+import { LogoutGuard } from './Guard/logout.guard';
+import { LoginGuard } from './Guard/login.guard';
 
 const routes: Routes = [
-  { path: 'Companies', component: CompaniesHomeComponent },
-  { path: 'Companies-Details', component: CompaniesDetailsComponent },
-  { path: 'Researcher', component: ResearcherHomeComponent },
-  { path: 'Researcher-Details', component: ResearcherDetailsComponent },
-  { path: 'Auditing-Rules', component: AuditingRulesHomeComponent },
-  { path: 'Codes', component: CodeHomeComponent },
-  { path: 'Login', component: LoginComponent },
-  { path: 'Home', component: HomeComponent },
+  { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Companies-Details', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
+  { path: 'Researcher', component: ResearcherHomeComponent , canActivate: [LoginGuard]},
+  { path: 'Researcher-Details', component: ResearcherDetailsComponent, canActivate: [LoginGuard] },
+  { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
+  { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];
