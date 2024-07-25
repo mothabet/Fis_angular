@@ -9,6 +9,15 @@ export interface ICompany {
     status: string,
     id: number,
 }
+export interface ICompaniesPDF {
+    activityId: number,
+    arActivityName: string,
+    address: string,
+    arName: string,
+    compRegNumber: string,
+    id: number,
+}
+
 export interface IAddCompany {
     userName: string,
     password: string,

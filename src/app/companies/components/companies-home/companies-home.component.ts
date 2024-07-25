@@ -3,9 +3,12 @@ import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { IAddCompany, ICompany, } from '../../Dtos/CompanyHomeDto';
+import { IAddCompany, ICompaniesPDF, ICompany, } from '../../Dtos/CompanyHomeDto';
 import { IDropdownList } from '../../Dtos/SharedDto';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
 
 @Component({
   selector: 'app-companies-home',
@@ -13,7 +16,14 @@ import Swal from 'sweetalert2';
   styleUrls: ['./companies-home.component.css']
 })
 export class CompaniesHomeComponent implements OnInit {
+  private arabicCharMap: { [key: string]: string } = {
+    'ء': 'ﺀ', 'آ': 'ﺁ', 'أ': 'ﺃ', 'ؤ': 'ﺅ', 'إ': 'ﺇ', 'ئ': 'ﺉ', 'ا': 'ﺍ', 'ب': 'ﺏ', 'ة': 'ﺓ', 'ت': 'ﺕ',
+    'ث': 'ﺙ', 'ج': 'ﺝ', 'ح': 'ﺡ', 'خ': 'ﺥ', 'د': 'ﺩ', 'ذ': 'ﺫ', 'ر': 'ﺭ', 'ز': 'ﺯ', 'س': 'ﺱ', 'ش': 'ﺵ',
+    'ص': 'ﺹ', 'ض': 'ﺽ', 'ط': 'ﻁ', 'ظ': 'ﻅ', 'ع': 'ﻉ', 'غ': 'ﻍ', 'ف': 'ﻑ', 'ق': 'ﻕ', 'ك': 'ﻙ', 'ل': 'ﻝ',
+    'م': 'ﻡ', 'ن': 'ﻥ', 'ه': 'ﻩ', 'و': 'ﻭ', 'ي': 'ﻱ'
+  };
   companies: ICompany[] = []
+  companiesPDF: ICompaniesPDF[] = []
   Activities: IDropdownList[] = []
   SubActivities: IDropdownList[] = []
   Sectors: IDropdownList[] = []
@@ -32,6 +42,7 @@ export class CompaniesHomeComponent implements OnInit {
   add: boolean = true;
   id: number = 0;
   searchText : string ='';
+  tableColumns = ['عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
@@ -651,7 +662,6 @@ export class CompaniesHomeComponent implements OnInit {
   companiesSearch(){
     this.GetCompanies(this.searchText);
   }
-
   GetSectorActivities_UpdatePop(sectorId : number , activityId : number){
     debugger
     this.GetSectorActvities(sectorId)
@@ -659,5 +669,63 @@ export class CompaniesHomeComponent implements OnInit {
   }
   GetSubActivities_UpdatePop(activityId : number){
     this.GetSubActivities(this.company.activityId)
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('الشركات', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map(item => [
+        item.address,
+        item.arActivityName,
+        item.activityId,
+        item.id,
+        item.compRegNumber,
+        item.arName
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('companies.pdf');
+  }
+  fixArabic(text: string): string {
+    return text.split('').map(char => this.arabicCharMap[char] || char).join('');
+  }
+  printPdf() {
+    this.companiesPDF = this.transformToPDF(this.companies);
+    this.generatePdf(this.companiesPDF, this.tableColumns);
+  }
+  transformToPDF(companies: ICompany[]): ICompaniesPDF[] {
+    return companies.map(company => ({
+      activityId: company.activityId,
+      arActivityName: company.arActivityName,
+      address: company.address,
+      arName: company.arName,
+      compRegNumber: company.compRegNumber,
+      id: company.id
+    }));
   }
 }
