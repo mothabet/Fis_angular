@@ -17,28 +17,28 @@ export class ResearcherHomeService {
   }
   GetResearcherCode(){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherCode`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherCode?lang=2`, { headers });
      return resopnse;
    }
    GetAllReseachers(pageNumber:number , textSearch : string =''){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetAllReseachers?pageNumber=${pageNumber}&lang=1&textSearch=${textSearch}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetAllReseachers?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
      return resopnse;
    }
    DeleteReseacher(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.delete(environment.apiUrl+`Researcher/DeleteReseacher?id=${id}`, { headers });
+     var resopnse = this.http.delete(environment.apiUrl+`Researcher/DeleteReseacher?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    GetResearcherById(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    updateResearcher(id:number,Model: IAddResearcher){
     debugger
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}`, Model, { headers });
+     var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
 }

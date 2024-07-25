@@ -1,12 +1,12 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
-<div class="main-content p-4 main card" style="flex: 1">
+<div class="p-4 main card" style="flex: 1">
   <app-top-screen [title]="'قواعد التدقيق'"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
-      <div class="title">قواعد التدقيق</div>
+      <div class="title">قائمة قواعد التدقيق</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
           <input
@@ -52,9 +52,9 @@
         <tbody>
           <tr *ngFor="let item of auditRules; let i = index">
             <td>
-              <label for="Name1">{{i+1}}</label>
+              <label for="Name1">{{ i + 1 }}</label>
             </td>
-            <td class="text-center">{{item.Rule}}</td>
+            <td class="text-center">{{ item.Rule }}</td>
             <td class="text-center td-actions">
               <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
@@ -91,13 +91,13 @@
   <!-- end content -->
 </div>
 <app-pagination
-    [pageNumber]="currentPage"
-    [lastPage]="isLastPage"
-    [emptyData]="noData"
-    [pagesCount]="totalPages"
-    (pageChange)="onPageChange($event)"
-    ></app-pagination> -->
-<!--start modal
+  [pageNumber]="currentPage"
+  [lastPage]="isLastPage"
+  [emptyData]="noData"
+  [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"
+></app-pagination>
+<!--start modal-->
 
 <!--start add researcher modal -->
 <div
@@ -124,11 +124,21 @@
           <div class="row">
             <div class="col-sm-12 mb-2">
               <div class="row">
-                <select class="col-4" *ngFor="let select of selects; let i = index"
-                        [disabled]="select.disabled" (change)="onSelectChange($event, i)">
-                  <option value="" disabled selected>اختر قيمة</option>
-                  <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode }}</option>
-                </select>
+                <div *ngFor="let select of selects; let i = index" class="col-3 mb-2 mx-auto">
+                  <select
+                    class="form-control"
+                    [disabled]="select.disabled"
+                    (change)="onSelectChange($event, i)"
+                  >
+                    <option value="" disabled selected>اختر قيمة</option>
+                    <option
+                      *ngFor="let option of select.options"
+                      [value]="option.QuestionCode"
+                    >
+                      {{ option.QuestionCode }}
+                    </option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="col-sm-12 mb-2">
@@ -151,11 +161,16 @@
           >
             إلغاء
           </button>
-          <button type="button" class="btn btn-save" [disabled]="!isEquationValid()" (click)="SaveAuditRule()">حفظ</button>
+          <button
+            type="button"
+            class="btn btn-save"
+            [disabled]="!isEquationValid()"
+            (click)="SaveAuditRule()"
+          >
+            حفظ
+          </button>
         </div>
       </form>
-      
-      
     </div>
   </div>
 </div>

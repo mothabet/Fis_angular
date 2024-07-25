@@ -12,17 +12,17 @@ export class AuditRuleHomeService {
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddAuditRules(Model: IAddAuditRule){
    var headers= this.sharedService.getHeaders();
-    var resopnse = this.http.post(environment.apiUrl+`AuditRules/AddAuditRule`, Model, { headers });
+    var resopnse = this.http.post(environment.apiUrl+`AuditRules/AddAuditRule?lang=2`, Model, { headers });
     return resopnse;
   }
   GetAllAuditRules(pageNumber:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`AuditRules/GetAllAuditRules?pageNumber=${pageNumber}&lang=1`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`AuditRules/GetAllAuditRules?pageNumber=${pageNumber}&lang=2`, { headers });
      return resopnse;
    }
    DeleteAuditRule(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.delete(environment.apiUrl+`AuditRules/DeleteAuditRule?id=${id}`, { headers });
+     var resopnse = this.http.delete(environment.apiUrl+`AuditRules/DeleteAuditRule?id=${id}&lang=2`, { headers });
      return resopnse;
    }
 }
