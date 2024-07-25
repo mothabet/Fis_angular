@@ -12,30 +12,30 @@ export class CodeHomeService {
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddCode(Model: IAddCode){
    var headers= this.sharedService.getHeaders();
-    var resopnse = this.http.post(environment.apiUrl+`Code/AddCode`, Model, { headers });
+    var resopnse = this.http.post(environment.apiUrl+`Code/AddCode?lang=2`, Model, { headers });
     return resopnse;
   }
   GetAllCodes(pageNumber:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=1`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2`, { headers });
      return resopnse;
    }
    DeleteCode(id:number){
     debugger
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.delete(environment.apiUrl+`Code/DeleteCode?id=${id}`, { headers });
+     var resopnse = this.http.delete(environment.apiUrl+`Code/DeleteCode?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    GetCodeById(id:number){
     debugger
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    UpdateCode(id:number,Model: IAddCode){
     debugger
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.put(environment.apiUrl+`Code/UpdateCode?id=${id}`, Model, { headers });
+     var resopnse = this.http.put(environment.apiUrl+`Code/UpdateCode?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
 }

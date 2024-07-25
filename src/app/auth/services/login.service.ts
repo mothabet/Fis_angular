@@ -12,12 +12,10 @@ export class LoginService {
 
   constructor(private http: HttpClient, private cookieService: CookieService) { }
   LogIn(model: ILogin) {
-    debugger
-    var logIn = this.http.post(environment.apiUrl + 'Auth/Login', model);
+    var logIn = this.http.post(environment.apiUrl + 'Auth/Login?lang=2', model);
     return logIn;
   }
   saveToken(token: string) {
-    debugger
     // Define a secret key for encryption. 
     // Make sure to use a secure way to manage and store your key.
     const secretKey = 'your-256-bit-secret-key';
