@@ -4,7 +4,7 @@
     cursor: not-allowed; /* Change cursor to indicate disabled state */
     border: 1px solid #ced4da; /* Light border */
     opacity: 1; /* Ensure full opacity */
-    pointer-events: none; /* Disable mouse events */
+    /* pointer-events: none; Disable mouse events */
     user-select: none; /* Prevent text selection */
   }
   tfoot tr th .alert {
