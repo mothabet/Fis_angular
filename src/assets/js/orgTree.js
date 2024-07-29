@@ -1,8 +1,8 @@
 //JavaScript
 
-var zoomInIcon = '<img src="./images/zoomin.png" width="19px">';
+var zoomInIcon = '<img src=".././../../../assets/images/zoomin.png" width="19px">';
 
-var zoomOutIcon = '<img src="./images/zoomout.png" width="19px">';
+var zoomOutIcon = '<img src=".././../../../assets/images/zoomout.png" width="19px">';
 
 var fitIcon = '<svg style="display: block;cursor: pointer;" width="30px" height="30px"><path stroke-width="1" fill="none" stroke="#133C8B" d="M4,11 L4,4 L11,4"></path><path stroke-width="1" fill="none" stroke="" d="M28,11 L28,4 L21,4"></path><path stroke-width="1" fill="none" stroke="#133C8B" d="M28,21 L28,28 L21,28"></path><path stroke-width="1" fill="none" stroke="#133C8B" d="M4,21 L4,28 L11,28"></path><circle cx="16" cy="16" r="5" fill="#133C8B" stroke="#133C8B"></circle></svg>'
  

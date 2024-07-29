@@ -10,8 +10,10 @@ import { LoginComponent } from './auth/components/login/login.component';
 import { CodeHomeComponent } from './code/Components/code-home/code-home.component';
 import { LogoutGuard } from './Guard/logout.guard';
 import { LoginGuard } from './Guard/login.guard';
+import { FormsComponent } from './Forms/Components/forms/forms.component';
 
 const routes: Routes = [
+  { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Companies-Details', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Researcher', component: ResearcherHomeComponent , canActivate: [LoginGuard]},

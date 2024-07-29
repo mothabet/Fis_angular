@@ -19,7 +19,6 @@ import { PaginationComponent } from './components/pagination/pagination.componen
   imports: [
     CommonModule,
     AppRoutingModule,
-    FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,

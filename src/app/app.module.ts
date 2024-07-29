@@ -10,6 +10,8 @@ import { AuditingRulesModule } from './auditing-rules/auditing-rules.module';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthModule } from './auth/auth.module';
 import { CodeModule } from './code/code.module';
+import { FormsModule } from '@angular/forms';
+import { FromsModule } from './Forms/froms.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +20,7 @@ import { CodeModule } from './code/code.module';
     SharedModule,
     HomeModule,
     CompaniesModule,
+    FromsModule,
     ResearcherModule,
     AuditingRulesModule,
     AuthModule,
