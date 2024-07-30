@@ -1,12 +1,12 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
 <div class="p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'الرموز'"></app-top-screen>
+  <app-top-screen [title]="'محتوي الاستماره'"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة الرموز</div>
+      <div class="title">قائمة محتوي الاستماره</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
           <input
@@ -29,7 +29,7 @@
               alt=""
               id="addCodeBtn"
             />
-            إضافة كود
+            إضافة محتوي استماره
           </button>
           <button type="button" class="btn btn-download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
@@ -54,7 +54,7 @@
         <tbody>
           <tr *ngFor="let item of codes; let i = index">
             <td>
-              <label for="Name1">{{ i + 1 }}</label>
+              {{ i + 1 }}
             </td>
             <td class="text-center">{{ item.QuestionCode }}</td>
             <td class="text-center">{{ item.arName }}</td>
@@ -95,12 +95,12 @@
   <!-- end content -->
 </div>
 <app-pagination
-    [pageNumber]="currentPage"
-    [lastPage]="isLastPage"
-    [emptyData]="noData"
-    [pagesCount]="totalPages"
-    (pageChange)="onPageChange($event)"
-    ></app-pagination>
+  [pageNumber]="currentPage"
+  [lastPage]="isLastPage"
+  [emptyData]="noData"
+  [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"
+></app-pagination>
 <!--start modal -->
 
 <!--start add researcher modal -->
@@ -116,47 +116,50 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add" *ngIf="add">إضافة رمز</h5>
-        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الرمز</h5>
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة محتوي استماره</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">
+          تعديل محتوي الاستماره
+        </h5>
       </div>
       <form [formGroup]="codeForm">
         <div class="modal-body pb-1">
           <div class="row">
-            <div class="col-sm-6 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                [(ngModel)]="codeForm.value.arName"
-                placeholder="الاسم بالكامل"
+                id="inputField"
                 formControlName="arName"
               />
+              <label for="inputField">الاسم بالكامل</label>
               <div
                 *ngIf="
-                codeForm.controls['arName'].invalid &&
+                  codeForm.controls['arName'].invalid &&
                   (codeForm.controls['arName'].dirty ||
-                  codeForm.controls['arName'].touched)
+                    codeForm.controls['arName'].touched)
                 "
               >
                 <small
                   *ngIf="codeForm.controls['arName'].errors?.['required']"
                   class="text-danger"
                 >
-                  يجب ادخال الاسم
+                  يجب ادخال الاسم بالكامل.
                 </small>
               </div>
             </div>
-            <div class="col-sm-6 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="English Full Name"
+                id="inputField"
                 formControlName="enName"
               />
+              <label for="inputField">English Full Name</label>
               <div
                 *ngIf="
-                codeForm.controls['enName'].invalid &&
+                  codeForm.controls['enName'].invalid &&
                   (codeForm.controls['enName'].dirty ||
-                  codeForm.controls['enName'].touched)
+                    codeForm.controls['enName'].touched)
                 "
               >
                 <small
@@ -167,17 +170,105 @@
                 </small>
               </div>
             </div>
-            <div class="col-sm-6 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <input
                 class="form-control input-modal"
                 type="text"
-                placeholder="الرمز"
+                id="inputField"
                 formControlName="QuestionCode"
                 (input)="onlyNumber($event)"
               />
-              </div>
+              <label for="inputField">الرمز</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <select
+                formControlName="TypeId"
+                id="inputField"
+                class="form-control"
+                [(ngModel)]="typeId"
+              >
+                <option selected value="1">عادي</option>
+                <option value="2">انشطه</option>
+                <option value="3">بلاد</option>
+              </select>
+              <label for="inputField">نوع محتوي الاستماره</label>
+            </div>
+            <hr *ngIf="typeId == 1" />
+            <div
+              class="table-responsive company-table research-table table-border"
+              *ngIf="typeId == 1"
+            >
+              <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
+              <table class="table table-borderless">
+                <thead>
+                  <tr class="t-header">
+                    <th scope="col">رقم</th>
+                    <th class="text-center" scope="col">الاسم</th>
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">الرمز</th>
+                    <th class="text-center" scope="col"></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let item of subCode; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td class="text-center">
+                      <input
+                        type="text"
+                        [(ngModel)]="item.arName"
+                        (input)="updateSubCode(i, 'arName', $event)"
+                        value="{{ item.arName }}"
+                      />
+                    </td>
+                    <td class="text-center">
+                      <input
+                        type="text"
+                        [(ngModel)]="item.enName"
+                        (input)="updateSubCode(i, 'enName', $event)"
+                        value="{{ item.enName }}"
+                      />
+                    </td>
+                    <td class="text-center">
+                      <input
+                        type="text"
+                        [(ngModel)]="item.QuestionCode"
+                        (input)="updateSubCode(i, 'QuestionCode', $event)"
+                        value="{{ item.QuestionCode }}"
+                      />
+                    </td>
+                    <td class="text-center td-actions">
+                      <button
+                        class="icon"
+                        (click)="removeItem(i)"
+                        style="border: none; background-color: transparent"
+                      >
+                        <img
+                          src="../../../../assets/images/trash-can-outline.png"
+                          alt=""
+                        />
+                      </button>
+                      <!-- <button class="icon" (click)="editCode(item.Id)">
+                        <img src="../../../../assets/images/pencil-outline.png" alt="Edit" />
+                      </button> -->
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot *ngIf="noData">
+                  <tr>
+                    <th colspan="7">
+                      <div class="alert alert-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <br />
+                        <span> لا يوجد بيانات </span>
+                      </div>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           </div>
+        </div>
         <div class="modal-footer pt-0">
           <button
             type="button"
@@ -196,7 +287,7 @@
             class="btn btn-save"
             (click)="saveCode()"
             *ngIf="add"
-            [disabled]="!codeForm.valid"
+            [disabled]="!codeForm.valid || !areAllFieldsFilled()"
           >
             حفظ
           </button>
@@ -205,7 +296,8 @@
             class="btn btn-save"
             (click)="updateCode()"
             *ngIf="!add"
-            [disabled]="!codeForm.valid"
+            [disabled]="!codeForm.valid || !areAllFieldsFilled()"
+
           >
             تعديل
           </button>

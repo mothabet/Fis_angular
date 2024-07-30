@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+.form-group {
+  position: relative;
+  margin-top: 5px !important; /* Adjust based on your layout */
+}
+
+label {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  transform: translateY(-50%);
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  background-color: white; /* Match the background color */
+  padding: 0 5px;
+}
+
+input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-50%) scale(0.75);
+}
+select:focus + label,
+select:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-50%) scale(0.75);
+}

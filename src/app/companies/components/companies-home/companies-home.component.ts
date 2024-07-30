@@ -46,12 +46,12 @@ export class CompaniesHomeComponent implements OnInit {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  tableColumns = ['عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
+  tableColumns = ['رقم الهاتف','عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
-      userName: ['', Validators.required],
+      userName: [{ value: '', disabled: true }, Validators.required],
       password: ['', Validators.required],
       arName: [''],
       enName: [''],
@@ -442,7 +442,7 @@ export class CompaniesHomeComponent implements OnInit {
   }
   resetForm() {
     this.companyForm.reset({
-      userName: '',
+      userName: { value: '', disabled: true },
       password: '',
       arName: '',
       enName: '',
@@ -593,6 +593,7 @@ export class CompaniesHomeComponent implements OnInit {
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
             });
+            this.companyForm.get('userName')?.disable();
           }
           this.id = id;
         }
@@ -700,9 +701,11 @@ export class CompaniesHomeComponent implements OnInit {
     doc.text('الشركات', 10, 10);
 
     // Generate the table
+    debugger
     autoTable(doc, {
       head: [columns],
       body: data.map(item => [
+        item.phoneNumber,
         item.address,
         item.arActivityName,
         item.activityId,
@@ -730,10 +733,12 @@ export class CompaniesHomeComponent implements OnInit {
   }
   printPdf() {
     this.companiesPDF = this.transformToPDF(this.companies);
+    debugger
     this.generatePdf(this.companiesPDF, this.tableColumns);
   }
   transformToPDF(companies: ICompany[]): ICompaniesPDF[] {
     return companies.map(company => ({
+      phoneNumber: company.phoneNumber,
       activityId: company.activityId,
       arActivityName: company.arActivityName,
       address: company.address,

@@ -33,6 +33,7 @@
             <th scope="col">رقم</th>
             <th class="text-center" scope="col">الاسم</th>
             <th class="text-center" scope="col">البريد الإلكتروني</th>
+            <th class="text-center" scope="col">رقم الهاتف</th>
             <th class="text-center" scope="col">الحالة</th>
             <th class="text-center" scope="col"></th>
           </tr>
@@ -45,6 +46,7 @@
             </td>
             <td class="text-center">{{ item.arName }}</td>
             <td class="text-center">{{ item.email }}</td>
+            <td class="text-center">{{ item.phone }}</td>
             <td class="text-center active">
               <ng-container *ngIf="item.status; else inactive">
                 نشط
@@ -99,20 +101,38 @@
       <form [formGroup]="researcherForm">
         <div class="modal-body pb-1">
           <div class="row">
-            <div class="col-sm-6 mb-2">
-              <input class="form-control input-modal input-disabled" type="text" placeholder="اسم المستخدم"
-                [(ngModel)]="researcherForm.value.userName" formControlName="userName" name="username" />
+            <div class="form-group col-sm-6 mb-2">
+              <input class="form-control input-modal"  type="text"
+                [(ngModel)]="researcherForm.value.userName" formControlName="userName" name="username"/>
+                <label for="inputField">اسم المستخدم</label>
             </div>
-            <div class="col-sm-6 mb-2" id="researcherPass">
-              <input class="form-control input-modal input-disabled" type="text" placeholder="كلمة المرور"
+            <div class="form-group col-sm-6 mb-2" id="researcherPass">
+              <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
                 [(ngModel)]="researcherForm.value.password" formControlName="password" name="password" />
+                <label for="inputField">كلمة المرور</label>
+                <div
+                *ngIf="
+                researcherForm.controls['password'].invalid &&
+                  (researcherForm.controls['password'].dirty ||
+                  researcherForm.controls['password'].touched)
+                "
+              >
+                <small
+                  *ngIf="researcherForm.controls['password'].errors?.['required']"
+                  class="text-danger"
+                >
+                  يجب ادخال الرقم السري
+                </small>
+              </div>
               <button type="button" id="reload" (click)="generateRandomCredentials()" *ngIf="add">
                 <img src="../../../../assets/images/refresh.png" alt="" />
               </button>
             </div>
-            <div class="col-sm-6 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.arName"
-                placeholder="الاسم بالكامل" formControlName="arName" />
+                 formControlName="arName" />
+                <label for="inputField">الاسم بالكامل</label>
+
               <div *ngIf="
                   researcherForm.controls['arName'].invalid &&
                   (researcherForm.controls['arName'].dirty ||
@@ -123,27 +143,28 @@
                 </small>
               </div>
             </div>
-            <div class="col-sm-6 mb-2">
-              <input class="form-control input-modal" type="text" placeholder="English Full Name"
+            <div class="form-group col-sm-6 mb-2">
+              <input class="form-control input-modal" type="text"
                 formControlName="enName" />
+                <label for="inputField">الاسم بالإنجليزي</label>
+
               <div *ngIf="
                   researcherForm.controls['enName'].invalid &&
                   (researcherForm.controls['enName'].dirty ||
                     researcherForm.controls['enName'].touched)
                 ">
                 <small *ngIf="researcherForm.controls['enName'].errors?.['required']" class="text-danger">
-                  English Full Name is required.
+                  يجب ادخال الاسم بالإنجليزي.
                 </small>
               </div>
             </div>
-
-            <div class="col-sm-6 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <select class="form-control" style="width: 100%" formControlName="status"
                 [(ngModel)]="researcherForm.value.status">
-                <option value="" disabled selected>الحاله</option>
                 <option [ngValue]="true">نشط</option>
                 <option [ngValue]="false">غير نشط</option>
               </select>
+              <label for="inputField">الحاله</label>
               <div *ngIf="
                   researcherForm.controls['status'].invalid &&
                   (researcherForm.controls['status'].dirty ||
@@ -154,10 +175,11 @@
                 </small>
               </div>
             </div>
-
-            <div class="col-10 col-sm-4 mb-2">
-              <input class="form-control input-modal" type="text" placeholder="رقم الهاتف" formControlName="phone"
+            <div class="form-group col-10 col-sm-4 mb-2">
+              <input class="form-control input-modal" type="text" formControlName="phone"
                 maxlength="8" minlength="8" pattern="[0-9]*" (input)="onlyNumber($event)" />
+                <label for="inputField">رقم الهاتف</label>
+
               <div *ngIf="
                   researcherForm.controls['phone'].touched &&
                   researcherForm.controls['phone'].dirty &&
@@ -169,13 +191,16 @@
                 </small>
               </div>
             </div>
-            <div class="col-2 mb-2">
-              <input class="form-control input-modal input-disabled" type="text" placeholder="كود الهاتف"
+            <div class="form-group col-2 mb-2">
+              <input class="form-control input-modal input-disabled" type="text"
                 value="{{ phoneCode }}" />
+                <label for="inputField">كود الهاتف</label>
+
             </div>
-            <div class="col-sm-6 mb-2">
-              <input class="form-control input-modal" type="email" placeholder="عنوان البريد الإلكتروني"
+            <div class="form-group col-sm-6 mb-2">
+              <input class="form-control input-modal" type="email"
                 [(ngModel)]="researcherForm.value.email" formControlName="email" />
+                <label for="inputField">عنوان البريد الاليكتروني</label>
               <div *ngIf="
                   researcherForm.controls['email'].invalid &&
                   (researcherForm.controls['email'].dirty ||

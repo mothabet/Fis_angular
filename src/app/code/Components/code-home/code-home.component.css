@@ -20,3 +20,6 @@
   small{
     display: block;
   }
+  #research-btns .btn {
+    width: 160px !important;
+}
