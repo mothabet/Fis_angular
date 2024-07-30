@@ -146,7 +146,7 @@
             <div class="form-group col-sm-6 mb-2">
               <input class="form-control input-modal" type="text"
                 formControlName="enName" />
-                <label for="inputField">الاسم بالإنجليزي</label>
+                <label for="inputField">English Full Name</label>
 
               <div *ngIf="
                   researcherForm.controls['enName'].invalid &&
@@ -154,7 +154,7 @@
                     researcherForm.controls['enName'].touched)
                 ">
                 <small *ngIf="researcherForm.controls['enName'].errors?.['required']" class="text-danger">
-                  يجب ادخال الاسم بالإنجليزي.
+                  English full name is required.
                 </small>
               </div>
             </div>

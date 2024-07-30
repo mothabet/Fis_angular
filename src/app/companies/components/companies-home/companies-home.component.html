@@ -135,145 +135,296 @@
   ></app-pagination>
 </div>
 <!--start add company modal -->
-<div class="modal company-modal fade" id="addCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة شركة</h5>
+<div
+  class="modal company-modal fade"
+  id="addCompany"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add">إضافة شركة</h5>
+      </div>
+      <form [formGroup]="companyForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="username"
+                formControlName="userName"
+                name="username"
+              />
+              <label for="inputField">اسم المستخدم</label>
             </div>
-            <form [formGroup]="companyForm">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6 mb-2">
-                            <input required class="form-control input-modal input-disabled" type="text"
-                                placeholder="اسم المستخدم" [(ngModel)]="username" formControlName="userName"
-                                name="username" />
-                        </div>
-                        <div class="col-sm-6 mb-2" id="researcherPass">
-                            <input required class="form-control input-modal input-disabled" type="text"
-                                placeholder="كلمة المرور" [(ngModel)]="password" formControlName="password"
-                                name="password" />
-                            <button type="button" id="reload" (click)="generateRandomCredentials()">
-                                <img src="../../../../assets/images/refresh.png" alt="" />
-                            </button>
-                        </div>
-                        <div required class="col-sm-6 mb-2">
-                            <input class="form-control input-modal" disabled type="text" value="{{CompanyCode}}"
-                                placeholder="رمز الشركة">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input required formControlName="arName" class="form-control input-modal" type="text"
-                                placeholder="اسم الشركة بالعربى">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input required formControlName="enName" class="form-control input-modal" type="text"
-                                placeholder="اسم الشركة بالإنجليزي">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <select required formControlName="sectorId" class="form-control  " style="width: 100%;">
-                                <option selected value="0" disabled>اختيار القطاع</option>
-                                <option *ngFor="let sector of Sectors" value="{{sector.id}}">{{sector.arName}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <select required formControlName="activityId" class="form-control  " style="width: 100%;">
-                                <option selected value="0" disabled>اختيار النشاط الرئيسي</option>
-                                <option *ngFor="let activity of Activities" value="{{activity.id}}">{{activity.arName}}
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <select required formControlName="subActivityId" class="form-control  "
-                                style="width: 100%;">
-                                <option selected value="0" disabled>اختيار النشاط الثانوي</option>
-                                <option *ngFor="let subActivity of SubActivities" value="{{subActivity.id}}">
-                                    {{subActivity.arName}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input formControlName="municipalityNumber" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="رقم البلدية">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input required formControlName="compRegNumber" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="رقم تسجيل الشركة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input formControlName="accountingPeriod" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="مدة المحاسبة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input formControlName="completionAccPeriod" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="الانتهاء مدة المحاسبة">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input required formControlName="phoneNumber" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="رقم الهاتف">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="telNumber" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="الهاتف الثابت">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input required formControlName="fax" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="فاكس">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="webSite" class="form-control input-modal" type="email"
-                                placeholder="الموقع الإلكتروني">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input required formControlName="address" class="form-control input-modal" type="text"
-                                placeholder="العنوان">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="mailBox" class="form-control input-modal" type="text"
-                                placeholder="صندوق البريد">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="postalCode" class="form-control input-modal" type="text"
-                                placeholder="الرمز البريدي">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <select (change)="onGovenoratesChange()" required formControlName="governoratesId"
-                                class="form-control  " style="width: 100%;">
-                                <option selected value="0">اختيار رقم المنطقة</option>
-                                <option *ngFor="let governorate of Governorates" value="{{governorate.id}}">
-                                    {{governorate.arName}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input disabled value="{{Govenorates}}" class="form-control input-modal" type="text"
-                                placeholder="المنطقة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <select required (change)="onWilayaChange()" formControlName="wilayatId"
-                                class="form-control" style="width: 100%;">
-                                <option selected value="0">اختيار رقم الولاية</option>
-                                <option *ngFor="let wilaya of Wilayat" value="{{wilaya.id}}">{{wilaya.arName}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input disabled value="{{Wilaya}}" class="form-control input-modal" type="text"
-                                placeholder="الولاية">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input formControlName="institutionHeadquarters" class="form-control input-modal"
-                                type="text" placeholder="مقر إقامة المؤسسة">
-                        </div>
-                        <div class="col-sm-3 mb-2">
-                            <input required formControlName="dateOfWork" class="form-control input-modal" type="date"
-                                placeholder="تاريخ مزاولة العمل">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="institutionVlaue" class="form-control input-modal" type="text"
-                                (keypress)="validateInput($event)" placeholder="قيمة المؤسسه">
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <input formControlName="legalType" class="form-control input-modal" type="text"
-                                placeholder="النوع القانوني">
-                        </div>
-                        <!-- <div class="col-sm-12 mb-2 d-flex flex-column" style="gap: 8px;">
+            <div class="form-group col-sm-6 mb-2" id="researcherPass">
+              <input
+                required
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="password"
+                formControlName="password"
+                name="password"
+              />
+              <label for="inputField">كلمة المرور</label>
+              <button
+                type="button"
+                id="reload"
+                (click)="generateRandomCredentials()"
+              >
+                <img src="../../../../assets/images/refresh.png" alt="" />
+              </button>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="arName"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">اسم الشركه بالعربي</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="enName"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">English Full Name</label>
+            </div>
+            <div required class="form-group col-sm-3 mb-2">
+              <input
+                class="form-control input-modal"
+                disabled
+                type="text"
+                value="{{ CompanyCode }}"
+              />
+              <label for="inputField">رمز الشركه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="sectorId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>اختيار القطاع</option>
+                <option *ngFor="let sector of Sectors" value="{{ sector.id }}">
+                  {{ sector.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار القطاع</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="activityId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>
+                  اختيار النشاط الرئيسي
+                </option>
+                <option
+                  *ngFor="let activity of Activities"
+                  value="{{ activity.id }}"
+                >
+                  {{ activity.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار النشاط الرئيسي</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="subActivityId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>
+                  اختيار النشاط الثانوي
+                </option>
+                <option
+                  *ngFor="let subActivity of SubActivities"
+                  value="{{ subActivity.id }}"
+                >
+                  {{ subActivity.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار النشاط الثانوي</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="municipalityNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم البلدية</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                required
+                formControlName="compRegNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم تسجيل الشركة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="accountingPeriod"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="completionAccPeriod"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">الانتهاء من مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="phoneNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم الهاتف</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="telNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">الهاتف الثابت</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="fax"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">فاكس</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="webSite"
+                class="form-control input-modal"
+                type="email"
+              />
+              <label for="inputField">الموقع الإلكتروني</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="address"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">العنوان</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="mailBox"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">صندوق البريد</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="postalCode"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">الرمز البريدي</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <select
+                (change)="onGovenoratesChange()"
+                required
+                formControlName="governoratesId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0">اختيار رقم المنطقة</option>
+                <option
+                  *ngFor="let governorate of Governorates"
+                  value="{{ governorate.id }}"
+                >
+                  {{ governorate.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار رقم المنطقة</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <select
+                required
+                (change)="onWilayaChange()"
+                formControlName="wilayatId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0">اختيار رقم الولاية</option>
+                <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
+                  {{ wilaya.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار رقم الولاية</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="institutionHeadquarters"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">مقر اقامة المؤسسه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                required
+                formControlName="dateOfWork"
+                class="form-control input-modal"
+                type="date"
+              />
+              <label for="inputField">تاريخ مزاولة العمل</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="institutionVlaue"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">قيمة المؤسسه</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="legalType"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">النوع القانوني</label>
+            </div>
+            <!-- <div class="col-sm-12 mb-2 d-flex flex-column" style="gap: 8px;">
                             <div formArrayName="compEmails" class="row mb-4">
                                 <div *ngFor="let emailControl of compEmails.controls; let i = index" [formGroupName]="i"
                                     class="col-6 mb-2">
@@ -294,20 +445,40 @@
 
                             </div>
                         </div> -->
-                    </div>
-                </div>
-                <div class="modal-footer pt-0" style="border-top: none;">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
-                    <button type="button" class="btn btn-reset" (click)="resetForm()">إعادة ملء</button>
-                    <button type="button" class="btn btn-save" (click)="saveCompany()" *ngIf="add"> حفظ
-                    </button>
-                    <button type="button" class="btn btn-save" (click)="updateCompany()" *ngIf="!add">
-                        تعديل
-                    </button>
-                </div>
-            </form>
+          </div>
         </div>
+        <div class="modal-footer pt-0" style="border-top: none">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            data-bs-dismiss="modal"
+            id="btnCancel"
+          >
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="saveCompany()"
+            *ngIf="add"
+          >
+            حفظ
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="updateCompany()"
+            *ngIf="!add"
+          >
+            تعديل
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 <!--end add company modal -->
 
