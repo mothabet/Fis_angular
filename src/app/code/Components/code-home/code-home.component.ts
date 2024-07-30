@@ -5,6 +5,9 @@ import { CodeHomeService } from '../../Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 import { IAddSubCode } from '../../Dtos/SubCodeHomeDto';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
 
 @Component({
   selector: 'app-code-home',
@@ -25,6 +28,8 @@ export class CodeHomeComponent {
   isLastPage: boolean = false;
   totalPages: number = 0;
   typeId : number = 1;
+  tableColumns = ['English Full Name', 'الاسم بالكامل', 'الرمز','الرقم'];
+  searchText: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
@@ -123,7 +128,7 @@ export class CodeHomeComponent {
     });
     this.subCode = []
   }
-  GetAllCodes(page: number): void {
+  GetAllCodes(page: number, textSearch : string = ''): void {
     debugger
     this.showLoader = true;
     const observer = {
@@ -147,7 +152,7 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(page).subscribe(observer);
+    this.codeHomeService.GetAllCodes(page,textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -270,11 +275,56 @@ export class CodeHomeComponent {
       QuestionCode: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      TypeId : [1, Validators.required]
+      TypeId : [null, Validators.required]
     });
   }
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+  }
+  printPdf() {
+    this.generatePdf(this.codes, this.tableColumns);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('محتوي الاستماره', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        item.enName,
+        item.arName,
+        item.QuestionCode,
+        index +1,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('researchers.pdf');
+  }
+  codeSearch(){
+    this.GetAllCodes(this.currentPage,this.searchText);
   }
 }

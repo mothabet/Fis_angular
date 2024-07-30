@@ -14,8 +14,15 @@
             type="text"
             name="search"
             placeholder="البحث"
+            (keydown.enter)="codeSearch()"
+            [(ngModel)]="searchText"
           />
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          <i
+            class="fa fa-search icon"
+            (click)="codeSearch()"
+            id="search-icon"
+            aria-hidden="true"
+          ></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
           <button
@@ -31,7 +38,7 @@
             />
             إضافة محتوي استماره
           </button>
-          <button type="button" class="btn btn-download">
+          <button type="button" (click)="printPdf()" class="btn btn-download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
@@ -198,13 +205,19 @@
               class="table-responsive company-table research-table table-border"
               *ngIf="typeId == 1"
             >
-              <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
+              <button
+                (click)="addRow()"
+                class="btn btn-save"
+                [disabled]="!areAllFieldsFilled()"
+              >
+                اضافة سطر
+              </button>
               <table class="table table-borderless">
                 <thead>
                   <tr class="t-header">
                     <th scope="col">رقم</th>
-                    <th class="text-center" scope="col">الاسم</th>
-                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">الاسم بالكامل</th>
+                    <th class="text-center" scope="col">English Full Name</th>
                     <th class="text-center" scope="col">الرمز</th>
                     <th class="text-center" scope="col"></th>
                   </tr>
@@ -297,7 +310,6 @@
             (click)="updateCode()"
             *ngIf="!add"
             [disabled]="!codeForm.valid || !areAllFieldsFilled()"
-
           >
             تعديل
           </button>

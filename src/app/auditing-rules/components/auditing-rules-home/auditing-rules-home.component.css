@@ -13,3 +13,6 @@
   tfoot tr th .alert span {
     font-size: 20px;
   }
+  #research-btns .btn {
+    width: 160px !important;
+}

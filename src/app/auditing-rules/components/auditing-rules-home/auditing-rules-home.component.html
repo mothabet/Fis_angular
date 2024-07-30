@@ -31,7 +31,7 @@
             />
             إضافة قاعدة تدقيق
           </button>
-          <button type="button" class="btn btn-download">
+          <button type="button" class="btn btn-download" (click)="printPdf()">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
@@ -45,6 +45,8 @@
           <tr class="t-header">
             <th scope="col">رقم</th>
             <th class="text-center" scope="col">قاعدة التدقيق</th>
+            <th class="text-center" scope="col">اسم المُنشئ</th>
+            <th class="text-center" scope="col">تاريخ الانشاء</th>
             <th class="text-center" scope="col"></th>
           </tr>
         </thead>
@@ -52,9 +54,11 @@
         <tbody>
           <tr *ngFor="let item of auditRules; let i = index">
             <td>
-              <label for="Name1">{{ i + 1 }}</label>
+              {{ i + 1 }}
             </td>
             <td class="text-center">{{ item.Rule }}</td>
+            <td class="text-center">{{ item.CreatedBy }}</td>
+            <td class="text-center">{{getDateOnly(item.CreatedOn) }}</td>
             <td class="text-center td-actions">
               <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
