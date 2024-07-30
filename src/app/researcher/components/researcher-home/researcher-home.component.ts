@@ -221,11 +221,9 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
           this.researcher = res.Data;
           this.researcher.phone = this.researcher.phone.replace(this.phoneCode.toString(), '');
-          debugger
           this.researcherForm.patchValue({
             userName: this.researcher.userName,
             password: this.researcher.password,

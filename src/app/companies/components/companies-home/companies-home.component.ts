@@ -41,7 +41,7 @@ export class CompaniesHomeComponent implements OnInit {
   company!: IAddCompany;
   add: boolean = true;
   id: number = 0;
-  searchText : string ='';
+  searchText: string = '';
   phoneCode: number = 968;
   currentPage: number = 1;
   isLastPage: boolean = false;
@@ -81,7 +81,7 @@ export class CompaniesHomeComponent implements OnInit {
       //   })
       // ])
     });
-    this.GetCompanies('',1);
+    this.GetCompanies('', 1);
   }
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;
@@ -89,7 +89,7 @@ export class CompaniesHomeComponent implements OnInit {
   onPageChange(page: number) {
     debugger
     this.currentPage = page;
-    this.GetCompanies('',page);
+    this.GetCompanies('', page);
   }
   addEmail(): void {
     this.compEmails.push(this.formBuilder.control('', [Validators.required, Validators.email]));
@@ -170,21 +170,21 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
   }
-  GetCompanies(textSearch : string='',page:number) {
+  GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
         this.showLoader = false;
-        if(res.Data){
+        if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.resetForm();
         }
-        else{
-          this.companies=[];
+        else {
+          this.companies = [];
         }
         this.showLoader = false;
       },
@@ -216,7 +216,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
     };
-    this.companyHomeServices.GetCompanies(textSearch,page).subscribe(observer);
+    this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
   }
   GetSectors() {
     const observer = {
@@ -257,7 +257,7 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetSectors().subscribe(observer);
   }
-  GetWilayat(govId:number) {
+  GetWilayat(govId: number) {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
@@ -331,6 +331,7 @@ export class CompaniesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.username = `FISC0${res.Data}`;
           this.CompanyCode = res.Data;
         }
@@ -368,6 +369,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
+    debugger
     if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
@@ -396,6 +398,7 @@ export class CompaniesHomeComponent implements OnInit {
         wilayatId: this.companyForm.value.wilayatId,
         companyEmails: this.companyForm.value.companyEmails
       }
+      debugger
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
@@ -403,11 +406,12 @@ export class CompaniesHomeComponent implements OnInit {
           if (button) {
             button.click();
           }
-          this.GetCompanies('',1);
+          this.GetCompanies('', 1);
           this.resetForm();
           this.showLoader = false;
         },
         error: (err: any) => {
+          debugger
           this.showLoader = false;
           if (err.status) {
             switch (err.status) {
@@ -476,7 +480,11 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetSectors();
     this.GetGovernorates();
     this.generateRandomCredentials();
-    this.GetCompanyCode();
+    if (this.add)
+    {
+      this.GetCompanyCode();
+      this.resetForm();
+    }
     this.companyForm.get('sectorId')!.valueChanges.subscribe(value => {
       if (value != 0) {
         this.clearActivity();
@@ -502,7 +510,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetCompanies('',1);
+        this.GetCompanies('', 1);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -556,10 +564,8 @@ export class CompaniesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
           this.company = res.Data;
-          
-          this.GetSectorActivities_UpdatePop(this.company.sectorId , this.company.activityId);
+          this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
           this.GetWilayat(this.company.governoratesId)
           this.onWilayaChange();
           this.onGovenoratesChange();
@@ -568,6 +574,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
+            debugger
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -589,13 +596,16 @@ export class CompaniesHomeComponent implements OnInit {
               dateOfWork: this.company.dateOfWork,
               legalType: this.company.legalType,
               sectorId: this.company.sectorId,
+              activityId: this.company.activityId,
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
             });
             this.companyForm.get('userName')?.disable();
           }
+          debugger
           this.id = id;
+          this.CompanyCode = id.toString();
         }
       },
       error: (err: any) => {
@@ -642,7 +652,7 @@ export class CompaniesHomeComponent implements OnInit {
             button.click();
           }
           this.resetForm();
-          this.GetCompanies('',1);
+          this.GetCompanies('', 1);
           this.showLoader = false;
           this.add = true;
           Swal.fire({
@@ -654,7 +664,6 @@ export class CompaniesHomeComponent implements OnInit {
 
         },
         error: (err: any) => {
-          debugger
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -666,23 +675,25 @@ export class CompaniesHomeComponent implements OnInit {
     }
   }
   clearActivity() {
-    this.companyForm.get('activityId')?.setValue('');
+    this.companyForm.get('activityId')?.setValue(0);
   }
   clearSubActivity() {
-    this.companyForm.get('subActivityId')?.setValue('');
+    this.companyForm.get('subActivityId')?.setValue(0);
   }
   clearWilayat() {
-    this.companyForm.get('wilayatId')?.setValue('');
+    this.companyForm.get('wilayatId')?.setValue(0);
   }
-  companiesSearch(){
-    this.GetCompanies(this.searchText,1);
+  companiesSearch() {
+    this.GetCompanies(this.searchText, 1);
   }
-  GetSectorActivities_UpdatePop(sectorId : number , activityId : number){
+  GetSectorActivities_UpdatePop(sectorId: number, activityId: number) {
     debugger
-    this.GetSectorActvities(sectorId)
-    this.GetSubActivities_UpdatePop(activityId)
+    if (this.Sectors)
+      this.GetSectorActvities(sectorId)
+    if (this.Activities)
+      this.GetSubActivities_UpdatePop(activityId)
   }
-  GetSubActivities_UpdatePop(activityId : number){
+  GetSubActivities_UpdatePop(activityId: number) {
     this.GetSubActivities(this.company.activityId)
   }
   generatePdf(data: any[], columns: string[]) {
@@ -746,5 +757,10 @@ export class CompaniesHomeComponent implements OnInit {
       compRegNumber: company.compRegNumber,
       id: company.id
     }));
+  }
+  closePopup()
+  {
+    this.add = true;
+    this.resetForm();
   }
 }
