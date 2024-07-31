@@ -410,7 +410,6 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.removeForm(formId, 'main');
-        this.GetAllForms('delete');
         this.Loader = false;
         Swal.fire({
           icon: 'success',
