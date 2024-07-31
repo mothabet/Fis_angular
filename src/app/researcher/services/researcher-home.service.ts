@@ -12,7 +12,7 @@ export class ResearcherHomeService {
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   addResearcher(Model: IAddResearcher){
    var headers= this.sharedService.getHeaders();
-    var resopnse = this.http.post(environment.apiUrl+`Researcher/AddReseacher`, Model, { headers });
+    var resopnse = this.http.post(environment.apiUrl+`Researcher/AddReseacher?lang=2`, Model, { headers });
     return resopnse;
   }
   GetResearcherCode(){
