@@ -110,6 +110,7 @@ export class TestComponent implements OnInit {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
+          console.log(res.Data)
           this.forms = res.Data;
           this.resetForm();
         }

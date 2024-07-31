@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import { IAddForm } from '../../Dtos/FormDto';
+import { IAddForm, IGetFormDto } from '../../Dtos/FormDto';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FormService } from '../../Services/form.service';
 import Swal from 'sweetalert2';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
   selector: 'app-forms',
@@ -17,10 +18,12 @@ export class FormsComponent implements OnInit {
   quesCount = 0;
   tableId = 0;
   formForm!: FormGroup;
+  noData: boolean = false;
+  forms: IGetFormDto[] = [];
   constructor(private rendererFactory: RendererFactory2, private formBuilder: FormBuilder, private toastr: ToastrService,
     private formServices: FormService,
     private el: ElementRef,
-    private renderer: Renderer2) { }
+    private renderer: Renderer2, private sharedServices: SharedService) { }
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -30,7 +33,12 @@ export class FormsComponent implements OnInit {
       isActive: [''],
       type: [''],
     });
-      
+    const element = document.getElementById('items');
+    if (element) {
+      element.classList.remove('d-none');
+    }
+
+    this.GetAllForms();
   }
   saveForm(event: Event) {
     if (this.formForm.valid) {
@@ -43,9 +51,19 @@ export class FormsComponent implements OnInit {
         Type: this.formForm.value.Type
       };
       
+
       this.Loader = true;
       const observer = {
         next: (res: any) => {
+          const form: IGetFormDto = {
+            id:res.Data,
+            arName: this.formForm.value.arName,
+            enName: this.formForm.value.enName,
+            arNotes: this.formForm.value.arNotes,
+            enNotes: this.formForm.value.enNotes,
+            IsActive: this.formForm.value.IsActive, // Corrected to match the interface
+            Type: this.formForm.value.Type
+          };
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -62,7 +80,7 @@ export class FormsComponent implements OnInit {
           if (element) {
             element.classList.remove('d-none');
           }
-          this.AppenHtmlForm(Model.arName);
+          this.AppenHtmlForm(form);
         },
         error: (err: any) => {
           this.Loader = false;
@@ -105,7 +123,7 @@ export class FormsComponent implements OnInit {
     })
   }
 
-  AppenHtmlQues(itemId : number) {
+  AppenHtmlQues(itemId: number) {
     debugger
     this.quesCount++;
     const quesUl = document.getElementById('quesUl' + itemId);
@@ -237,7 +255,7 @@ export class FormsComponent implements OnInit {
     return tableLi;
   }
 
-  createHtmlForm(formName: string): HTMLLIElement {
+  createHtmlForm(form: IGetFormDto): HTMLLIElement {
     const formLi = this.renderer.createElement('li');
     formLi.id = this.formCount
     this.renderer.addClass(formLi, 'formLi' + this.formCount);
@@ -245,7 +263,7 @@ export class FormsComponent implements OnInit {
     const subAnchor = this.renderer.createElement('a');
     const crtbLabel = this.renderer.createElement('label');
     const divIcon = this.renderer.createElement('div');
-    const text = this.renderer.createText('استمارة 1');
+    const text = this.renderer.createText(form.arName);
     const lText = this.renderer.createText('إضافة جدول');
 
     const img = this.renderer.createElement('img');
@@ -259,6 +277,12 @@ export class FormsComponent implements OnInit {
 
     const delIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(delIcon, 'src', '.././../../../assets/images/trash-can-outline.png');
+
+    delIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.showAlert(form.id, formLi.id); // Pass form ID
+  });
+
 
     const tableIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(tableIcon, 'id', this.formCount.toString());
@@ -292,9 +316,9 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(divIcon, 'position', 'relative');
     return formLi;
   }
-  AppenHtmlForm(formName: string) {
+  AppenHtmlForm(form: IGetFormDto) {
     this.formCount++;
-    const newMenuItem = this.createHtmlForm(formName);
+    const newMenuItem = this.createHtmlForm(form);
     const maindiv = document.getElementById('main');
     this.renderer.appendChild(maindiv, newMenuItem);
   }
@@ -323,5 +347,83 @@ export class FormsComponent implements OnInit {
         button.click();
       }, 0);
     }
+  }
+
+  GetAllForms(type : string =''): void {
+    debugger
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.forms = res.Data;
+          this.resetForm();
+          if(type != 'delete')
+          {
+            (res.Data as IGetFormDto[]).forEach((element: IGetFormDto) => {
+              this.AppenHtmlForm(element);
+            });
+          }
+        }
+        else {
+
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetAllForms().subscribe(observer);
+  }
+
+  removeForm(formId: string, containerId: string) {
+    debugger
+    const container = document.getElementById(containerId);
+    const formLi = document.getElementById(formId);
+    if (container && formLi) {
+        this.renderer.removeChild(container, formLi);
+    }
+  }
+
+  showAlert(id: number, formId: string): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeleteForm(id, formId);
+      }
+    });
+  }
+
+  DeleteForm(id: number, formId: string): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.removeForm(formId, 'main');
+        this.GetAllForms('delete');
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.DeleteForm(id).subscribe(observer);
   }
 }
