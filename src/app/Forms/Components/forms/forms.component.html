@@ -10,7 +10,8 @@
         <div class="content companies">
             <div class="header d-flex justify-content-end">
                 <div class="btns d-flex">
-                    <button style="padding: 6px;" type="button" class="btn-download" data-bs-toggle="modal" data-bs-target="#createForm">
+                    <button style="padding: 6px;" type="button" class="btn-download" data-bs-toggle="modal"
+                        data-bs-target="#createForm">
                         <img src=".././../../../assets/images/list-box-outline.png" alt="">
                         إنشاء إستمارة
                     </button>
@@ -33,7 +34,7 @@
                     <li>
                         <a style="font-size: large;">الأستمارات</a>
                         <ul id="main">
-                            
+
                         </ul>
                     </li>
                 </ul>
@@ -47,7 +48,8 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header pb-1">
-                    <h5 class="modal-title" id="sendForm">إنشاء استمارة</h5>
+                    <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء استمارة</h5>
+                    <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل الاستمارة</h5>
                 </div>
                 <form [formGroup]="formForm">
                     <div class="modal-body pb-0">
@@ -97,8 +99,11 @@
                         <div class="modal-footer pt-0 ps-0" style="border-top: none;">
                             <button id="btnCancel" type="button" class="btn btn-cancel"
                                 data-bs-dismiss="modal">إلغاء</button>
-                            <button (click)="saveForm($event)" type="button" class="btn btn-save"
-                                style="background-color: #133C8B;">حفظ</button>
+                            <button (click)="saveForm()" type="button" class="btn btn-save"
+                                style="background-color: #133C8B;" *ngIf="add">حفظ</button>
+                            <button (click)="updateForm()" type="button" class="btn btn-save"
+                                style="background-color: #133C8B;" *ngIf="!add">تعديل</button>
+
                         </div>
                     </div>
                 </form>
@@ -127,7 +132,8 @@
                             </div>
                             <div class="col-sm-12 mb-2">
                                 <div class=" input-floating-label mb-0">
-                                    <input type="text" class="form-control" style="direction: ltr;" formControlName="enName">
+                                    <input type="text" class="form-control" style="direction: ltr;"
+                                        formControlName="enName">
                                     <label class="eng">Table Name in English</label>
                                 </div>
                             </div>
@@ -139,7 +145,8 @@
                             </div>
                             <div class="col-sm-12 mb-2">
                                 <div class=" input-floating-label mb-0">
-                                    <input type="text" class="form-control" style="direction: ltr;" formControlName="enHeading">
+                                    <input type="text" class="form-control" style="direction: ltr;"
+                                        formControlName="enHeading">
                                     <label class="eng">Table Heading in English</label>
                                 </div>
                             </div>
@@ -162,8 +169,10 @@
                             </div>
                         </div>
                         <div class="modal-footer pt-0 ps-0" style="border-top: none;">
-                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="tableCancel">إلغاء</button>
-                            <button type="button" class="btn btn-save" style="background-color: #133C8B;" (click)="saveTable()">حفظ</button>
+                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal"
+                                id="tableCancel">إلغاء</button>
+                            <button type="button" class="btn btn-save" style="background-color: #133C8B;"
+                                (click)="saveTable()">حفظ</button>
                         </div>
                     </div>
                 </form>
@@ -285,8 +294,10 @@
 
                         </div>
                         <div class="modal-footer  pt-0 ps-0" style="border-top: none;">
-                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel">إلغاء</button>
-                            <button (click)="saveQues()" type="button" class="btn btn-save" style="background-color: #133C8B;">حفظ</button>
+                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal"
+                                id="quesCancel">إلغاء</button>
+                            <button (click)="saveQues()" type="button" class="btn btn-save"
+                                style="background-color: #133C8B;">حفظ</button>
                         </div>
                     </div>
                 </form>

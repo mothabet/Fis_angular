@@ -56,7 +56,7 @@ export class FormsComponent implements OnInit {
     
     
   }
-  saveForm(event: Event) {
+  saveForm() {
     if (this.formForm.valid) {
       const Model: IAddForm = {
         arName: this.formForm.value.arName,
