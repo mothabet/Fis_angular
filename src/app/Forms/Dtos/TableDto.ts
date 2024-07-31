@@ -4,8 +4,8 @@ export interface IAddTableDto {
     arHeading: string,
     enHeading: string,
     Type: string,
-    fromId:number,
-    isActive: boolean,
+    formId:number,
+    IsActive: boolean,
 }
 export interface IGetTableDto {
     id:number,
@@ -14,6 +14,6 @@ export interface IGetTableDto {
     arHeading: string,
     enHeading: string,
     Type: string,
-    fromId:number,
-    isActive: boolean,
+    formId:number,
+    IsActive: boolean,
 }

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormService } from '../../Services/form.service';
 import Swal from 'sweetalert2';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { IAddTableDto } from '../../Dtos/TableDto';
 
 @Component({
   selector: 'app-forms',
@@ -15,11 +16,18 @@ export class FormsComponent implements OnInit {
   Loader: boolean = false;
   tablesCount = 0;
   formCount = 0;
+  add: boolean = true;
   quesCount = 0;
   tableId = 0;
   formForm!: FormGroup;
   noData: boolean = false;
   forms: IGetFormDto[] = [];
+  tableForm!: FormGroup;
+  formId:number = 0;
+  addTable!: IAddTableDto;
+  idTable: number = 0;
+  id: number = 0;
+  addForm!: IAddForm;
   constructor(private rendererFactory: RendererFactory2, private formBuilder: FormBuilder, private toastr: ToastrService,
     private formServices: FormService,
     private el: ElementRef,
@@ -33,12 +41,20 @@ export class FormsComponent implements OnInit {
       isActive: [''],
       type: [''],
     });
-    const element = document.getElementById('items');
-    if (element) {
-      element.classList.remove('d-none');
-    }
-
-    this.GetAllForms();
+    this.tableForm = this.formBuilder.group({
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+      arHeading: ['', Validators.required],
+      enHeading: ['', Validators.required],
+      IsActive: [true, Validators.required],
+      Type: ['', Validators.required],
+      formId: [''],
+    });
+    
+    
+    this.GetAllForms('load');
+    
+    
   }
   saveForm(event: Event) {
     if (this.formForm.valid) {
@@ -62,8 +78,10 @@ export class FormsComponent implements OnInit {
             arNotes: this.formForm.value.arNotes,
             enNotes: this.formForm.value.enNotes,
             IsActive: this.formForm.value.IsActive, // Corrected to match the interface
-            Type: this.formForm.value.Type
+            Type: this.formForm.value.Type,
+            tables: this.formForm.value.tables
           };
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -83,30 +101,8 @@ export class FormsComponent implements OnInit {
           this.AppenHtmlForm(form);
         },
         error: (err: any) => {
+          this.sharedServices.handleError(err);
           this.Loader = false;
-          if (err.status) {
-            switch (err.status) {
-              case 400:
-                this.toastr.error(err.error.Errors[0]);
-                break;
-              case 401:
-                this.toastr.error('Unauthorized', err.message);
-                break;
-              case 403:
-                this.toastr.error('Forbidden', err.message);
-                break;
-              case 404:
-                this.toastr.error('Not Found', err.message);
-                break;
-              case 500:
-                this.toastr.error('Internal Server Error', err.message);
-                break;
-              default:
-                this.toastr.error('An unexpected error occurred', err.message);
-            }
-          } else {
-            this.toastr.error('An unknown error occurred', err.message);
-          }
         },
       };
       this.formServices.addForm(Model).subscribe(observer);
@@ -124,7 +120,7 @@ export class FormsComponent implements OnInit {
   }
 
   AppenHtmlQues(itemId: number) {
-    debugger
+    
     this.quesCount++;
     const quesUl = document.getElementById('quesUl' + itemId);
     if (quesUl) {
@@ -160,7 +156,7 @@ export class FormsComponent implements OnInit {
 
     const delIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(delIcon, 'src', '.././../../../assets/images/trash-can-outline.png');
-    debugger
+    
     const text = this.renderer.createText('سؤال 1');
     this.renderer.appendChild(divIcon, delIcon);
     this.renderer.appendChild(divIcon, editIcon);
@@ -201,7 +197,7 @@ export class FormsComponent implements OnInit {
     }
   }
   createHtmlTable(): HTMLLIElement {
-    debugger
+    
     const tableLi = this.renderer.createElement('li');
     tableLi.id = this.tablesCount
     this.renderer.addClass(tableLi, 'tableLi' + this.tablesCount);
@@ -271,6 +267,11 @@ export class FormsComponent implements OnInit {
 
     const editIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(editIcon, 'src', '.././../../../assets/images/pencil-outline.png');
+    editIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.editForm(form.id); // Pass form ID
+  });
+
 
     const detailsIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(detailsIcon, 'src', '.././../../../assets/images/eye-outline.png');
@@ -291,7 +292,7 @@ export class FormsComponent implements OnInit {
     tableIcon.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       e.stopPropagation();
-      this.openModal('createTable', +target.id);
+      this.openModal('createTable', +target.id , form.id);
     });
 
 
@@ -323,20 +324,12 @@ export class FormsComponent implements OnInit {
     this.renderer.appendChild(maindiv, newMenuItem);
   }
 
-  openModal(name: string, id: number) {
+  openModal(name: string, id: number=0 , formId:number=0) {
+    if(name === "createTable")
+      this.formId=formId;
     this.tableId = id;
     const modal = new (window as any).bootstrap.Modal(document.getElementById(name));
     modal.show();
-  }
-
-  saveTable() {
-    this.AppenHtmlTable(this.tableId);
-    const button = document.getElementById('tableCancel');
-    if (button) {
-      setTimeout(() => {
-        button.click();
-      }, 0);
-    }
   }
 
   saveQues() {
@@ -350,16 +343,23 @@ export class FormsComponent implements OnInit {
   }
 
   GetAllForms(type : string =''): void {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.forms = res.Data;
+          
           this.resetForm();
-          if(type != 'delete')
+          if(this.forms.length>0)
+            {
+              const element = document.getElementById('items');
+              if (element) {
+                element.classList.remove('d-none');
+              }
+            }
+          if(type === 'load')
           {
             (res.Data as IGetFormDto[]).forEach((element: IGetFormDto) => {
               this.AppenHtmlForm(element);
@@ -380,7 +380,7 @@ export class FormsComponent implements OnInit {
   }
 
   removeForm(formId: string, containerId: string) {
-    debugger
+    
     const container = document.getElementById(containerId);
     const formLi = document.getElementById(formId);
     if (container && formLi) {
@@ -426,4 +426,229 @@ export class FormsComponent implements OnInit {
     };
     this.formServices.DeleteForm(id).subscribe(observer);
   }
+  saveTable() {
+    
+    this.Loader = true;
+    this.tableForm.value.fromId = this.formId;
+    if (this.tableForm.valid) {
+      const Model: IAddTableDto = {
+        arName: this.tableForm.value.arName,
+        enName: this.tableForm.value.enName,
+        arHeading: this.tableForm.value.arHeading,
+        enHeading: this.tableForm.value.enHeading,
+        Type: this.tableForm.value.Type,
+        formId: this.tableForm.value.fromId,
+        IsActive: this.tableForm.value.IsActive,
+      };
+      const observer = {
+        next: (res: any) => {
+          
+          const button = document.getElementById('tableCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetTable();
+          this.GetAllForms();
+          console.log(res)
+          this.Loader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
+          this.Loader = false;
+        },
+      };
+      this.formServices.AddTable(Model).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.Loader = false;
+    }
+  }
+  resetTable(): void {
+    this.formForm.reset({
+      arName: '',
+      enName: '',
+      arHeading: '',
+      enHeading: '',
+      Type: '',
+      fromId: '',
+      isActive: '',
+    });
+  }
+  editTable(id: number): void {
+    this.Loader = true;
+    debugger
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          this.addTable = res.Data;
+          this.formForm.patchValue({
+            arName: this.addTable.arName,
+            enName: this.addTable.enName,
+            arHeading: this.addTable.arHeading,
+            enHeading: this.addTable.enHeading,
+            Type: this.addTable.Type,
+            fromId: this.addTable.formId,
+            isActive: this.addTable.IsActive,
+          });
+          this.Loader = false;
+          this.add = false;
+          const button = document.getElementById('addFormBtn');
+          if (button) {
+            button.click();
+          }
+          this.idTable = id;
+        }
+        else{
+          this.Loader = false;
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetTableById(id).subscribe(observer);
+  }
+  updateTable() {
+    this.Loader = true;
+    if (this.formForm.valid) {
+      const Model: IAddTableDto = {
+        arName: this.formForm.value.arName,
+            enName: this.formForm.value.enName,
+            arHeading: this.formForm.value.arHeading,
+            enHeading: this.formForm.value.enHeading,
+            Type: this.formForm.value.Type,
+            formId: this.formForm.value.fromId,
+            IsActive: this.formForm.value.isActive,
+      };
+      const observer = {
+        next: (res: any) => {
+          debugger
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.GetAllForms();
+          this.Loader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          debugger
+          this.sharedServices.handleError(err);
+          this.Loader = false;
+        },
+      };
+      this.formServices.UpdateTable(this.id, Model).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.Loader = false;
+    }
+  }
+  editForm(id: number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.addForm = res.Data;
+          this.formForm.patchValue({
+            arName: this.addForm.arName,
+            enName: this.addForm.enName,
+            arNotes: this.addForm.arNotes,
+            enNotes: this.addForm.enNotes,
+            IsActive: this.addForm.IsActive,
+            Type: this.addForm.Type,
+          });
+          this.Loader = false;
+          this.add = false;
+          const button = document.getElementById('addFormBtn');
+          if (button) {
+            button.click();
+          }
+          this.id = id;
+          debugger
+          this.openModal('createForm')
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormById(id).subscribe(observer);
+  }
+  updateForm() {
+    this.Loader = true;
+    if (this.formForm.valid) {
+      const Model: IAddForm = {
+        arName: this.formForm.value.arName,
+        enName: this.formForm.value.enName,
+        arNotes: this.formForm.value.arNotes,
+        enNotes: this.formForm.value.enNotes,
+        IsActive: this.formForm.value.IsActive,
+        Type: this.formForm.value.userName,
+      };
+      const observer = {
+        next: (res: any) => {
+          debugger
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.GetAllForms();
+          this.Loader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          debugger
+          this.sharedServices.handleError(err);
+          this.Loader = false;
+        },
+      };
+      this.formServices.UpdateForm(this.id, Model).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.Loader = false;
+    }
+  }
+  
 }

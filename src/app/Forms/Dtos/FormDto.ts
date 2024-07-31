@@ -15,4 +15,15 @@ export interface IGetFormDto {
     enNotes : string,
     IsActive : boolean,
     Type : number
+    tables :IGetTablesDto[]
+}
+
+export interface IGetTablesDto {
+    id:number,
+    arName : string,
+    enName : string,
+    enHeading : string,
+    arHeading : string,
+    IsActive : boolean,
+    formId : number
 }

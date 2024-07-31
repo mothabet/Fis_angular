@@ -248,8 +248,8 @@ export class TestComponent implements OnInit {
         arHeading: this.tableForm.value.arHeading,
         enHeading: this.tableForm.value.enHeading,
         Type: this.tableForm.value.Type,
-        fromId: this.tableForm.value.fromId,
-        isActive: this.tableForm.value.isActive,
+        formId: this.tableForm.value.fromId,
+        IsActive: this.tableForm.value.isActive,
       };
       const observer = {
         next: (res: any) => {
@@ -366,8 +366,8 @@ export class TestComponent implements OnInit {
             arHeading: this.addTable.arHeading,
             enHeading: this.addTable.enHeading,
             Type: this.addTable.Type,
-            fromId: this.addTable.fromId,
-            isActive: this.addTable.isActive,
+            fromId: this.addTable.formId,
+            isActive: this.addTable.IsActive,
           });
           this.showLoader = false;
           this.add = false;
@@ -394,8 +394,8 @@ export class TestComponent implements OnInit {
             arHeading: this.formForm.value.arHeading,
             enHeading: this.formForm.value.enHeading,
             Type: this.formForm.value.Type,
-            fromId: this.formForm.value.fromId,
-            isActive: this.formForm.value.isActive,
+            formId: this.formForm.value.fromId,
+            IsActive: this.formForm.value.isActive,
       };
       const observer = {
         next: (res: any) => {

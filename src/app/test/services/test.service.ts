@@ -58,7 +58,6 @@ export class TestService {
      return resopnse;
    }
    UpdateTable(id:number,Model: IAddTableDto){
-    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Table/UpdateTable?id=${id}&lang=2`, Model, { headers });
      return resopnse;
