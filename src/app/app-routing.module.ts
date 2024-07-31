@@ -12,8 +12,10 @@ import { LogoutGuard } from './Guard/logout.guard';
 import { LoginGuard } from './Guard/login.guard';
 import { FormsComponent } from './Forms/Components/forms/forms.component';
 import { TestComponent } from './test/component/test/test.component';
+import { FormDetailsComponent } from './Forms/Components/form-details/form-details.component';
 
 const routes: Routes = [
+  { path: 'FormDetails/:id', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Companies-Details', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
