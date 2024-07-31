@@ -230,7 +230,10 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(tableA, 'place-items', 'center');
     this.renderer.setStyle(delIcon, 'padding', '5px');
     this.renderer.setStyle(crtbLabel, 'margin-left', '60px');
-    this.renderer.setStyle(crtbLabel, 'margin-right', '8px');
+    this.renderer.setStyle(crtbLabel, 'position', 'static');
+    this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
+    this.renderer.setStyle(img, 'padding', '8px');
+    this.renderer.setStyle(divIcon, 'position', 'relative');
     return tableLi;
   }
 
@@ -283,7 +286,10 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(subAnchor, 'place-items', 'center');
     this.renderer.setStyle(delIcon, 'padding', '5px');
     this.renderer.setStyle(crtbLabel, 'margin-left', '60px');
-    this.renderer.setStyle(crtbLabel, 'margin-right', '8px');
+    this.renderer.setStyle(crtbLabel, 'position', 'static');
+    this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
+    this.renderer.setStyle(img, 'padding', '8px');
+    this.renderer.setStyle(divIcon, 'position', 'relative');
     return formLi;
   }
   AppenHtmlForm(formName: string) {
