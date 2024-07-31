@@ -1,0 +1,153 @@
+
+<div class="p-4 main card" style="flex: 1">
+  
+    <!-- start content -->
+    <div class="content companies researcher">
+      <div class="header d-flex mb-0">
+        <div class="title">قائمة الباحثين</div>
+        <div class="btns d-flex">
+            <button type="button" class="btn btn-download" data-bs-toggle="modal" data-bs-target="#createForm" id="addFormBtn">
+                <img src=".././../../../assets/images/list-box-outline.png" alt="">
+                إنشاء إستمارة
+            </button>
+            
+            <button type="button" class="btn btn-add">
+                <img src=".././../../../assets/images/briefcase-plus-outli.png" alt="">
+                طباعة PDF
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="table-responsive company-table research-table">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">رقم</th>
+              <th class="text-center" scope="col">arName</th>
+              <th class="text-center" scope="col">enName</th>
+              <th class="text-center" scope="col">arNotes</th>
+              <th class="text-center" scope="col">enNotes</th>
+              <th class="text-center" scope="col">IsActive</th>
+              <th class="text-center" scope="col">Type</th>
+              <th class="text-center" scope="col"></th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <tr *ngFor="let item of forms; let i = index">
+              <td>
+                <label for="Name1">{{ i + 1 }}</label>
+              </td>
+              <td class="text-center">{{ item.arName }}</td>
+              <td class="text-center">{{ item.enName }}</td>
+              <td class="text-center">{{ item.arNotes }}</td>
+              <td class="text-center">{{ item.enNotes }}</td>
+              <td class="text-center active">
+                <ng-container *ngIf="item.IsActive; else inactive">
+                  نشط
+                </ng-container>
+                <ng-template #inactive> غير نشط </ng-template>
+              </td>
+              <td class="text-center">
+                <ng-container *ngIf="item.Type == 1; else isType">
+                  السنويه
+                </ng-container>
+                <ng-template #isType>الربعيه</ng-template>
+              </td>
+              <td class="text-center td-actions">
+                <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink">
+                  <img src="../../../../assets/images/link.png" alt="" />
+                </a>
+                <a routerLink="/Researcher-Details" class="icon">
+                  <img src="../../../../assets/images/eye-outline.png" alt="" />
+                </a>
+                <button class="icon" (click)="showAlert(item.id)">
+                  <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                </button>
+                <button class="icon" (click)="editForm(item.id)">
+                  <img src="../../../../assets/images/pencil-outline.png" alt="" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="noData">
+            <tr>
+              <th colspan="7">
+                <div class="alert alert-warning">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <br />
+                  <span> لا يوجد بيانات </span>
+                </div>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <!-- end content -->
+<!--start create form modal -->
+<div class="modal company-modal fade" id="createForm" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header pb-1">
+                <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء استمارة</h5>
+                <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل الاستمارة</h5>
+            </div>
+            <form [formGroup]="formForm">
+                <div class="modal-body pb-0">
+                    <div class="row">
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <input formControlName="arName" type="text" class="form-control">
+                                <label for="user">اسم الاستمارة بالعربى</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class=" input-floating-label mb-0">
+                                <input formControlName="enName" type="text" class="form-control" style="direction: ltr;">
+                                <label class="eng">Form Name in English</label>
+                            </div>
+                        </div>
+                        <div class="col-12-12 mb-2">
+                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                                <label class="form-check-label" for="active" style="font-size: 14px;">فعال</label>
+                                <input formControlName="IsActive" class="form-check-input" type="checkbox" id="active" checked>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <textarea formControlName="arNotes" class="form-control input-modal" rows="2" placeholder="ملاحظات ..."
+                                    style="font-size: 12px;"></textarea>
+                                <label for="user">ملاحظات بالعربى</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <textarea formControlName="enNotes" class="form-control input-modal" rows="2" placeholder="Notes"
+                                    style="direction: ltr; font-size: 12px;"></textarea>
+                                <label class="eng">Notes in English</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb-3">
+                        <select formControlName="Type" class="form-control" style="width: 100%;">
+                            <option selected value="0">النوع</option>
+                            <option value="1">سنوية</option>
+                            <option value="2">ربعية</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer pt-0 ps-0" style="border-top: none;">
+                        <button id="btnCancel" type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                        <button (click)="saveForm()" type="button" class="btn btn-save" style="background-color: #133C8B;"  *ngIf="add">حفظ</button>
+                        <button (click)="updateForm()"  type="button" class="btn btn-save" style="background-color: #133C8B;" *ngIf="!add">تعديل</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--end create form modal -->

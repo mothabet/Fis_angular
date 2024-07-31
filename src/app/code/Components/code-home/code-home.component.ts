@@ -4,6 +4,10 @@ import { IAddCode, ICode } from '../../Dtos/CodeHomeDto';
 import { CodeHomeService } from '../../Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
+import { IAddSubCode } from '../../Dtos/SubCodeHomeDto';
+import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
 
 @Component({
   selector: 'app-code-home',
@@ -15,6 +19,7 @@ export class CodeHomeComponent {
   codeForm!: FormGroup;
   codes: ICode[] = [];
   code!: IAddCode;
+  subCode: IAddSubCode[] = [];
   showLoader: boolean = false;
   noData: boolean = false;
   add: boolean = true;
@@ -22,6 +27,9 @@ export class CodeHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
+  typeId : number = 1;
+  tableColumns = ['English Full Name', 'الاسم بالكامل', 'الرمز','الرقم'];
+  searchText: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
@@ -32,16 +40,34 @@ export class CodeHomeComponent {
     this.codeForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      QuestionCode: [
-        '',
-        [
-          Validators.pattern('^[0-9]*$'),
-          Validators.required
-        ]
-      ],
+      QuestionCode: [''],
+      TypeId: [1,Validators.required],
     });
 
     this.GetAllCodes(this.currentPage);
+  }
+  addRow(){
+    this.subCode.push({
+      QuestionCode: '',
+      arName: '',
+      enName: '',
+      Id:0
+    });
+  }
+  updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+  
+    // Ensure that value is correctly assigned based on field type
+    if (field === 'QuestionCode' || field === 'arName' || field === 'enName') {
+      this.subCode[index][field] = value;
+    }
+  }
+  removeItem(index: number): void {
+    this.subCode.splice(index, 1);
+  }
+  areAllFieldsFilled(): boolean {
+    return this.subCode.every(item => item.arName && item.enName);
   }
   onPageChange(page: number) {
     debugger
@@ -49,13 +75,18 @@ export class CodeHomeComponent {
     this.GetAllCodes(page);
   }
   saveCode(): void {
+    debugger
     this.showLoader = true;
     if (this.codeForm.valid) {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
         arName: this.codeForm.value.arName,
         enName: this.codeForm.value.enName,
+        TypeId:Number(this.codeForm.value.TypeId),
+        addSubCodeDtos : this.subCode
       };
+      debugger
+      console.log(this.subCode);
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -93,23 +124,26 @@ export class CodeHomeComponent {
       QuestionCode: '',
       arName: '',
       enName: '',
+      TypeId : null
     });
+    this.subCode = []
   }
-  GetAllCodes(page: number): void {
+  GetAllCodes(page: number, textSearch : string = ''): void {
+    debugger
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
-        if(res.Data){
+        if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.resetForm();
         }
-        else{
-          this.codes=[];
+        else {
+          this.codes = [];
         }
         this.showLoader = false;
       },
@@ -118,7 +152,7 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(page).subscribe(observer);
+    this.codeHomeService.GetAllCodes(page,textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -160,18 +194,19 @@ export class CodeHomeComponent {
     this.codeHomeService.DeleteCode(id).subscribe(observer);
   }
   editCode(id: number): void {
-    debugger
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
         if (res.Data) {
-          this.code = res.Data;
+          this.code = res.Data.codeDto;
+          this.subCode = res.Data.getSubCodeDtos
           debugger
           this.codeForm.patchValue({
             QuestionCode: this.code.QuestionCode,
             arName: this.code.arName,
             enName: this.code.enName,
+            TypeId:this.code.TypeId,
           });
           this.showLoader = false;
           this.add = false;
@@ -190,13 +225,14 @@ export class CodeHomeComponent {
     this.codeHomeService.GetCodeById(id).subscribe(observer);
   }
   updateCode() {
-    debugger
     this.showLoader = true;
     if (this.codeForm.valid) {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
         arName: this.codeForm.value.arName,
         enName: this.codeForm.value.enName,
+        TypeId:this.codeForm.value.TypeId,
+        addSubCodeDtos: this.subCode
       };
       const observer = {
         next: (res: any) => {
@@ -233,15 +269,62 @@ export class CodeHomeComponent {
     }
   }
   reset() {
+    this.subCode = [];
     this.add = true;
     this.codeForm = this.formBuilder.group({
       QuestionCode: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
+      TypeId : [null, Validators.required]
     });
   }
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+  }
+  printPdf() {
+    this.generatePdf(this.codes, this.tableColumns);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('محتوي الاستماره', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        item.enName,
+        item.arName,
+        item.QuestionCode,
+        index +1,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('researchers.pdf');
+  }
+  codeSearch(){
+    this.GetAllCodes(this.currentPage,this.searchText);
   }
 }

@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { CodeModule } from './code/code.module';
 import { FormsModule } from '@angular/forms';
 import { FromsModule } from './Forms/froms.module';
+import { TestModule } from './test/test.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +26,7 @@ import { FromsModule } from './Forms/froms.module';
     AuditingRulesModule,
     AuthModule,
     CodeModule,
+    TestModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({

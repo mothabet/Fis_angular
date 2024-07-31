@@ -11,6 +11,7 @@ import { CodeHomeComponent } from './code/Components/code-home/code-home.compone
 import { LogoutGuard } from './Guard/logout.guard';
 import { LoginGuard } from './Guard/login.guard';
 import { FormsComponent } from './Forms/Components/forms/forms.component';
+import { TestComponent } from './test/component/test/test.component';
 
 const routes: Routes = [
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'Researcher-Details', component: ResearcherDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Test', component: TestComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided

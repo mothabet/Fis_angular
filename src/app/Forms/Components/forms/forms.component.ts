@@ -30,6 +30,7 @@ export class FormsComponent implements OnInit {
       isActive: [''],
       type: [''],
     });
+      
   }
   saveForm(event: Event) {
     if (this.formForm.valid) {
@@ -38,9 +39,10 @@ export class FormsComponent implements OnInit {
         enName: this.formForm.value.enName,
         arNotes: this.formForm.value.arNotes,
         enNotes: this.formForm.value.enNotes,
-        isActive: this.formForm.value.isActive,
-        type: this.formForm.value.type,
-      }
+        IsActive: this.formForm.value.IsActive, // Corrected to match the interface
+        Type: this.formForm.value.Type
+      };
+      
       this.Loader = true;
       const observer = {
         next: (res: any) => {
@@ -98,8 +100,8 @@ export class FormsComponent implements OnInit {
       enName: '',
       arNotes: '',
       enNotes: '',
-      isActive: '',
-      type: '',
+      IsActive: '',
+      Type: '',
     })
   }
 

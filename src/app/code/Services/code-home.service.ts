@@ -11,13 +11,14 @@ export class CodeHomeService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddCode(Model: IAddCode){
+    debugger
    var headers= this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl+`Code/AddCode?lang=2`, Model, { headers });
     return resopnse;
   }
-  GetAllCodes(pageNumber:number){
+  GetAllCodes(pageNumber:number, textSearch : string =''){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
      return resopnse;
    }
    DeleteCode(id:number){

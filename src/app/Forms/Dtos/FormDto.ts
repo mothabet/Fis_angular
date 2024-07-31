@@ -3,6 +3,16 @@ export interface IAddForm {
     enName : string,
     arNotes : string,
     enNotes : string,
-    isActive : string,
-    type : string
+    IsActive : string,
+    Type : string
+}
+
+export interface IGetFormDto {
+    id:number,
+    arName : string,
+    enName : string,
+    arNotes : string,
+    enNotes : string,
+    IsActive : boolean,
+    Type : number
 }

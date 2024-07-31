@@ -6,6 +6,8 @@ export interface ICompany {
     arName: string,
     enName: string,
     compRegNumber: string,
+    phoneNumber: string,
+    email: string,
     status: string,
     id: number,
 }

@@ -6,6 +6,9 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 import { IAddAuditRule, IAuditRule } from '../../Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from '../../Services/audit-rule-home.service';
+import autoTable from 'jspdf-autotable';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-auditing-rules-home',
@@ -23,8 +26,9 @@ export class AuditingRulesHomeComponent implements OnInit {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
+  tableColumns = ['معادلة التدقيق', 'الرقم'];
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
-    private sharedService: SharedService, private auditRuleHomeService:AuditRuleHomeService) { }
+    private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService) { }
 
   ngOnInit() {
     this.auditForm = this.fb.group({
@@ -34,7 +38,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.GetAuditRules(1); // لتحميل البيانات عند البدء
   }
   onPageChange(page: number) {
-    debugger
+    
     this.currentPage = page;
     this.GetAllCodes(page);
   }
@@ -101,6 +105,7 @@ export class AuditingRulesHomeComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
+          
           this.codes = res.Data.getCodeDtos;
           this.resetForm();
         } else {
@@ -118,7 +123,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.showLoader = true;
     if (this.auditForm.valid) {
       const Model: IAddAuditRule = {
-        Rule:this.auditForm.value.Rule,
+        Rule: this.auditForm.value.Rule,
       };
       const observer = {
         next: (res: any) => {
@@ -156,17 +161,17 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
-        if(res.Data){
+        if (res.Data) {
           this.auditRules = res.Data.getAuditRuleDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.resetForm();
         }
-        else{
-          this.auditRules=[];
+        else {
+          this.auditRules = [];
         }
         this.showLoader = false;
       },
@@ -213,5 +218,52 @@ export class AuditingRulesHomeComponent implements OnInit {
       },
     };
     this.auditRuleHomeService.DeleteAuditRule(id).subscribe(observer);
+  }
+  printPdf() {
+    
+    this.generatePdf(this.auditRules, this.tableColumns);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('قواعد التدقيق', 10, 10);
+    
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        this.getDateOnly(item.CreatedOn),
+        item.CreatedBy,
+        item.Rule,
+        index + 1,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('researchers.pdf');
+  }
+  getDateOnly(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toISOString().split('T')[0];
   }
 }

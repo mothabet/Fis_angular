@@ -3,5 +3,7 @@ export interface IAddAuditRule {
 }
 export interface IAuditRule{
     Id:number,
-    Rule:string
+    Rule:string,
+    CreatedBy:string,
+    CreatedOn:string,
 }

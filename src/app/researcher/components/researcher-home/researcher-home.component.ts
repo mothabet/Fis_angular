@@ -38,7 +38,7 @@ export class ResearcherHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  tableColumns = ['البريد الالكتروني', 'الاسم', 'الرقم'];
+  tableColumns = ['رقم الهاتف','البريد الالكتروني', 'الاسم', 'الرقم'];
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -48,7 +48,7 @@ export class ResearcherHomeComponent {
 
   ngOnInit(): void {
     this.researcherForm = this.formBuilder.group({
-      userName: ['', Validators.required],
+      userName: [{ value: '', disabled: true }, Validators.required],
       password: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -143,7 +143,7 @@ export class ResearcherHomeComponent {
 
   resetForm(): void {
     this.researcherForm.reset({
-      userName: '',
+      userName: { value: '', disabled: true },
       password: '',
       arName: '',
       enName: '',
@@ -233,6 +233,7 @@ export class ResearcherHomeComponent {
             phone: this.researcher.phone,
             email: this.researcher.email
           });
+          this.researcherForm.get('userName')?.disable();
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addResearcherBtn');
@@ -294,7 +295,7 @@ export class ResearcherHomeComponent {
   reset() {
     this.add = true;
     this.researcherForm = this.formBuilder.group({
-      userName: ['', Validators.required],
+      userName: [{ value: '', disabled: true }, Validators.required],
       password: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -330,6 +331,7 @@ export class ResearcherHomeComponent {
     autoTable(doc, {
       head: [columns],
       body: data.map((item, index) => [
+        item.phone,
         item.email,
         item.arName,
         index +1,
