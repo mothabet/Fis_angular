@@ -40,9 +40,7 @@
               "src/assets/js/bootstrap.min.js",
               "src/assets/js/select2.min.js",
               "src/assets/js/custom.js",
-              "src/assets/js/charts.js",
-              "src/assets/js/orgchart.js",
-              "src/assets/js/orgTree.js"
+              "src/assets/js/charts.js"
             ]
           },
           "configurations": {
