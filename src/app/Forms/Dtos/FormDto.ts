@@ -1,3 +1,5 @@
+import { IGetTableDto } from "./TableDto"
+
 export interface IAddForm {
     arName : string,
     enName : string,
@@ -15,15 +17,9 @@ export interface IGetFormDto {
     enNotes : string,
     IsActive : boolean,
     Type : number
-    tables :IGetTablesDto[]
+    tables :IGetTableDto[]
 }
-
-export interface IGetTablesDto {
+export interface ICoverFormDetailsDto{
     id:number,
-    arName : string,
-    enName : string,
-    enHeading : string,
-    arHeading : string,
-    IsActive : boolean,
-    formId : number
+    tables :IGetTableDto[]
 }

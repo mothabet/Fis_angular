@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ICoverFormDetailsDto, IGetFormDto } from '../../Dtos/FormDto';
 
 @Component({
   selector: 'app-form-details',
