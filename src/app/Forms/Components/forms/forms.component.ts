@@ -6,9 +6,10 @@ import Swal from 'sweetalert2';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddTableDto, IGetTableDto } from '../../Dtos/TableDto';
 import { Router } from '@angular/router';
-import { IAddQuestion } from '../../Dtos/QuestionDto';
+import { IAddQuestion, IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { CodeHomeComponent } from 'src/app/code/Components/code-home/code-home.component';
 
 @Component({
   selector: 'app-forms',
@@ -20,6 +21,8 @@ export class FormsComponent implements OnInit {
   tablesCount = 0;
   formCount = 0;
   add: boolean = true;
+  addQuestion: boolean = true;
+  _addTable: boolean = true;
   quesCount = 0;
   tableId = 0;
   formForm!: FormGroup;
@@ -29,14 +32,19 @@ export class FormsComponent implements OnInit {
   tableForm!: FormGroup;
   formId: number = 0;
   formIdScreen: string = '';
+  quesIdScreen: string = '';
   addTable!: IAddTableDto;
   idTable: number = 0;
+  idFormTables: number = 0;
   id: number = 0;
   addForm!: IAddForm;
+  editQues!: IGetQuestionDto;
+  quesId: number = 0;
   tableIdInQuestion: number = 0;
   questionForm!: FormGroup;
   codes: ICode[] = [];
-  Type:number=0;
+  code!: ICode;
+  Type: number = 0;
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -44,7 +52,7 @@ export class FormsComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private sharedServices: SharedService,
-    private codeService : CodeHomeService
+    private codeService: CodeHomeService
   ) {}
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -71,7 +79,7 @@ export class FormsComponent implements OnInit {
     });
     this.GetAllForms();
   }
-  
+
   resetForm() {
     this.add = true;
     this.formForm.reset({
@@ -83,31 +91,24 @@ export class FormsComponent implements OnInit {
       Type: '',
     });
   }
-  AppenHtmlQues(itemId: number) {
-    this.quesCount++;
-    const quesUl = document.getElementById('quesUl' + itemId);
+  AppenHtmlQues(getQuestionDto: IGetQuestionDto) {
+    this.quesCount = getQuestionDto.Id;
+    const quesUl = document.getElementById('quesUl' + getQuestionDto.tableId);
     if (quesUl) {
-      const newMenuItem = this.createHtmlQues();
-      newMenuItem.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevents the event from bubbling up to parent elements
-        this.AppenHtmlQues(itemId); // Your function to handle the click event
-      });
+      const newMenuItem = this.createHtmlQues(getQuestionDto);
       this.renderer.appendChild(quesUl, newMenuItem);
     } else {
       const quesUl = this.renderer.createElement('ul');
-      quesUl.id = 'quesUl' + itemId;
-      const newMenuItem = this.createHtmlQues();
-      newMenuItem.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevents the event from bubbling up to parent elements
-      });
+      quesUl.id = 'quesUl' + getQuestionDto.tableId;
+      const newMenuItem = this.createHtmlQues(getQuestionDto);
       const tableLi = this.el.nativeElement.getElementsByClassName(
-        'tableLi' + itemId
+        'tableLi' + getQuestionDto.tableId
       );
       this.renderer.appendChild(quesUl, newMenuItem);
       this.renderer.appendChild(tableLi[0], quesUl);
     }
   }
-  createHtmlQues(): HTMLLIElement {
+  createHtmlQues(getQuestionDto: IGetQuestionDto): HTMLLIElement {
     const quesLi = this.renderer.createElement('li');
     quesLi.id = 'quesLi' + this.quesCount;
     const quesA = this.renderer.createElement('a');
@@ -121,15 +122,22 @@ export class FormsComponent implements OnInit {
       'src',
       '.././../../../assets/images/pencil-outline.png'
     );
-
+    editIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.editQuestion(getQuestionDto.Id); // Pass form ID
+    });
     const delIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(
       delIcon,
       'src',
       '.././../../../assets/images/trash-can-outline.png'
     );
-
-    const text = this.renderer.createText('سؤال 1');
+    delIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.showAlertQuestion(getQuestionDto.Id); // Pass form ID
+    });
+    debugger;
+    const text = this.renderer.createText(getQuestionDto.code.arName);
     this.renderer.appendChild(divIcon, delIcon);
     this.renderer.appendChild(divIcon, editIcon);
     this.renderer.appendChild(quesA, text);
@@ -140,11 +148,11 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(quesA, 'place-items', 'center');
     this.renderer.setStyle(delIcon, 'padding', '5px');
     this.renderer.setStyle(quesLi, 'min-width', '160px');
+    this.renderer.setStyle(divIcon, 'margin-right', 'auto');
 
     return quesLi;
   }
   AppenHtmlTable(getTableDto: IGetTableDto) {
-    debugger;
     this.tablesCount = getTableDto.id;
     const tableUl = document.getElementById('tableUl' + getTableDto.formId);
     if (tableUl) {
@@ -192,7 +200,10 @@ export class FormsComponent implements OnInit {
       'src',
       '.././../../../assets/images/pencil-outline.png'
     );
-
+    editIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.editTable(getTableDto.id, getTableDto.formId); // Pass form ID
+    });
     const delIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(
       delIcon,
@@ -209,12 +220,17 @@ export class FormsComponent implements OnInit {
       'src',
       '.././../../../assets/images/text-box-multiple-outline.png'
     );
-    this.renderer.setAttribute(multiTextIcon, 'id', getTableDto.id.toString());
+    this.renderer.setAttribute(
+      multiTextIcon,
+      'id',
+      `addَQuestionBtn${getTableDto.id.toString()}`
+    );
     this.renderer.addClass(multiTextIcon, 'tableLi' + getTableDto.id);
     multiTextIcon.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       e.stopPropagation();
-      this.openModal('createQuestion', +target.id);
+      debugger;
+      this.openModal('createQuestion', +getTableDto.id);
     });
 
     const text = this.renderer.createText(getTableDto.arName);
@@ -292,7 +308,11 @@ export class FormsComponent implements OnInit {
     });
 
     const tableIcon = this.renderer.createElement('img');
-    this.renderer.setAttribute(tableIcon, 'id', this.formCount.toString());
+    this.renderer.setAttribute(
+      tableIcon,
+      'id',
+      `addَTableBtn${this.formCount.toString()}`
+    );
     this.renderer.setAttribute(
       tableIcon,
       'src',
@@ -327,9 +347,8 @@ export class FormsComponent implements OnInit {
     return formLi;
   }
   openModal(name: string, id: number = 0, formId: number = 0) {
-    debugger;
     if (name === 'createTable') this.formId = formId;
-    if (name === 'createQuestion'){
+    if (name === 'createQuestion') {
       this.tableIdInQuestion = id;
       this.GetAllCodes();
     }
@@ -339,18 +358,15 @@ export class FormsComponent implements OnInit {
     );
     modal.show();
   }
-  GetAllCodes(page: number = 0, textSearch : string = ''): void {
-    debugger
+  GetAllCodes(page: number = 0, textSearch: string = ''): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.resetForm();
-        }
-        else {
+        } else {
           this.codes = [];
         }
         this.Loader = false;
@@ -360,7 +376,7 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.codeService.GetAllCodes(page,textSearch).subscribe(observer);
+    this.codeService.GetAllCodes(page, textSearch).subscribe(observer);
   }
   saveForm() {
     if (this.formForm.valid) {
@@ -393,7 +409,6 @@ export class FormsComponent implements OnInit {
           }
           this.Loader = false;
           this.resetForm();
-          debugger;
           this.GetAllForms();
           Swal.fire({
             icon: 'success',
@@ -434,11 +449,15 @@ export class FormsComponent implements OnInit {
             (element.tables as IGetTableDto[]).forEach(
               (elementTable: IGetTableDto) => {
                 this.AppenHtmlTable(elementTable);
+                (elementTable.formContents as IGetQuestionDto[]).forEach(
+                  (elementQuestion: IGetQuestionDto) => {
+                    this.AppenHtmlQues(elementQuestion);
+                  }
+                );
               }
             );
           });
         } else {
-          debugger;
           const element = document.getElementById('items');
           if (element) {
             element.classList.add('d-none');
@@ -500,7 +519,6 @@ export class FormsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.addForm = res.Data;
-          debugger;
           this.formForm.patchValue({
             arName: this.addForm.arName,
             enName: this.addForm.enName,
@@ -572,6 +590,7 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
+    debugger;
     this.Loader = true;
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
@@ -583,7 +602,7 @@ export class FormsComponent implements OnInit {
         Type: this.tableForm.value.Type,
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
-        period: this.tableForm.value.period,
+        period: Number(this.tableForm.value.period),
       };
       const observer = {
         next: (res: any) => {
@@ -665,13 +684,16 @@ export class FormsComponent implements OnInit {
     };
     this.formServices.DeleteTable(id).subscribe(observer);
   }
-  editTable(id: number): void {
+  editTable(id: number, idFormTables: number): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.addTable = res.Data;
-          this.formForm.patchValue({
+          if (this.addTable.period == 0) {
+            this.tableForm.value.period = '';
+          } else this.tableForm.value.period = this.addTable.period;
+          this.tableForm.patchValue({
             arName: this.addTable.arName,
             enName: this.addTable.enName,
             arHeading: this.addTable.arHeading,
@@ -679,14 +701,18 @@ export class FormsComponent implements OnInit {
             Type: this.addTable.Type,
             fromId: this.addTable.formId,
             isActive: this.addTable.IsActive,
+            period: this.tableForm.value.period,
           });
           this.Loader = false;
-          this.add = false;
-          const button = document.getElementById('addFormBtn');
+          this._addTable = false;
+          const button = document.getElementById(
+            `addَTableBtn${this.addTable.formId}`
+          );
           if (button) {
             button.click();
           }
           this.idTable = id;
+          this.idFormTables = idFormTables;
         } else {
           this.Loader = false;
           Swal.fire({
@@ -705,21 +731,22 @@ export class FormsComponent implements OnInit {
     this.formServices.GetTableById(id).subscribe(observer);
   }
   updateTable() {
+    debugger;
     this.Loader = true;
-    if (this.formForm.valid) {
+    if (this.tableForm.valid) {
       const Model: IAddTableDto = {
-        arName: this.formForm.value.arName,
-        enName: this.formForm.value.enName,
-        arHeading: this.formForm.value.arHeading,
-        enHeading: this.formForm.value.enHeading,
-        Type: this.formForm.value.Type,
-        formId: this.formForm.value.fromId,
-        IsActive: this.formForm.value.isActive,
-        period:this.formForm.value.period
+        arName: this.tableForm.value.arName,
+        enName: this.tableForm.value.enName,
+        arHeading: this.tableForm.value.arHeading,
+        enHeading: this.tableForm.value.enHeading,
+        Type: this.tableForm.value.Type,
+        formId: this.idFormTables,
+        IsActive: this.tableForm.value.IsActive,
+        period: this.tableForm.value.period,
       };
       const observer = {
         next: (res: any) => {
-          const button = document.getElementById('btnCancel');
+          const button = document.getElementById('tableCancel');
           if (button) {
             button.click();
           }
@@ -738,7 +765,7 @@ export class FormsComponent implements OnInit {
           this.Loader = false;
         },
       };
-      this.formServices.UpdateTable(this.id, Model).subscribe(observer);
+      this.formServices.UpdateTable(this.idTable, Model).subscribe(observer);
     } else {
       Swal.fire({
         icon: 'error',
@@ -750,17 +777,25 @@ export class FormsComponent implements OnInit {
     }
   }
   saveQues() {
-    debugger;
     this.Loader = true;
     this.questionForm.value.tableId = this.tableIdInQuestion;
-    if (this.questionForm.valid) {
+    if (!(this.questionForm.value.codeId > 0)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      this.Loader = false;
+    } else if (this.questionForm.valid) {
       const Model: IAddQuestion = {
         codeId: Number(this.questionForm.value.codeId),
         tableId: this.questionForm.value.tableId,
       };
       const observer = {
         next: (res: any) => {
-          const button = document.getElementById('tableCancel');
+          const button = document.getElementById('quesCancel');
+
           if (button) {
             button.click();
           }
@@ -792,9 +827,116 @@ export class FormsComponent implements OnInit {
     }
   }
   resetQuestion(): void {
+    this.addQuestion = true;
     this.tableForm.reset({
       codeId: 0,
       tableId: '',
     });
+  }
+  showAlertQuestion(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeleteQuestion(id);
+      }
+    });
+  }
+  DeleteQuestion(id: number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetAllForms();
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.DeleteFormContent(id).subscribe(observer);
+  }
+  editQuestion(id: number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.editQues = res.Data;
+          this.questionForm.patchValue({
+            tableId: this.editQues.tableId,
+            codeId: this.editQues.codeId,
+          });
+          this.Loader = false;
+          this.addQuestion = false;
+          const button = document.getElementById(
+            `addَQuestionBtn${this.editQues.tableId}`
+          );
+          if (button) {
+            button.click();
+          }
+          this.quesId = id;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormContentById(id).subscribe(observer);
+  }
+  updateQuestion() {
+    this.Loader = true;
+    if (this.questionForm.valid) {
+      const Model: IAddQuestion = {
+        tableId: this.questionForm.value.tableId,
+        codeId: this.questionForm.value.codeId,
+      };
+      const observer = {
+        next: (res: any) => {
+          const button = document.getElementById('quesCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.form = res.Data;
+          this.GetAllForms();
+          this.Loader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
+          this.Loader = false;
+        },
+      };
+      this.formServices
+      .UpdateFormContent(this.quesId, Model)
+      .subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      this.Loader = false;
+    }
   }
 }

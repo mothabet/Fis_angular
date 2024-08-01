@@ -30,16 +30,19 @@ export class FormService {
      return resopnse;
    }
    AddTable(Model: IAddTableDto){
+    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`Table/AddTable?lang=2`, Model, { headers });
      return resopnse;
    }
    GetTableById(id:number){
+    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Table/GetTableById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    UpdateTable(id:number,Model: IAddTableDto){
+    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Table/UpdateTable?id=${id}&lang=2`, Model, { headers });
      return resopnse;
@@ -64,6 +67,23 @@ export class FormService {
     debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`FormContent/AddFormContent?lang=2`, Model, { headers });
+     return resopnse;
+   }
+   DeleteFormContent(id:number){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.delete(environment.apiUrl+`FormContent/DeleteFormContent?id=${id}&lang=2`, { headers });
+     return resopnse;
+   }
+   GetFormContentById(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`FormContent/GetFormContentById?id=${id}&lang=2`, { headers });
+     return resopnse;
+   }
+   UpdateFormContent(id:number,Model: IAddQuestion){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`FormContent/UpdateFormContent?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
 }

@@ -1,3 +1,5 @@
+import { IGetQuestionDto } from "./QuestionDto";
+
 export interface IAddTableDto {
     arName: string,
     enName: string,
@@ -17,4 +19,5 @@ export interface IGetTableDto {
     Type: string,
     formId:number,
     IsActive: boolean,
+    formContents :IGetQuestionDto[]
 }

@@ -1,3 +1,4 @@
+import { ICode } from "src/app/code/Dtos/CodeHomeDto";
 
 export interface IAddQuestion {
   tableId: number;
@@ -5,11 +6,8 @@ export interface IAddQuestion {
 }
 
 export interface IGetQuestionDto {
-  id: number;
-  arName: string;
-  enName: string;
-  arNotes: string;
-  enNotes: string;
-  IsActive: boolean;
-  Type: number;
+  Id: number;
+  tableId: number;
+  codeId: number;
+  code:ICode;
 }
