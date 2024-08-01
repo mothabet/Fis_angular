@@ -58,10 +58,10 @@ export class FormsComponent implements OnInit {
     this.formForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      arNotes: [''],
-      enNotes: [''],
-      isActive: [''],
-      type: [''],
+      arNotes: ['', Validators.required],
+      enNotes: ['', Validators.required],
+      isActive: [true, Validators.required],
+      type: ['', Validators.required],
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -423,6 +423,14 @@ export class FormsComponent implements OnInit {
         },
       };
       this.formServices.addForm(Model).subscribe(observer);
+    }
+    else{
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
   }
   GetAllForms(): void {

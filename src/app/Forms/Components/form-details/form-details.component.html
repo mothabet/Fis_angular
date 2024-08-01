@@ -1,51 +1,31 @@
+<app-loader *ngIf="Loader"></app-loader>
+
 <div class="main-content p-4 main card " style="flex: 1;">
-    <app-loader *ngIf="Loader"></app-loader>
-
     <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            عرض الاستمارة
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    عربي
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src=".././../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
+    <app-top-screen [title]="'عرض الاستمارة'"></app-top-screen>
     <!-- end-header -->
-
     <!-- start content -->
     <div class="companies-details form-details prev-form">
         <div class="header-nav" style="margin-bottom: -10px;">
             <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
-                <ul class="links" >
-                    <li *ngFor="let item of forms; let i = index" [ngClass]="{'active': i === 0}">
-                        <a href="#">{{item.arName}}</a>
-                      </li>
+                <ul class="links">
+                    <li>
+                        <a [routerLink]="['/FormDetails', coverForm.id]"
+                            (click)="FormsNavigation(coverForm.id)">{{coverForm.arName}}</a>
+                    </li>
                 </ul>
             </div>
         </div>
-        <div class="arrow-group table-responsive d-flex form-tabs" style="gap:0px;">
+        <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
             <div class="clipped-element-first arrow" *ngFor="let item of coverForm.tables">
-                <a href="#">{{item.arName}}</a>
+                <a [routerLink]="['/PeriodTable',formId, item.id]">{{item.arName}}</a>
+            </div>
+            <div *ngIf="noTables" style="min-height: 60px;">
+                <h1> </h1>
             </div>
         </div>
         <div class="card-box">
-            <div
-                class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
+            <div class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
                 <div class="title-ar flex-fill">
                     <h6>سلطنة عمان</h6>
                     <h6>المركز الوطني للإحصاء والمعلومات</h6>
@@ -61,8 +41,7 @@
                 </div>
 
             </div>
-            <div
-                class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
+            <div class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
                 <div class="subtitle-ar">
                     <h6>المسح السنوي</h6>
                     <h6>للاستثمار الأجنبي</h6>
@@ -77,7 +56,7 @@
                     <h6>الإستعمال الرسمي</h6>
                 </div>
                 <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                    <input type="text"  class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
+                    <input type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
                 </div>
                 <div class="detail-en col-md-4 col-6 order-md-3 order-2">
                     <h6>OFFICIAL USE</h6>
@@ -88,7 +67,7 @@
                     <h6>رمز النشاط</h6>
                 </div>
                 <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                    <input type="text"  class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
+                    <input type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
                 </div>
                 <div class="detail-en col-md-4 col-6 order-md-3 order-2">
                     <h6>ACTIVITY CODE</h6>
@@ -99,7 +78,8 @@
                     <h6>رقم الاستبيان</h6>
                 </div>
                 <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                    <input style="text-align: center;" disabled type="text" value="{{coverForm.id}}"  class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
+                    <input style="text-align: center;" disabled type="text" value="{{formId}}"
+                        class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
                 </div>
                 <div class="detail-en col-md-4 col-6 order-md-3 order-2">
                     <h6>QUESTIONNAIRE NO.</h6>
@@ -110,7 +90,7 @@
                     <h6>المرجع. سنة</h6>
                 </div>
                 <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                    <input type="text"  class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
+                    <input type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
                 </div>
                 <div class="detail-en col-md-4 col-6 order-md-3 order-2">
                     <h6>REF. YEAR</h6>

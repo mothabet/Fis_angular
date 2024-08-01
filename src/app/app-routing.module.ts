@@ -12,8 +12,10 @@ import { LogoutGuard } from './Guard/logout.guard';
 import { LoginGuard } from './Guard/login.guard';
 import { FormsComponent } from './Forms/Components/forms/forms.component';
 import { FormDetailsComponent } from './Forms/Components/form-details/form-details.component';
+import { TableWithPeriodComponent } from './Forms/Components/table-with-period/table-with-period.component';
 
 const routes: Routes = [
+  { path: 'PeriodTable/:formId/:tableId', component: TableWithPeriodComponent, canActivate: [LoginGuard] },
   { path: 'FormDetails/:id', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },

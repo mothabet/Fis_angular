@@ -21,5 +21,17 @@ export interface IGetFormDto {
 }
 export interface ICoverFormDetailsDto{
     id:number,
-    tables :IGetTableDto[]
+    tables :IGetTableDto[],
+    arName : string,
+    arNotes : string,
+    enNotes : string,
+}
+export interface IGetTablesDto {
+    id:number,
+    arName : string,
+    enName : string,
+    enHeading : string,
+    arHeading : string,
+    IsActive : boolean,
+    formId : number
 }
