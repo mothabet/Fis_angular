@@ -10,9 +10,7 @@ import { AuditingRulesModule } from './auditing-rules/auditing-rules.module';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthModule } from './auth/auth.module';
 import { CodeModule } from './code/code.module';
-import { FormsModule } from '@angular/forms';
 import { FromsModule } from './Forms/froms.module';
-import { TestModule } from './test/test.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +24,6 @@ import { TestModule } from './test/test.module';
     AuditingRulesModule,
     AuthModule,
     CodeModule,
-    TestModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({

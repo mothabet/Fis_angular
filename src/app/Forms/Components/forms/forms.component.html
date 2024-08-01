@@ -158,14 +158,20 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 mb-3">
-                                <select formControlName="Type" class="form-control" style="width: 100%;">
-                                    <option selected value="0">النوع</option>
-                                    <option value="1">استماره بتعاملات</option>
-                                    <option value="2">استماره بدون تعاملات</option>
-                                    <option value="3">ربعية</option>
-                                    <option value="4">ربعية</option>
-                                    <option value="5">ربعية</option>
+                                <select formControlName="Type" class="form-control" style="width: 100%;" [(ngModel)]="Type">
+                                    <option selected disabled value="0">--اختر نوع الاستماره--</option>
+                                    <option value="1">جدول بمعاملات</option>
+                                    <option value="2">جدول بدون معاملات</option>
+                                    <option value="3">جدول سنه مقسمه الى اجزاء</option>
+                                    <option value="4">جدول سنتين مقسمه الى اجزاء</option>
+                                    <option value="5">جدول بمدة زمنية</option>
                                 </select>
+                            </div>
+                            <div class="col-sm-12 mb-2" *ngIf="Type == 5">
+                                <div class=" input-floating-label mb-0">
+                                    <input type="text" class="form-control" formControlName="period">
+                                    <label class="eng">عدد سنين الجدول</label>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer pt-0 ps-0" style="border-top: none;">
@@ -231,67 +237,19 @@
                 <div class="modal-header pb-1">
                     <h5 class="modal-title" id="sendForm">إضافة سؤال</h5>
                 </div>
-                <form>
+                <form [formGroup]="questionForm">
                     <div class="modal-body pb-0">
                         <div class="row">
-                            <div class="col-lg-6 col-md-12 mb-3">
-                                <div class=" input-floating-label mb-0">
-                                    <input type="text" class="form-control">
-                                    <label for="user">اسم السؤال بالعربى</label>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-12 mb-3">
-                                <div class=" input-floating-label mb-0">
-                                    <input type="text" class="form-control" style="direction: ltr;">
-                                    <label class="eng">Question Name in English</label>
-                                </div>
-                            </div>
                             <div class="col-lg-6 col-md-12 mb-2">
                                 <div class=" input-floating-label mb-0">
-                                    <select class="form-select create-table-select" style="width: 100%;">
-                                        <option selected value="0" id="messageType" name="messageType">إختيارى</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select class="form-control" style="width: 100%;" formControlName="codeId">
+                                        <option selected value="0" id="messageType" disabled>--اختار رمز السؤال--</option>
+                                        <option *ngFor="let item of codes" value={{item.Id}}>{{item.QuestionCode}}_{{item.arName}}</option>
                                     </select>
-                                    <label>نوع السؤال </label>
+                                    <label>رمز السؤال</label>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-12 mb-2">
-                                <div class=" form-group mb-0">
-                                    <input type="text" class="form-control" placeholder="ملاحظات">
-                                </div>
-                            </div>
-                            <div class="col-12-12 mb-2">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 style="font-size: 14px;">الاختيارات</h6>
-                                    <button type="button" class="btn add-ques rounded-circle" id="add-ques"><i
-                                            class="fa-solid fa-plus icon"></i></button>
-                                </div>
-                            </div>
-                            <div class="col-12" id="row-container">
-                                <div class="row" id="question-1">
-                                    <div class="col-lg-6 col-12 mb-3">
-                                        <div class=" input-floating-label mb-0">
-                                            <input type="text" class="form-control">
-                                            <label>اسم الاختيار بالعربى</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-5 col-11 mb-3" id="eng-choose-label">
-                                        <div class=" input-floating-label mb-0">
-                                            <input type="text" class="form-control" style="direction: ltr;">
-                                            <label class="eng">Choice in English</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-1" id="eng-choose-icon">
-                                        <button type="button" class="trash-btn-form trash" id="delete-ques">
-                                            <img src=".././../../../assets/images/trash-can-outline.png" alt=""
-                                                class="trash">
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
+                            
                         </div>
                         <div class="modal-footer  pt-0 ps-0" style="border-top: none;">
                             <button type="button" class="btn btn-cancel" data-bs-dismiss="modal"

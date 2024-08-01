@@ -1,15 +1,16 @@
-.items{
-  width:1195px;
+.items {
+  width: 1195px;
   height: 475px;
-  overflow:auto;
+  overflow: auto;
   display: flex;
 }
+
 .items ul {
   padding-top: 20px;
-position:relative;
-display:flex
+  position: relative;
+  display: flex
 }
- 
+
 /* Make all children "inline" */
 .items li {
   /*float: left;*/
@@ -20,9 +21,10 @@ display:flex
   padding: 20px 5px 0 5px;
   width: auto;
 }
- 
+
 /* Add horizontal connector. Note: they are 2 pseudo-elements */
-.items li::before, .items li::after {
+.items li::before,
+.items li::after {
   content: '';
   position: absolute;
   top: 0;
@@ -32,41 +34,44 @@ display:flex
   z-index: -1;
   border-top: 1px solid #CCC;
 }
- 
+
 .items li::after {
   border-left: 1px solid #CCC;
   left: 50%;
   right: auto;
 }
- 
+
 /* Remove left and right connector from a single child */
-.items li:only-child::after, .items li:only-child::before {
+.items li:only-child::after,
+.items li:only-child::before {
   display: none;
 }
- 
+
 .items li:only-child {
   padding-top: 0;
 }
- 
+
 /* Remove "outer" connector */
-.items li:first-child::before, .items li:last-child::after {
-  
+.items li:first-child::before,
+.items li:last-child::after {
+
   border-top: 1px solid #CCC;
 }
+
 /* Add back the down connector for last node */
 .items li:last-child::before {
   border-right: 1px solid #CCC;
   border-radius: 0 5px 0 0;
   width: 0px;
 }
- 
+
 /* Add curve line to the first child's connector */
 .items li:first-child::after {
   border-radius: 5px 0 0 0;
   width: 0px !important;
 }
- 
- 
+
+
 /* Add down connector from parent */
 .items ul ul::before {
   content: '';
@@ -78,7 +83,7 @@ display:flex
   left: 50%;
   width: 0;
 }
- 
+
 /* Add cosmetic for each item */
 .items li a {
   font-size: 12px;
@@ -89,22 +94,23 @@ display:flex
   text-decoration: none;
   display: inline-block;
   border-radius: 4px;
+  min-width: 275px;
 }
- 
+
 /* Change bg-color while hovering each item */
 .items li a:hover {
   background-color: #EEF;
 }
- 
+
 /* EXPERIMENTAL for multiple parents */
 /* Add margin for the parents */
 .items li a:not(:only-of-type) {
   position: relative;
   margin-bottom: 16px;
 }
- 
+
 /* Add "down" connector (vertical line) from each multi-parent, EXCEPT the last one */
-.items li > a:not(:last-of-type)::after{
+.items li>a:not(:last-of-type)::after {
   content: '';
   position: absolute;
   border-left: 1px solid #CCC;
@@ -115,9 +121,9 @@ display:flex
   left: 50%;
   z-index: -1;
 }
- 
+
 /* Special case for the last multiple-parent, using border-right */
-.items li > a:not(:only-of-type):last-of-type::after {
+.items li>a:not(:only-of-type):last-of-type::after {
   content: '';
   position: absolute;
   border-right: 1px solid #CCC;
@@ -126,18 +132,18 @@ display:flex
   width: 50%;
   height: 20px;
   right: 50%;
-  z-index: -1; 
+  z-index: -1;
   border-bottom-right-radius: 5px;
 }
- 
+
 /* Give the curve line to the first multiple parent .... */
-.items li > a:not(:only-of-type):first-child::after {
+.items li>a:not(:only-of-type):first-child::after {
   border-bottom-left-radius: 5px;
-  
+
 }
- 
+
 /* The middle element of multi-parents*/
-.items li > a:not(:first-child):not(:last-of-type)::before {
+.items li>a:not(:first-child):not(:last-of-type)::before {
   content: '';
   position: absolute;
   border-bottom: 1px solid #CCC;
@@ -146,8 +152,15 @@ display:flex
   right: 50%;
   z-index: -1;
 }
- 
+
 .items ul:last-of-type li {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+label.form-check-label {
+  position: static;
+  top: 0;
+  right: 15px;
+  transform: translateY(0);
 }

@@ -6,6 +6,7 @@ export interface IAddTableDto {
     Type: string,
     formId:number,
     IsActive: boolean,
+    period: number,
 }
 export interface IGetTableDto {
     id:number,

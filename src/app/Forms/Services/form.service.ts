@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 import { IAddTableDto } from '../Dtos/TableDto';
+import { IAddQuestion } from '../Dtos/QuestionDto';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,17 @@ export class FormService {
     debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Form/UpdateForm?id=${id}&lang=2`, Model, { headers });
+     return resopnse;
+   }
+   DeleteTable(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.delete(environment.apiUrl+`Table/DeleteTable?id=${id}&lang=2`, { headers });
+     return resopnse;
+   }
+   AddFormContent(Model: IAddQuestion){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`FormContent/AddFormContent?lang=2`, Model, { headers });
      return resopnse;
    }
 }
