@@ -203,7 +203,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12 mb-2">
                                 <div class=" input-floating-label mb-0">
-                                    <select class="form-control" style="width: 100%;" formControlName="codeId">
+                                    <select class="form-control" style="width: 100%;" formControlName="codeId" (change)="onSelectChange($event)">
                                         <option selected value="0" id="messageType" disabled>--اختار رمز السؤال--</option>
                                         <option *ngFor="let item of codes" value={{item.Id}}>{{item.QuestionCode}}_{{item.arName}}</option>
                                     </select>
@@ -212,6 +212,41 @@
                             </div>
                             
                         </div>
+                        <div class="table-responsive company-table research-table">
+                            <table class="table table-borderless">
+                              <thead>
+                                <tr class="t-header">
+                                  <th scope="col">رقم</th>
+                                  <th class="text-center" scope="col">الرمز</th>
+                                  <th class="text-center" scope="col">الاسم</th>
+                                  <th class="text-center" scope="col">Name</th>
+                                </tr>
+                              </thead>
+                      
+                              <tbody>
+                                <tr *ngFor="let item of subCodes; let i = index">
+                                  <td>
+                                    {{ i + 1 }}
+                                  </td>
+                                  <td class="text-center">{{ item.QuestionCode }}</td>
+                                  <td class="text-center">{{ item.arName }}</td>
+                                  <td class="text-center">{{ item.enName }}</td>
+                                  
+                                </tr>
+                              </tbody>
+                              <tfoot *ngIf="noData">
+                                <tr>
+                                  <th colspan="7">
+                                    <div class="alert alert-warning">
+                                      <i class="fa-solid fa-triangle-exclamation"></i>
+                                      <br />
+                                      <span> لا يوجد بيانات </span>
+                                    </div>
+                                  </th>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
                         <div class="modal-footer  pt-0 ps-0" style="border-top: none;">
                             <button type="button" class="btn btn-cancel" data-bs-dismiss="modal"
                                 id="quesCancel">إلغاء</button>

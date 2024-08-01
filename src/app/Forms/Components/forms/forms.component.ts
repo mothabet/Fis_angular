@@ -10,6 +10,8 @@ import { IAddQuestion, IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { CodeHomeComponent } from 'src/app/code/Components/code-home/code-home.component';
+import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
+import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 
 @Component({
   selector: 'app-forms',
@@ -43,6 +45,7 @@ export class FormsComponent implements OnInit {
   tableIdInQuestion: number = 0;
   questionForm!: FormGroup;
   codes: ICode[] = [];
+  subCodes: ISubCode[] = [];
   code!: ICode;
   Type: number = 0;
   constructor(
@@ -52,7 +55,8 @@ export class FormsComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private sharedServices: SharedService,
-    private codeService: CodeHomeService
+    private codeService: CodeHomeService,
+    private subCodeService: SubCodeHomeService,
   ) {}
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -79,7 +83,6 @@ export class FormsComponent implements OnInit {
     });
     this.GetAllForms();
   }
-
   resetForm() {
     this.add = true;
     this.formForm.reset({
@@ -887,6 +890,7 @@ export class FormsComponent implements OnInit {
             tableId: this.editQues.tableId,
             codeId: this.editQues.codeId,
           });
+          this.GetSubCodesById(this.editQues.codeId)
           this.Loader = false;
           this.addQuestion = false;
           const button = document.getElementById(
@@ -946,5 +950,30 @@ export class FormsComponent implements OnInit {
       });
       this.Loader = false;
     }
+  }
+  onSelectChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.GetSubCodesById(Number(selectedValue))
+  }
+  GetSubCodesById(id:number){
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.subCodes = res.Data;
+        }
+        else {
+          this.subCodes = [];
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.subCodeService.GetSubCodesById(Number(id)).subscribe(observer);
   }
 }
