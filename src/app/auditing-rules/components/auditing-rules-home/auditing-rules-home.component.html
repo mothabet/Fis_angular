@@ -45,7 +45,6 @@
           <tr class="t-header">
             <th scope="col">رقم</th>
             <th class="text-center" scope="col">قاعدة التدقيق</th>
-            <th class="text-center" scope="col">اسم المُنشئ</th>
             <th class="text-center" scope="col">تاريخ الانشاء</th>
             <th class="text-center" scope="col"></th>
           </tr>
@@ -57,7 +56,6 @@
               {{ i + 1 }}
             </td>
             <td class="text-center">{{ item.Rule }}</td>
-            <td class="text-center">{{ item.CreatedBy }}</td>
             <td class="text-center">{{getDateOnly(item.CreatedOn) }}</td>
             <td class="text-center td-actions">
               <!-- <a routerLink="/Code-Details" class="icon">
