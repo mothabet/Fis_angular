@@ -13,9 +13,17 @@ import { LoginGuard } from './Guard/login.guard';
 import { FormsComponent } from './Forms/Components/forms/forms.component';
 import { FormDetailsComponent } from './Forms/Components/form-details/form-details.component';
 import { TableWithPeriodComponent } from './Forms/Components/table-with-period/table-with-period.component';
+import { TransTableComponent } from './Forms/Components/trans-table/trans-table.component';
+import { TableWithoutTransComponent } from './Forms/Components/table-without-trans/table-without-trans.component';
+import { OneYearWithPartsComponent } from './Forms/Components/one-year-with-parts/one-year-with-parts.component';
+import { TwoYearsWithPartsComponent } from './Forms/Components/two-years-with-parts/two-years-with-parts.component';
 
 const routes: Routes = [
+  { path: 'TransTable/:formId/:tableId', component: TransTableComponent, canActivate: [LoginGuard] },
   { path: 'PeriodTable/:formId/:tableId', component: TableWithPeriodComponent, canActivate: [LoginGuard] },
+  { path: 'TableWithoutTrans/:formId/:tableId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },
+  { path: 'OneYearWithParts/:formId/:tableId', component: OneYearWithPartsComponent, canActivate: [LoginGuard] },
+  { path: 'TwoYearsWithParts/:formId/:tableId', component: TwoYearsWithPartsComponent, canActivate: [LoginGuard] },
   { path: 'FormDetails/:id', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },

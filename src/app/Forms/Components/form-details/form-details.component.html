@@ -18,7 +18,7 @@
         </div>
         <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
             <div class="clipped-element-first arrow" *ngFor="let item of coverForm.tables">
-                <a [routerLink]="['/PeriodTable',formId, item.id]">{{item.arName}}</a>
+                <a (click)="NavigateTables(item.id)">{{item.arName}}</a>
             </div>
             <div *ngIf="noTables" style="min-height: 60px;">
                 <h1> </h1>

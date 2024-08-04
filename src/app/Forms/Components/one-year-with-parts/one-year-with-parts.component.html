@@ -1,0 +1,120 @@
+<app-loader *ngIf="Loader"></app-loader>
+
+<div class="main-content p-4 main card" style="flex: 1">
+    <!-- header -->
+    <app-top-screen [title]="'عرض الاستمارة'"></app-top-screen>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="companies-details form-details prev-form">
+        <div class="header-nav" style="margin-bottom: -10px">
+            <div class="header-nav" style="margin-bottom: -10px">
+                <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
+                    <ul class="links">
+                        <li>
+                            <a [routerLink]="['/FormDetails', coverForm.id]" (click)="FormsNavigation(coverForm.id)">test0</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="arrow-group table-responsive d-flex form-tabs" style="gap: 15px">
+                <div class="clipped-element-first arrow" *ngFor="let item of coverForm.tables">
+                    <a (click)="GetTableById(item.id)" [routerLink]="['/PeriodTable', formId, item.id]">test1</a>
+                </div>
+                <div *ngIf="noTables" style="min-height: 60px">
+                    <h1></h1>
+                </div>
+            </div>
+            <!-- start table -->
+            <div class="table-responsive company-table">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" rowspan="2">البيان</th>
+                            <th scope="col" rowspan="2">Total الاجمالى</th>
+                            <th class="text-center" scope="col" colspan="2">نهاية عام Year-end 2021</th>
+                            <th class="text-center" scope="col" rowspan="2">الرمز Code</th>
+                            <th class="text-start" scope="col" rowspan="2">Items</th>
+                        </tr>
+                        <tr class="t-header">
+                            <th class="text-center" scope="col">التفاصيل 3 Details 3</th>
+                            <th class="text-center" scope="col">التفاصيل 4 Details 4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Row 1 Data 1</td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="text" value="Code 1" /></td>
+                            <td class="text-start">Row 1 Data 2</td>
+                        </tr>
+                        <tr>
+                            <td>Row 2 Data 1</td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="text" value="Code 2" /></td>
+                            <td class="text-start">Row 2 Data 2</td>
+                        </tr>
+                        <tr>
+                            <td>Row 3 Data 1</td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="text" value="Code 3" /></td>
+                            <td class="text-start">Row 3 Data 2</td>
+                        </tr>
+                        <tr>
+                            <td>Row 4 Data 1</td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="text" value="Code 4" /></td>
+                            <td class="text-start">Row 4 Data 2</td>
+                        </tr>
+                        <tr>
+                            <td>Row 5 Data 1</td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="number" placeholder="0" /></td>
+                            <td class="text-center"><input type="text" value="Code 5" /></td>
+                            <td class="text-start">Row 5 Data 2</td>
+                        </tr>
+                        <tr class="footer">
+                            <td>الاجمالى</td>
+                            <td class="text-center">
+                                <input type="number" placeholder="0" />
+                            </td>
+                            <td class="text-center">
+                                <input type="number" placeholder="0" /></td>
+                            <td class="text-center">
+                                <input type="number" placeholder="0" /></td>
+                            <td class="text-center">
+                                <input type="text" value="900" /></td>
+                            <td class="text-start">Total</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            
+            
+            
+            <!-- end table -->
+
+            <!-- start footer -->
+            <footer class="projection-notes d-flex flex-wrap my-3 card-box">
+                <p class="ar flex-fill">
+                    {{ arNotes }}
+                </p>
+                <p class="en flex-fill">
+                    {{ enNotes }}
+                </p>
+            </footer>
+            <!-- end footer -->
+
+            <!-- end content -->
+        </div>
+    </div>
+</div>
