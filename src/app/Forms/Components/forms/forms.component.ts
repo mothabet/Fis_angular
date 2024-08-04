@@ -10,6 +10,8 @@ import { IAddQuestion, IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { CodeHomeComponent } from 'src/app/code/Components/code-home/code-home.component';
+import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
+import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 
 @Component({
   selector: 'app-forms',
@@ -43,6 +45,7 @@ export class FormsComponent implements OnInit {
   tableIdInQuestion: number = 0;
   questionForm!: FormGroup;
   codes: ICode[] = [];
+  subCodes: ISubCode[] = [];
   code!: ICode;
   Type: number = 0;
   constructor(
@@ -52,7 +55,8 @@ export class FormsComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private sharedServices: SharedService,
-    private codeService: CodeHomeService
+    private codeService: CodeHomeService,
+    private subCodeService: SubCodeHomeService,
   ) {}
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -78,8 +82,8 @@ export class FormsComponent implements OnInit {
       codeId: [0, Validators.required],
     });
     this.GetAllForms();
+    
   }
-
   resetForm() {
     this.add = true;
     this.formForm.reset({
@@ -87,8 +91,8 @@ export class FormsComponent implements OnInit {
       enName: '',
       arNotes: '',
       enNotes: '',
-      IsActive: '',
-      Type: '',
+      isActive: true,
+      type: '',
     });
   }
   AppenHtmlQues(getQuestionDto: IGetQuestionDto) {
@@ -136,7 +140,6 @@ export class FormsComponent implements OnInit {
       e.stopPropagation();
       this.showAlertQuestion(getQuestionDto.Id); // Pass form ID
     });
-    debugger;
     const text = this.renderer.createText(getQuestionDto.code.arName);
     this.renderer.appendChild(divIcon, delIcon);
     this.renderer.appendChild(divIcon, editIcon);
@@ -229,7 +232,7 @@ export class FormsComponent implements OnInit {
     multiTextIcon.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       e.stopPropagation();
-      debugger;
+      
       this.openModal('createQuestion', +getTableDto.id);
     });
 
@@ -379,6 +382,7 @@ export class FormsComponent implements OnInit {
     this.codeService.GetAllCodes(page, textSearch).subscribe(observer);
   }
   saveForm() {
+    
     if (this.formForm.valid) {
       const Model: IAddForm = {
         arName: this.formForm.value.arName,
@@ -392,17 +396,6 @@ export class FormsComponent implements OnInit {
       this.Loader = true;
       const observer = {
         next: (res: any) => {
-          const form: IGetFormDto = {
-            id: res.Data,
-            arName: this.formForm.value.arName,
-            enName: this.formForm.value.enName,
-            arNotes: this.formForm.value.arNotes,
-            enNotes: this.formForm.value.enNotes,
-            IsActive: this.formForm.value.IsActive, // Corrected to match the interface
-            Type: this.formForm.value.Type,
-            tables: this.formForm.value.tables,
-          };
-
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -424,13 +417,21 @@ export class FormsComponent implements OnInit {
       };
       this.formServices.addForm(Model).subscribe(observer);
     }
-    else{
+    else {
+      const allErrors: string[] = [];
+      for (const controlName in this.formForm.controls) {
+        if (this.formForm.controls[controlName].invalid) {
+          const errors = this.getControlErrors(controlName);
+          allErrors.push(...errors);
+        }
+      }
       Swal.fire({
         icon: 'error',
-        title: 'يجب ادخال البيانات بشكل صحيح',
+        title: allErrors.join('<br>'),
         showConfirmButton: false,
         timer: 2000,
       });
+      this.Loader = false;
     }
   }
   GetAllForms(): void {
@@ -440,7 +441,9 @@ export class FormsComponent implements OnInit {
         this.noData = !res.Data || res.Data.length === 0;
         this.forms = res.Data;
         if (res.Data) {
+          
           this.resetForm();
+          
           if (this.forms.length > 0) {
             const element = document.getElementById('items');
             if (element) {
@@ -453,12 +456,16 @@ export class FormsComponent implements OnInit {
           }
 
           (res.Data as IGetFormDto[]).forEach((element: IGetFormDto) => {
+            
             this.AppenHtmlForm(element);
             (element.tables as IGetTableDto[]).forEach(
               (elementTable: IGetTableDto) => {
+            
                 this.AppenHtmlTable(elementTable);
                 (elementTable.formContents as IGetQuestionDto[]).forEach(
                   (elementQuestion: IGetQuestionDto) => {
+            
+
                     this.AppenHtmlQues(elementQuestion);
                   }
                 );
@@ -527,6 +534,7 @@ export class FormsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.addForm = res.Data;
+          
           this.formForm.patchValue({
             arName: this.addForm.arName,
             enName: this.addForm.enName,
@@ -598,7 +606,7 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
-    debugger;
+    
     this.Loader = true;
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
@@ -739,7 +747,7 @@ export class FormsComponent implements OnInit {
     this.formServices.GetTableById(id).subscribe(observer);
   }
   updateTable() {
-    debugger;
+    
     this.Loader = true;
     if (this.tableForm.valid) {
       const Model: IAddTableDto = {
@@ -887,6 +895,7 @@ export class FormsComponent implements OnInit {
             tableId: this.editQues.tableId,
             codeId: this.editQues.codeId,
           });
+          this.GetSubCodesById(this.editQues.codeId)
           this.Loader = false;
           this.addQuestion = false;
           const button = document.getElementById(
@@ -946,5 +955,54 @@ export class FormsComponent implements OnInit {
       });
       this.Loader = false;
     }
+  }
+  onSelectChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    this.GetSubCodesById(Number(selectedValue))
+  }
+  GetSubCodesById(id:number){
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.subCodes = res.Data;
+        }
+        else {
+          this.subCodes = [];
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.subCodeService.GetSubCodesById(Number(id)).subscribe(observer);
+  }
+  getControlErrors(controlName: string): string[] {
+    const control = this.formForm.get(controlName);
+    const errors: string[] = [];
+
+    if (control && control.errors) {
+      
+      // Check if control is not null and has errors
+      if (controlName == 'arName') controlName = 'اسم الاستمارة بالعربى';
+      if (controlName == 'enName') controlName = 'Form Name in English';
+      if (controlName == 'arNotes') controlName = 'ملاحظات بالعربى';
+      if (controlName == 'enNotes') controlName = 'Notes in English';
+      if (controlName == 'isActive') controlName = 'حالة الاستماره';
+      if (controlName == 'type') controlName = 'نوع الاستماره';
+      if(control.errors['required'] && (controlName=='حالة الاستماره' || controlName=='نوع الاستماره')){
+        errors.push(`يجب اختيار ${controlName}`);
+      }
+      else if (control.errors['required']) {
+        errors.push(`يجب ادخال ${controlName}`);
+      }
+      // Add other error types here if needed
+    }
+
+    return errors;
   }
 }

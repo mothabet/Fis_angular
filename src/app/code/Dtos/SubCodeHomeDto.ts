@@ -4,3 +4,11 @@ export interface IAddSubCode {
     arName: string,
     enName: string,
 }
+export interface ISubCode{
+    Id:number,
+    arName: string,
+    enName: string,
+    QuestionCode:string,
+    codeId :number
+
+}
