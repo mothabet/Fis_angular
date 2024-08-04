@@ -8,13 +8,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { TopScreenComponent } from './components/top-screen/top-screen.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { NavigateTablesTypesComponent } from './components/navigate-tables-types/navigate-tables-types.component';
 
 @NgModule({
   declarations: [
     SidebarComponent,
     TopScreenComponent,
     LoaderComponent,
-    PaginationComponent
+    PaginationComponent,
+    NavigateTablesTypesComponent
   ],
   imports: [
     CommonModule,

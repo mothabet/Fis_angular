@@ -7,23 +7,6 @@
     <!-- start content -->
     <div class="companies-details form-details prev-form">
         <div class="header-nav" style="margin-bottom: -10px">
-            <div class="header-nav" style="margin-bottom: -10px">
-                <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
-                    <ul class="links">
-                        <li>
-                            <a [routerLink]="['/FormDetails', coverForm.id]" (click)="FormsNavigation(coverForm.id)">test0</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="arrow-group table-responsive d-flex form-tabs" style="gap: 15px">
-                <div class="clipped-element-first arrow" *ngFor="let item of coverForm.tables">
-                    <a (click)="GetTableById(item.id)" [routerLink]="['/PeriodTable', formId, item.id]">test1</a>
-                </div>
-                <div *ngIf="noTables" style="min-height: 60px">
-                    <h1></h1>
-                </div>
-            </div>
             <!-- start table -->
             <div class="content companies projection-table">
                 <div class="header d-flex flex-wrap">
@@ -143,10 +126,8 @@
             <!-- start footer -->
             <footer class="projection-notes d-flex flex-wrap my-3 card-box">
                 <p class="ar flex-fill">
-                    {{ arNotes }}
                 </p>
                 <p class="en flex-fill">
-                    {{ enNotes }}
                 </p>
             </footer>
             <!-- end footer -->
