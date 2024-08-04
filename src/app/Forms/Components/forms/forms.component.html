@@ -145,6 +145,18 @@
                   <label  >نوع الاستماره</label>
                 </div>
               </div>
+              <div class="col-sm-12 mb-3">
+                <div class="input-floating-label mb-0">
+                  <select formControlName="yearDeleted" class="form-control" style="width: 100%">
+                    <option selected disabled value="0">--اختر تاريخ مسح الاستماره--</option>
+                    <ng-container *ngFor="let year of years">
+                      <option [value]="year">{{ year }}</option>
+                    </ng-container>
+                  </select>
+                  <label>تاريخ مسح</label>
+                </div>
+              </div>
+              
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
               <button
