@@ -48,6 +48,8 @@ export class FormsComponent implements OnInit {
   subCodes: ISubCode[] = [];
   code!: ICode;
   Type: number = 0;
+  years: number[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -66,6 +68,8 @@ export class FormsComponent implements OnInit {
       enNotes: ['', Validators.required],
       isActive: [true, Validators.required],
       type: ['', Validators.required],
+      yearDeleted: [''],
+
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -82,7 +86,8 @@ export class FormsComponent implements OnInit {
       codeId: [0, Validators.required],
     });
     this.GetAllForms();
-    
+    this.years = this.sharedServices.generateYears(2000, 2050);
+
   }
   resetForm() {
     this.add = true;

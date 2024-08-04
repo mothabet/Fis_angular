@@ -105,4 +105,11 @@ export class SharedService {
       event.preventDefault();
     }
   }
+  generateYears(start: number, end: number): number[] {
+    const years = [];
+    for (let i = start; i <= end; i++) {
+      years.push(i);
+    }
+    return years;
+  }
 }
