@@ -10,25 +10,14 @@
     <div class="content companies">
       <div class="header d-flex justify-content-end">
         <div class="btns d-flex">
-          <button
-            style="padding: 6px"
-            type="button"
-            class="btn-download"
-            data-bs-toggle="modal"
-            data-bs-target="#createForm"
-          >
-            <img
-              src=".././../../../assets/images/list-box-outline.png"
-              alt=""
-            />
+          <button style="padding: 6px" type="button" class="btn-download" data-bs-toggle="modal"
+            data-bs-target="#createForm">
+            <img src=".././../../../assets/images/list-box-outline.png" alt="" />
             إنشاء إستمارة
           </button>
 
           <button type="button" class="btn btn-add">
-            <img
-              src=".././../../../assets/images/briefcase-plus-outli.png"
-              alt=""
-            />
+            <img src=".././../../../assets/images/briefcase-plus-outli.png" alt="" />
             طباعة PDF
           </button>
         </div>
@@ -51,13 +40,7 @@
   </div>
   <!--start modal -->
   <!--start create form modal -->
-  <div
-    class="modal company-modal fade"
-    id="createForm"
-    tabindex="-1"
-    aria-labelledby="add"
-    aria-hidden="true"
-  >
+  <div class="modal company-modal fade" id="createForm" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header pb-1">
@@ -71,83 +54,50 @@
             <div class="row">
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <input
-                    formControlName="arName"
-                    type="text"
-                    class="form-control"
-                  />
+                  <input formControlName="arName" type="text" class="form-control" />
                   <label for="user">اسم الاستمارة بالعربى</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-2">
                 <div class="input-floating-label mb-0">
-                  <input
-                    formControlName="enName"
-                    type="text"
-                    class="form-control"
-                    style="direction: ltr"
-                  />
+                  <input formControlName="enName" type="text" class="form-control" style="direction: ltr" />
                   <label class="eng">Form Name in English</label>
                 </div>
               </div>
               <div class="col-12-12 mb-2">
-                <div
-                  class="form-check form-switch d-flex justify-content-between align-items-center"
-                >
-                  <label
-                    class="form-check-label"
-                    for="active"
-                    style="font-size: 14px"
-                    >فعال</label
-                  >
-                  <input
-                    formControlName="isActive"
-                    class="form-check-input"
-                    type="checkbox"
-                    id="active"
-                    checked
-                  />
+                <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                  <label class="form-check-label" for="active" style="font-size: 14px">فعال</label>
+                  <input formControlName="isActive" class="form-check-input" type="checkbox" id="active" checked />
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <textarea
-                    formControlName="arNotes"
-                    class="form-control input-modal"
-                    rows="2"
-                    style="font-size: 12px"
-                  ></textarea>
+                  <textarea formControlName="arNotes" class="form-control input-modal" rows="2"
+                    style="font-size: 12px"></textarea>
                   <label for="user">ملاحظات بالعربى</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <textarea
-                    formControlName="enNotes"
-                    class="form-control input-modal"
-                    rows="2"
-                    style="direction: ltr; font-size: 12px"
-                  ></textarea>
+                  <textarea formControlName="enNotes" class="form-control input-modal" rows="2"
+                    style="direction: ltr; font-size: 12px"></textarea>
                   <label class="eng">Notes in English</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <select
-                    formControlName="type"
-                    class="form-control"
-                    style="width: 100%"
-                  >
+                  <select formControlName="type" class="form-control" style="width: 100%" [(ngModel)]="typeForm">
                     <option selected disabled value="0">--اختر نوع الاستماره--</option>
                     <option value="1">سنوية</option>
                     <option value="2">ربعية</option>
                   </select>
-                  <label  >نوع الاستماره</label>
+                  <label>نوع الاستماره</label>
                 </div>
               </div>
-              <div class="col-sm-12 mb-3">
+              <div class="col-sm-12 mb-3" *ngIf="typeForm=='1'||typeForm=='2'">
                 <div class="input-floating-label mb-0">
-                  <select formControlName="yearDeleted" class="form-control" style="width: 100%">
+                  <select formControlName="yearDeleted" class="form-control" style="width: 100%"
+                    [(ngModel)]="yearDeleted">
                     <option selected disabled value="0">--اختر تاريخ مسح الاستماره--</option>
                     <ng-container *ngFor="let year of years">
                       <option [value]="year">{{ year }}</option>
@@ -156,33 +106,29 @@
                   <label>تاريخ مسح</label>
                 </div>
               </div>
-              
+              <div class="col-sm-12 mb-3" *ngIf="(yearDeleted>'0') && typeForm=='2'">
+                <div class="input-floating-label mb-0">
+                  <select formControlName="typeQuarter" class="form-control" style="width: 100%">
+                    <option selected disabled value="0">--اختر ربع مسح الاستماره--</option>
+                    <option value="1">الاول</option>
+                    <option value="2">الثاني</option>
+                    <option value="3">الثالث</option>
+                    <option value="4">الرابع</option>
+                  </select>
+                  <label>ربع مسح الاستماره</label>
+                </div>
+              </div>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button
-                id="btnCancel"
-                type="button"
-                class="btn btn-cancel"
-                data-bs-dismiss="modal"
-              >
+              <button id="btnCancel" type="button" class="btn btn-cancel" data-bs-dismiss="modal" (click)="resetForm()">
                 إلغاء
               </button>
-              <button
-                (click)="saveForm()"
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                *ngIf="add"
-              >
+              <button (click)="saveForm()" type="button" class="btn btn-save" style="background-color: #133c8b"
+                *ngIf="add">
                 حفظ
               </button>
-              <button
-                (click)="updateForm()"
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                *ngIf="!add"
-              >
+              <button (click)="updateForm()" type="button" class="btn btn-save" style="background-color: #133c8b"
+                *ngIf="!add">
                 تعديل
               </button>
             </div>
@@ -195,13 +141,7 @@
   <!--end create form modal -->
 
   <!--start create table modal -->
-  <div
-    class="modal company-modal fade"
-    id="createTable"
-    tabindex="-1"
-    aria-labelledby="add"
-    aria-hidden="true"
-  >
+  <div class="modal company-modal fade" id="createTable" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header pb-1">
@@ -209,7 +149,7 @@
             إنشاء جدول
           </h5>
           <h5 class="modal-title" id="sendForm" *ngIf="!_addTable">
-            إنشاء جدول
+            تعديل جدول
           </h5>
         </div>
         <form [formGroup]="tableForm">
@@ -217,118 +157,114 @@
             <div class="row">
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="arName"
-                  />
+                  <input type="text" class="form-control" formControlName="arName" />
                   <label>اسم الجدول بالعربى</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-2">
                 <div class="input-floating-label mb-0">
-                  <input
-                    type="text"
-                    class="form-control"
-                    style="direction: ltr"
-                    formControlName="enName"
-                  />
+                  <input type="text" class="form-control" style="direction: ltr" formControlName="enName" />
                   <label class="eng">Table Name in English</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="arHeading"
-                  />
+                  <input type="text" class="form-control" formControlName="arHeading" />
                   <label>عنوان الجدول</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-2">
                 <div class="input-floating-label mb-0">
-                  <input
-                    type="text"
-                    class="form-control"
-                    style="direction: ltr"
-                    formControlName="enHeading"
-                  />
+                  <input type="text" class="form-control" style="direction: ltr" formControlName="enHeading" />
                   <label class="eng">Table Heading in English</label>
                 </div>
               </div>
               <div class="col-12-12 mb-2">
-                <div
-                  class="form-check form-switch d-flex justify-content-between align-items-center"
-                >
-                  <label
-                    class="form-check-label"
-                    for="active"
-                    style="font-size: 14px"
-                    >فعال</label
-                  >
-                  <input
-                    formControlName="IsActive"
-                    class="form-check-input"
-                    type="checkbox"
-                    id="active"
-                    checked
-                  />
+                <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                  <label class="form-check-label" for="active" style="font-size: 14px">فعال</label>
+                  <input formControlName="IsActive" class="form-check-input" type="checkbox" id="active" checked />
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
-                <select
-                  formControlName="Type"
-                  class="form-control"
-                  style="width: 100%"
-                  [(ngModel)]="Type"
-                >
+                <select formControlName="Type" class="form-control" style="width: 100%" [(ngModel)]="Type" (change)="onTypeChange()">
                   <option selected disabled value="0">
-                    --اختر نوع الاستماره--
+                    --اختر نوع الجدول--
                   </option>
                   <option value="1">جدول بمعاملات</option>
                   <option value="2">جدول بدون معاملات</option>
-                  <option value="5">جدول سنه مقسمة الى اجزاء</option>
+                  <option value="3">جدول سنه مقسمة الى اجزاء</option>
                   <option value="4">جدول سنتين مقسمة الى اجزاء</option>
                   <option value="5">جدول بمدة زمنية</option>
                 </select>
               </div>
               <div class="col-sm-12 mb-2" *ngIf="Type == 5">
                 <div class="input-floating-label mb-0">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="period"
-                  />
+                  <input type="text" class="form-control" formControlName="period" />
                   <label class="eng">مده الزمنيه للجدول</label>
                 </div>
               </div>
+              <hr *ngIf="Type == 3 || Type == 4" />
+              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4">
+                <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
+                  اضافة سطر
+                </button>
+                <table class="table table-borderless">
+                  <thead>
+                    <tr class="t-header">
+                      <th scope="col">رقم</th>
+                      <th class="text-center" scope="col">الاسم بالكامل</th>
+                      <th class="text-center" scope="col">English Full Name</th>
+                      <th class="text-center" scope="col"></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr *ngFor="let item of addTableParts; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td class="text-center">
+                        <input type="text" [(ngModel)]="item.arName" (input)="updateTableParts(i, 'arName', $event)"
+                          value="{{ item.arName }}" />
+                      </td>
+                      <td class="text-center">
+                        <input type="text" [(ngModel)]="item.enName" (input)="updateTableParts(i, 'enName', $event)"
+                          value="{{ item.enName }}" />
+                      </td>
+                      
+                      <td class="text-center td-actions">
+                        <button class="icon" (click)="removeItem(i)"
+                          style="border: none; background-color: transparent">
+                          <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                        </button>
+                        <!-- <button class="icon" (click)="editCode(item.Id)">
+                        <img src="../../../../assets/images/pencil-outline.png" alt="Edit" />
+                      </button> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot *ngIf="noData">
+                    <tr>
+                      <th colspan="7">
+                        <div class="alert alert-warning">
+                          <i class="fa-solid fa-triangle-exclamation"></i>
+                          <br />
+                          <span> لا يوجد بيانات </span>
+                        </div>
+                      </th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button
-                type="button"
-                class="btn btn-cancel"
-                data-bs-dismiss="modal"
-                id="tableCancel"
-              >
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="tableCancel">
                 إلغاء
               </button>
-              <button
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                (click)="saveTable()"
-                *ngIf="_addTable"
-              >
+              <button type="button" class="btn btn-save" style="background-color: #133c8b" (click)="saveTable()"
+                *ngIf="_addTable">
                 حفظ
               </button>
-              <button
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                *ngIf="!_addTable"
-                (click)="updateTable()"
-              >
+              <button type="button" class="btn btn-save" style="background-color: #133c8b" *ngIf="!_addTable"
+                (click)="updateTable()">
                 تعديل
               </button>
             </div>
@@ -341,13 +277,7 @@
   <!--end create table modal -->
 
   <!--start create question modal -->
-  <div
-    class="modal company-modal fade"
-    id="createQuestion"
-    tabindex="-1"
-    aria-labelledby="add"
-    aria-hidden="true"
-  >
+  <div class="modal company-modal fade" id="createQuestion" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header pb-1">
@@ -363,12 +293,8 @@
             <div class="row">
               <div class="col-lg-6 col-md-12 mb-2">
                 <div class="input-floating-label mb-0">
-                  <select
-                    class="form-control"
-                    style="width: 100%"
-                    formControlName="codeId"
-                    (change)="onSelectChange($event)"
-                  >
+                  <select class="form-control" style="width: 100%" formControlName="codeId"
+                    (change)="onSelectChange($event)">
                     <option selected value="0" id="messageType" disabled>
                       --اختار رمز السؤال--
                     </option>
@@ -415,30 +341,15 @@
               </table>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button
-                type="button"
-                class="btn btn-cancel"
-                data-bs-dismiss="modal"
-                id="quesCancel"
-              >
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel">
                 إلغاء
               </button>
-              <button
-                (click)="saveQues()"
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                *ngIf="addQuestion"
-              >
+              <button (click)="saveQues()" type="button" class="btn btn-save" style="background-color: #133c8b"
+                *ngIf="addQuestion">
                 حفظ
               </button>
-              <button
-                (click)="updateQuestion()"
-                type="button"
-                class="btn btn-save"
-                style="background-color: #133c8b"
-                *ngIf="!addQuestion"
-              >
+              <button (click)="updateQuestion()" type="button" class="btn btn-save" style="background-color: #133c8b"
+                *ngIf="!addQuestion">
                 تعديل
               </button>
             </div>

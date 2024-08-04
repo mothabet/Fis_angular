@@ -6,7 +6,9 @@ export interface IAddForm {
     arNotes : string,
     enNotes : string,
     IsActive : string,
-    Type : string
+    Type : string,
+    yearDeleted:string,
+    typeQuarter:string
 }
 
 export interface IGetFormDto {
@@ -16,8 +18,10 @@ export interface IGetFormDto {
     arNotes : string,
     enNotes : string,
     IsActive : boolean,
-    Type : number
-    tables :IGetTableDto[]
+    Type : number,
+    tables :IGetTableDto[],
+    yearDeleted:string,
+    typeQuarter:string
 }
 export interface ICoverFormDetailsDto{
     id:number,

@@ -14,6 +14,7 @@ export class FormService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
   addForm(Model: IAddForm) {
+    debugger
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Form/AddForm`, Model, { headers });
     return response;

@@ -1,4 +1,5 @@
 import { IGetQuestionDto } from "./QuestionDto";
+import { IAddTablePartsDto } from "./TablePartsDto";
 
 export interface IAddTableDto {
     arName: string,
@@ -9,6 +10,7 @@ export interface IAddTableDto {
     formId:number,
     IsActive: boolean,
     period: number,
+    tableParts : IAddTablePartsDto[]
 }
 export interface IGetTableDto {
     id:number,

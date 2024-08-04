@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
 import { IAddQuestion, IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { CodeHomeComponent } from 'src/app/code/Components/code-home/code-home.component';
 import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
 
 @Component({
   selector: 'app-forms',
@@ -49,7 +49,9 @@ export class FormsComponent implements OnInit {
   code!: ICode;
   Type: number = 0;
   years: number[] = [];
-
+  typeForm: string = '';
+  yearDeleted: string = '';
+  addTableParts: IAddTablePartsDto[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -59,7 +61,7 @@ export class FormsComponent implements OnInit {
     private sharedServices: SharedService,
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -68,8 +70,8 @@ export class FormsComponent implements OnInit {
       enNotes: ['', Validators.required],
       isActive: [true, Validators.required],
       type: ['', Validators.required],
-      yearDeleted: [''],
-
+      yearDeleted: ['', Validators.required],
+      typeQuarter: ['']
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -98,6 +100,8 @@ export class FormsComponent implements OnInit {
       enNotes: '',
       isActive: true,
       type: '',
+      yearDeleted: '',
+      typeQuarter: ''
     });
   }
   AppenHtmlQues(getQuestionDto: IGetQuestionDto) {
@@ -237,7 +241,7 @@ export class FormsComponent implements OnInit {
     multiTextIcon.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       e.stopPropagation();
-      
+
       this.openModal('createQuestion', +getTableDto.id);
     });
 
@@ -387,26 +391,42 @@ export class FormsComponent implements OnInit {
     this.codeService.GetAllCodes(page, textSearch).subscribe(observer);
   }
   saveForm() {
-    
+    const allErrors: string[] = [];
+    debugger
+    if (this.formForm.value.type == '2' && this.formForm.value.typeQuarter == '' && (this.formForm.value.yearDeleted != '0' || this.formForm.value.yearDeleted != '')) {
+      allErrors.push('يجب ادخال ربع مسح الاستماره');
+      if (this.formForm.valid) {
+        Swal.fire({
+          icon: 'error',
+          title: allErrors.join('<br>'),
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
+    }
+
     if (this.formForm.valid) {
       const Model: IAddForm = {
         arName: this.formForm.value.arName,
         enName: this.formForm.value.enName,
         arNotes: this.formForm.value.arNotes,
         enNotes: this.formForm.value.enNotes,
-        IsActive: this.formForm.value.IsActive, // Corrected to match the interface
-        Type: this.formForm.value.Type,
+        IsActive: this.formForm.value.isActive, // Corrected to match the interface
+        Type: this.formForm.value.type,
+        yearDeleted: this.formForm.value.yearDeleted,
+        typeQuarter: this.formForm.value.typeQuarter
       };
 
       this.Loader = true;
       const observer = {
         next: (res: any) => {
+          debugger
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
           }
           this.Loader = false;
-          this.resetForm();
           this.GetAllForms();
           Swal.fire({
             icon: 'success',
@@ -423,7 +443,7 @@ export class FormsComponent implements OnInit {
       this.formServices.addForm(Model).subscribe(observer);
     }
     else {
-      const allErrors: string[] = [];
+
       for (const controlName in this.formForm.controls) {
         if (this.formForm.controls[controlName].invalid) {
           const errors = this.getControlErrors(controlName);
@@ -445,10 +465,11 @@ export class FormsComponent implements OnInit {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         this.forms = res.Data;
+        debugger
         if (res.Data) {
-          
+
           this.resetForm();
-          
+
           if (this.forms.length > 0) {
             const element = document.getElementById('items');
             if (element) {
@@ -461,15 +482,15 @@ export class FormsComponent implements OnInit {
           }
 
           (res.Data as IGetFormDto[]).forEach((element: IGetFormDto) => {
-            
+
             this.AppenHtmlForm(element);
             (element.tables as IGetTableDto[]).forEach(
               (elementTable: IGetTableDto) => {
-            
+
                 this.AppenHtmlTable(elementTable);
                 (elementTable.formContents as IGetQuestionDto[]).forEach(
                   (elementQuestion: IGetQuestionDto) => {
-            
+
 
                     this.AppenHtmlQues(elementQuestion);
                   }
@@ -538,16 +559,19 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.addForm = res.Data;
-          
           this.formForm.patchValue({
             arName: this.addForm.arName,
             enName: this.addForm.enName,
             arNotes: this.addForm.arNotes,
             enNotes: this.addForm.enNotes,
-            IsActive: this.addForm.IsActive,
-            Type: this.addForm.Type,
+            isActive: this.addForm.IsActive,
+            type: this.addForm.Type,
+            yearDeleted: this.addForm.yearDeleted,
+            typeQuarter: this.addForm.typeQuarter
           });
+          debugger
           this.Loader = false;
           this.add = false;
           const button = document.getElementById('addFormBtn');
@@ -574,8 +598,10 @@ export class FormsComponent implements OnInit {
         enName: this.formForm.value.enName,
         arNotes: this.formForm.value.arNotes,
         enNotes: this.formForm.value.enNotes,
-        IsActive: this.formForm.value.IsActive,
-        Type: this.formForm.value.userName,
+        IsActive: this.formForm.value.isActive,
+        Type: this.formForm.value.type,
+        yearDeleted: this.formForm.value.yearDeleted,
+        typeQuarter: this.formForm.value.typeQuarter
       };
       const observer = {
         next: (res: any) => {
@@ -611,7 +637,7 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
-    
+
     this.Loader = true;
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
@@ -624,6 +650,7 @@ export class FormsComponent implements OnInit {
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
         period: Number(this.tableForm.value.period),
+        tableParts: this.addTableParts
       };
       const observer = {
         next: (res: any) => {
@@ -658,6 +685,32 @@ export class FormsComponent implements OnInit {
       this.Loader = false;
     }
   }
+  addRow() {
+    this.addTableParts.push({
+      arName: '',
+      enName: '',
+      tableId: 1
+    });
+  }
+  removeItem(index: number): void {
+    this.addTableParts.splice(index, 1);
+  }
+  updateTableParts(index: number, field: keyof IAddTablePartsDto, event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+
+    // Ensure that value is correctly assigned based on field type
+    if (field === 'arName' || field === 'enName') {
+      this.addTableParts[index][field] = value;
+    }
+  }
+  areAllFieldsFilled(): boolean {
+    return this.addTableParts.every(item => item.arName && item.enName);
+  }
+  onTypeChange() {
+    // عند تغيير نوع الجدول، إعادة تعيين addTableParts إلى مصفوفة فارغة
+    this.addTableParts = [];
+  }
   resetTable(): void {
     this.tableForm.reset({
       arName: '',
@@ -668,6 +721,7 @@ export class FormsComponent implements OnInit {
       fromId: '',
       isActive: true,
     });
+    this.addTableParts = [];
   }
   showAlertTable(id: number): void {
     Swal.fire({
@@ -724,6 +778,7 @@ export class FormsComponent implements OnInit {
             isActive: this.addTable.IsActive,
             period: this.tableForm.value.period,
           });
+          this.addTableParts = res.Data.tableParts;
           this.Loader = false;
           this._addTable = false;
           const button = document.getElementById(
@@ -752,8 +807,9 @@ export class FormsComponent implements OnInit {
     this.formServices.GetTableById(id).subscribe(observer);
   }
   updateTable() {
-    
+    debugger
     this.Loader = true;
+    if (!(this.tableForm.value.Type == '5')) this.tableForm.value.period = 0
     if (this.tableForm.valid) {
       const Model: IAddTableDto = {
         arName: this.tableForm.value.arName,
@@ -764,6 +820,7 @@ export class FormsComponent implements OnInit {
         formId: this.idFormTables,
         IsActive: this.tableForm.value.IsActive,
         period: this.tableForm.value.period,
+        tableParts: this.addTableParts
       };
       const observer = {
         next: (res: any) => {
@@ -949,8 +1006,8 @@ export class FormsComponent implements OnInit {
         },
       };
       this.formServices
-      .UpdateFormContent(this.quesId, Model)
-      .subscribe(observer);
+        .UpdateFormContent(this.quesId, Model)
+        .subscribe(observer);
     } else {
       Swal.fire({
         icon: 'error',
@@ -965,11 +1022,11 @@ export class FormsComponent implements OnInit {
     const selectedValue = (event.target as HTMLSelectElement).value;
     this.GetSubCodesById(Number(selectedValue))
   }
-  GetSubCodesById(id:number){
+  GetSubCodesById(id: number) {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.subCodes = res.Data;
@@ -991,7 +1048,7 @@ export class FormsComponent implements OnInit {
     const errors: string[] = [];
 
     if (control && control.errors) {
-      
+
       // Check if control is not null and has errors
       if (controlName == 'arName') controlName = 'اسم الاستمارة بالعربى';
       if (controlName == 'enName') controlName = 'Form Name in English';
@@ -999,7 +1056,9 @@ export class FormsComponent implements OnInit {
       if (controlName == 'enNotes') controlName = 'Notes in English';
       if (controlName == 'isActive') controlName = 'حالة الاستماره';
       if (controlName == 'type') controlName = 'نوع الاستماره';
-      if(control.errors['required'] && (controlName=='حالة الاستماره' || controlName=='نوع الاستماره')){
+      if (controlName == 'yearDeleted') controlName = 'تاريخ المسح الاستماره';
+
+      if (control.errors['required'] && (controlName == 'حالة الاستماره' || controlName == 'نوع الاستماره' || controlName == 'تاريخ المسح الاستماره')) {
         errors.push(`يجب اختيار ${controlName}`);
       }
       else if (control.errors['required']) {
