@@ -22,4 +22,10 @@ export interface IGetTableDto {
     formId:number,
     IsActive: boolean,
     formContents :IGetQuestionDto[]
+    tableParts :IGetTableParts[]
+}
+
+export interface IGetTableParts{
+    arName: string,
+    enName: string
 }

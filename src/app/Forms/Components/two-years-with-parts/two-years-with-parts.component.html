@@ -9,75 +9,51 @@
         <div class="header-nav" style="margin-bottom: -10px">
             <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
             <!-- start table -->
-            <div class="table-responsive company-table">
-                <table class="table table-borderless">
-                    <thead>
-                        <tr class="t-header">
-                            <th scope="col" rowspan="2">البيان</th>
-                            <th class="text-center" scope="col" colspan="2">التعاملات خلال Transactions during 2021</th>
-                            <th class="text-center" scope="col" colspan="2">نهاية عام Year-end 2021</th>
-                            <th class="text-center" scope="col" rowspan="2">الرمز Code</th>
-                            <th class="text-start" scope="col" rowspan="2">Items</th>
-                        </tr>
-                        <tr class="t-header">
-                            <th class="text-center" scope="col">التفاصيل 1 Details 1</th>
-                            <th class="text-center" scope="col">التفاصيل 2 Details 2</th>
-                            <th class="text-center" scope="col">التفاصيل 3 Details 3</th>
-                            <th class="text-center" scope="col">التفاصيل 4 Details 4</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Row 1 Data 1</td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="text" value="Code 1" /></td>
-                            <td class="text-start">Row 1 Data 2</td>
-                        </tr>
-                        <tr>
-                            <td>Row 2 Data 1</td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="text" value="Code 2" /></td>
-                            <td class="text-start">Row 2 Data 2</td>
-                        </tr>
-                        <tr>
-                            <td>Row 3 Data 1</td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="text" value="Code 3" /></td>
-                            <td class="text-start">Row 3 Data 2</td>
-                        </tr>
-                        <tr>
-                            <td>Row 4 Data 1</td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="text" value="Code 4" /></td>
-                            <td class="text-start">Row 4 Data 2</td>
-                        </tr>
-                        <tr>
-                            <td>Row 5 Data 1</td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="number" placeholder="0" /></td>
-                            <td class="text-center"><input type="text" value="Code 5" /></td>
-                            <td class="text-start">Row 5 Data 2</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="content companies projection-table">
+
+                <div class="header d-flex flex-wrap">
+                    <div class="title flex-fill">
+                        {{table.arName}}
+                    </div>
+                    <div class="title flex-fill en">
+                        {{table.enName}}
+                    </div>
+                </div>
+                <div class="table-responsive company-table">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="t-header">
+                                <th scope="col" colspan="">البيان</th>
+                                <th class="text-center" scope="col" colspan="3">التعاملات خلال Transactions during 2021
+                                </th>
+                                <th class="text-center" scope="col" colspan="3">نهاية عام Year-end 2021</th>
+                                <th class="text-center" scope="col" colspan="">الرمز Code</th>
+                                <th class="text-start" scope="col" colspan="">Items</th>
+                            </tr>
+                            <tr class="t-header">
+                                <th class="text-center" scope="col"></th>
+                                <th *ngFor="let part of table.tableParts" class="text-center" scope="col">
+                                    {{part.arName}}{{part.enName}}</th>
+                                <th *ngFor="let part of table.tableParts" class="text-center" scope="col">
+                                    {{part.arName}}{{part.enName}}</th>
+                                <th class="text-center" scope="col"></th>
+                                <th class="text-center" scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let formContent of table.formContents">
+                                <td>Row 1 Data 1</td>
+                                <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
+                                <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
+                                <td class="text-center"><input type="text" value="Code 1" /></td>
+                                <td class="text-start">Row 1 Data 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            
-            
-            
+
+
             <!-- end table -->
 
             <!-- start footer -->

@@ -31,7 +31,6 @@ export class TwoYearsWithPartsComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;

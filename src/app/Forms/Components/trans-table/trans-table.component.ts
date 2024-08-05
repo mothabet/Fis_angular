@@ -17,6 +17,9 @@ export class TransTableComponent {
   tableId: string = '';
   table!: IGetTableDto;
   form!:IGetFormDto;
+  lastYear = 0;
+  nextYear = 0;
+  transaction = 0;
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -63,6 +66,9 @@ export class TransTableComponent {
       },
     };
     this.formServices.GetFormById(id).subscribe(observer);
+  }
+  calculateTransaction() {
+    this.transaction = this.lastYear - this.nextYear;
   }
 }
 

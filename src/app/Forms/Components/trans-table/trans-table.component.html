@@ -24,8 +24,8 @@
                             <tr class="t-header">
                                 <th scope="col">البيان</th>
                                 <th class="text-center" scope="col">نهاية عام Year-end {{form.reviewYear}}</th>
-                                <th class="text-center" scope="col">التعاملات خلال Transactions during {{form.reviewYear - 1}}</th>
-                                <th class="text-center" scope="col">نهاية عام Year-end {{form.reviewYear - 1}}</th>
+                                <th class="text-center" scope="col">التعاملات خلال Transactions during {{+form.reviewYear - 1}}</th>
+                                <th class="text-center" scope="col">نهاية عام Year-end {{+form.reviewYear - 1}}</th>
                                 <th class="text-center" scope="col">الرمز Code</th>
                                 <th class="text-start" scope="col">Items</th>
                             </tr>
@@ -34,13 +34,13 @@
                             <tr *ngFor="let formContent of table.formContents">
                                 <td>{{formContent.code.arName}}</td>
                                 <td class="text-center">
-                                    <input type="number" placeholder="0" />
+                                    <input [(ngModel)]="lastYear" (ngModelChange)="calculateTransaction()" type="number" placeholder="0" />
                                 </td>
                                 <td class="text-center">
-                                    <input type="number" placeholder="0" />
+                                    <input [(ngModel)]="transaction" (ngModelChange)="calculateTransaction()" type="number" placeholder="0" />
                                 </td>
                                 <td class="text-center">
-                                    <input type="number" placeholder="0" />
+                                    <input [(ngModel)]="nextYear" (ngModelChange)="calculateTransaction()" type="number" placeholder="0" />
                                 </td>
                                 <td class="text-center">
                                     <input type="text" value="{{formContent.code.QuestionCode}}" />

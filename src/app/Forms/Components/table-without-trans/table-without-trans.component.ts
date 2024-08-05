@@ -33,11 +33,11 @@ export class TableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
+        console.log(this.table)
         }
       },
       error: (err: any) => {
