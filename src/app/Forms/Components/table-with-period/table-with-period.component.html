@@ -7,79 +7,44 @@
   <!-- start content -->
   <div class="companies-details form-details prev-form">
     <div class="header-nav" style="margin-bottom: -10px">
-      <div class="header-nav" style="margin-bottom: -10px">
-        <div
-          class="card-box d-flex flex-wrap align-items-center justify-content-between"
-        >
-          <ul class="links">
-            <li>
-              <a
-                [routerLink]="['/FormDetails', coverForm.id]"
-                (click)="FormsNavigation(coverForm.id)"
-                >{{ coverForm.arName }}</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        class="arrow-group table-responsive d-flex form-tabs"
-        style="gap: 15px"
-      >
-        <div
-          class="clipped-element-first arrow"
-          *ngFor="let item of coverForm.tables"
-        >
-          <a
-            (click)="GetTableById(item.id)"
-            [routerLink]="['/PeriodTable', formId, item.id]"
-            >{{ item.arName }}</a
-          >
-        </div>
-        <div *ngIf="noTables" style="min-height: 60px">
-          <h1></h1>
-        </div>
-      </div>
+      <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
       <!-- start table -->
       <div class="content companies projection-table">
         <div class="header d-flex flex-wrap">
           <div class="title flex-fill">
-            {{ table.arName }}
           </div>
           <div class="title flex-fill en">
-            {{ table.enName }}
           </div>
         </div>
         <div class="table-responsive company-table">
           <table class="table table-borderless">
             <thead>
               <tr class="t-header">
-                <th scope="col">{{ table.arHeading }}</th>
+                <th scope="col"></th>
                 <th class="text-center" scope="col">Total الاجمالى</th>
-                <ng-container *ngFor="let year of years; let i = index">
-                  <th *ngIf="i >= 0" class="text-center" scope="col">
-                    خلال {{ year }} During
+                <ng-container>
+                  <th class="text-center" scope="col">
                   </th>
                 </ng-container>
                 <th class="text-center" scope="col">الرمز Code</th>
-                <th class="text-start" scope="col">{{ table.enHeading }}</th>
+                <th class="text-start" scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngFor="let content of formContent; let i = index">
+              <ng-container>
                 <tr>
-                  <td>{{content.code.arName}}</td>
+                  <td></td>
                   <td class="text-center">
                     <input type="number" placeholder="0" />
                   </td>
-                  <ng-container *ngFor="let year of years; let i = index">
-                    <td *ngIf="i >= 0" class="text-center">
+                  <ng-container>
+                    <td class="text-center">
                       <input type="number" placeholder="0" />
                     </td>
                   </ng-container>
 
                   <td class="text-center">
-                    <input disabled type="text" value={{content.code.QuestionCode}} />
+                    <input disabled type="text" />
                   </td>
                   <td class="text-start">Externally generated funds</td>
                 </tr>
@@ -89,8 +54,8 @@
                 <td class="text-center">
                   <input type="number" placeholder="0" />
                 </td>
-                <ng-container *ngFor="let year of years; let i = index">
-                  <td *ngIf="i >= 0" class="text-center">
+                <ng-container>
+                  <td class="text-center">
                     <input type="number" placeholder="0" />
                   </td>
                 </ng-container>
@@ -109,10 +74,8 @@
       <!-- start footer -->
       <footer class="projection-notes d-flex flex-wrap my-3 card-box">
         <p class="ar flex-fill">
-          {{ coverForm.arNotes }}
         </p>
         <p class="en flex-fill">
-          {{ coverForm.enNotes }}
         </p>
       </footer>
       <!-- end footer -->

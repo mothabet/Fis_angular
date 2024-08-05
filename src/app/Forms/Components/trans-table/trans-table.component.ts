@@ -1,26 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { ICoverFormDetailsDto, IGetFormDto, IGetTablesDto } from '../../Dtos/FormDto';
+import { Component } from '@angular/core';
 import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
+import { ICoverFormDetailsDto, IGetFormDto } from '../../Dtos/FormDto';
+import { inputs } from '@syncfusion/ej2-angular-diagrams/src/diagram/diagram.component';
 
 @Component({
-  selector: 'app-table-with-period',
-  templateUrl: './table-with-period.component.html',
-  styleUrls: ['./table-with-period.component.css']
+  selector: 'app-trans-table',
+  templateUrl: './trans-table.component.html',
+  styleUrls: ['./trans-table.component.css']
 })
-export class TableWithPeriodComponent implements OnInit {
+export class TransTableComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';
   table!: IGetTableDto;
-  coverForm!: ICoverFormDetailsDto;
-
+  coverForm!:IGetFormDto;
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    
-    
+
+
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
@@ -65,3 +64,5 @@ export class TableWithPeriodComponent implements OnInit {
     this.formServices.GetFormById(id).subscribe(observer);
   }
 }
+
+

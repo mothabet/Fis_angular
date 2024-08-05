@@ -6,24 +6,7 @@
     <!-- end-header -->
     <!-- start content -->
     <div class="companies-details form-details prev-form">
-        <div class="header-nav" style="margin-bottom: -10px;">
-            <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
-                <ul class="links">
-                    <li>
-                        <a [routerLink]="['/FormDetails', coverForm.id]"
-                            (click)="FormsNavigation(coverForm.id)">{{coverForm.arName}}</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
-            <div class="clipped-element-first arrow" *ngFor="let item of coverForm.tables">
-                <a [routerLink]="['/PeriodTable',formId, item.id]">{{item.arName}}</a>
-            </div>
-            <div *ngIf="noTables" style="min-height: 60px;">
-                <h1> </h1>
-            </div>
-        </div>
+        <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
         <div class="card-box">
             <div class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
                 <div class="title-ar flex-fill">
@@ -98,25 +81,11 @@
             </div>
             <div class="row footer">
                 <div class="col-sm-6 footer-ar">
-                    <p>ينص قانون المركز الوطني للإحصاء والمعلومات في المادة رقم ( 19 ) من قانون الاحصائي الصادر
-                        بالمرسوم السلطاني رقم
-                        55/2019 للمركز في سبيل تحقيق أهدافه طلب ما يراه لازما من بيانات ومعلومات وسجلات إدارية
-                        من الأفراد والجهات
-                        الحكومية وغير الحكومية، وبدون رسوم، وعلى الأفراد والجهات المشار إليها موافاة المركز بها،
-                        وذلك دون الإخلال بما يفرضه
-                        القانون من قواعد تكفل سرية وخصوصية بيانات الأفراد
+                    <p>coverForm.arNotes
                     </p>
                 </div>
                 <div class="col-sm-6 footer-en">
-                    <p>As the Article (19) law from the Center for Statistic and Informationfor NCSI to achieve
-                        the goals, The
-                        center have the right to request any necessary data, information and administrative
-                        records from
-                        individuals, public or private sector free of charge. The individuals and entities
-                        should provide data
-                        without disruption to the rules imposed by the law to ensure the confidentiality and
-                        privacy of individual's
-                        data.</p>
+                    <p>{{coverForm.enNotes}}</p>
                 </div>
             </div>
 

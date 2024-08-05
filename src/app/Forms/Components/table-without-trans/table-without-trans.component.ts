@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { ICoverFormDetailsDto, IGetFormDto, IGetTablesDto } from '../../Dtos/FormDto';
 import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
 
 @Component({
-  selector: 'app-table-with-period',
-  templateUrl: './table-with-period.component.html',
-  styleUrls: ['./table-with-period.component.css']
+  selector: 'app-table-without-trans',
+  templateUrl: './table-without-trans.component.html',
+  styleUrls: ['./table-without-trans.component.css']
 })
-export class TableWithPeriodComponent implements OnInit {
+
+export class TableWithoutTransComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';

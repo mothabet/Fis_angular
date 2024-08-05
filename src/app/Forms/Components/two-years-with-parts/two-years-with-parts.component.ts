@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ICoverFormDetailsDto, IGetFormDto, IGetTablesDto } from '../../Dtos/FormDto';
+import { Component } from '@angular/core';
 import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
+import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
 
 @Component({
-  selector: 'app-table-with-period',
-  templateUrl: './table-with-period.component.html',
-  styleUrls: ['./table-with-period.component.css']
+  selector: 'app-two-years-with-parts',
+  templateUrl: './two-years-with-parts.component.html',
+  styleUrls: ['./two-years-with-parts.component.css']
 })
-export class TableWithPeriodComponent implements OnInit {
+export class TwoYearsWithPartsComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';

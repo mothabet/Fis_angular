@@ -3,6 +3,8 @@ import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICoverFormDetailsDto, IGetFormDto } from '../../Dtos/FormDto';
+import { IGetTableDto } from '../../Dtos/TableDto';
+import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 
 @Component({
   selector: 'app-form-details',
@@ -16,75 +18,38 @@ export class FormDetailsComponent implements OnInit {
   coverForm!: ICoverFormDetailsDto;
   noTables = true;
   formId: string = '';
-  constructor(private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    this.coverForm = {
-      id: 0,
-      tables: [],
-arName : '',
-arNotes : '',
-enNotes : '',
-    };
+  table!: IGetTableDto;
+  years!: number[];
+  currentYear: number = 0;
+  period: number = 0;
+  formContent!: IGetQuestionDto[]
+  constructor(private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+    
   }
   ngOnInit(): void {
-    this.formId = this.activeRouter.snapshot.paramMap.get('id')!;
-    debugger
+    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.GetFormById(+this.formId);
-  }
-  GetAllForms(type: string = ''): void {
-    this.Loader = true;
-    const observer = {
-      next: (res: any) => {
-        this.noData = !res.Data || res.Data.length === 0;
-        if (res.Data) {
-          this.forms = res.Data;
-
-          if (this.forms.length > 0) {
-            const element = document.getElementById('items');
-            if (element) {
-              element.classList.remove('d-none');
-            }
-          }
-        }
-        else {
-
-        }
-        this.Loader = false;
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetAllForms().subscribe(observer);
+    debugger
   }
   GetFormById(id: number): void {
-    this.noTables = true;
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        this.Loader = false;
         debugger
         if (res.Data) {
-          this.coverForm.id = res.Data.id;
-          this.coverForm.tables = res.Data.tables;
-          this.coverForm.arName = res.Data.arName;
-          this.coverForm.arNotes = res.Data.arNotes;
-          this.coverForm.enNotes = res.Data.enNotes;
-          debugger
-          if(res.Data.tables.length > 0)
+          this.coverForm = res.Data;
+          if (res.Data.tables.length > 0)
             this.noTables = false;
           this.Loader = false;
         }
       },
       error: (err: any) => {
-        
+
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
     this.formServices.GetFormById(id).subscribe(observer);
-  }
-  FormsNavigation(id: number){
-    this.GetFormById(id);
-    this.formId = id.toString();
   }
 }

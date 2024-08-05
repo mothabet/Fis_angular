@@ -1,0 +1,17 @@
+<div class="header-nav" style="margin-bottom: -10px">
+    <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
+        <ul class="links">
+            <li>
+                <a [routerLink]="['/FormDetails']">test0</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
+    <div class="clipped-element-first arrow" >
+        <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
+    </div>
+    <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables">
+        <a (click)="TablesNavigation(table.id)">{{table.arName}}</a>
+    </div>
+</div>
