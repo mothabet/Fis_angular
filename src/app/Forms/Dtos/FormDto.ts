@@ -20,7 +20,7 @@ export interface IGetFormDto {
     IsActive : boolean,
     Type : number,
     tables :IGetTableDto[],
-    reviewYear:string,
+    reviewYear:number,
     typeQuarter:string
 }
 export interface ICoverFormDetailsDto{
