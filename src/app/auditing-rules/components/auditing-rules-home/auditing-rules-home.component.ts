@@ -26,7 +26,7 @@ export class AuditingRulesHomeComponent implements OnInit {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  tableColumns = ['معادلة التدقيق', 'الرقم'];
+  tableColumns = ['تاريخ الانشاء','معادلة التدقيق', 'الرقم'];
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService) { }
 
@@ -56,7 +56,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       });
     }
   }
-
   getAvailableOptions(): ICode[] {
     console.log('Used Options:', Array.from(this.usedOptions)); // تحقق من القيم في Set
     return this.codes.filter(code => {
@@ -64,7 +63,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       return !this.usedOptions.has(questionCode);
     });
   }
-
   onSelectChange(event: Event, index: number) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
@@ -85,20 +83,17 @@ export class AuditingRulesHomeComponent implements OnInit {
     // تعطيل الـ <select> بعد اختيار القيمة
     this.selects[index].disabled = true;
   }
-
   // دالة للتحقق من صحة المعادلة
   isEquationValid(): boolean {
     const questionCode = this.auditForm.get('Rule')?.value || '';
     const parts = questionCode.split(/=|\+/).filter((part: string) => part.trim() !== '');
     return parts.length >= 3;
   }
-
   resetForm() {
     this.selects = []; // إزالة جميع الـ <select>ات
     this.usedOptions.clear(); // مسح جميع الخيارات المستخدمة
     this.auditForm.patchValue({ Rule: '' }); // إفراغ حقل النص
   }
-
   GetAllCodes(page: number): void {
     this.showLoader = true;
     const observer = {
@@ -161,7 +156,6 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.auditRules = res.Data.getAuditRuleDtos;
@@ -198,7 +192,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       }
     });
   }
-
   DeleteAuditRule(id: number): void {
     this.showLoader = true;
     const observer = {
@@ -220,7 +213,6 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.auditRuleHomeService.DeleteAuditRule(id).subscribe(observer);
   }
   printPdf() {
-    
     this.generatePdf(this.auditRules, this.tableColumns);
   }
   generatePdf(data: any[], columns: string[]) {
@@ -229,7 +221,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       unit: 'mm',
       format: 'a4'
     });
-
     // Add the Arabic font to jsPDF
     doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
     doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
@@ -243,7 +234,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       head: [columns],
       body: data.map((item, index) => [
         this.getDateOnly(item.CreatedOn),
-        item.CreatedBy,
         item.Rule,
         index + 1,
       ]),
@@ -266,4 +256,63 @@ export class AuditingRulesHomeComponent implements OnInit {
     const date = new Date(dateTimeString);
     return date.toISOString().split('T')[0];
   }
+  editCode(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.auditRuleHomeService.GetAllAuditRules(id).subscribe(observer);
+  }
+  // updateCode() {
+  //   this.showLoader = true;
+  //   if (this.codeForm.valid) {
+  //     const Model: IAddCode = {
+  //       QuestionCode: this.codeForm.value.QuestionCode,
+  //       arName: this.codeForm.value.arName,
+  //       enName: this.codeForm.value.enName,
+  //       TypeId:this.codeForm.value.TypeId,
+  //       addSubCodeDtos: this.subCode
+  //     };
+  //     const observer = {
+  //       next: (res: any) => {
+  //         debugger
+  //         const button = document.getElementById('btnCancel');
+  //         if (button) {
+  //           button.click();
+  //         }
+  //         this.resetForm();
+  //         this.GetAllCodes(1);
+  //         this.showLoader = false;
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: res.Message,
+  //           showConfirmButton: false,
+  //           timer: 2000
+  //         });
+  //       },
+  //       error: (err: any) => {
+  //         debugger
+  //         this.sharedService.handleError(err);
+  //         this.showLoader = false;
+  //       },
+  //     };
+  //     this.codeHomeService.UpdateCode(this.id, Model).subscribe(observer);
+  //   } else {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'يجب ادخال البيانات بشكل صحيح',
+  //       showConfirmButton: false,
+  //       timer: 2000
+  //     });
+  //     this.showLoader = false;
+  //   }
+  // }
 }

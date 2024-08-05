@@ -18,7 +18,7 @@ export class CodeHomeService {
   }
   GetAllCodes(pageNumber:number, textSearch : string =''){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=false`, { headers });
      return resopnse;
    }
    DeleteCode(id:number){
@@ -28,13 +28,11 @@ export class CodeHomeService {
      return resopnse;
    }
    GetCodeById(id:number){
-    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    UpdateCode(id:number,Model: IAddCode){
-    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Code/UpdateCode?id=${id}&lang=2`, Model, { headers });
      return resopnse;

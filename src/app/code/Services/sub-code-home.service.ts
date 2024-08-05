@@ -22,4 +22,9 @@ export class SubCodeHomeService {
      var resopnse = this.http.get(environment.apiUrl+`SubCodes/GetSubCodesById?id=${id}&lang=2`, { headers });
      return resopnse;
   }
+  GetAllSubCodes(pageNumber:number, textSearch : string =''){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`SubCodes/GetAllSubCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=false`, { headers });
+     return resopnse;
+   }
 }
