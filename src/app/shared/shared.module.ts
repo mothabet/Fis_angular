@@ -26,6 +26,7 @@ import { NavigateTablesTypesComponent } from './components/navigate-tables-types
     HttpClientModule,
   ],
   exports: [
+    NavigateTablesTypesComponent,
     SidebarComponent,
     TopScreenComponent,
     LoaderComponent,

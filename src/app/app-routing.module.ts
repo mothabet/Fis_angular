@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'TableWithoutTrans/:formId/:tableId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },
   { path: 'OneYearWithParts/:formId/:tableId', component: OneYearWithPartsComponent, canActivate: [LoginGuard] },
   { path: 'TwoYearsWithParts/:formId/:tableId', component: TwoYearsWithPartsComponent, canActivate: [LoginGuard] },
-  { path: 'FormDetails/:id', component: FormDetailsComponent, canActivate: [LoginGuard] },
+  { path: 'FormDetails/:formId', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Companies-Details', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
