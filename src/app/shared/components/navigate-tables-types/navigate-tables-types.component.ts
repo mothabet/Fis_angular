@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,12 +8,19 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './navigate-tables-types.component.html',
   styleUrls: ['./navigate-tables-types.component.css']
 })
-export class NavigateTablesTypesComponent {
+export class NavigateTablesTypesComponent implements OnInit {
   @Input() coverForm: any;
+  @Input() isCoverActive: boolean = false;
+  @Output() coverActivated: EventEmitter<void> = new EventEmitter();
   Loader: boolean = false;
   tableType!: number;
   formId!: string;
+  tableId: number | null = null; 
   constructor(private activeRouter: ActivatedRoute, private sharedServices: SharedService, private formServices: FormService, private router: Router) { }
+  ngOnInit(): void {
+    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
+    this.tableId = tableIdParam ? +tableIdParam : null;  }
   TablesNavigation(id: number) {
     this.GetTableById(id);
   }
@@ -24,7 +31,6 @@ export class NavigateTablesTypesComponent {
         this.Loader = false;
         this.tableType = res.Data.Type;
         this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-        debugger
         if (this.tableType == 1)
           this.router.navigate(['/TransTable', this.formId, id]);
         else if (this.tableType == 2)
@@ -45,5 +51,9 @@ export class NavigateTablesTypesComponent {
       },
     };
     this.formServices.GetTableById(id).subscribe(observer);
+  }
+  activateCover() {
+    this.coverActivated.emit();
+    this.tableId = null;
   }
 }

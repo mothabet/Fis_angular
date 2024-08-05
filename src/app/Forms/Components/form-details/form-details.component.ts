@@ -23,20 +23,20 @@ export class FormDetailsComponent implements OnInit {
   currentYear: number = 0;
   period: number = 0;
   formContent!: IGetQuestionDto[]
+  isCoverActive = false;
   constructor(private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    this.isCoverActive = true
     this.GetFormById(+this.formId);
-    debugger
   }
   GetFormById(id: number): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         this.Loader = false;
-        debugger
         if (res.Data) {
           this.coverForm = res.Data;
           if (res.Data.tables.length > 0)

@@ -2,16 +2,18 @@
     <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
         <ul class="links">
             <li>
-                <a [routerLink]="['/FormDetails']">test0</a>
+                <a [routerLink]="['/FormDetails']">{{coverForm.arName}}</a>
             </li>
         </ul>
     </div>
 </div>
-<div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
-    <div class="clipped-element-first arrow" >
+<div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;" >
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}"
+    (click)="activateCover()">
         <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
     </div>
-    <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables">
+    <div class="clipped-element-first arrow"  [ngClass]="{'active': table.id === tableId}"
+    *ngFor="let table of coverForm.tables">
         <a (click)="TablesNavigation(table.id)">{{table.arName}}</a>
     </div>
 </div>

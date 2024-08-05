@@ -7,15 +7,15 @@
     <!-- start content -->
     <div class="companies-details form-details prev-form">
         <div class="header-nav" style="margin-bottom: -10px">
-            <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
+            <app-navigate-tables-types [coverForm]="form"></app-navigate-tables-types>
             <!-- start table -->
             <div class="content companies projection-table">
                 <div class="header d-flex flex-wrap">
                     <div class="title flex-fill">
-                        test
+                        {{table.arName}}
                     </div>
                     <div class="title flex-fill en">
-                        test
+                        {{table.enName}}
                     </div>
                 </div>
                 <div class="table-responsive company-table">
@@ -23,17 +23,16 @@
                         <thead>
                             <tr class="t-header">
                                 <th scope="col">البيان</th>
-                                <th class="text-center" scope="col">نهاية عام Year-end 2022</th>
-                                <th class="text-center" scope="col">التعاملات خلال Transactions during 2021</th>
-                                <th class="text-center" scope="col">نهاية عام Year-end 2021</th>
+                                <th class="text-center" scope="col">نهاية عام Year-end form.reviewYear</th>
+                                <th class="text-center" scope="col">التعاملات خلال Transactions during {{form.reviewYear - 1}}</th>
+                                <th class="text-center" scope="col">نهاية عام Year-end {{form.reviewYear - 1}}</th>
                                 <th class="text-center" scope="col">الرمز Code</th>
                                 <th class="text-start" scope="col">Items</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Row 1 Data 1</td>
-                                
+                            <tr *ngFor="let formContent of table.formContents">
+                                <td>{{formContent.code.arName}}</td>
                                 <td class="text-center">
                                     <input type="number" placeholder="0" />
                                 </td>
@@ -44,84 +43,15 @@
                                     <input type="number" placeholder="0" />
                                 </td>
                                 <td class="text-center">
-                                    <input type="text" value="Code 1" />
+                                    <input type="text" value="{{formContent.code.QuestionCode}}" />
                                 </td>
-                                <td class="text-start">Row 1 Data 2</td>
+                                <td class="text-start">{{formContent.code.enName}}</td>
                             </tr>
-                            <tr>
-                                <td>Row 2 Data 1</td>
-                                
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="text" value="Code 2" />
-                                </td>
-                                <td class="text-start">Row 2 Data 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 3 Data 1</td>
-                                
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="text" value="Code 3" />
-                                </td>
-                                <td class="text-start">Row 3 Data 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 4 Data 1</td>
-                                
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="text" value="Code 4" />
-                                </td>
-                                <td class="text-start">Row 4 Data 2</td>
-                            </tr>
-                            <tr>
-                                <td>Row 5 Data 1</td>
-                                
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="number" placeholder="0" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="text" value="Code 5" />
-                                </td>
-                                <td class="text-start">Row 5 Data 2</td>
-                            </tr>
-                            
                         </tbody>
                     </table>
                 </div>
             </div>
-            
+
             <!-- end table -->
 
             <!-- start footer -->

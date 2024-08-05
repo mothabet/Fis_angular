@@ -16,7 +16,7 @@ export class TransTableComponent {
   formId: string = '';
   tableId: string = '';
   table!: IGetTableDto;
-  coverForm!:IGetFormDto;
+  form!:IGetFormDto;
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -36,6 +36,7 @@ export class TransTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
+          console.log(this.table);
         }
       },
       error: (err: any) => {
@@ -53,7 +54,7 @@ export class TransTableComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          this.coverForm = res.Data;
+          this.form = res.Data;
         }
       },
       error: (err: any) => {
