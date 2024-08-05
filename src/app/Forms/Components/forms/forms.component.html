@@ -96,8 +96,8 @@
               </div>
               <div class="col-sm-12 mb-3" *ngIf="typeForm=='1'||typeForm=='2'">
                 <div class="input-floating-label mb-0">
-                  <select formControlName="yearDeleted" class="form-control" style="width: 100%"
-                    [(ngModel)]="yearDeleted">
+                  <select formControlName="reviewYear" class="form-control" style="width: 100%"
+                    [(ngModel)]="reviewYear">
                     <option selected disabled value="0">--اختر تاريخ مسح الاستماره--</option>
                     <ng-container *ngFor="let year of years">
                       <option [value]="year">{{ year }}</option>
@@ -106,7 +106,7 @@
                   <label>تاريخ مسح</label>
                 </div>
               </div>
-              <div class="col-sm-12 mb-3" *ngIf="(yearDeleted>'0') && typeForm=='2'">
+              <div class="col-sm-12 mb-3" *ngIf="(reviewYear>'0') && typeForm=='2'">
                 <div class="input-floating-label mb-0">
                   <select formControlName="typeQuarter" class="form-control" style="width: 100%">
                     <option selected disabled value="0">--اختر ربع مسح الاستماره--</option>
@@ -294,7 +294,7 @@
               <div class="col-lg-6 col-md-12 mb-2">
                 <div class="input-floating-label mb-0">
                   <select class="form-control" style="width: 100%" formControlName="codeId"
-                    (change)="onSelectChange($event)">
+                    (change)="onSelectChange($event)" [(ngModel)]="showSubCode">
                     <option selected value="0" id="messageType" disabled>
                       --اختار رمز السؤال--
                     </option>
@@ -306,7 +306,7 @@
                 </div>
               </div>
             </div>
-            <div class="table-responsive company-table research-table">
+            <div class="table-responsive company-table research-table" *ngIf="!(showSubCode == '0' || showSubCode =='')">
               <table class="table table-borderless">
                 <thead>
                   <tr class="t-header">
@@ -341,7 +341,7 @@
               </table>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel" (click)="resetQuestion()">
                 إلغاء
               </button>
               <button (click)="saveQues()" type="button" class="btn btn-save" style="background-color: #133c8b"

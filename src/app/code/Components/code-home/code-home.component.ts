@@ -322,7 +322,7 @@ export class CodeHomeComponent {
     });
 
     // Save the PDF
-    doc.save('researchers.pdf');
+    doc.save('Codes.pdf');
   }
   codeSearch(){
     this.GetAllCodes(this.currentPage,this.searchText);

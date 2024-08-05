@@ -7,7 +7,7 @@ export interface IAddForm {
     enNotes : string,
     IsActive : string,
     Type : string,
-    yearDeleted:string,
+    reviewYear:string,
     typeQuarter:string
 }
 
@@ -20,7 +20,7 @@ export interface IGetFormDto {
     IsActive : boolean,
     Type : number,
     tables :IGetTableDto[],
-    yearDeleted:string,
+    reviewYear:string,
     typeQuarter:string
 }
 export interface ICoverFormDetailsDto{

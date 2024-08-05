@@ -260,7 +260,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     });
 
     // Save the PDF
-    doc.save('researchers.pdf');
+    doc.save('AuditingRules.pdf');
   }
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
