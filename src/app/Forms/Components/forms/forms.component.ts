@@ -21,6 +21,11 @@ import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
 export class FormsComponent implements OnInit {
   Loader: boolean = false;
   zoomLevel: number = 1;
+  isPanning: boolean = false;
+  startX: number = 0;
+  startY: number = 0;
+  scrollLeft: number = 0;
+  scrollTop: number = 0;
   tablesCount = 0;
   formCount = 0;
   add: boolean = true;
@@ -1093,5 +1098,33 @@ export class FormsComponent implements OnInit {
 
   mainZoomLevel() {
     this.zoomLevel = 1; // Prevent zooming out too much
+  }
+
+  onMouseDown(event: MouseEvent) {
+    this.isPanning = true;
+    const items = document.getElementById('items');
+    if (items) {
+      this.startX = event.clientX - items.offsetLeft;
+      this.startY = event.clientY - items.offsetTop;
+      this.scrollLeft = items.scrollLeft;
+      this.scrollTop = items.scrollTop;
+    }
+    this.renderer.listen('window', 'mousemove', this.onMouseMove.bind(this));
+    this.renderer.listen('window', 'mouseup', this.onMouseUp.bind(this));
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isPanning) return;
+    const items = document.getElementById('items');
+    if (items) {
+      const x = event.clientX - this.startX;
+      const y = event.clientY - this.startY;
+      items.scrollLeft = this.scrollLeft - x;
+      items.scrollTop = this.scrollTop - y;
+    }
+  }
+
+  onMouseUp() {
+    this.isPanning = false;
   }
 }

@@ -44,7 +44,7 @@
       </button>
     </div>
     <div >
-      <div class="items d-none" id="items" >
+      <div class="items d-none" id="items" (mousedown)="onMouseDown($event)">
         <ul [ngStyle]="{'transform': 'scale(' + zoomLevel + ')'}">
           <li>
             <a style="font-size: large">الأستمارات</a>
