@@ -20,6 +20,7 @@ import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
 })
 export class FormsComponent implements OnInit {
   Loader: boolean = false;
+  zoomLevel: number = 1;
   tablesCount = 0;
   formCount = 0;
   add: boolean = true;
@@ -1081,5 +1082,16 @@ export class FormsComponent implements OnInit {
     }
 
     return errors;
+  }
+  zoomIn() {
+    this.zoomLevel += 0.1;
+  }
+
+  zoomOut() {
+    this.zoomLevel = Math.max(0.1, this.zoomLevel - 0.1); // Prevent zooming out too much
+  }
+
+  mainZoomLevel() {
+    this.zoomLevel = 1; // Prevent zooming out too much
   }
 }

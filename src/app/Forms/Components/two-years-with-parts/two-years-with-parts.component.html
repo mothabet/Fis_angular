@@ -24,9 +24,9 @@
                         <thead>
                             <tr class="t-header">
                                 <th scope="col" colspan="">البيان</th>
-                                <th class="text-center" scope="col" colspan="3">التعاملات خلال Transactions during 2021
+                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">التعاملات خلال Transactions during 2021
                                 </th>
-                                <th class="text-center" scope="col" colspan="3">نهاية عام Year-end 2021</th>
+                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end 2021</th>
                                 <th class="text-center" scope="col" colspan="">الرمز Code</th>
                                 <th class="text-start" scope="col" colspan="">Items</th>
                             </tr>
@@ -42,11 +42,11 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let formContent of table.formContents">
-                                <td>Row 1 Data 1</td>
+                                <td>{{formContent.code.arName}}</td>
                                 <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
                                 <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
-                                <td class="text-center"><input type="text" value="Code 1" /></td>
-                                <td class="text-start">Row 1 Data 2</td>
+                                <td class="text-center"><input type="text" value="{{formContent.code.QuestionCode}}" /></td>
+                                <td class="text-start">{{formContent.code.enName}}</td>
                             </tr>
                         </tbody>
                     </table>

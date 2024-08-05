@@ -16,7 +16,7 @@ export class TwoYearsWithPartsComponent {
   tableId: string = '';
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
-
+  tablePartsCount = 0;
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
@@ -35,6 +35,7 @@ export class TwoYearsWithPartsComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
+          this.tablePartsCount = this.table.tableParts.length
         }
       },
       error: (err: any) => {

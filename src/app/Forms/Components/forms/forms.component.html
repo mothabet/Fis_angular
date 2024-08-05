@@ -26,9 +26,26 @@
       <!-- end content -->
     </div>
     <!-- Start form tree  -->
-    <div>
-      <div class="items d-none" id="items">
-        <ul>
+    <div class="zoom-controls" style="padding: 20px;">
+      <button (click)="zoomIn()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">            
+        <img src=".././../../../assets/images/zoomin.png" alt="" />
+      </button>
+      <button (click)="zoomOut()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">
+        <img src=".././../../../assets/images/zoomout.png" alt="" />
+      </button>
+      <button (click)="mainZoomLevel()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">
+        <svg width="30px" height="30px">
+          <path stroke-width="1" fill="none" stroke="#133C8B" d="M4,11 L4,4 L11,4"></path>
+          <path stroke-width="1" fill="none" stroke="#133C8B" d="M28,11 L28,4 L21,4"></path>
+          <path stroke-width="1" fill="none" stroke="#133C8B" d="M28,21 L28,28 L21,28"></path>
+          <path stroke-width="1" fill="none" stroke="#133C8B" d="M4,21 L4,28 L11,28"></path>
+          <circle cx="16" cy="16" r="5" fill="#133C8B" stroke="#133C8B"></circle>
+        </svg>
+      </button>
+    </div>
+    <div >
+      <div class="items d-none" id="items" >
+        <ul [ngStyle]="{'transform': 'scale(' + zoomLevel + ')'}">
           <li>
             <a style="font-size: large">الأستمارات</a>
             <ul id="main"></ul>
