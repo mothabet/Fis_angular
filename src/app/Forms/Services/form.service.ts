@@ -16,7 +16,7 @@ export class FormService {
   addForm(Model: IAddForm) {
     debugger
     var headers = this.sharedService.getHeaders();
-    var response = this.http.post(environment.apiUrl + `Form/AddForm`, Model, { headers });
+    var response = this.http.post(environment.apiUrl + `Form/AddForm?lang=2`, Model, { headers });
     return response;
   }
   GetAllForms(){

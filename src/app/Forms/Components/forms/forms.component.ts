@@ -370,6 +370,7 @@ export class FormsComponent implements OnInit {
       document.getElementById(name)
     );
     modal.show();
+    debugger
   }
   GetAllCodes(page: number = 0, textSearch: string = ''): void {
     this.Loader = true;
@@ -378,7 +379,6 @@ export class FormsComponent implements OnInit {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
-          this.resetForm();
         } else {
           this.codes = [];
         }
@@ -423,6 +423,15 @@ export class FormsComponent implements OnInit {
       const observer = {
         next: (res: any) => {
           debugger
+          if(res.Status == 400){
+            Swal.fire({
+              icon: 'error',
+              title: res.Message,
+              showConfirmButton: false,
+              timer: 2000,
+            });
+            return
+          }
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -610,6 +619,7 @@ export class FormsComponent implements OnInit {
           if (button) {
             button.click();
           }
+          debugger
           this.resetForm();
           this.form = res.Data;
           this.GetAllForms();

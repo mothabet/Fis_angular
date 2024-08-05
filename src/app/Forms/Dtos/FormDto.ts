@@ -7,7 +7,7 @@ export interface IAddForm {
     enNotes : string,
     IsActive : string,
     Type : string,
-    reviewYear:string,
+    reviewYear:number,
     typeQuarter:string
 }
 
