@@ -20,6 +20,11 @@ export class AuditRuleHomeService {
      var resopnse = this.http.get(environment.apiUrl+`AuditRules/GetAllAuditRules?pageNumber=${pageNumber}&lang=2`, { headers });
      return resopnse;
    }
+   GetAuditRulesById(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&lang=2`, { headers });
+     return resopnse;
+   }
    DeleteAuditRule(id:number){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.delete(environment.apiUrl+`AuditRules/DeleteAuditRule?id=${id}&lang=2`, { headers });
