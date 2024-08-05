@@ -9,5 +9,6 @@ export interface IGetQuestionDto {
   Id: number;
   tableId: number;
   codeId: number;
+  values: number[];
   code:ICode;
 }

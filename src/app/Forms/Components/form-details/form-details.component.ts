@@ -42,6 +42,7 @@ export class FormDetailsComponent implements OnInit {
           if (res.Data.tables.length > 0)
             this.noTables = false;
           this.Loader = false;
+          console.log(this.coverForm)
         }
       },
       error: (err: any) => {

@@ -17,6 +17,8 @@ export class TableWithPeriodComponent implements OnInit {
   tableId: string = '';
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
+  years: number[] = [];
+  formYear : string = '';
 
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
@@ -32,15 +34,14 @@ export class TableWithPeriodComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
         }
+        console.log(this.table)
       },
       error: (err: any) => {
-        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -55,6 +56,8 @@ export class TableWithPeriodComponent implements OnInit {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.formYear = this.coverForm.reviewYear;
+          this.generateYearsList();
         }
       },
       error: (err: any) => {
@@ -64,4 +67,10 @@ export class TableWithPeriodComponent implements OnInit {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
+  generateYearsList(): void {
+    for (let i = 0; i < 5; i++) {
+      this.years.push(+this.formYear + i);
+    }
+  }
+  
 }

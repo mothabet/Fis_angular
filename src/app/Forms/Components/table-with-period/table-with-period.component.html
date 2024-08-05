@@ -20,33 +20,36 @@
           <table class="table table-borderless">
             <thead>
               <tr class="t-header">
-                <th scope="col"></th>
+                <th scope="col">الاستمارات المخططة</th>
                 <th class="text-center" scope="col">Total الاجمالى</th>
-                <ng-container>
-                  <th class="text-center" scope="col">
-                  </th>
-                </ng-container>
+                <th class="text-center" scope="col" *ngFor="let year of years">
+                  خلال {{year}} During
+                </th>
                 <th class="text-center" scope="col">الرمز Code</th>
-                <th class="text-start" scope="col"></th>
+                <th class="text-start" scope="col">New Investment Planned</th>
               </tr>
             </thead>
             <tbody>
-              <ng-container>
-                <tr>
-                  <td></td>
-                  <td class="text-center">
-                    <input type="number" placeholder="0" />
-                  </td>
-                  <ng-container>
-                    <td class="text-center">
-                      <input type="number" placeholder="0" />
-                    </td>
-                  </ng-container>
-
-                  <td class="text-center">
-                    <input disabled type="text" />
-                  </td>
-                  <td class="text-start">Externally generated funds</td>
+              <tr *ngFor="let formContent of table.formContents">
+                <td>{{formContent.code.arName}}</td>
+                <td class="text-center">
+                  <input type="number" placeholder="0" />
+                </td>
+                <td class="text-center" *ngFor="let year of years">
+                  <input type="number" placeholder="0" />
+                </td>
+                <td class="text-center">
+                  <input disabled type="text" value="{{formContent.code.QuestionCode}}"/>
+                </td>
+                <td class="text-start">{{formContent.code.enName}}</td>
+              </tr>
+              <ng-container *ngFor="let formContent of table.formContents">
+                <tr class="sub-row" *ngFor="let subCode of formContent.code.SubCodes">
+                  <td></td> <!-- Empty cell or span to align with columns -->
+                  <td class="text-center">ff</td>
+                  <td class="text-center">ff</td>
+                  <td></td> <!-- Empty cells or spans for alignment -->
+                  <td></td> <!-- Empty cells or spans for alignment -->
                 </tr>
               </ng-container>
               <tr class="footer">
@@ -54,11 +57,9 @@
                 <td class="text-center">
                   <input type="number" placeholder="0" />
                 </td>
-                <ng-container>
-                  <td class="text-center">
-                    <input type="number" placeholder="0" />
-                  </td>
-                </ng-container>
+                <td class="text-center" *ngFor="let year of years">
+                  <input type="number" placeholder="0" />
+                </td>
 
                 <td class="text-center">
                   <input type="text" value="900" />

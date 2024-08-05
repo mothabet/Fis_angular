@@ -27,6 +27,7 @@ export interface ICoverFormDetailsDto{
     id:number,
     tables :IGetTableDto[],
     arName : string,
+    enName : string,
     arNotes : string,
     enNotes : string,
     reviewYear : string,
