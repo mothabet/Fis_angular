@@ -50,8 +50,9 @@ export class FormsComponent implements OnInit {
   Type: number = 0;
   years: number[] = [];
   typeForm: string = '';
-  yearDeleted: string = '';
+  reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
+  showSubCode : string = '';
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -70,7 +71,7 @@ export class FormsComponent implements OnInit {
       enNotes: ['', Validators.required],
       isActive: [true, Validators.required],
       type: ['', Validators.required],
-      yearDeleted: ['', Validators.required],
+      reviewYear: ['', Validators.required],
       typeQuarter: ['']
     });
     this.tableForm = this.formBuilder.group({
@@ -100,7 +101,7 @@ export class FormsComponent implements OnInit {
       enNotes: '',
       isActive: true,
       type: '',
-      yearDeleted: '',
+      reviewYear: '',
       typeQuarter: ''
     });
   }
@@ -393,7 +394,7 @@ export class FormsComponent implements OnInit {
   saveForm() {
     const allErrors: string[] = [];
     debugger
-    if (this.formForm.value.type == '2' && this.formForm.value.typeQuarter == '' && (this.formForm.value.yearDeleted != '0' || this.formForm.value.yearDeleted != '')) {
+    if (this.formForm.value.type == '2' && this.formForm.value.typeQuarter == '' && (this.formForm.value.reviewYear != '0' || this.formForm.value.reviewYear != '')) {
       allErrors.push('يجب ادخال ربع مسح الاستماره');
       if (this.formForm.valid) {
         Swal.fire({
@@ -414,7 +415,7 @@ export class FormsComponent implements OnInit {
         enNotes: this.formForm.value.enNotes,
         IsActive: this.formForm.value.isActive, // Corrected to match the interface
         Type: this.formForm.value.type,
-        yearDeleted: this.formForm.value.yearDeleted,
+        reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter
       };
 
@@ -568,7 +569,7 @@ export class FormsComponent implements OnInit {
             enNotes: this.addForm.enNotes,
             isActive: this.addForm.IsActive,
             type: this.addForm.Type,
-            yearDeleted: this.addForm.yearDeleted,
+            reviewYear: this.addForm.reviewYear,
             typeQuarter: this.addForm.typeQuarter
           });
           debugger
@@ -600,7 +601,7 @@ export class FormsComponent implements OnInit {
         enNotes: this.formForm.value.enNotes,
         IsActive: this.formForm.value.isActive,
         Type: this.formForm.value.type,
-        yearDeleted: this.formForm.value.yearDeleted,
+        reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter
       };
       const observer = {
@@ -822,6 +823,7 @@ export class FormsComponent implements OnInit {
         period: this.tableForm.value.period,
         tableParts: this.addTableParts
       };
+      debugger
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');
@@ -906,10 +908,11 @@ export class FormsComponent implements OnInit {
   }
   resetQuestion(): void {
     this.addQuestion = true;
-    this.tableForm.reset({
-      codeId: 0,
+    this.questionForm.reset({
+      codeId: '',
       tableId: '',
     });
+    this.subCodes = [];
   }
   showAlertQuestion(id: number): void {
     Swal.fire({
@@ -1056,7 +1059,7 @@ export class FormsComponent implements OnInit {
       if (controlName == 'enNotes') controlName = 'Notes in English';
       if (controlName == 'isActive') controlName = 'حالة الاستماره';
       if (controlName == 'type') controlName = 'نوع الاستماره';
-      if (controlName == 'yearDeleted') controlName = 'تاريخ المسح الاستماره';
+      if (controlName == 'reviewYear') controlName = 'تاريخ المسح الاستماره';
 
       if (control.errors['required'] && (controlName == 'حالة الاستماره' || controlName == 'نوع الاستماره' || controlName == 'تاريخ المسح الاستماره')) {
         errors.push(`يجب اختيار ${controlName}`);
