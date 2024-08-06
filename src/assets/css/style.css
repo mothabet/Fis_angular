@@ -2195,8 +2195,10 @@ a.sidebar-link span {
     height: 100px;
     background-color: white;
     border-radius: 40%;
+    margin-left: 15px !important;
     -webkit-clip-path: polygon(100% 25%, 100% 50%, 100% 75%, 0 75%, 12% 50%, 0 25%);
-    clip-path: polygon(100% 25%, 100% 50%, 100% 75%, 0 75%, 12% 50%, 0 25%);
+    /* clip-path: polygon(100% 25%, 100% 50%, 100% 75%, 0 75%, 12% 50%, 0 25%); */
+    clip-path: polygon(100% 25%, 100% 50%, 100% 75%, 0 75%, 0% 10%, 0 25%);
 }
 
 

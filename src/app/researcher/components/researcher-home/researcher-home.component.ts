@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 
 @Component({
   selector: 'app-researcher-home',
@@ -23,7 +25,6 @@ export class ResearcherHomeComponent {
   };
   @ViewChild('addResearcher') addResearcherModal!: ElementRef;
   researcherForm!: FormGroup;
-  isDisabled: boolean = true;
   username: string = '';
   searchText: string = '';
   password: string = '';
@@ -38,17 +39,20 @@ export class ResearcherHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  tableColumns = ['رقم الهاتف','البريد الالكتروني', 'الاسم', 'الرقم'];
+  tableColumns = ['رقم الهاتف', 'البريد الالكتروني', 'الاسم', 'الرقم'];
+  companies: ICompany[] = [];
+  selectedCompanyIds: Set<number> = new Set<number>();
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private researcherService: ResearcherHomeService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private companyService: CompanyHomeService
   ) { }
 
   ngOnInit(): void {
     this.researcherForm = this.formBuilder.group({
-      userName: [{ value: '', disabled: true }, Validators.required],
+      userName: ['', Validators.required],
       password: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -65,6 +69,7 @@ export class ResearcherHomeComponent {
 
     this.generateRandomCredentials();
     this.GetAllReseachers(this.currentPage);
+    this.GetCompanies('', 0);
   }
   onPageChange(page: number) {
     debugger
@@ -143,7 +148,7 @@ export class ResearcherHomeComponent {
 
   resetForm(): void {
     this.researcherForm.reset({
-      userName: { value: '', disabled: true },
+      userName: '',
       password: '',
       arName: '',
       enName: '',
@@ -154,21 +159,21 @@ export class ResearcherHomeComponent {
     this.generateRandomCredentials();
   }
 
-  GetAllReseachers(page: number , textSearch : string = ''): void {
+  GetAllReseachers(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
-        if(res.Data){
+        if (res.Data) {
           this.researchers = res.Data.getResearcherDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.resetForm();
         }
-        else{
-          this.researchers=[];
+        else {
+          this.researchers = [];
         }
         this.showLoader = false;
       },
@@ -177,7 +182,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.researcherService.GetAllReseachers(page , textSearch).subscribe(observer);
+    this.researcherService.GetAllReseachers(page, textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {
@@ -233,7 +238,6 @@ export class ResearcherHomeComponent {
             phone: this.researcher.phone,
             email: this.researcher.email
           });
-          this.researcherForm.get('userName')?.disable();
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addResearcherBtn');
@@ -295,7 +299,7 @@ export class ResearcherHomeComponent {
   reset() {
     this.add = true;
     this.researcherForm = this.formBuilder.group({
-      userName: [{ value: '', disabled: true }, Validators.required],
+      userName: ['', Validators.required],
       password: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -309,8 +313,8 @@ export class ResearcherHomeComponent {
     const inputElement = event.target as HTMLInputElement;
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
   }
-  researcherSearch(){
-    this.GetAllReseachers(this.currentPage,this.searchText);
+  researcherSearch() {
+    this.GetAllReseachers(this.currentPage, this.searchText);
   }
   generatePdf(data: any[], columns: string[]) {
     const doc = new jsPDF({
@@ -334,7 +338,7 @@ export class ResearcherHomeComponent {
         item.phone,
         item.email,
         item.arName,
-        index +1,
+        index + 1,
       ]),
       styles: {
         font: 'Arabic',
@@ -357,4 +361,111 @@ export class ResearcherHomeComponent {
   printPdf() {
     this.generatePdf(this.researchers, this.tableColumns);
   }
+  GetCompanies(textSearch: string = '', page: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.showLoader = false;
+
+        if (res.Data) {
+          this.companies = res.Data.getCompaniesDtos;
+          debugger
+        }
+        else {
+          this.companies = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        debugger
+        this.showLoader = false;
+        this.sharedService.handleError(err);
+      },
+    };
+    this.companyService.GetCompanies(textSearch, page).subscribe(observer);
+  }
+  onCheckboxChange(companyId: number, event: Event) {
+    debugger
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.checked) {
+      this.selectedCompanyIds.add(companyId);
+    } else {
+      this.selectedCompanyIds.delete(companyId);
+    }
+  }
+  OpenCompany(id: number): void {
+    this.id = id
+    this.showLoader = true;
+    this.selectedCompanyIds.clear();
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.showLoader = false;
+
+        if (res.Data) {
+          debugger
+          for (let index = 0; index < res.Data.length; index++) {
+            debugger
+            this.selectedCompanyIds.add(res.Data[index].id);
+          }
+          // res.Data.getCompaniesDtos.forEach((element:any) => {
+            
+          //   
+          // });
+        }
+        
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        debugger
+        this.showLoader = false;
+        this.sharedService.handleError(err);
+      },
+    };
+    this.companyService.GetCompaniesByResearcherId(id).subscribe(observer);
+  }
+  saveSelectedCompanies() {
+    const selectedCompanies = this.companies.filter(company => this.selectedCompanyIds.has(company.id));
+    debugger
+    this.showLoader = true;
+    if (selectedCompanies.length > 0) {
+
+      const observer = {
+        next: (res: any) => {
+          debugger
+          const button = document.getElementById('btnCancelCompanyResearcher');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          debugger
+          this.sharedService.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.companyService.UpdateCompanyToRecearcher(this.id, selectedCompanies).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اختيار شركات',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+    }
+  }
+  companiesSearch() {
+    this.GetCompanies(this.searchText, 1);
+  }
+  
 }

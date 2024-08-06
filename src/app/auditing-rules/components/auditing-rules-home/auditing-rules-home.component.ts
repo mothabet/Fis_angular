@@ -42,7 +42,6 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.auditForm = this.fb.group({
       Rule: ['']
     });
-    this.auditForm.get('Rule')?.disable();
     this.showLoader = true; // Show loader before starting requests
 
   concat(

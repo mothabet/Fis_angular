@@ -54,7 +54,7 @@
               <ng-template #inactive> غير نشط </ng-template>
             </td>
             <td class="text-center td-actions">
-              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink">
+              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)">
                 <img src="../../../../assets/images/link.png" alt="" />
               </a>
               <a routerLink="/Researcher-Details" class="icon">
@@ -245,7 +245,7 @@
       <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
         <h5>ربط بالشركة</h5>
         <div class="search">
-          <input class="form-control" type="text" name="search" placeholder="البحث" />
+          <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
       </div>
@@ -262,51 +262,28 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let company of companies">
               <td>
-                <input type="checkbox" name="companyName1" id="companyName1" />
-                <label for="companyName1">شركة الابداع</label>
+                <input type="checkbox" (change)="onCheckboxChange(company.id, $event)" [checked]="company.id == id || selectedCompanyIds.has(company.id)"/>
+                {{ company.arName }}
               </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr>
-              <td>
-                <input type="checkbox" name="companyName2" id="companyName2" />
-                <label for="companyName2">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr class="last">
-              <td>
-                <input type="checkbox" name="companyName3" id="companyName3" />
-                <label for="companyName3">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
+              <td class="text-center">{{ company.compRegNumber }}</td>
+              <td class="text-center">{{ company.id }}</td>
+              <td class="text-center">{{ company.activityId }}</td>
+              <td class="text-center">{{ company.arActivityName }}</td>
+              <td class="text-center">{{ company.address }}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
-          إلغاء
-        </button>
-        <button type="button" class="btn btn-add">حفظ</button>
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcher" (click)="resetForm()">إلغاء</button>
+        <button type="button" class="btn btn-add" (click)="saveSelectedCompanies()">حفظ</button>
       </div>
     </div>
   </div>
 </div>
+
 <!--end linked company modal -->
 
 <!--end modal -->

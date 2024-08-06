@@ -16,3 +16,6 @@
   #research-btns .btn {
     width: 160px !important;
 }
+.disabled{
+  pointer-events: none;
+}
