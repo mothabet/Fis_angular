@@ -8,6 +8,8 @@ import { TransTableComponent } from './Components/trans-table/trans-table.compon
 import { TableWithoutTransComponent } from './Components/table-without-trans/table-without-trans.component';
 import { TwoYearsWithPartsComponent } from './Components/two-years-with-parts/two-years-with-parts.component';
 import { OneYearWithPartsComponent } from './Components/one-year-with-parts/one-year-with-parts.component';
+import { QuarterFormCoverComponent } from './Components/quarter-form-cover/quarter-form-cover.component';
+import { QuarterTableComponent } from './Components/quarter-table/quarter-table.component';
 
 
 
@@ -19,7 +21,9 @@ import { OneYearWithPartsComponent } from './Components/one-year-with-parts/one-
     TransTableComponent,
     TableWithoutTransComponent,
     TwoYearsWithPartsComponent,
-    OneYearWithPartsComponent
+    OneYearWithPartsComponent,
+    QuarterFormCoverComponent,
+    QuarterTableComponent
   ],
   imports: [
     CommonModule,

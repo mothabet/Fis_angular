@@ -25,6 +25,7 @@ export interface IGetFormDto {
 }
 export interface ICoverFormDetailsDto{
     id:number,
+    typeQuarter:number,
     tables :IGetTableDto[],
     arName : string,
     enName : string,

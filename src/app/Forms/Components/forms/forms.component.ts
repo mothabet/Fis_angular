@@ -311,7 +311,7 @@ export class FormsComponent implements OnInit {
     );
     this.renderer.listen(detailsIcon, 'click', (e: Event) => {
       e.stopPropagation();
-      this.router.navigate(['/FormDetails', form.id]);
+      this.formNavigate(form.id);
     });
 
     const delIcon = this.renderer.createElement('img');
@@ -1126,5 +1126,27 @@ export class FormsComponent implements OnInit {
 
   onMouseUp() {
     this.isPanning = false;
+  }
+  formNavigate(id:number){
+    debugger
+    this.GetFormById(id)
+  }
+
+  GetFormById(id: number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.formId = res.Data.id
+        if(res.Data.Type == 1)
+          this.router.navigate(['/FormDetails', this.formId]);
+        else if(res.Data.Type == 2)
+          this.router.navigate(['/QuarterFormCover', this.formId]);
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormById(id).subscribe(observer);
   }
 }

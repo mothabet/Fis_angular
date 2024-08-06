@@ -24,9 +24,11 @@
                         <thead>
                             <tr class="t-header">
                                 <th scope="col" colspan="">البيان</th>
-                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">التعاملات خلال Transactions during 2021
+                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">التعاملات خلال
+                                    Transactions during {{coverForm.reviewYear}}
                                 </th>
-                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end 2021</th>
+                                <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end
+                                    {{coverForm.reviewYear}}</th>
                                 <th class="text-center" scope="col" colspan="">الرمز Code</th>
                                 <th class="text-start" scope="col" colspan="">Items</th>
                             </tr>
@@ -41,13 +43,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let formContent of table.formContents">
-                                <td>{{formContent.code.arName}}</td>
-                                <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
-                                <td *ngFor="let part of table.tableParts" class="text-center"><input type="number" placeholder="0" /></td>
-                                <td class="text-center"><input type="text" value="{{formContent.code.QuestionCode}}" /></td>
-                                <td class="text-start">{{formContent.code.enName}}</td>
-                            </tr>
+                            <ng-container *ngFor="let formContent of table.formContents">
+                                <tr>
+                                    <td>{{formContent.code.arName}}</td>
+                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
+                                            placeholder="0" /></td>
+                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center"><input disabled type="text"
+                                            value="{{formContent.code.QuestionCode}}" /></td>
+                                    <td class="text-start">{{formContent.code.enName}}</td>
+                                </tr>
+                                <tr *ngFor="let subCode of formContent.code.SubCodes">
+                                    <td style="color: orange;">{{subCode.arName}}</td>
+                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
+                                            placeholder="0" /></td>
+                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center"><input disabled type="text"
+                                            value="{{subCode.QuestionCode}}" /></td>
+                                    <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
+                                </tr>
+                            </ng-container>
                         </tbody>
                     </table>
                 </div>

@@ -1,4 +1,4 @@
-import { IAddSubCode } from "./SubCodeHomeDto"
+import { IAddSubCode, ISubCode } from "./SubCodeHomeDto"
 
 export interface IAddCode {
     QuestionCode:string,
@@ -11,5 +11,7 @@ export interface ICode{
     Id:number,
     arName: string,
     enName: string,
+    TypeId : number;
     QuestionCode:string
+    SubCodes:ISubCode[]
 }

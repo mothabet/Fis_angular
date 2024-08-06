@@ -17,8 +17,12 @@ import { TransTableComponent } from './Forms/Components/trans-table/trans-table.
 import { TableWithoutTransComponent } from './Forms/Components/table-without-trans/table-without-trans.component';
 import { OneYearWithPartsComponent } from './Forms/Components/one-year-with-parts/one-year-with-parts.component';
 import { TwoYearsWithPartsComponent } from './Forms/Components/two-years-with-parts/two-years-with-parts.component';
+import { QuarterFormCoverComponent } from './Forms/Components/quarter-form-cover/quarter-form-cover.component';
+import { QuarterTableComponent } from './Forms/Components/quarter-table/quarter-table.component';
 
 const routes: Routes = [
+  { path: 'QuarterTable/:formId/:tableId', component: QuarterTableComponent, canActivate: [LoginGuard] },
+  { path: 'QuarterFormCover/:formId', component: QuarterFormCoverComponent, canActivate: [LoginGuard] },
   { path: 'TransTable/:formId/:tableId', component: TransTableComponent, canActivate: [LoginGuard] },
   { path: 'PeriodTable/:formId/:tableId', component: TableWithPeriodComponent, canActivate: [LoginGuard] },
   { path: 'TableWithoutTrans/:formId/:tableId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },

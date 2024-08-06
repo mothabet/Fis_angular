@@ -41,6 +41,8 @@ export class NavigateTablesTypesComponent implements OnInit {
           this.router.navigate(['/OneYearWithParts', this.formId, id]);
         else if (this.tableType == 5)
           this.router.navigate(['/PeriodTable', this.formId, id]);
+        else if (this.tableType == 0)
+          this.router.navigate(['/QuarterTable', this.formId, id]);
         if (res.Data) {
           this.Loader = false;
         }
