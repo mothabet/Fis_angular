@@ -58,7 +58,7 @@ export class FormsComponent implements OnInit {
   typeForm: string = '';
   reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
-  showSubCode : string = '';
+  showSubCode: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -126,11 +126,65 @@ export class FormsComponent implements OnInit {
       );
       this.renderer.appendChild(quesUl, newMenuItem);
       this.renderer.appendChild(tableLi[0], quesUl);
+      this.addCollapseButton(quesUl); // Add collapse button to new ul
     }
   }
+
+  AppenHtmlTable(getTableDto: IGetTableDto) {
+    this.tablesCount = getTableDto.id;
+    const tableUl = document.getElementById('tableUl' + getTableDto.formId);
+    if (tableUl) {
+      const newMenuItem = this.createHtmlTable(getTableDto);
+      this.renderer.appendChild(tableUl, newMenuItem);
+    } else {
+      const tableUl = this.renderer.createElement('ul');
+      tableUl.id = 'tableUl' + getTableDto.formId;
+      const newMenuItem = this.createHtmlTable(getTableDto);
+      const formLi = this.el.nativeElement.getElementsByClassName(
+        'formLi' + getTableDto.formId
+      );
+      this.renderer.appendChild(tableUl, newMenuItem);
+      this.renderer.appendChild(formLi[0], tableUl);
+      this.addCollapseButton(tableUl); // Add collapse button to new ul
+    }
+  }
+
+  AppenHtmlForm(form: IGetFormDto) {
+    this.formCount = form.id;
+    const newMenuItem = this.createHtmlForm(form);
+    const maindiv = document.getElementById('main');
+    this.renderer.appendChild(maindiv, newMenuItem);
+    const formUl = this.renderer.createElement('ul'); // Create new ul
+    formUl.id = 'formUl' + form.id;
+    this.renderer.appendChild(newMenuItem, formUl);
+  }
+
+  addCollapseButton(ulElement: HTMLElement) {
+    const button = this.renderer.createElement('button');
+    const icon = this.renderer.createElement('img');
+    this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomout.png');
+    this.renderer.appendChild(button, icon);
+    this.renderer.listen(button, 'click', () => {
+      this.toggleCollapse(ulElement, icon);
+    });
+    this.renderer.insertBefore(ulElement.parentNode, button, ulElement); // Insert button before ul
+  }
+
+  toggleCollapse(ulElement: HTMLElement, icon: HTMLElement) {
+    const isCollapsed = ulElement.classList.contains('collapsed');
+    if (isCollapsed) {
+      this.renderer.removeClass(ulElement, 'collapsed');
+      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomout.png');
+    } else {
+      this.renderer.addClass(ulElement, 'collapsed');
+      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomin.png');
+    }
+  }
+
   createHtmlQues(getQuestionDto: IGetQuestionDto): HTMLLIElement {
     const quesLi = this.renderer.createElement('li');
     quesLi.id = 'quesLi' + this.quesCount;
+
     const quesA = this.renderer.createElement('a');
     const divIcon = this.renderer.createElement('div');
 
@@ -169,31 +223,22 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(quesLi, 'min-width', '160px');
     this.renderer.setStyle(divIcon, 'margin-right', 'auto');
 
+    // Toggle child ul visibility
+    quesLi.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      const childUl = quesLi.querySelector('ul');
+      if (childUl) {
+        if (childUl.classList.contains('hidden')) {
+          childUl.classList.remove('hidden');
+        } else {
+          childUl.classList.add('hidden');
+        }
+      }
+    });
+
     return quesLi;
   }
-  AppenHtmlTable(getTableDto: IGetTableDto) {
-    this.tablesCount = getTableDto.id;
-    const tableUl = document.getElementById('tableUl' + getTableDto.formId);
-    if (tableUl) {
-      const newMenuItem = this.createHtmlTable(getTableDto);
-      this.renderer.appendChild(tableUl, newMenuItem);
-    } else {
-      const tableUl = this.renderer.createElement('ul');
-      tableUl.id = 'tableUl' + getTableDto.formId;
-      const newMenuItem = this.createHtmlTable(getTableDto);
-      const formLi = this.el.nativeElement.getElementsByClassName(
-        'formLi' + getTableDto.formId
-      );
-      this.renderer.appendChild(tableUl, newMenuItem);
-      this.renderer.appendChild(formLi[0], tableUl);
-    }
-  }
-  AppenHtmlForm(form: IGetFormDto) {
-    this.formCount = form.id;
-    const newMenuItem = this.createHtmlForm(form);
-    const maindiv = document.getElementById('main');
-    this.renderer.appendChild(maindiv, newMenuItem);
-  }
+
   createHtmlTable(getTableDto: IGetTableDto): HTMLLIElement {
     const tableLi = this.renderer.createElement('li');
     tableLi.id = this.tablesCount;
@@ -272,8 +317,23 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
     this.renderer.setStyle(img, 'padding', '8px');
     this.renderer.setStyle(divIcon, 'position', 'relative');
+
+    // Toggle child ul visibility
+    tableLi.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      const childUl = tableLi.querySelector('ul');
+      if (childUl) {
+        if (childUl.classList.contains('hidden')) {
+          childUl.classList.remove('hidden');
+        } else {
+          childUl.classList.add('hidden');
+        }
+      }
+    });
+
     return tableLi;
   }
+
   createHtmlForm(form: IGetFormDto): HTMLLIElement {
     const formLi = this.renderer.createElement('li');
     formLi.id = this.formCount;
@@ -363,8 +423,23 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
     this.renderer.setStyle(img, 'padding', '8px');
     this.renderer.setStyle(divIcon, 'position', 'relative');
+
+    // Toggle child ul visibility
+    formLi.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      const childUl = formLi.querySelector('ul');
+      if (childUl) {
+        if (childUl.classList.contains('hidden')) {
+          childUl.classList.remove('hidden');
+        } else {
+          childUl.classList.add('hidden');
+        }
+      }
+    });
+
     return formLi;
   }
+
   openModal(name: string, id: number = 0, formId: number = 0) {
     if (name === 'createTable') this.formId = formId;
     if (name === 'createQuestion') {
@@ -429,7 +504,7 @@ export class FormsComponent implements OnInit {
       const observer = {
         next: (res: any) => {
           debugger
-          if(res.Status == 400){
+          if (res.Status == 400) {
             Swal.fire({
               icon: 'error',
               title: res.Message,
@@ -1127,7 +1202,7 @@ export class FormsComponent implements OnInit {
   onMouseUp() {
     this.isPanning = false;
   }
-  formNavigate(id:number){
+  formNavigate(id: number) {
     debugger
     this.GetFormById(id)
   }
@@ -1137,9 +1212,9 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        if(res.Data.Type == 1)
+        if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId]);
-        else if(res.Data.Type == 2)
+        else if (res.Data.Type == 2)
           this.router.navigate(['/QuarterFormCover', this.formId]);
       },
       error: (err: any) => {
