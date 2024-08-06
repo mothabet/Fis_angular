@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetFormDto } from '../../Dtos/FormDto';
 import { inputs } from '@syncfusion/ej2-angular-diagrams/src/diagram/diagram.component';
+import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 
 @Component({
   selector: 'app-trans-table',
@@ -69,6 +71,16 @@ export class TransTableComponent {
   }
   calculateTransaction() {
     this.transaction = this.lastYear - this.nextYear;
+  }
+  addSubCodeRow(code:ICode){
+    const subCode:ISubCode={
+      arName:'',
+      codeId:0,
+      enName:'',
+      Id:0,
+      QuestionCode:''
+    }
+    code.SubCodes.push(subCode);
   }
 }
 

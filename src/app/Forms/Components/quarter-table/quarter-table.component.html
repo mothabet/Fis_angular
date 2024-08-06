@@ -5,7 +5,7 @@
     <app-top-screen [title]="'عرض الاستمارة'"></app-top-screen>
     <!-- end-header -->
     <!-- start content -->
-    <div class="companies-details form-details prev-form">
+    <div class="companies-details form-details prev-form" style="max-width: 74rem;">
         <div class="header-nav" style="margin-bottom: -10px">
             <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
             <!-- start table -->
@@ -34,9 +34,8 @@
                         <ng-container *ngFor="let formContent of table.formContents">
                             <tr>
                                 <td>
-                                    <button (click)="addSubCodeRow(formContent.code)">
-                                        <img style="background-color: #00af9d;" *ngIf="formContent.code.TypeId != 1"
-                                            src=".././../../../assets/images/briefcase-plus-outli.png">
+                                    <button *ngIf="formContent.code.TypeId != 1" style="background-color: #00af9d; border-radius: 5px;" (click)="addSubCodeRow(formContent.code)">
+                                        <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
                                     </button> {{formContent.code.arName}}
                                 </td>
                                 <td class="text-center quarter4"><input disabled class="quarter4" type="number"
@@ -56,13 +55,13 @@
                                 <td class="text-center quarter1"><input disabled class="quarter1" type="number"
                                         placeholder="0" /></td>
                                 <td class="text-center"><input disabled type="number" placeholder="0" /></td>
-                                <td class="text-start">
+                                <td class="text-start" style="text-wrap: balance;">
                                     {{formContent.code.enName}}</td>
                             </tr>
                             <ng-container *ngIf="formContent.code.TypeId == 1">
                                 <tr *ngFor="let subCode of formContent.code.SubCodes">
-                                    <td style="color: orange;">{{subCode.arName}}</td>
-                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                        <td class="sub-list-item" style="text-align: center;color: #00af9d; text-wrap: balance;">{{ subCode.arName }}</td>
+                                        <td class="text-center quarter4"><input disabled class="quarter4" type="number"
                                             placeholder="0" /></td>
                                     <td class="text-center quarter4"><input disabled class="quarter4" type="number"
                                             placeholder="0" />
@@ -83,37 +82,39 @@
                                             placeholder="0" />
                                     </td>
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
-                                    <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
+                                    <td class="text-start" style="min-width: 250px;text-align: center !important;color: #00af9d; text-wrap: balance;">{{subCode.enName}}</td>
                                 </tr>
                             </ng-container>
                             <ng-container *ngIf="formContent.code.TypeId == 2 || formContent.code.TypeId==3">
                                 <tr *ngFor="let subCode of formContent.code.SubCodes; let i = index">
-                                    <td style="padding: 8px 0px;">{{i+1}}- <input
-                                            style="width: 80%;margin: auto;" value="{{subCode.arName}}"/>
-                                    </td>
-                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+
+                                              <td class="text-center" *ngIf="subCode.Id ==0">
+                                                <input type="text" style="width: 100%;" />
+                                              </td>
+                                    <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
                                             placeholder="0" /></td>
-                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                    <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
                                             placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                    <td class="text-center quarter3" [ngClass]="coverForm.typeQuarter == 3 ? 'colActive' : ''"><input disabled class="quarter3" type="number"
                                             placeholder="0" /></td>
-                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                    <td class="text-center quarter3" [ngClass]="coverForm.typeQuarter == 3 ? 'colActive' : ''"><input disabled class="quarter3" type="number"
                                             placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                    <td class="text-center quarter2" [ngClass]="coverForm.typeQuarter == 2 ? 'colActive' : ''"><input disabled class="quarter2" type="number"
                                             placeholder="0" /></td>
-                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                    <td class="text-center quarter2" [ngClass]="coverForm.typeQuarter == 2 ? 'colActive' : ''"><input disabled class="quarter2" type="number"
                                             placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                    <td class="text-center quarter1" [ngClass]="coverForm.typeQuarter == 1 ? 'colActive' : ''"><input disabled class="quarter1" type="number"
                                             placeholder="0" /></td>
-                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                    <td class="text-center quarter1" [ngClass]="coverForm.typeQuarter == 1 ? 'colActive' : ''"><input disabled class="quarter1" type="number"
                                             placeholder="0" />
                                     </td>
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
-                                    <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
-                                </tr>
+                                    <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
+                                        <input type="text" style="width: 100%;" />
+                                      </td>                                </tr>
                             </ng-container>
                         </ng-container>
                         <tr class="footer">
@@ -139,9 +140,11 @@
             <!-- start footer -->
             <footer class="projection-notes d-flex flex-wrap my-3 card-box">
                 <p class="ar flex-fill">
-                </p>
-                <p class="en flex-fill">
-                </p>
+                        {{table.arNotes}}
+                    </p>
+                    <p class="en flex-fill">
+                        {{table.enNotes}}
+                    </p>
             </footer>
             <!-- end footer -->
 

@@ -1,6 +1,6 @@
 .items {
   width: 1195px;
-  height: 500px;
+  height: 615px;
   overflow: auto;
   display: flex;
 }
@@ -176,4 +176,20 @@ tfoot tr th .alert span {
 }
 #createTable .modal-content{
   width: 180% !important;
+}
+ul.collapsed > li {
+  display: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+}
+
+button img {
+  width: 20px;
+  height: 20px;
 }

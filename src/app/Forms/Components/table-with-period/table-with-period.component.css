@@ -12,7 +12,7 @@ th, td {
 
 /* Set max width for all table cells */
 td {
-  max-width: 100px;
+  max-width: 250px;
 }
 
 /* Specific styles for the subcode cells to handle long text */
@@ -23,4 +23,8 @@ td {
   word-wrap: break-word;     /* Break long words to the next line */
   word-break: break-all;     /* Ensure the text breaks within words if necessary */
   overflow: visible;         /* Ensure the overflow content is visible */
+}
+.colActive{
+  background-color: rgb(202 227 224);
+  color: black;
 }
