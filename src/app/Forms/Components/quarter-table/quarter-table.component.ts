@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +18,7 @@ export class QuarterTableComponent {
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
 
-  constructor(private el: ElementRef,private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
@@ -81,35 +81,5 @@ export class QuarterTableComponent {
     }
   }
 
-  addNewRow() {
-    
-    // Find the tbody element
-    const tableBody = this.el.nativeElement.querySelector('tbody');
-
-    // Create a new row
-    const newRow = this.renderer.createElement('tr');
-
-    // Define the row content
-    const cells = [
-      this.createCell('New Row', 'text-start'),
-      this.createCell('<input disabled class="quarter2" type="number" placeholder="0" />', 'text-center quarter2'),
-      this.createCell('<input disabled class="quarter2" type="number" placeholder="0" />', 'text-center quarter2'),
-      // Add more cells as needed
-    ];
-
-    // Append cells to the new row
-    cells.forEach(cell => {
-      this.renderer.appendChild(newRow, cell);
-    });
-
-    // Append the new row to the table body
-    this.renderer.appendChild(tableBody, newRow);
-  }
-
-  private createCell(content: string, className: string) {
-    const cell = this.renderer.createElement('td');
-    this.renderer.addClass(cell, className);
-    this.renderer.setProperty(cell, 'innerHTML', content);
-    return cell;
-  }
+  
 }

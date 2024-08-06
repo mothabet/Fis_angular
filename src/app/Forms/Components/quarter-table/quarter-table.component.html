@@ -30,7 +30,7 @@
                         <ng-container *ngFor="let formContent of table.formContents">
                             <tr>
                                 <td>
-                                    <img style="background-color: #00af9d;" (click)="addNewRow()" *ngIf="formContent.code.TypeId != 1" src=".././../../../assets/images/briefcase-plus-outli.png">
+                                    <img style="background-color: #00af9d;"  *ngIf="formContent.code.TypeId != 1" src=".././../../../assets/images/briefcase-plus-outli.png">
                                     {{formContent.code.arName}}</td>
                                 <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" /></td>
                                 <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" /></td>
