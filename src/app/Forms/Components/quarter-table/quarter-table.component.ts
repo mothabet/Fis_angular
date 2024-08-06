@@ -33,7 +33,6 @@ export class QuarterTableComponent {
     this.modifyInputById(this.coverForm.typeQuarter);
   }
   ngAfterViewInit(): void {
-    debugger
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
   }
   GetTableById(id: number): void {
@@ -74,7 +73,6 @@ export class QuarterTableComponent {
     this.formServices.GetFormById(id).subscribe(observer);
   }
   modifyInputById(id:number): void {
-    debugger
     const inputs = document.getElementsByClassName('quarter'+id) as HTMLCollectionOf<HTMLInputElement>;
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i];
@@ -92,6 +90,8 @@ export class QuarterTableComponent {
       QuestionCode:''
     }
     code.SubCodes.push(subCode);
+    // this.modifyInputById(this.coverForm.typeQuarter);
   }
   
+
 }

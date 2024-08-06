@@ -4,6 +4,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
+import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 
 @Component({
   selector: 'app-two-years-with-parts',
@@ -62,5 +64,15 @@ export class TwoYearsWithPartsComponent {
       },
     };
     this.formServices.GetFormById(id).subscribe(observer);
+  }
+  addSubCodeRow(code:ICode){
+    const subCode:ISubCode={
+      arName:'',
+      codeId:0,
+      enName:'',
+      Id:0,
+      QuestionCode:''
+    }
+    code.SubCodes.push(subCode);
   }
 }

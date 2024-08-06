@@ -33,8 +33,12 @@
                         <tbody>
                             <ng-container *ngFor="let formContent of table.formContents">
                                 <tr>
-                                    <td>{{formContent.code.arName}}</td>
-                                    <td class="text-center">
+                                    <td style="text-wrap: balance;">{{formContent.code.arName}}
+                                        <button *ngIf="formContent.code.TypeId != 1" style="background-color: #00af9d; border-radius: 5px;    margin-right: 70px;" (click)="addSubCodeRow(formContent.code)">
+                                            <img  
+                                                src=".././../../../assets/images/plus-circle-outline.png">
+                                        </button> 
+                                    </td>                                    <td class="text-center">
                                         <input type="number" placeholder="0" />
                                     </td>
                                     <td class="text-center">
@@ -43,10 +47,11 @@
                                     <td class="text-center">
                                         <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
                                     </td>
-                                    <td class="text-start">{{formContent.code.enName}}</td>
+                                    <td style="text-wrap: balance;" class="text-start">{{formContent.code.enName}}</td>
                                 </tr>
                                 <tr *ngFor="let subCode of formContent.code.SubCodes">
-                                    <td style="color: orange;">{{subCode.arName}}</td>
+                                    <td style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                        {{subCode.arName}}</td>
                                     <td class="text-center">
                                         <input type="number" placeholder="0" />
                                     </td>
@@ -56,7 +61,10 @@
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />
                                     </td>
-                                    <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
+                                    <td class="text-start"
+                                        style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                        {{subCode.enName}}
+                                    </td>
                                 </tr>
                             </ng-container>
                         </tbody>

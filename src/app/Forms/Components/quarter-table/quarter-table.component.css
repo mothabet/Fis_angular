@@ -13,7 +13,7 @@ th, td {
 
 /* Set max width for all table cells */
 td {
-  max-width: 100px;
+  max-width: 250px;
 }
 
 /* Specific styles for the subcode cells to handle long text */
@@ -49,4 +49,17 @@ thead th {
   top: 0; /* Keep the header fixed at the top during scroll */
   background: #fff; /* Ensure the background is white for readability */
   z-index: 1; /* Ensure header stays above other content */
+}
+.sub-list-item::before {
+  content: "     •  "; /* Dot character */
+  font-size: 16px; /* Size of the dot */
+  display: inline-block;
+  width: 1em; /* Space for the dot */
+  text-align: center;
+  text-wrap: balance;
+}
+
+.colActive{
+  background-color: rgb(202 227 224);
+  color: black;
 }
