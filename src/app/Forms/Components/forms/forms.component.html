@@ -323,7 +323,7 @@
                 </div>
               </div>
             </div>
-            <div class="table-responsive company-table research-table" *ngIf="!(showSubCode == '0' || showSubCode =='')">
+            <div class="table-responsive company-table research-table" *ngIf="(code.TypeId == 1)&&(!(showSubCode == '0' || showSubCode ==''))">
               <table class="table table-borderless">
                 <thead>
                   <tr class="t-header">

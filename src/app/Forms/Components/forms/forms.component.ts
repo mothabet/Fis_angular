@@ -52,13 +52,20 @@ export class FormsComponent implements OnInit {
   questionForm!: FormGroup;
   codes: ICode[] = [];
   subCodes: ISubCode[] = [];
-  code!: ICode;
+  code: ICode = {
+    arName: '',
+    enName: '',
+    Id: 0,
+    QuestionCode: '',
+    SubCodes: [],
+    TypeId: 0
+  }
   Type: number = 0;
   years: number[] = [];
   typeForm: string = '';
   reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
-  showSubCode : string = '';
+  showSubCode: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -429,7 +436,7 @@ export class FormsComponent implements OnInit {
       const observer = {
         next: (res: any) => {
           debugger
-          if(res.Status == 400){
+          if (res.Status == 400) {
             Swal.fire({
               icon: 'error',
               title: res.Message,
@@ -1038,8 +1045,13 @@ export class FormsComponent implements OnInit {
     }
   }
   onSelectChange(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
-    this.GetSubCodesById(Number(selectedValue))
+    const selectedId = (event.target as HTMLSelectElement).value;
+    const selectedItem = this.codes.find(item => item.Id === +selectedId);
+    if (selectedItem) {
+      this.code = selectedItem;
+    } 
+    debugger
+    this.GetSubCodesById(Number(selectedId))
   }
   GetSubCodesById(id: number) {
     this.Loader = true;
@@ -1061,6 +1073,24 @@ export class FormsComponent implements OnInit {
       },
     };
     this.subCodeService.GetSubCodesById(Number(id)).subscribe(observer);
+  }
+  GetCodeById(id: number) {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.code = res.Data.codeDto;
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.codeService.GetCodeById(Number(id)).subscribe(observer);
   }
   getControlErrors(controlName: string): string[] {
     const control = this.formForm.get(controlName);
@@ -1127,7 +1157,7 @@ export class FormsComponent implements OnInit {
   onMouseUp() {
     this.isPanning = false;
   }
-  formNavigate(id:number){
+  formNavigate(id: number) {
     debugger
     this.GetFormById(id)
   }
@@ -1137,9 +1167,9 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        if(res.Data.Type == 1)
+        if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId]);
-        else if(res.Data.Type == 2)
+        else if (res.Data.Type == 2)
           this.router.navigate(['/QuarterFormCover', this.formId]);
       },
       error: (err: any) => {
