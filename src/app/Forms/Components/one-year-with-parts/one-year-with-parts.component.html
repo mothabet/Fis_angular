@@ -34,8 +34,7 @@
                             <tr>
                                 <td style="text-wrap: balance;">{{formContent.code.arName}}
                                     <button *ngIf="formContent.code.TypeId != 1" style="background-color: #00af9d; border-radius: 5px; margin-right: 135px;" (click)="addSubCodeRow(formContent.code)">
-                                        <img  
-                                            src=".././../../../assets/images/plus-circle-outline.png">
+                                        <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
                                     </button> 
                                 </td>                                <td class="text-center"><input type="number" placeholder="0" /></td>
                                 <td class="text-center" *ngFor="let part of table.tableParts"><input type="number"
@@ -45,13 +44,19 @@
                                 <td class="text-start" style="text-wrap: balance;">{{formContent.code.enName}}</td>
                             </tr>
                             <tr  *ngFor="let subCode of formContent.code.SubCodes">
-                                <td style="text-wrap: balance; text-align: center !important; color: #00af9d;">{{subCode.arName}}</td>
+                                <td *ngIf="subCode.Id !=0" style="text-wrap: balance; text-align: center !important; color: #00af9d;">{{subCode.arName}}</td>
+                                <td class="text-center" *ngIf="subCode.Id ==0">
+                                    <input type="text" style="width: 100%;"/>
+                                </td>
                                 <td class="text-center"><input type="number" placeholder="0" /></td>
                                 <td class="text-center" *ngFor="let part of table.tableParts"><input type="number"
                                         placeholder="0" /></td>
                                 <td class="text-center"><input disabled type="text" value="{{subCode.QuestionCode}}" />
                                 </td>
-                                <td class="text-start" style="text-wrap: balance; text-align: center !important; color: #00af9d;">{{subCode.enName}}</td>
+                                <td class="text-center" *ngIf="subCode.Id ==0">
+                                    <input type="text" style="width: 100%;"/>
+                                </td>
+                                <td *ngIf="subCode.Id !=0" class="text-start" style="text-wrap: balance; text-align: center !important; color: #00af9d;">{{subCode.enName}}</td>
                             </tr>
                         </ng-container>
                         <tr class="footer">
@@ -79,8 +84,10 @@
             <!-- start footer -->
             <footer class="projection-notes d-flex flex-wrap my-3 card-box">
                 <p class="ar flex-fill">
+                    {{table.arNotes}}
                 </p>
                 <p class="en flex-fill">
+                    {{table.enNotes}}
                 </p>
             </footer>
             <!-- end footer -->

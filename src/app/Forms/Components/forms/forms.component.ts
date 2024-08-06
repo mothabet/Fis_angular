@@ -1243,7 +1243,6 @@ export class FormsComponent implements OnInit {
     this.isPanning = false;
   }
   formNavigate(id: number) {
-    debugger
     this.GetFormById(id)
   }
 
@@ -1252,6 +1251,7 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
+        debugger
         if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId]);
         else if (res.Data.Type == 2)
