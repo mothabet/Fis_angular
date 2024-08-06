@@ -52,7 +52,14 @@ export class FormsComponent implements OnInit {
   questionForm!: FormGroup;
   codes: ICode[] = [];
   subCodes: ISubCode[] = [];
-  code!: ICode;
+  code: ICode = {
+    arName: '',
+    enName: '',
+    Id: 0,
+    QuestionCode: '',
+    SubCodes: [],
+    TypeId: 0
+  }
   Type: number = 0;
   years: number[] = [];
   typeForm: string = '';
@@ -85,6 +92,8 @@ export class FormsComponent implements OnInit {
       enName: ['', Validators.required],
       arHeading: ['', Validators.required],
       enHeading: ['', Validators.required],
+      arNotes: ['', Validators.required],
+      enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
       Type: [0, Validators.required],
       formId: [''],
@@ -738,6 +747,8 @@ export class FormsComponent implements OnInit {
         enName: this.tableForm.value.enName,
         arHeading: this.tableForm.value.arHeading,
         enHeading: this.tableForm.value.enHeading,
+        arNotes:this.tableForm.value.arNotes,
+        enNotes:this.tableForm.value.enNotes,
         Type: this.tableForm.value.Type,
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
@@ -809,6 +820,8 @@ export class FormsComponent implements OnInit {
       enName: '',
       arHeading: '',
       enHeading: '',
+      enNotes:'',
+      arNotes:'',
       Type: 0,
       fromId: '',
       isActive: true,
@@ -865,6 +878,8 @@ export class FormsComponent implements OnInit {
             enName: this.addTable.enName,
             arHeading: this.addTable.arHeading,
             enHeading: this.addTable.enHeading,
+            arNotes: this.addTable.arNotes,
+            enNotes: this.addTable.enNotes,
             Type: this.addTable.Type,
             fromId: this.addTable.formId,
             isActive: this.addTable.IsActive,
@@ -908,6 +923,8 @@ export class FormsComponent implements OnInit {
         enName: this.tableForm.value.enName,
         arHeading: this.tableForm.value.arHeading,
         enHeading: this.tableForm.value.enHeading,
+        arNotes: this.tableForm.value.arNotes,
+        enNotes: this.tableForm.value.enNotes,
         Type: this.tableForm.value.Type,
         formId: this.idFormTables,
         IsActive: this.tableForm.value.IsActive,
@@ -1113,8 +1130,13 @@ export class FormsComponent implements OnInit {
     }
   }
   onSelectChange(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
-    this.GetSubCodesById(Number(selectedValue))
+    const selectedId = (event.target as HTMLSelectElement).value;
+    const selectedItem = this.codes.find(item => item.Id === +selectedId);
+    if (selectedItem) {
+      this.code = selectedItem;
+    } 
+    debugger
+    this.GetSubCodesById(Number(selectedId))
   }
   GetSubCodesById(id: number) {
     this.Loader = true;
@@ -1136,6 +1158,24 @@ export class FormsComponent implements OnInit {
       },
     };
     this.subCodeService.GetSubCodesById(Number(id)).subscribe(observer);
+  }
+  GetCodeById(id: number) {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.code = res.Data.codeDto;
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.codeService.GetCodeById(Number(id)).subscribe(observer);
   }
   getControlErrors(controlName: string): string[] {
     const control = this.formForm.get(controlName);

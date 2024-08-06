@@ -14,13 +14,17 @@
                     <thead>
                         <tr class="t-header">
                             <th scope="col">البيان</th>
-                            <th class="text-center quarter4" scope="col">30.012.{{+coverForm.reviewYear + 1}} Position</th>
+                            <th class="text-center quarter4" scope="col">30.012.{{+coverForm.reviewYear + 1}} Position
+                            </th>
                             <th class="text-center quarter4" scope="col">Transactions</th>
-                            <th class="text-center quarter3" scope="col">30.09.{{+coverForm.reviewYear + 1}} Position</th>
+                            <th class="text-center quarter3" scope="col">30.09.{{+coverForm.reviewYear + 1}} Position
+                            </th>
                             <th class="text-center quarter3" scope="col">Transactions</th>
-                            <th class="text-center quarter2" scope="col">30.06.{{+coverForm.reviewYear + 1}} Position</th>
+                            <th class="text-center quarter2" scope="col">30.06.{{+coverForm.reviewYear + 1}} Position
+                            </th>
                             <th class="text-center quarter2" scope="col">Transactions</th>
-                            <th class="text-center quarter1" scope="col">30.03.{{+coverForm.reviewYear + 1}} Position</th>
+                            <th class="text-center quarter1" scope="col">30.03.{{+coverForm.reviewYear + 1}} Position
+                            </th>
                             <th class="text-center quarter1" scope="col">Transactions</th>
                             <th class="text-center" scope="col">Year End {{coverForm.reviewYear}} Position</th>
                             <th class="text-start" scope="col">Items</th>
@@ -30,16 +34,27 @@
                         <ng-container *ngFor="let formContent of table.formContents">
                             <tr>
                                 <td>
-                                    <img style="background-color: #00af9d;"  *ngIf="formContent.code.TypeId != 1" src=".././../../../assets/images/briefcase-plus-outli.png">
-                                    {{formContent.code.arName}}</td>
-                                <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter3"><input disabled class="quarter3" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter3"><input disabled class="quarter3" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter2"><input disabled class="quarter2" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter2"><input disabled class="quarter2" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter1"><input disabled class="quarter1" type="number" placeholder="0" /></td>
-                                <td class="text-center quarter1"><input disabled class="quarter1" type="number" placeholder="0" /></td>
+                                    <button (click)="addSubCodeRow(formContent.code)">
+                                        <img style="background-color: #00af9d;" *ngIf="formContent.code.TypeId != 1"
+                                            src=".././../../../assets/images/briefcase-plus-outli.png">
+                                    </button> {{formContent.code.arName}}
+                                </td>
+                                <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                        placeholder="0" /></td>
+                                <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                        placeholder="0" /></td>
                                 <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                 <td class="text-start">
                                     {{formContent.code.enName}}</td>
@@ -47,17 +62,54 @@
                             <ng-container *ngIf="formContent.code.TypeId == 1">
                                 <tr *ngFor="let subCode of formContent.code.SubCodes">
                                     <td style="color: orange;">{{subCode.arName}}</td>
-                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" /></td>
-                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number" placeholder="0" />
+                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                            placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number" placeholder="0" /></td>
-                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number" placeholder="0" />
+                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                            placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number" placeholder="0" /></td>
-                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number" placeholder="0" />
+                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                            placeholder="0" />
                                     </td>
-                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number" placeholder="0" /></td>
-                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number" placeholder="0" />
+                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center"><input disabled type="number" placeholder="0" /></td>
+                                    <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="formContent.code.TypeId == 2 || formContent.code.TypeId==3">
+                                <tr *ngFor="let subCode of formContent.code.SubCodes; let i = index">
+                                    <td style="padding: 8px 0px;">{{i+1}}- <input
+                                            style="width: 80%;margin: auto;" value="{{subCode.arName}}"/>
+                                    </td>
+                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                            placeholder="0" />
                                     </td>
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                     <td class="text-start" style="color: orange;">{{subCode.enName}}</td>
