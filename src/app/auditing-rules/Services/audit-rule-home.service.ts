@@ -22,12 +22,17 @@ export class AuditRuleHomeService {
    }
    GetAuditRulesById(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&lang=2`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`AuditRules/GetAuditRulesById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    DeleteAuditRule(id:number){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.delete(environment.apiUrl+`AuditRules/DeleteAuditRule?id=${id}&lang=2`, { headers });
+     return resopnse;
+   }
+   UpdateAuditRules(id:number,Model: IAddAuditRule){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`AuditRules/UpdateAuditRules?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
 }

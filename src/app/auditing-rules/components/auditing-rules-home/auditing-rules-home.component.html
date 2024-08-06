@@ -9,26 +9,12 @@
       <div class="title">قائمة قواعد التدقيق</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button
-            type="button"
-            class="btn btn-add"
-            data-bs-toggle="modal"
-            data-bs-target="#addCode"
-          >
-            <img
-              src="../../../../assets/images/briefcase-plus-outli.png"
-              alt=""
-              id="addCodeBtn"
-            />
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addAuditRulesBtn" />
             إضافة قاعدة تدقيق
           </button>
           <button type="button" class="btn btn-download" (click)="printPdf()">
@@ -62,16 +48,10 @@
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a> -->
               <button class="icon" (click)="showAlert(item.Id)">
-                <img
-                  src="../../../../assets/images/trash-can-outline.png"
-                  alt=""
-                />
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
               </button>
-              <button class="icon" (click)="editCode(item.Id)">
-                <img
-                  src="../../../../assets/images/pencil-outline.png"
-                  alt=""
-                />
+              <button class="icon" (click)="editAuditRules(item.Id)">
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
             </td>
           </tr>
@@ -92,30 +72,19 @@
   </div>
   <!-- end content -->
 </div>
-<app-pagination
-  [pageNumber]="currentPage"
-  [lastPage]="isLastPage"
-  [emptyData]="noData"
-  [pagesCount]="totalPages"
-  (pageChange)="onPageChange($event)"
-></app-pagination>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <!--start modal-->
 
 <!--start add researcher modal -->
-<div
-  class="modal company-modal fade"
-  id="addCode"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
->
+<div class="modal company-modal fade" id="addCode" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
         <div class="header-right">
-          <h5 class="modal-title" id="add">إضافة قاعدة تدقيق</h5>
+          <h5 class="modal-title" id="add" *ngIf="add">إضافة قاعدة تدقيق</h5>
+          <h5 class="modal-title" id="add" *ngIf="!add">تعديل قاعدة التدقيق</h5>
         </div>
         <div class="header-left">
           <button (click)="addSelect()" class="btn btn-save">اضافه</button>
@@ -126,50 +95,40 @@
           <div class="row">
             <div class="col-sm-12 mb-2">
               <div class="row">
+                <!-- Inside the modal -->
                 <div *ngFor="let select of selects; let i = index" class="col-3 mb-2 mx-auto">
-                  <select
-                    class="form-control"
-                    [disabled]="select.disabled"
-                    (change)="onSelectChange($event, i)"
-                  >
-                    <option value="" disabled selected>اختر قيمة</option>
-                    <option
-                      *ngFor="let option of select.options"
-                      [value]="option.QuestionCode"
-                    >
-                      {{ option.QuestionCode }}
-                    </option>
-                  </select>
+                  <div class="d-flex align-items-center">
+                    <button class="btn btn-delete" (click)="removeSelect(i)" *ngIf="i>0||usedOptions.size==1">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    <select class="form-control ml-2" [disabled]="select.disabled" (change)="onSelectChange($event, i)">
+                      <option value="" disabled selected>اختر قيمة</option>
+                      <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode
+                        }}</option>
+                    </select>
+                  </div>
                 </div>
+
               </div>
             </div>
             <div class="col-sm-12 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                placeholder="قاعدة الندقيق"
-                formControlName="Rule"
-              />
+              <input class="form-control input-modal disabled" type="text" placeholder="قاعدة الندقيق"
+                formControlName="Rule" />
             </div>
           </div>
         </div>
         <div class="modal-footer pt-0">
-          <button
-            type="button"
-            class="btn btn-cancel"
-            data-bs-dismiss="modal"
-            id="btnCancel"
-            (click)="resetForm()"
-          >
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
+            (click)="resetAuditRules()">
             إلغاء
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            [disabled]="!isEquationValid()"
-            (click)="SaveAuditRule()"
-          >
+          <button type="button" class="btn btn-save" [disabled]="!isEquationValid()" (click)="SaveAuditRule()"
+            *ngIf="add">
             حفظ
+          </button>
+          <button type="button" class="btn btn-save" [disabled]="!isEquationValid()" (click)="UpdateAuditRule()"
+            *ngIf="!add">
+            تعديل
           </button>
         </div>
       </form>
@@ -177,89 +136,4 @@
   </div>
 </div>
 <!--end add researcher modal -->
-
-<!--start linked company modal -->
-<div
-  class="modal company-modal fade"
-  id="companyLink"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div
-        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
-      >
-        <h5>ربط بالشركة</h5>
-        <div class="search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-        </div>
-      </div>
-      <div class="table-responsive company-modal-table mx-2">
-        <table class="table table-borderless">
-          <thead>
-            <tr class="t-header">
-              <th scope="col">اسم الشركة</th>
-              <th class="text-center" scope="col">رقم السجل التجاري</th>
-              <th class="text-center" scope="col">رقم الشركة</th>
-              <th class="text-center" scope="col">رمز النشاط</th>
-              <th class="text-center" scope="col">النشاط</th>
-              <th class="text-center" scope="col">عنوان الشركة</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input type="checkbox" name="companyName1" id="companyName1" />
-                <label for="companyName1">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr>
-              <td>
-                <input type="checkbox" name="companyName2" id="companyName2" />
-                <label for="companyName2">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr class="last">
-              <td>
-                <input type="checkbox" name="companyName3" id="companyName3" />
-                <label for="companyName3">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
-          إلغاء
-        </button>
-        <button type="button" class="btn btn-add">حفظ</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--end linked company modal -->
-
 <!--end modal -->
