@@ -89,7 +89,7 @@
               <td class="text-center" *ngIf="company.status">نشط</td>
               <td class="text-center" *ngIf="!company.status">غير نشط</td>
               <td class="text-center td-actions">
-                <a routerLink="/Companies-Details" class="icon">
+                <a routerLink="/Companies-Details/{{company.id}}" class="icon">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
                 <button class="icon" (click)="showAlert(company.id)">

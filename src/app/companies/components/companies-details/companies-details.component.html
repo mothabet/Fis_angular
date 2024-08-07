@@ -1,4 +1,5 @@
 <!-- main content -->
+<app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card " style="flex: 1;">
 
     <app-top-screen [title]="'عرض تفاصيل الشركة'"></app-top-screen>
@@ -27,21 +28,21 @@
                     <img src="../../../../assets/images/companyLogo.png" class="img-fluid" alt="company">
                 </div>
                 <div class="detail">
-                    <h4 class="title">شركة الإيداع</h4>
+                    <h4 class="title">{{company.arName}}</h4>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/deskphone.png" alt="">
                         <p class="m-0 mx-2 name">رقم الهاتف :</p>
-                        <p class="data m-0">956482375</p>
+                        <p class="data m-0">{{company.phoneNumber}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/fax.png" alt="">
                         <p class="m-0 mx-2 name">فاكس :</p>
-                        <p class="data m-0">956482375</p>
+                        <p class="data m-0">{{company.fax}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/email-outline.png" alt="">
                         <p class="m-0 mx-2 name">البريد الإلكترونى :</p>
-                        <p class="data m-0">emailgmail.com</p>
+                        <p class="data m-0">{{company.email}}</p>
                     </div>
                 </div>
             </div>
@@ -54,16 +55,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <img src="../../../../assets/images/map-marker-radius-ou.png" alt="">
                                 <p class="m-0 mx-2 name">عنوان :</p>
-                                <p class="data text-nowrap m-0">الخوير، مسقط</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex flex-nowrap align-items-center">
-                                    <img src="../../../../assets/images/office-building-mark.png" alt="">
-                                    <p class="m-0 mx-2 name">المنطقة :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">مسقط</p>
+                                <p class="data text-nowrap m-0">{{company.address}}</p>
                             </div>
                         </div>
                         <div class="col-6">
@@ -72,7 +64,7 @@
                                     <img src="../../../../assets/images/archive-marker-outli.png" alt="">
                                     <p class="m-0 mx-2 name">صندوق البريد :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">61</p>
+                                <p class="data text-nowrap m-0">{{company.mailBox}}</p>
                             </div>
                         </div>
                         <div class="col-6">
@@ -81,16 +73,7 @@
                                     <img src="../../../../assets/images/printer-pos-outline.png" alt="">
                                     <p class="m-0 mx-2 name">الرمز البريدي :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">52</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex flex-nowrap align-items-center">
-                                    <img src="../../../../assets/images/texture-box.png" alt="">
-                                    <p class="m-0 mx-2 name">رقم المنطقة :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">1</p>
+                                <p class="data text-nowrap m-0">{{company.postalCode}}</p>
                             </div>
                         </div>
                         <div class="col-6">
@@ -99,7 +82,7 @@
                                     <img src="../../../../assets/images/select-marker.png" alt="">
                                     <p class="m-0 mx-2 name">رقم الولاية :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">24</p>
+                                <p class="data text-nowrap m-0">{{company.wilayatId}}</p>
                             </div>
                         </div>
                         <div class="col-6">
@@ -108,7 +91,7 @@
                                     <img src="../../../../assets/images/select-marker.png" alt="">
                                     <p class="m-0 mx-2 name">الولاية :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">مطرح</p>
+                                <p class="data text-nowrap m-0">{{company.wilayat}}</p>
                             </div>
                         </div>
                         <div class="col-6">
@@ -117,7 +100,7 @@
                                     <img src="../../../../assets/images/domain.png" alt="">
                                     <p class="m-0 mx-2 name">المحافظة: :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">مسقط</p>
+                                <p class="data text-nowrap m-0">{{company.governorates}}</p>
                             </div>
                         </div>
                     </div>
@@ -133,7 +116,7 @@
                                     <img src="../../../../assets/images/domain.png" alt="">
                                     <p class="m-0 mx-2 name">رمز الشركة :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">956482375</p>
+                                <p class="data text-nowrap m-0">{{company.id}}</p>
                             </div>
                         </div>
                         <div class="col-6 pe-0">
@@ -142,7 +125,7 @@
                                     <img src="../../../../assets/images/book-account-outline.png" alt="">
                                     <p class="m-0 mx-2 name">رمز القطاع :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">12</p>
+                                <p class="data text-nowrap m-0">{{company.sectorId}}</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center flex-wrap">
@@ -151,14 +134,14 @@
                                     <img src="../../../../assets/images/book-cog-outline.png" alt="">
                                     <p class="m-0 mx-2 name">النشاط الاقتصادي الرئيسي :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">زراعي</p>
+                                <p class="data text-nowrap m-0">{{company.activity}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src=" ../../../../assets/images/notebook-outline.png" alt="">
                                     <p class="m-0 mx-2 name">النشاط الاقتصادي الثانوي :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">المحاصيل الزراعية</p>
+                                <p class="data text-nowrap m-0">{{company.subActivity}}</p>
                             </div>
 
                         </div>
@@ -168,7 +151,7 @@
                                     <img src="../../../../assets/images/bulletin-board.png" alt="">
                                     <p class="m-0 mx-2 name">رقم البلدية :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">2</p>
+                                <p class="data text-nowrap m-0">{{company.municipalityNumber}}</p>
                             </div>
                         </div>
                         <div class="col-6 pe-0">
@@ -177,7 +160,7 @@
                                     <img src="../../../../assets/images/briefcase-variant-ou.png" alt="">
                                     <p class="m-0 mx-2 name">رقم تسجيل الشركة :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">51</p>
+                                <p class="data text-nowrap m-0">{{company.compRegNumber}}</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center flex-wrap">
@@ -186,12 +169,12 @@
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
                                     <p class="m-0 mx-2 name">مدة المحاسبة :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">1 NOV 2021</p>
+                                <p class="data text-nowrap m-0">{{company.accountingPeriod}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex">
                                 <img src="../../../../assets/images/briefcase-outline.png" alt="">
                                 <p class="m-0 mx-2 name">النوع القانوني :</p>
-                                <p class="data text-nowrap m-0">H.Others</p>
+                                <p class="data text-nowrap m-0">{{company.legalType}}</p>
                             </div>
                         </div>
                     </div>
