@@ -1,4 +1,5 @@
 <!-- main content -->
+<app-loader *ngIf="showLoader"></app-loader>
 <div class="p-4 main card " style="flex: 1;     min-height: 100vb;">
 
     <app-top-screen [title]="'عرض تفاصيل الباحث'"></app-top-screen>
@@ -22,6 +23,13 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex flex-grow-1 gap-1 left-align-button">
+            <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                <img src="../../../../assets/images/email-edit-outline.png" alt="" />
+                إرسال إستمارة
+            </button>
+        </div>
     </div>
     <!-- end researcher header -->
 
@@ -32,7 +40,7 @@
             <div class="card company text-center">
                 <div class="header py-3">
                     <div class="total-num">
-                        2,895,547
+                        {{companiesCount}}
                     </div>
                     <div class="total-title">
                         إجمالي عدد الشركات
@@ -44,7 +52,7 @@
             <div class="card invest text-center">
                 <div class="header py-3">
                     <div class="total-num">
-                        6,214,665
+                        0
                     </div>
                     <div class="total-title">
                         إجمالي الشركات التى تم مسحها
@@ -56,7 +64,7 @@
             <div class="card researcher text-center">
                 <div class="header py-3">
                     <div class="total-num">
-                        43,533,547
+                        0
                     </div>
                     <div class="total-title">
                         إجمالي الشركات التى تم الإنتهاء منها
@@ -92,53 +100,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>شركة الابداع</td>
+                            <tr *ngFor="let company of researcher.companies">
+                                <td>{{company.arName}}</td>
                                 <td class="text-center">021124444</td>
-                                <td class="text-center">86431</td>
+                                <td class="text-center">{{company.id}}</td>
                                 <td class="text-center">184510</td>
                                 <td class="text-center">الترفيه</td>
-                                <td class="text-center">الخوير، مسقط</td>
+                                <td class="text-center">{{company.address}}</td>
                                 <td class="text-center notes">
                                     ملاحظات
                                     <img src="../../../../assets/images/information-slab-cir.png" alt="">
                                 </td>
-                                <td class="text-center status-active">نشط</td>
+                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
+                                <td *ngIf="!company.status" class="text-center status-active"
+                                    style="color: red !important;">غير نشط</td>
                                 <td class="text-center">
                                     <button class="btn btn-form">
                                         <a href="./form-details.html">إستماره</a>
                                     </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>شركة الابداع</td>
-                                <td class="text-center">021124444</td>
-                                <td class="text-center">86431</td>
-                                <td class="text-center">184510</td>
-                                <td class="text-center">الترفيه</td>
-                                <td class="text-center">الخوير، مسقط</td>
-                                <td class="text-center">لا يوجد</td>
-                                <td class="text-center status-active">نشط</td>
-                                <td class="text-center">
-                                    <button class="btn btn-form"><a
-                                            href="./form-details.html">إستماره</a></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>شركة الابداع</td>
-                                <td class="text-center">021124444</td>
-                                <td class="text-center">86431</td>
-                                <td class="text-center">184510</td>
-                                <td class="text-center">الترفيه</td>
-                                <td class="text-center">الخوير، مسقط</td>
-                                <td class="text-center notes">
-                                    ملاحظات
-                                    <img src="../../../../assets/images/information-slab-cir.png" alt="">
-                                </td>
-                                <td class="text-center status-inactive">غير نشط</td>
-                                <td class="text-center">
-                                    <button class="btn btn-form"><a
-                                            href="./form-details.html">إستماره</a></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -154,3 +133,80 @@
 
 </div>
 <!-- end main content -->
+<div class="modal company-modal fade" id="sendFormCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1">
+                <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
+            </div>
+            <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
+                <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
+                <div class="search">
+                    <input (keydown.enter)="researcherCompanySerach()"
+                    [(ngModel)]="text"
+                     class="form-control" type="text" name="search" placeholder="البحث" />
+                    <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col">اسم الشركة</th>
+                            <th class="text-center" scope="col">رقم السجل التجاري</th>
+                            <th class="text-center" scope="col">رقم الشركة</th>
+                            <th class="text-center" scope="col">رمز النشاط</th>
+                            <th class="text-center" scope="col">النشاط</th>
+                            <th class="text-center" scope="col">عنوان الشركة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let company of researcher.companies">
+                            <td>
+                                <input type="checkbox" name="companyName1" id="companyName1" />
+                                {{company.arName}}
+                            </td>
+                            <td class="text-center">{{company.compRegNumber}}</td>
+                            <td class="text-center">{{company.id}}</td>
+                            <td class="text-center">184510</td>
+                            <td class="text-center">الترفيه</td>
+                            <td class="text-center">{{company.address}}</td>
+                        </tr>  
+                    </tbody>
+                </table>
+            </div>
+            <form>
+                <div class="modal-body pb-1">
+                    <div class="form-title mb-3">تفاصيل الرسالة</div>
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-0">
+                                <select class="form-form send-company-select" style="width: 100%">
+                                    <option selected value="0" id="messageType" name="messageType">
+                                        النشاط الاقتصادي الرئيسي
+                                    </option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                <label for="user">نوع الرسالة</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة" />
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0" style="border-top: none">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+                        إلغاء
+                    </button>
+                    <button type="button" class="btn btn-save">إرسال</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

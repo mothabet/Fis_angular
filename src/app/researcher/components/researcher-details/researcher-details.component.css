@@ -1,0 +1,12 @@
+.sendForm{
+    background-color: #F57F20;
+    cursor: pointer;
+    color: white;
+}
+.company-card {
+    justify-content: space-between; /* This ensures that the contents are spaced out */
+}
+
+.left-align-button {
+    justify-content: end; /* This aligns the button div to the left */
+}

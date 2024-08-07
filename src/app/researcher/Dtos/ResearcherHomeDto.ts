@@ -17,6 +17,10 @@ export interface IResearcher {
     status: boolean,
     email: string,
     phone: number,
-    UserId: number
+    UserId: number,
+    address: string,
+    activityId: number,
+    activityName: number,
+    compRegNumber: number,
     companies : ICompany[]
 }
