@@ -1,0 +1,95 @@
+<!-- header -->
+<div class="header d-flex flex-wrap justify-content-between align-items-center">
+    <h4 class="title">
+        عرض تفاصيل الشركة
+    </h4>
+    <div class="user d-flex justify-content-between align-items-center">
+        <div class="dropdown">
+            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                عربي
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                <li><a class="dropdown-item" href="#">En</a></li>
+            </ul>
+        </div>
+        <a href="./notification.html" class="notification  active">
+            <i class="fa-solid fa-bell"></i>
+        </a>
+        <div class="user-img">
+            <img src="./images/avatar.PNG" class="img-fluid">
+        </div>
+    </div>
+</div>
+<!-- end-header -->
+
+<!-- start content -->
+<div class="companies-details email">
+    <div class="header-nav">
+        <div class="card-box mb-3 d-flex justify-content-between align-items-center flex-wrap">
+            <ul>
+                <li>
+                    <a href="./companies-details.html">التفاصيل</a>
+                </li>
+                <li>
+                    <a href="#">الإستمارات</a>
+                </li>
+                <li class="active">
+                    <a href="./emails.html">المراسلات</a>
+                </li>
+            </ul>
+            <button type="button" class="btn btn-create" data-bs-toggle="modal"
+                data-bs-target="#createMail">
+                <img src="./images/calendar-alert.png" alt="">
+                إنشاء مراسلة
+            </button>
+        </div>
+    </div>
+    <div class="content companies">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة التذكيرات والإنذارات
+            </div>
+        </div>
+
+        <div class="table-responsive company-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th style="min-width: 150px;" scope="col">العنوان</th>
+                        <th class="text-center" scope="col">عنوان المراسلة</th>
+                        <th class="text-center" scope="col">تفاصيل المراسلة</th>
+                        <th class="text-center" scope="col">حالة المراسلة</th>
+                        <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+
+                            <input type="checkbox" name="Name1" id="Name1">
+                            <label for="Name1">عنوان المراسلة</label>
+
+                        </td>
+                        <td class="text-center">إنذار</td>
+                        <td class="text-center">تفاصيل المراسلة</td>
+                        <td class="text-center">تم إرسالها</td>
+                        <td class="text-center td-actions">
+                            <a href="#" class="icon">
+                                <img src="./images/eye-outline.png" alt="">
+                            </a>
+                            <button class="icon">
+                                <img src="./images/trash-can-outline.png" alt="" class="trash">
+                            </button>
+                            <button class="icon" data-bs-toggle="modal" data-bs-target="#createMail">
+                                <img src="./images/pencil-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- end content -->

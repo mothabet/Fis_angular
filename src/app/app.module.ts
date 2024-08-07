@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { CodeModule } from './code/code.module';
 import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
+import { CompanyMessagesModule } from './company-messages/company-messages.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,7 @@ import { MessagesModule } from './messages/messages.module';
     AuthModule,
     CodeModule,
     MessagesModule,
+    CompanyMessagesModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({

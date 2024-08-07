@@ -177,26 +177,34 @@
             </div>
             <form>
                 <div class="modal-body pb-1">
-                    <div class="form-title mb-3">تفاصيل الرسالة</div>
                     <div class="row">
                         <div class="col-sm-12 mb-2">
                             <div class="input-floating-label mb-0">
-                                <select class="form-form send-company-select" style="width: 100%">
-                                    <option selected value="0" id="messageType" name="messageType">
-                                        النشاط الاقتصادي الرئيسي
+                                <select class="form-control" style="width: 100%" (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0" id="messageType" name="messageType">
+                                        --اختار الاستماره--
                                     </option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option *ngFor="let form of forms" value="{{form.id}}">{{form.arName}}</option>
                                 </select>
-                                <label for="user">نوع الرسالة</label>
+                                <label for="user">الاستماره</label>
                             </div>
                         </div>
                         <div class="col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة" />
+                            <div class="input-floating-label mb-0">
+                                <select class="form-control" style="width: 100%" (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0" id="messageType" name="messageType">
+                                        --اختار الرساله--
+                                    </option>
+                                    <option *ngFor="let message of messages" value="{{message.Id}}">{{message.arName}}</option>
+                                </select>
+                                <label for="user">الرسالة</label>
+                            </div>
                         </div>
                         <div class="col-sm-12 mb-2">
-                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"></textarea>
+                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة" [value]="selectedMessage?.arSubject || ''"/>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة">{{ selectedMessage?.arDetails || '' }}</textarea>
                         </div>
                     </div>
                 </div>
