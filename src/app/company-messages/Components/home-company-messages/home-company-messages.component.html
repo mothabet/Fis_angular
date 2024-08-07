@@ -1,0 +1,127 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="p-4 main card" style="flex: 1">
+<!-- header -->
+<app-top-screen [title]="'عرض تفاصيل الشركه'"></app-top-screen>
+<!-- end-header -->
+
+<!-- start content -->
+<div class="companies-details email">
+    <div class="header-nav">
+        <div class="card-box mb-3 d-flex justify-content-between align-items-center flex-wrap">
+            <ul>
+                <li>
+                    <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
+                </li>
+                <li>
+                    <a href="#">الإستمارات</a>
+                </li>
+                <li class="active">
+                    <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
+                </li>
+            </ul>
+            <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMail" id="addCompanyMessageBtn">
+                <img src="../../../../assets/images/calendar-alert.png" alt="">
+                إنشاء مراسلة
+            </button>
+        </div>
+    </div>
+    <div class="content companies">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة التذكيرات والإنذارات
+            </div>
+        </div>
+
+        <div class="table-responsive company-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th >#</th>
+                        <th class="text-center" scope="col">عنوان المراسلة</th>
+                        <th class="text-center" scope="col">تفاصيل المراسلة</th>
+                        <th class="text-center" scope="col">تاريخ المراسلة</th>
+                        <th class="text-center" scope="col">ةقت المراسله المراسلة</th>
+                        <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let message of companyMessages ; let i = index">
+                        <th >{{i+1}}</th>
+                        <td class="text-center">{{message.id}}</td>
+                        <td class="text-center">{{message.messageid}}</td>
+                        <td class="text-center">
+                            {{ getDateOnly(message.date.toString()) }}
+                        </td>
+                        <td class="text-center">{{message.time}}</td>
+                        <td class="text-center td-actions">
+                            <!-- <a href="#" class="icon">
+        <img src="../../../../assets/images/paperclip.png" alt="">
+    </a> -->
+                            <button class="icon" data-bs-toggle="modal"
+                                data-bs-target="#addCompany" (click)="editMessage(message.id)">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                            <button class="icon" (click)="showAlert(message.id)">
+                                <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- end content -->
+</div>
+<!--start create mail modal -->
+<div class="modal company-modal fade" id="createMail" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm ">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title pb-0" id="sendForm" *ngIf="add">إنشاء مراسلة</h5>
+                <h5 class="modal-title pb-0" id="sendForm" *ngIf="!add">تعديل مراسلة</h5>
+            </div>
+            <form [formGroup]="companyMessageForm">
+                <div class="modal-body pb-1">
+                    <div class="row">
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <select class="form-control" style="width: 100%;" formControlName="messageid">
+                                    <option selected disabled value="0" id="messageType" name="messageType">--اختر الرساله--
+                                    </option>
+                                    <option *ngFor="let message of messages" value="{{message.Id}}">{{message.arName}}</option>
+
+                                </select>
+                                <label for="user">المراسلة</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <input class="form-control input-modal" type="time" formControlName="time">
+                                <label>الوقت</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div class=" input-floating-label mb-0">
+                                <input class="form-control input-modal" type="date" formControlName="date">
+                                <label>التاريخ</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <textarea class="form-control input-modal" rows="2" placeholder="تفاصيل المراسلة"
+                                formControlName="details"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
+                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
+                        (click)="AddCompanyMessage()" *ngIf="add">إرسال</button>
+                        <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
+                        (click)="UpdateCompanyMessage()" *ngIf="!add">تعديل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end create mail modal -->

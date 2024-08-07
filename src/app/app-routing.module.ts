@@ -20,6 +20,7 @@ import { TwoYearsWithPartsComponent } from './Forms/Components/two-years-with-pa
 import { QuarterFormCoverComponent } from './Forms/Components/quarter-form-cover/quarter-form-cover.component';
 import { QuarterTableComponent } from './Forms/Components/quarter-table/quarter-table.component';
 import { HomemessagesComponent } from './messages/components/homemessages/homemessages.component';
+import { HomeCompanyMessagesComponent } from './company-messages/Components/home-company-messages/home-company-messages.component';
 
 const routes: Routes = [
   { path: 'QuarterTable/:formId/:tableId', component: QuarterTableComponent, canActivate: [LoginGuard] },
@@ -38,6 +39,7 @@ const routes: Routes = [
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
   { path: 'Messages', component: HomemessagesComponent, canActivate: [LoginGuard] },
+  { path: 'CopmanyMessages/:companyId', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
