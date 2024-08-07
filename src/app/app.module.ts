@@ -11,6 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AuthModule } from './auth/auth.module';
 import { CodeModule } from './code/code.module';
 import { FromsModule } from './Forms/froms.module';
+import { MessagesModule } from './messages/messages.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +25,7 @@ import { FromsModule } from './Forms/froms.module';
     AuditingRulesModule,
     AuthModule,
     CodeModule,
+    MessagesModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({
