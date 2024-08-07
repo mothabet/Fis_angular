@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'FormDetails/:formId', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
-  { path: 'Companies-Details', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
+  { path: 'Companies-Details/:companyId', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Researcher', component: ResearcherHomeComponent , canActivate: [LoginGuard]},
   { path: 'Researcher-Details/:researcherId', component: ResearcherDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
