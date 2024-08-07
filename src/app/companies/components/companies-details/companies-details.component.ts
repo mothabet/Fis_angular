@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ICompany, IPdfDto } from '../../Dtos/CompanyHomeDto';
+import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -16,19 +16,22 @@ export class CompaniesDetailsComponent implements OnInit {
   companyId!: string;
   selectedFiles: File[] = [];
   pdf!: IPdfDto;
+  companyPdfs!: IGetPdfDto[];
   constructor(private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
 
   }
   ngOnInit(): void {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetCompanyById(+this.companyId);
+    this.GetCompanyPdfs(+this.companyId);
+  }
+  ngAfterViewInit(): void {
+    this.showLoader = false;
   }
   GetCompanyById(id: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.showLoader = false;
-        debugger
         if (res.Data) {
           this.company = res.Data;
         }
@@ -40,7 +43,6 @@ export class CompaniesDetailsComponent implements OnInit {
     };
     this.companyServices.GetCompanyById(id).subscribe(observer);
   }
-
   onFilesSelected(event: any): void {
     this.selectedFiles = Array.from(event.target.files);
     this.onUpload();
@@ -71,7 +73,10 @@ export class CompaniesDetailsComponent implements OnInit {
             timer: 2000
           });
           const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-          fileInput.value = ''; // Clear the file input
+          fileInput.value = '';
+          this.GetCompanyPdfs(+this.companyId);
+          this.showLoader = false;
+          // Clear the file input
         },
         error: (err: any) => {
           debugger
@@ -84,5 +89,20 @@ export class CompaniesDetailsComponent implements OnInit {
       console.warn('No file selected');
     }
   }
-
+  GetCompanyPdfs(id: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.companyPdfs = res.Data;
+        }
+      },
+      error: (err: any) => {
+        debugger
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.companyServices.GetCompanyPdfs(id).subscribe(observer);
+  }
 }

@@ -70,3 +70,10 @@ export interface IPdfDto{
     enName : string,
     companyId : number
 }
+
+export interface IGetPdfDto{
+    id:number,
+    arName : string,
+    enName : string,
+    companyId : number
+}

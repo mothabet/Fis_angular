@@ -62,6 +62,7 @@ export class CompanyHomeService {
    }
    GetCompanyById(id:number){
     var headers= this.sharedService.getHeaders();
+    debugger
      var response = this.http.get(environment.apiUrl+`Company/GetCompany?id=${id}`, { headers });
      return response;
    }
@@ -79,6 +80,12 @@ export class CompanyHomeService {
    GetCompaniesByResearcherId(id:number){
     var headers= this.sharedService.getHeaders();
      var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0`, { headers });
+     return response;
+   }
+   GetCompanyPdfs(id:number){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Pdf/GetPdfs?companyId=${id}`, { headers });
      return response;
    }
 }
