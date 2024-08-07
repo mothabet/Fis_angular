@@ -64,3 +64,9 @@ export interface IAddCompany {
 export interface ICompanyEmail {
     Email: string,
 }
+
+export interface IPdfDto{
+    arName : string,
+    enName : string,
+    companyId : number
+}

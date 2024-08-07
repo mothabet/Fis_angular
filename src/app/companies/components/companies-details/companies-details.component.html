@@ -185,9 +185,10 @@
                 <div class="card-box file">
                     <div class="header">
                         <h4 class="title">المرفقات</h4>
-                        <button class="btn upload-btn">
+                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput">
+                        <button class="btn upload-btn" (click)="triggerFileInput()">
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
-                        </button>
+                          </button>
                     </div>
                     <div class="file-section d-flex justify-content-between align-items-center">
                         <div class="file-box d-flex justify-content-between align-items-center">

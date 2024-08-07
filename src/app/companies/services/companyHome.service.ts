@@ -15,6 +15,11 @@ export class CompanyHomeService {
     var response = this.http.get(environment.apiUrl + `Company/GetCompanies?textSearch=${textSearch}&pageNumber=${pageNumber}`, { headers });
     return response;
   }
+  uploadFile(formData: FormData){
+    var headers = this.sharedService.getHeaders();
+    var response = this.http.post(environment.apiUrl + `Pdf/AddPdf`,formData, { headers });
+    return response;
+  }
   GetSectorActvities(sectorId : number) {
     var headers = this.sharedService.getHeaders();
     const response = this.http.get(`${environment.apiUrl}Activity/GetActivities?sectorId=${sectorId}`, { headers });
