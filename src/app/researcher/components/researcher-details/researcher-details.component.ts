@@ -26,10 +26,11 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        this.showLoader = false;
+        debugger
         if (res.Data) {
           this.researcher = res.Data;
           this.companiesCount = this.researcher.companies.length;
-          this.showLoader = false;
         }
       },
       error: (err: any) => {
