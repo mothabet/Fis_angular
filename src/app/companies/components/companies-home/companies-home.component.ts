@@ -51,7 +51,7 @@ export class CompaniesHomeComponent implements OnInit {
     , private sharedService: SharedService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
-      userName: [{ value: '', disabled: true }, Validators.required],
+      userName: ['', Validators.required],
       password: ['', Validators.required],
       arName: [''],
       enName: [''],
@@ -82,6 +82,7 @@ export class CompaniesHomeComponent implements OnInit {
       // ])
     });
     this.GetCompanies('', 1);
+    this.username = this.companyForm.value.username
   }
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;
@@ -337,30 +338,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetCompanyCode().subscribe(observer);
@@ -369,8 +347,47 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
-    debugger
-    if (this.companyForm.valid) {
+    if(this.companyForm.value.subActivityId == 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اختيار النشاط الثانوي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if(this.companyForm.value.sectorId == 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب القطاع',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if(this.companyForm.value.activityId == 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب النشاط الرئيسي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if(this.companyForm.value.governoratesId == 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب رقم المنطقه',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if(this.companyForm.value.wilayatId == 0){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب رقم الولايه',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -411,42 +428,26 @@ export class CompaniesHomeComponent implements OnInit {
           this.showLoader = false;
         },
         error: (err: any) => {
-          debugger
-          this.showLoader = false;
-          if (err.status) {
-            switch (err.status) {
-              case 400:
-                this.toastr.error(err.error.Errors[0]);
-                break;
-              case 401:
-                this.toastr.error('Unauthorized', err.message);
-                break;
-              case 403:
-                this.toastr.error('Forbidden', err.message);
-                break;
-              case 404:
-                this.toastr.error('Not Found', err.message);
-                break;
-              case 500:
-                this.toastr.error('Internal Server Error', err.message);
-                break;
-              default:
-                this.toastr.error('An unexpected error occurred', err.message);
-            }
-          } else {
-            this.toastr.error('An unknown error occurred', err.message);
-          }
+          this.showLoader =false;
+          this.sharedService.handleError(err);
+          
         },
       };
       this.companyHomeServices.addCompany(Model).subscribe(observer);
     }
     else {
-      this.toastr.error("يجب ادخال البيانات بشكل صحيح");
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال جميع البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
     }
   }
   resetForm() {
     this.companyForm.reset({
-      userName: { value: '', disabled: true },
+      userName: '',
       password: '',
       arName: '',
       enName: '',
@@ -601,7 +602,6 @@ export class CompaniesHomeComponent implements OnInit {
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
             });
-            this.companyForm.get('userName')?.disable();
           }
           debugger
           this.id = id;

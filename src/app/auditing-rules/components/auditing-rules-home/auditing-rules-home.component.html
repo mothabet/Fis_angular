@@ -98,14 +98,15 @@
                 <!-- Inside the modal -->
                 <div *ngFor="let select of selects; let i = index" class="col-3 mb-2 mx-auto">
                   <div class="d-flex align-items-center">
-                    <button class="btn btn-delete" (click)="removeSelect(i)" *ngIf="i>0||usedOptions.size==1">
-                      <i class="fa fa-trash"></i>
-                    </button>
+                    
                     <select class="form-control ml-2" [disabled]="select.disabled" (change)="onSelectChange($event, i)">
                       <option value="" disabled selected>اختر قيمة</option>
                       <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode
                         }}</option>
                     </select>
+                    <button class="btn btn-delete" (click)="removeSelect(i)" *ngIf="i>0||usedOptions.size==1">
+                      <i class="fa fa-trash"></i>
+                    </button>
                   </div>
                 </div>
 

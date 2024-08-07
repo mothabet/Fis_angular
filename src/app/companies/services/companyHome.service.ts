@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment.development';
-import { IAddCompany } from '../Dtos/CompanyHomeDto';
+import { IAddCompany, ICompany } from '../Dtos/CompanyHomeDto';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +63,17 @@ export class CompanyHomeService {
    UpdateCompany(id:number,Model: IAddCompany){
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });
+     return response;
+   }
+   UpdateCompanyToRecearcher(id:number,Model: ICompany[]){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.put(environment.apiUrl+`Company/UpdateCompanyToRecearcher?id=${id}`, Model, { headers });
+     return response;
+   }
+   GetCompaniesByResearcherId(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0`, { headers });
      return response;
    }
 }

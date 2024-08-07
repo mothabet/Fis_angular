@@ -659,7 +659,6 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
           this.addForm = res.Data;
           this.formForm.patchValue({
             arName: this.addForm.arName,
@@ -672,6 +671,7 @@ export class FormsComponent implements OnInit {
             typeQuarter: this.addForm.typeQuarter
           });
           debugger
+          this.reviewYear = this.formForm.value.reviewYear;
           this.Loader = false;
           this.add = false;
           const button = document.getElementById('addFormBtn');

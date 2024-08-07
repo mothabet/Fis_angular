@@ -10,6 +10,7 @@ export interface ICompany {
     email: string,
     status: string,
     id: number,
+    researcherId:string
 }
 export interface ICompaniesPDF {
     activityId: number,
