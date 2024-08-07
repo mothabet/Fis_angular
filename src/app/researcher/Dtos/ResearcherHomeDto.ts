@@ -1,3 +1,5 @@
+import { ICompany } from "src/app/companies/Dtos/CompanyHomeDto"
+
 export interface IAddResearcher {
     userName: string,
     password: string,
@@ -16,4 +18,5 @@ export interface IResearcher {
     email: string,
     phone: number,
     UserId: number
+    companies : ICompany[]
 }

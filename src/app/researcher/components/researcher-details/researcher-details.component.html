@@ -10,58 +10,21 @@
         </div>
 
         <div class="researcher-info">
-            <h6 class="user">محمد إبراهيم</h6>
+            <h6 class="user">{{researcher.arName}}</h6>
             <div class="details d-flex flex-wrap">
                 <div class="detail-box d-flex">
                     <p class="m-0 mx-2 name">اسم المستخدم :</p>
-                    <p class="data m-0">user45454</p>
-                </div>
-                <div class="detail-box d-flex">
-                    <p class="m-0 mx-2 name">رقم الشركة :</p>
-                    <p class="data m-0">12</p>
+                    <p class="data m-0">{{researcher.userName}}</p>
                 </div>
                 <div class="detail-box d-flex">
                     <p class="m-0 mx-2 name">البريد الإلكترونى :</p>
-                    <p class="data m-0">emailgmail.com</p>
+                    <p class="data m-0">{{researcher.email}}</p>
                 </div>
             </div>
         </div>
     </div>
     <!-- end researcher header -->
 
-    <!-- start filter section -->
-    <div class="filter-section d-flex flex-wrap justify-content-between align-items-center mb-3">
-
-        <div class="first-section search d-flex align-items-center">
-            <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
-            <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
-
-            <div class="form-check form-switch me-3">
-                <input class="form-check-input" type="checkbox" id="seeAll">
-                <label class="form-check-label text-nowrap" for="seeAll">عرض الكل</label>
-            </div>
-        </div>
-
-        <div class="last-section  d-flex align-items-center">
-            <button class="btn">
-                <img src="../../../../assets/images/Combined Shape.png" alt="">
-            </button>
-            <button class="btn">
-                <img src="../../../../assets/images/printer.png" alt="">
-            </button>
-
-            <select class="form-select" style="width: 150px;">
-                <option selected>Jul 2023 - Aug 2023</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-                <img src="../../../../assets/images/square.png" alt="">
-            </select>
-
-        </div>
-
-    </div>
-    <!-- end filter section -->
 
     <!--start total -->
     <div class="row totals">
