@@ -4,12 +4,12 @@ export interface IAddCompanyMessage {
     companyid: number,
     messageid: number,
     date: Date,
-    time: Time,
+    time: string,
 }
 export interface ICompanyMessage {
-    هd :number,
+    id :number,
     companyid: number,
     messageid: number,
     date: Date,
-    time: Time,
+    time: string,
 }

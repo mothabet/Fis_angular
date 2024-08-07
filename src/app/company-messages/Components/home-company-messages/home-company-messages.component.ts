@@ -5,6 +5,9 @@ import { ToastrService } from 'ngx-toastr';
 import { HomeCompanyMessagesService } from '../../Services/home-company-messages.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
+import { IMessage } from 'src/app/messages/Dtos/MessageDto';
+import { HomemessagesService } from 'src/app/messages/services/homemessages.service';
 
 @Component({
   selector: 'app-home-company-messages',
@@ -24,26 +27,34 @@ export class HomeCompanyMessagesComponent {
   isLastPage: boolean = false;
   totalPages: number = 0;
   searchText: string = '';
+  companyId!: string;
+  messages: IMessage[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private companyMessageService: HomeCompanyMessagesService,
     private sharedService: SharedService,
+    private activeRouter: ActivatedRoute,
+    private messageService: HomemessagesService,
   ) { }
   ngOnInit(): void {
     this.companyMessageForm = this.formBuilder.group({
-      companyid: ['', Validators.required],
+      companyid: '',
       messageid: ['', Validators.required],
       date: ['', Validators.required],
       time: ['', Validators.required],
+      details:'',
     });
     this.GetAllCompanyMessages(1);
+    this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
+    this.GetAllMessages(0,'');
   }
   AddCompanyMessage(): void {
+    debugger
     this.showLoader = true;
     debugger
     if (this.companyMessageForm.valid) {
       const Model: IAddCompanyMessage = {
-        companyid: this.companyMessageForm.value.companyid,
+        companyid: Number(this.companyId),
         messageid: this.companyMessageForm.value.messageid,
         date: this.companyMessageForm.value.date,
         time: this.companyMessageForm.value.time,
@@ -83,7 +94,7 @@ export class HomeCompanyMessagesComponent {
   }
   resetForm(): void {
     this.companyMessageForm.reset({
-      companyid: '',
+      companyid:  Number(this.companyId),
       messageid: '',
       date: '',
       time: '',
@@ -152,12 +163,14 @@ export class HomeCompanyMessagesComponent {
   }
   editMessage(id: number): void {
     this.showLoader = true;
+    debugger
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
           this.companyMessage = res.Data;
           this.companyMessageForm.patchValue({
-            companyid: this.companyMessage.companyid,
+            companyid:  Number(this.companyId),
             messageid: this.companyMessage.messageid,
             date: this.companyMessage.date,
             time: this.companyMessage.time,
@@ -183,7 +196,7 @@ export class HomeCompanyMessagesComponent {
     this.showLoader = true;
     if (this.companyMessageForm.valid) {
       const Model: IAddCompanyMessage = {
-        companyid: this.companyMessageForm.value.companyid,
+        companyid:  Number(this.companyId),
         messageid: this.companyMessageForm.value.messageid,
         date: this.companyMessageForm.value.date,
         time: this.companyMessageForm.value.time,
@@ -258,5 +271,34 @@ export class HomeCompanyMessagesComponent {
   }
   researcherSearch() {
     this.GetAllCompanyMessages(this.currentPage, this.searchText);
+  }
+  GetAllMessages(page: number, textSearch: string = ''): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.messages = [];
+          res.Data.getMessagesDtos.forEach((message: IMessage) => {
+            switch (message.typeMessage) {
+              case 1:
+                this.messages.push(message);
+                break;
+              case 2:
+                this.messages.push(message);
+                break;
+            }
+          });
+        }
+        else {
+          this.messages = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.messageService.GetAllMessages(page, textSearch).subscribe(observer);
   }
 }

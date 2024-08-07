@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
   { path: 'Messages', component: HomemessagesComponent, canActivate: [LoginGuard] },
-  { path: 'CopmanyMessages', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
+  { path: 'CopmanyMessages/:companyId', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
