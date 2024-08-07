@@ -10,10 +10,10 @@ export interface IAddMessage {
 }
 export interface IMessage {
     Id :number,
-    arDetails: string,
-    enDetails: string,
     arSubject: string,
     enSubject: string,
+    arDetails: string,
+    enDetails: string,
     arName: string,
     enName: string,
     typeMessage:number,

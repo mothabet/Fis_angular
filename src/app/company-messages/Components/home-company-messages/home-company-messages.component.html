@@ -40,15 +40,15 @@
                         <th class="text-center" scope="col">عنوان المراسلة</th>
                         <th class="text-center" scope="col">تفاصيل المراسلة</th>
                         <th class="text-center" scope="col">تاريخ المراسلة</th>
-                        <th class="text-center" scope="col">ةقت المراسله المراسلة</th>
+                        <th class="text-center" scope="col">وقت المراسلة</th>
                         <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let message of companyMessages ; let i = index">
                         <th >{{i+1}}</th>
-                        <td class="text-center">{{message.id}}</td>
-                        <td class="text-center">{{message.messageid}}</td>
+                        <td class="text-center">{{message.arName}}</td>
+                        <td class="text-center">{{message.arDetails}}</td>
                         <td class="text-center">
                             {{ getDateOnly(message.date.toString()) }}
                         </td>
@@ -71,10 +71,13 @@
         </div>
     </div>
 </div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <!-- end content -->
 </div>
 <!--start create mail modal -->
-<div class="modal company-modal fade" id="createMail" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+<!--start create mail modal -->
+<div class="modal company-modal fade" id="createMail" tabindex="-1" aria-labelledby="add" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm ">
         <div class="modal-content">
             <div class="modal-header pb-0">
@@ -86,11 +89,10 @@
                     <div class="row">
                         <div class="col-sm-12 mb-3">
                             <div class=" input-floating-label mb-0">
-                                <select class="form-control" style="width: 100%;" formControlName="messageid">
+                                <select class="form-control" style="width: 100%;" formControlName="messageid" (change)="onSelectMessage($event)">
                                     <option selected disabled value="0" id="messageType" name="messageType">--اختر الرساله--
                                     </option>
                                     <option *ngFor="let message of messages" value="{{message.Id}}">{{message.arName}}</option>
-
                                 </select>
                                 <label for="user">المراسلة</label>
                             </div>
@@ -108,20 +110,19 @@
                             </div>
                         </div>
                         <div class="col-sm-12 mb-3">
-                            <textarea class="form-control input-modal" rows="2" placeholder="تفاصيل المراسلة"
-                                formControlName="details"></textarea>
+                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة" >{{ selectedMessage?.arDetails || '' }}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
-                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
-                        (click)="AddCompanyMessage()" *ngIf="add">إرسال</button>
-                        <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
-                        (click)="UpdateCompanyMessage()" *ngIf="!add">تعديل</button>
+                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;" (click)="AddCompanyMessage()" *ngIf="add">إرسال</button>
+                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;" (click)="UpdateCompanyMessage()" *ngIf="!add">تعديل</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<!--end create mail modal -->
+
 <!--end create mail modal -->
