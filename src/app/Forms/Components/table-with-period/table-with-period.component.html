@@ -55,8 +55,9 @@
                   <td *ngIf="subCode.Id !=0" style="text-wrap: balance; text-align: center !important; color: #00af9d;">
                     {{subCode.arName}}</td>
                   <td class="text-center" *ngIf="subCode.Id ==0">
-                    <input type="text" style="width: 100%;" />
-                  </td>
+                    <select class="form-control"  style="width: 100% !important; text-align:center">
+                      <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
+              </select>                  </td>
                   <td class="text-center">
                     <input type="number" placeholder="0" />
                   </td>
@@ -67,8 +68,9 @@
                     <input disabled type="text" disabled value="{{subCode.QuestionCode}}" />
                   </td>
                   <td class="text-center" *ngIf="subCode.Id ==0">
-                    <input type="text" style="width: 100%;" />
-                  </td>
+                    <select class="form-control"  style="width: 100% !important; text-align:center">
+                      <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
+              </select>                  </td>
                   <td *ngIf="subCode.Id !=0" class="text-start"
                     style="text-wrap: balance; text-align: center !important; color: #00af9d;">{{subCode.enName}}</td>
                 </tr>

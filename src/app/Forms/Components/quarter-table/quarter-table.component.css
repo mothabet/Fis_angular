@@ -15,7 +15,9 @@ th, td {
 td {
   max-width: 250px;
 }
-
+.clipped-element-first {
+  min-width: 120px !important;
+}
 /* Specific styles for the subcode cells to handle long text */
 .subcode-cell {
   color: orange;

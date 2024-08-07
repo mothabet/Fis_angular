@@ -1,5 +1,5 @@
 import { Component, Renderer2 } from '@angular/core';
-import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormService } from '../../Services/form.service';
@@ -20,17 +20,20 @@ export class QuarterTableComponent {
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
-
+  countries! : IGetCountriesDto[];
+  activities! : IGetActivitiesDto[];
   constructor(private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
+    
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
-    this.modifyInputById(this.coverForm.typeQuarter);
+    this.GetActivites();
+    this.GetCountrites();
   }
   ngAfterViewInit(): void {
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
@@ -39,7 +42,7 @@ export class QuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -48,7 +51,7 @@ export class QuarterTableComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -60,9 +63,12 @@ export class QuarterTableComponent {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
+        debugger
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.modifyInputById(this.coverForm.typeQuarter);
+
         }
       },
       error: (err: any) => {
@@ -72,8 +78,8 @@ export class QuarterTableComponent {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  modifyInputById(id:number): void {
-    const inputs = document.getElementsByClassName('quarter'+id) as HTMLCollectionOf<HTMLInputElement>;
+  modifyInputById(id: number): void {
+    const inputs = document.getElementsByClassName('quarter' + id) as HTMLCollectionOf<HTMLInputElement>;
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i];
       input.style.backgroundColor = 'rgb(202 227 224)';
@@ -81,17 +87,50 @@ export class QuarterTableComponent {
       input.disabled = false;
     }
   }
-  addSubCodeRow(code:ICode){
-    const subCode:ISubCode={
-      arName:'',
-      codeId:0,
-      enName:'',
-      Id:0,
-      QuestionCode:''
+  addSubCodeRow(code: ICode) {
+    const subCode: ISubCode = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: ''
     }
     code.SubCodes.push(subCode);
-    // this.modifyInputById(this.coverForm.typeQuarter);
   }
-  
-
+  GetActivites() {
+    
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.activities = res.Data;
+          console.log(this.activities)
+        }
+      },
+      error: (err: any) => {
+        
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetActivities().subscribe(observer);
+  }
+  GetCountrites() {
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.countries = res.Data;
+          console.log(this.countries)
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetCountries().subscribe(observer);
+  }
 }

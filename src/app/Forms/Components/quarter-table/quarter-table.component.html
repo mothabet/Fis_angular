@@ -33,10 +33,11 @@
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents">
                             <tr>
-                                <td>
-                                    <button *ngIf="formContent.code.TypeId != 1" style="background-color: #00af9d; border-radius: 5px;" (click)="addSubCodeRow(formContent.code)">
+                                <td style="text-wrap: balance;min-width: 250px;">
+                                        {{formContent.code.arName}}
+                                    <button *ngIf="formContent.code.TypeId != 1" style="background-color: #00af9d; border-radius: 5px;margin-right: 140px;" (click)="addSubCodeRow(formContent.code)">
                                         <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
-                                    </button> {{formContent.code.arName}}
+                                    </button> 
                                 </td>
                                 <td class="text-center quarter4"><input disabled class="quarter4" type="number"
                                         placeholder="0" /></td>
@@ -55,7 +56,7 @@
                                 <td class="text-center quarter1"><input disabled class="quarter1" type="number"
                                         placeholder="0" /></td>
                                 <td class="text-center"><input disabled type="number" placeholder="0" /></td>
-                                <td class="text-start" style="text-wrap: balance;">
+                                <td class="text-start" style="text-wrap: balance;min-width: 250px;">
                                     {{formContent.code.enName}}</td>
                             </tr>
                             <ng-container *ngIf="formContent.code.TypeId == 1">
@@ -85,11 +86,13 @@
                                     <td class="text-start" style="min-width: 250px;text-align: center !important;color: #00af9d; text-wrap: balance;">{{subCode.enName}}</td>
                                 </tr>
                             </ng-container>
-                            <ng-container *ngIf="formContent.code.TypeId == 2 || formContent.code.TypeId==3">
+                            <ng-container *ngIf="formContent.code.TypeId == 2">
                                 <tr *ngFor="let subCode of formContent.code.SubCodes; let i = index">
 
                                               <td class="text-center" *ngIf="subCode.Id ==0">
-                                                <input type="text" style="width: 100%;" />
+                                                <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                        <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
+                                                </select>
                                               </td>
                                     <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
                                             placeholder="0" /></td>
@@ -113,8 +116,46 @@
                                     </td>
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                     <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
-                                        <input type="text" style="width: 100%;" />
+                                        <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.enName}}</option>
+                                        </select>
                                       </td>                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="formContent.code.TypeId==3">
+                                <tr *ngFor="let subCode of formContent.code.SubCodes; let i = index">
+
+                                              <td class="text-center" *ngIf="subCode.Id ==0">
+                                                <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                        <option *ngFor="let country of countries" value="{{country.id}}">{{country.arName}}</option>
+                                                </select>
+                                              </td>
+                                    <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter3" [ngClass]="coverForm.typeQuarter == 3 ? 'colActive' : ''"><input disabled class="quarter3" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter3" [ngClass]="coverForm.typeQuarter == 3 ? 'colActive' : ''"><input disabled class="quarter3" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter2" [ngClass]="coverForm.typeQuarter == 2 ? 'colActive' : ''"><input disabled class="quarter2" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter2" [ngClass]="coverForm.typeQuarter == 2 ? 'colActive' : ''"><input disabled class="quarter2" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center quarter1" [ngClass]="coverForm.typeQuarter == 1 ? 'colActive' : ''"><input disabled class="quarter1" type="number"
+                                            placeholder="0" /></td>
+                                    <td class="text-center quarter1" [ngClass]="coverForm.typeQuarter == 1 ? 'colActive' : ''"><input disabled class="quarter1" type="number"
+                                            placeholder="0" />
+                                    </td>
+                                    <td class="text-center"><input disabled type="number" placeholder="0" /></td>
+                                    <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
+                                        <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                <option *ngFor="let country of countries" value="{{country.id}}">{{country.enName}}</option>
+                                        </select>
+                                      </td>                                
+                                </tr>
                             </ng-container>
                         </ng-container>
                         <tr class="footer">

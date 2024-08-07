@@ -3,7 +3,7 @@ import { FormService } from '../../Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGetTableDto } from '../../Dtos/TableDto';
-import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 
@@ -19,6 +19,8 @@ export class TwoYearsWithPartsComponent {
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
+  countries! : IGetCountriesDto[];
+  activities! : IGetActivitiesDto[];
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
@@ -28,6 +30,8 @@ export class TwoYearsWithPartsComponent {
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
+    this.GetActivites();
+    this.GetCountrites();
   }
   GetTableById(id: number): void {
     this.Loader = true;
@@ -75,5 +79,41 @@ export class TwoYearsWithPartsComponent {
       QuestionCode:''
     }
     code.SubCodes.push(subCode);
+  }
+  GetActivites() {
+    debugger
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.activities = res.Data;
+          console.log(this.activities)
+        }
+      },
+      error: (err: any) => {
+        debugger
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetActivities().subscribe(observer);
+  }
+  GetCountrites() {
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.countries = res.Data;
+          console.log(this.countries)
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetCountries().subscribe(observer);
   }
 }

@@ -14,7 +14,7 @@ export class FormService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
   addForm(Model: IAddForm) {
-    debugger
+    
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Form/AddForm?lang=2`, Model, { headers });
     return response;
@@ -24,6 +24,19 @@ export class FormService {
      var resopnse = this.http.get(environment.apiUrl+`Form/GetAllForms?lang=2`,{ headers });
      return resopnse;
    }
+
+   GetCountries(){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Country/GetCountries?lang=2`,{ headers });
+     return resopnse;
+   }
+
+   GetActivities(){
+    
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?lang=2`,{ headers });
+     return resopnse;
+   }
    
   DeleteForm(id:number){
     var headers= this.sharedService.getHeaders();
@@ -31,19 +44,19 @@ export class FormService {
      return resopnse;
    }
    AddTable(Model: IAddTableDto){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`Table/AddTable?lang=2`, Model, { headers });
      return resopnse;
    }
    GetTableById(id:number){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Table/GetTableById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
    UpdateTable(id:number,Model: IAddTableDto){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Table/UpdateTable?id=${id}&lang=2`, Model, { headers });
      return resopnse;
@@ -54,7 +67,7 @@ export class FormService {
      return resopnse;
    }
    UpdateForm(id:number,Model: IAddForm){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Form/UpdateForm?id=${id}&lang=2`, Model, { headers });
      return resopnse;
@@ -65,13 +78,13 @@ export class FormService {
      return resopnse;
    }
    AddFormContent(Model: IAddQuestion){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`FormContent/AddFormContent?lang=2`, Model, { headers });
      return resopnse;
    }
    DeleteFormContent(id:number){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.delete(environment.apiUrl+`FormContent/DeleteFormContent?id=${id}&lang=2`, { headers });
      return resopnse;
@@ -82,7 +95,7 @@ export class FormService {
      return resopnse;
    }
    UpdateFormContent(id:number,Model: IAddQuestion){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`FormContent/UpdateFormContent?id=${id}&lang=2`, Model, { headers });
      return resopnse;

@@ -42,3 +42,15 @@ export interface IGetTablesDto {
     IsActive : boolean,
     formId : number
 }
+
+export interface IGetCountriesDto {
+    id:number,
+    arName : string,
+    enName : string,
+}
+
+export interface IGetActivitiesDto {
+    id:number,
+    arName : string,
+    enName : string,
+}

@@ -67,7 +67,10 @@
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                                         {{subCode.arName}}</td>
                                     <td class="text-center" *ngIf="subCode.Id ==0">
-                                        <input type="text" style="width: 100%;" />
+                                        <select class="form-control"  style="width: 100% !important; text-align:center">
+                                            <option value="0">اختيار نشاط--</option>
+                                            <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
+                                    </select>
                                     </td>
                                     <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
                                             placeholder="0" /></td>
@@ -77,7 +80,10 @@
                                             value="{{subCode.QuestionCode}}" /></td>
 
                                     <td class="text-center" *ngIf="subCode.Id ==0">
-                                        <input type="text" style="width: 100%;" />
+                                        <select class="form-control"  style="width: 100% !important; text-align:center">
+                                            <option value="0">Choose Activity --</option>
+                                            <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.enName}}</option>
+                                    </select>
                                     </td>
                                     <td *ngIf="subCode.Id !=0" class="text-start"
                                         style="text-wrap: balance; text-align: center !important; color: #00af9d;">
