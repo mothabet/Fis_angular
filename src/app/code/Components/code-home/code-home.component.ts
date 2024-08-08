@@ -75,8 +75,20 @@ export class CodeHomeComponent {
     this.GetAllCodes(page);
   }
   saveCode(): void {
-    debugger
     this.showLoader = true;
+    if (this.codeForm.valid && this.codeForm.value.TypeId == "1") {
+      // Check if subCode has more than zero entries and each entry has valid values
+      if (this.subCode.length === 0 || !this.subCode.every(sub => sub.arName && sub.enName)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب ادخال بيانات الجدول بشكل صحيح',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        this.showLoader = false;
+        return;
+      }
+    }
     if (this.codeForm.valid) {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
@@ -226,6 +238,19 @@ export class CodeHomeComponent {
   }
   updateCode() {
     this.showLoader = true;
+    if (this.codeForm.valid && this.codeForm.value.TypeId == "1") {
+      // Check if subCode has more than zero entries and each entry has valid values
+      if (this.subCode.length === 0 || !this.subCode.every(sub => sub.arName && sub.enName)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب ادخال بيانات الجدول بشكل صحيح',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        this.showLoader = false;
+        return;
+      }
+    }
     if (this.codeForm.valid) {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,

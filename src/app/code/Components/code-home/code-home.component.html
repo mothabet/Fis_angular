@@ -267,17 +267,7 @@
                     </td>
                   </tr>
                 </tbody>
-                <tfoot *ngIf="noData">
-                  <tr>
-                    <th colspan="7">
-                      <div class="alert alert-warning">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <br />
-                        <span> لا يوجد بيانات </span>
-                      </div>
-                    </th>
-                  </tr>
-                </tfoot>
+                
               </table>
             </div>
           </div>
@@ -300,7 +290,7 @@
             class="btn btn-save"
             (click)="saveCode()"
             *ngIf="add"
-            [disabled]="!codeForm.valid || !areAllFieldsFilled()"
+
           >
             حفظ
           </button>
@@ -309,7 +299,7 @@
             class="btn btn-save"
             (click)="updateCode()"
             *ngIf="!add"
-            [disabled]="!codeForm.valid || !areAllFieldsFilled()"
+
           >
             تعديل
           </button>
