@@ -61,6 +61,7 @@ export class FormsComponent implements OnInit {
     TypeId: 0
   }
   Type: number = 0;
+  formType: number = 0;
   years: number[] = [];
   typeForm: string = '';
   reviewYear: string = '';
@@ -410,7 +411,7 @@ export class FormsComponent implements OnInit {
     tableIcon.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       e.stopPropagation();
-      this.openModal('createTable', +target.id, form.id);
+      this.openModal('createTable', +target.id, form.id, form.Type);
     });
 
     this.renderer.appendChild(subAnchor, img);
@@ -449,8 +450,14 @@ export class FormsComponent implements OnInit {
     return formLi;
   }
 
-  openModal(name: string, id: number = 0, formId: number = 0) {
-    if (name === 'createTable') this.formId = formId;
+  openModal(name: string, id: number = 0, formId: number = 0, formType: number = 0) {
+    if (name === 'createTable') {
+      this.formId = formId;
+      if (formType == 2) {
+        this.formType = formType;
+        this.tableForm.value.Type = this.formType;
+      }
+    }
     if (name === 'createQuestion') {
       this.tableIdInQuestion = id;
       this.GetAllCodes();
@@ -569,6 +576,8 @@ export class FormsComponent implements OnInit {
         if (res.Data) {
 
           this.resetForm();
+          this.resetTable();
+          this.resetQuestion();
 
           if (this.forms.length > 0) {
             const element = document.getElementById('items');
@@ -739,7 +748,7 @@ export class FormsComponent implements OnInit {
   }
   saveTable() {
 
-    this.Loader = true;
+    this.Loader = true;   
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
       const Model: IAddTableDto = {
@@ -747,8 +756,8 @@ export class FormsComponent implements OnInit {
         enName: this.tableForm.value.enName,
         arHeading: this.tableForm.value.arHeading,
         enHeading: this.tableForm.value.enHeading,
-        arNotes:this.tableForm.value.arNotes,
-        enNotes:this.tableForm.value.enNotes,
+        arNotes: this.tableForm.value.arNotes,
+        enNotes: this.tableForm.value.enNotes,
         Type: this.tableForm.value.Type,
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
@@ -820,13 +829,15 @@ export class FormsComponent implements OnInit {
       enName: '',
       arHeading: '',
       enHeading: '',
-      enNotes:'',
-      arNotes:'',
+      enNotes: '',
+      arNotes: '',
       Type: 0,
       fromId: '',
       isActive: true,
     });
     this.addTableParts = [];
+    this._addTable = true;
+    this.formType = 0;
   }
   showAlertTable(id: number): void {
     Swal.fire({
@@ -1134,7 +1145,7 @@ export class FormsComponent implements OnInit {
     const selectedItem = this.codes.find(item => item.Id === +selectedId);
     if (selectedItem) {
       this.code = selectedItem;
-    } 
+    }
     debugger
     this.GetSubCodesById(Number(selectedId))
   }
