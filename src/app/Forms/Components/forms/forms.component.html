@@ -27,7 +27,7 @@
     </div>
     <!-- Start form tree  -->
     <div class="zoom-controls" style="padding: 20px;">
-      <button (click)="zoomIn()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">            
+      <button (click)="zoomIn()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">
         <img src=".././../../../assets/images/zoomin.png" alt="" />
       </button>
       <button (click)="zoomOut()" class="mx-2" style="max-height: 50px; height: 100%; border-radius: 5px;">
@@ -43,7 +43,7 @@
         </svg>
       </button>
     </div>
-    <div >
+    <div>
       <div class="items d-none" id="items" (mousedown)="onMouseDown($event)">
         <ul [ngStyle]="{'transform': 'scale(' + zoomLevel + ')'}">
           <li>
@@ -57,14 +57,13 @@
   </div>
   <!--start modal -->
   <!--start create form modal -->
-  <div class="modal company-modal fade" id="createForm" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal company-modal fade" id="createForm" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header pb-1">
           <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء استمارة</h5>
-          <h5 class="modal-title" id="sendForm" *ngIf="!add">
-            تعديل الاستمارة
-          </h5>
+          <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل الاستمارة</h5>
         </div>
         <form [formGroup]="formForm">
           <div class="modal-body pb-0">
@@ -137,37 +136,28 @@
               </div>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button id="btnCancel" type="button" class="btn btn-cancel" data-bs-dismiss="modal" (click)="resetForm()">
-                إلغاء
-              </button>
+              <button id="btnCancel" type="button" class="btn btn-cancel" data-bs-dismiss="modal"
+                (click)="resetForm()">إلغاء</button>
               <button (click)="saveForm()" type="button" class="btn btn-save" style="background-color: #133c8b"
-                *ngIf="add">
-                حفظ
-              </button>
+                *ngIf="add">حفظ</button>
               <button (click)="updateForm()" type="button" class="btn btn-save" style="background-color: #133c8b"
-                *ngIf="!add">
-                تعديل
-              </button>
+                *ngIf="!add">تعديل</button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-
   <!--end create form modal -->
 
   <!--start create table modal -->
-  <div class="modal company-modal fade" id="createTable" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal company-modal fade" id="createTable" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header pb-1">
-          <h5 class="modal-title" id="sendForm" *ngIf="_addTable">
-            إنشاء جدول
-          </h5>
-          <h5 class="modal-title" id="sendForm" *ngIf="!_addTable">
-            تعديل جدول
-          </h5>
+          <h5 class="modal-title" id="sendForm" *ngIf="_addTable">إنشاء جدول</h5>
+          <h5 class="modal-title" id="sendForm" *ngIf="!_addTable">تعديل جدول</h5>
         </div>
         <form [formGroup]="tableForm">
           <div class="modal-body pb-0">
@@ -216,17 +206,19 @@
                   <input formControlName="IsActive" class="form-check-input" type="checkbox" id="active" checked />
                 </div>
               </div>
-              <div class="col-sm-12 mb-3">
-                <select formControlName="Type" class="form-control" style="width: 100%" [(ngModel)]="Type" (change)="onTypeChange()">
-                  <option selected disabled value="0">
-                    --اختر نوع الجدول--
-                  </option>
-                  <option value="1">جدول بمعاملات</option>
-                  <option value="2">جدول بدون معاملات</option>
-                  <option value="3">جدول سنه مقسمة الى اجزاء</option>
-                  <option value="4">جدول سنتين مقسمة الى اجزاء</option>
-                  <option value="5">جدول بمدة زمنية</option>
-                </select>
+              <div class="col-sm-12 mb-3" *ngIf="!(formType==2)">
+                <div class="input-floating-label mb-0">
+                  <select formControlName="Type" class="form-control" style="width: 100%" [(ngModel)]="Type"
+                    (change)="onTypeChange()">
+                    <option selected disabled value="">--اختر نوع الجدول--</option>
+                    <option value="1">جدول بمعاملات</option>
+                    <option value="2">جدول بدون معاملات</option>
+                    <option value="3">جدول سنه مقسمة الى اجزاء</option>
+                    <option value="4">جدول سنتين مقسمة الى اجزاء</option>
+                    <option value="5">جدول بمدة زمنية</option>
+                  </select>
+                  <label class="user">نوع الجدول</label>
+                </div>
               </div>
               <div class="col-sm-12 mb-2" *ngIf="Type == 5">
                 <div class="input-floating-label mb-0">
@@ -236,9 +228,7 @@
               </div>
               <hr *ngIf="Type == 3 || Type == 4" />
               <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4">
-                <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
-                  اضافة سطر
-                </button>
+                <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
                 <table class="table table-borderless">
                   <thead>
                     <tr class="t-header">
@@ -248,7 +238,6 @@
                       <th class="text-center" scope="col"></th>
                     </tr>
                   </thead>
-
                   <tbody>
                     <tr *ngFor="let item of addTableParts; let i = index">
                       <td>{{ i + 1 }}</td>
@@ -260,15 +249,11 @@
                         <input type="text" [(ngModel)]="item.enName" (input)="updateTableParts(i, 'enName', $event)"
                           value="{{ item.enName }}" />
                       </td>
-                      
                       <td class="text-center td-actions">
                         <button class="icon" (click)="removeItem(i)"
                           style="border: none; background-color: transparent">
                           <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                         </button>
-                        <!-- <button class="icon" (click)="editCode(item.Id)">
-                        <img src="../../../../assets/images/pencil-outline.png" alt="Edit" />
-                      </button> -->
                       </td>
                     </tr>
                   </tbody>
@@ -287,37 +272,30 @@
               </div>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="tableCancel">
-                إلغاء
-              </button>
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="tableCancel"
+                (click)="resetTable()">إلغاء</button>
               <button type="button" class="btn btn-save" style="background-color: #133c8b" (click)="saveTable()"
-                *ngIf="_addTable">
-                حفظ
-              </button>
+                *ngIf="_addTable">حفظ</button>
               <button type="button" class="btn btn-save" style="background-color: #133c8b" *ngIf="!_addTable"
-                (click)="updateTable()">
-                تعديل
-              </button>
+                (click)="updateTable()">تعديل</button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-
   <!--end create table modal -->
 
+
+
   <!--start create question modal -->
-  <div class="modal company-modal fade" id="createQuestion" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal company-modal fade" id="createQuestion" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header pb-1">
-          <h5 class="modal-title" id="sendForm" *ngIf="addQuestion">
-            إضافة سؤال
-          </h5>
-          <h5 class="modal-title" id="sendForm" *ngIf="!addQuestion">
-            تعديل سؤال
-          </h5>
+          <h5 class="modal-title" id="sendForm" *ngIf="addQuestion">إضافة سؤال</h5>
+          <h5 class="modal-title" id="sendForm" *ngIf="!addQuestion">تعديل سؤال</h5>
         </div>
         <form [formGroup]="questionForm">
           <div class="modal-body pb-0">
@@ -326,18 +304,16 @@
                 <div class="input-floating-label mb-0">
                   <select class="form-control" style="width: 100%" formControlName="codeId"
                     (change)="onSelectChange($event)" [(ngModel)]="showSubCode">
-                    <option selected value="0" id="messageType" disabled>
-                      --اختار رمز السؤال--
-                    </option>
-                    <option *ngFor="let item of codes" value="{{ item.Id }}">
-                      {{ item.QuestionCode }}_{{ item.arName }}
+                    <option selected value="0" id="messageType" disabled>--اختار رمز السؤال--</option>
+                    <option *ngFor="let item of codes" value="{{ item.Id }}">{{ item.QuestionCode }}_{{ item.arName }}
                     </option>
                   </select>
                   <label>رمز السؤال</label>
                 </div>
               </div>
             </div>
-            <div class="table-responsive company-table research-table" *ngIf="(code.TypeId == 1)&&(!(showSubCode == '0' || showSubCode ==''))">
+            <div class="table-responsive company-table research-table"
+              *ngIf="(code.TypeId == 1)&&(!(showSubCode == '0' || showSubCode ==''))">
               <table class="table table-borderless">
                 <thead>
                   <tr class="t-header">
@@ -347,12 +323,9 @@
                     <th class="text-center" scope="col">Name</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   <tr *ngFor="let item of subCodes; let i = index">
-                    <td>
-                      {{ i + 1 }}
-                    </td>
+                    <td>{{ i + 1 }}</td>
                     <td class="text-center">{{ item.QuestionCode }}</td>
                     <td class="text-center">{{ item.arName }}</td>
                     <td class="text-center">{{ item.enName }}</td>
@@ -372,21 +345,17 @@
               </table>
             </div>
             <div class="modal-footer pt-0 ps-0" style="border-top: none">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel" (click)="resetQuestion()">
-                إلغاء
-              </button>
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="quesCancel"
+                (click)="resetQuestion()">إلغاء</button>
               <button (click)="saveQues()" type="button" class="btn btn-save" style="background-color: #133c8b"
-                *ngIf="addQuestion">
-                حفظ
-              </button>
+                *ngIf="addQuestion">حفظ</button>
               <button (click)="updateQuestion()" type="button" class="btn btn-save" style="background-color: #133c8b"
-                *ngIf="!addQuestion">
-                تعديل
-              </button>
+                *ngIf="!addQuestion">تعديل</button>
             </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-</div>
+  <!--end create question modal -->
+

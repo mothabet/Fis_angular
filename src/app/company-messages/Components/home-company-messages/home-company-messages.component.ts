@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IAddCompanyMessage, ICompanyMessage } from '../../Dtos/CompanyMessageDto';
-import { ToastrService } from 'ngx-toastr';
 import { HomeCompanyMessagesService } from '../../Services/home-company-messages.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
@@ -29,6 +28,17 @@ export class HomeCompanyMessagesComponent {
   searchText: string = '';
   companyId!: string;
   messages: IMessage[] = [];
+  selectedMessage: IMessage = {
+    arDetails: '',
+    arName: '',
+    arSubject: '',
+    CreatedOn: '',
+    enDetails: '',
+    enName: '',
+    enSubject: '',
+    Id: 0,
+    typeMessage: 0
+  };
   constructor(
     private formBuilder: FormBuilder,
     private companyMessageService: HomeCompanyMessagesService,
@@ -42,11 +52,11 @@ export class HomeCompanyMessagesComponent {
       messageid: ['', Validators.required],
       date: ['', Validators.required],
       time: ['', Validators.required],
-      details:'',
+      arDetails: '',
     });
     this.GetAllCompanyMessages(1);
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
-    this.GetAllMessages(0,'');
+    this.GetAllMessages(0, '');
   }
   AddCompanyMessage(): void {
     debugger
@@ -83,21 +93,29 @@ export class HomeCompanyMessagesComponent {
       };
       this.companyMessageService.AddCompanyMessage(Model).subscribe(observer);
     } else {
+      const allErrors: string[] = [];
+      for (const controlName in this.companyMessageForm.controls) {
+        if (this.companyMessageForm.controls[controlName].invalid) {
+          const errors = this.getControlErrors(controlName);
+          allErrors.push(...errors);
+        }
+      }
       Swal.fire({
         icon: 'error',
-        title: 'يجب ادخال البيانات بشكل صحيح',
+        title: allErrors.join('<br>'),
         showConfirmButton: false,
-        timer: 2000
+        timer: 2000,
       });
       this.showLoader = false;
     }
   }
   resetForm(): void {
     this.companyMessageForm.reset({
-      companyid:  Number(this.companyId),
+      companyid: Number(this.companyId),
       messageid: '',
       date: '',
       time: '',
+      arDetails: ''
     });
   }
   GetAllCompanyMessages(page: number, textSearch: string = ''): void {
@@ -169,14 +187,18 @@ export class HomeCompanyMessagesComponent {
         debugger
         if (res.Data) {
           this.companyMessage = res.Data;
+          const formattedDate = this.companyMessage.date
+          ? new Date(this.companyMessage.date).toISOString().split('T')[0]
+          : '';
           this.companyMessageForm.patchValue({
-            companyid:  Number(this.companyId),
+            companyid: Number(this.companyId),
             messageid: this.companyMessage.messageid,
-            date: this.companyMessage.date,
+            date: formattedDate,
             time: this.companyMessage.time,
           });
-          debugger
-          this.showLoader = false;
+          if (this.selectedMessage) {
+            this.selectedMessage.arDetails = this.companyMessage.arDetails;
+          } this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addCompanyMessageBtn');
           if (button) {
@@ -196,7 +218,7 @@ export class HomeCompanyMessagesComponent {
     this.showLoader = true;
     if (this.companyMessageForm.valid) {
       const Model: IAddCompanyMessage = {
-        companyid:  Number(this.companyId),
+        companyid: Number(this.companyId),
         messageid: this.companyMessageForm.value.messageid,
         date: this.companyMessageForm.value.date,
         time: this.companyMessageForm.value.time,
@@ -245,26 +267,19 @@ export class HomeCompanyMessagesComponent {
   getControlErrors(controlName: string): string[] {
     const control = this.companyMessageForm.get(controlName);
     const errors: string[] = [];
-
     if (control && control.errors) {
-
-      // Check if control is not null and has errors
-      // if (controlName == 'arName') controlName = 'اسم الاستمارة بالعربى';
-      // if (controlName == 'enName') controlName = 'Form Name in English';
-      // if (controlName == 'arDetails') controlName = 'ملاحظات بالعربى';
-      // if (controlName == 'enDetails') controlName = 'Notes in English';
-      // if (controlName == 'arSubject') controlName = 'حالة الاستماره';
-      // if (controlName == 'enSubject') controlName = 'نوع الاستماره';
-
-      if (control.errors['required']) {
+      if (controlName == 'messageid') controlName = 'المراسلة';
+      if (controlName == 'date') controlName = 'التاريخ';
+      if (controlName == 'time') controlName = 'الوقت';
+      if (controlName == 'المراسلة'&&control.errors['required']) {
+        errors.push(`يجب اختيار ${controlName}`);
+      }
+      else if (control.errors['required']) {
         errors.push(`يجب ادخال ${controlName}`);
       }
-      // Add other error types here if needed
     }
-
     return errors;
   }
-  
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toISOString().split('T')[0];
@@ -300,5 +315,32 @@ export class HomeCompanyMessagesComponent {
       },
     };
     this.messageService.GetAllMessages(page, textSearch).subscribe(observer);
+  }
+  onSelectMessage(event: any): void {
+    debugger
+    const selectedMessageId = event.target.value;
+    const foundMessage = this.messages.find(message => message.Id == selectedMessageId);
+    if (foundMessage) {
+      this.selectedMessage = foundMessage;
+    } else {
+      // Handle the case when no message is found, e.g., show an error message or assign a default value
+      this.selectedMessage = {
+        arDetails: '',
+        arName: '',
+        arSubject: '',
+        CreatedOn: '',
+        enDetails: '',
+        enName: '',
+        enSubject: '',
+        Id: 0,
+        typeMessage: 0
+      };
+    }
+
+  }
+  onPageChange(page: number) {
+    debugger
+    this.currentPage = page;
+    this.GetAllCompanyMessages(page);
   }
 }

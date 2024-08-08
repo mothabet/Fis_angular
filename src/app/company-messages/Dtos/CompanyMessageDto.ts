@@ -10,6 +10,10 @@ export interface ICompanyMessage {
     id :number,
     companyid: number,
     messageid: number,
-    date: Date,
+    date: string,
     time: string,
+    arDetails: string,
+    enDetails: string,
+    arName: string,
+    enName: string,
 }
