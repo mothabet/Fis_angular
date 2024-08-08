@@ -9,7 +9,7 @@
         <div class="header-nav" style="margin-bottom: -10px">
             <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
             <!-- start table -->
-            <div class="content companies projection-table">
+            <div class="content companies projection-table" style="max-width: 74rem;">
 
                 <div class="header d-flex flex-wrap">
                     <div class="title flex-fill">
@@ -62,33 +62,105 @@
                                     <td class="text-start" style="text-wrap: balance; text-align: center;">
                                         {{formContent.code.enName}}</td>
                                 </tr>
-                                <tr *ngFor="let subCode of formContent.code.SubCodes">
-                                    <td *ngIf="subCode.Id !=0"
-                                        style="text-wrap: balance; text-align: center !important;color: #00af9d;">
-                                        {{subCode.arName}}</td>
-                                    <td class="text-center" *ngIf="subCode.Id ==0">
-                                        <select class="form-control"  style="width: 100% !important; text-align:center">
-                                            <option value="0">اختيار نشاط--</option>
-                                            <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
-                                    </select>
-                                    </td>
-                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
-                                            placeholder="0" /></td>
-                                    <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
-                                            placeholder="0" /></td>
-                                    <td class="text-center"><input disabled type="text"
-                                            value="{{subCode.QuestionCode}}" /></td>
+                                <ng-container *ngIf="formContent.code.TypeId == 1">
+                                    <tr *ngFor="let subCode of formContent.code.SubCodes">
+                                        <td *ngIf="subCode.Id !=0"
+                                            style="text-wrap: balance; text-align: center !important;color: #00af9d;">
+                                            {{subCode.arName}}</td>
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">اختيار نشاط--</option>
+                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                    {{activity.arName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td class="text-center"><input disabled type="text"
+                                                value="{{subCode.QuestionCode}}" /></td>
 
-                                    <td class="text-center" *ngIf="subCode.Id ==0">
-                                        <select class="form-control"  style="width: 100% !important; text-align:center">
-                                            <option value="0">Choose Activity --</option>
-                                            <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.enName}}</option>
-                                    </select>
-                                    </td>
-                                    <td *ngIf="subCode.Id !=0" class="text-start"
-                                        style="text-wrap: balance; text-align: center !important; color: #00af9d;">
-                                        {{subCode.enName}}</td>
-                                </tr>
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">Choose Activity --</option>
+                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                    {{activity.enName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngIf="subCode.Id !=0" class="text-start"
+                                            style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                            {{subCode.enName}}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="formContent.code.TypeId == 2">
+                                    <tr *ngFor="let subCode of formContent.code.SubCodes">
+                                        <td *ngIf="subCode.Id !=0"
+                                            style="text-wrap: balance; text-align: center !important;color: #00af9d;">
+                                            {{subCode.arName}}</td>
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">اختيار نشاط--</option>
+                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                    {{activity.arName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td class="text-center"><input disabled type="text"
+                                                value="{{subCode.QuestionCode}}" /></td>
+
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">Choose Activity --</option>
+                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                    {{activity.enName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngIf="subCode.Id !=0" class="text-start"
+                                            style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                            {{subCode.enName}}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="formContent.code.TypeId == 3">
+                                    <tr *ngFor="let subCode of formContent.code.SubCodes">
+                                        <td *ngIf="subCode.Id !=0"
+                                            style="text-wrap: balance; text-align: center !important;color: #00af9d;">
+                                            {{subCode.arName}}</td>
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">اختيار دولة--</option>
+                                                <option *ngFor="let country of countries" value="{{country.id}}">
+                                                    {{country.arName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                type="number" placeholder="0" /></td>
+                                        <td class="text-center"><input disabled type="text"
+                                                value="{{subCode.QuestionCode}}" /></td>
+
+                                        <td class="text-center" *ngIf="subCode.Id ==0">
+                                            <select class="form-control"
+                                                style="width: 100% !important; text-align:center">
+                                                <option value="0">Choose Country --</option>
+                                                <option *ngFor="let country of countries" value="{{country.id}}">
+                                                    {{country.enName}}</option>
+                                            </select>
+                                        </td>
+                                        <td *ngIf="subCode.Id !=0" class="text-start"
+                                            style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                            {{subCode.enName}}</td>
+                                    </tr>
+                                </ng-container>
                             </ng-container>
                         </tbody>
                     </table>

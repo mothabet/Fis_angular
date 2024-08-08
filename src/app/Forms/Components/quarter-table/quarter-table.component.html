@@ -91,6 +91,7 @@
 
                                               <td class="text-center" *ngIf="subCode.Id ==0">
                                                 <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                        <option>اختيار النشاط--</option>
                                                         <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.arName}}</option>
                                                 </select>
                                               </td>
@@ -117,6 +118,7 @@
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                     <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
                                         <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                <option>Choose Activity--</option>
                                                 <option *ngFor="let activity of activities" value="{{activity.id}}">{{activity.enName}}</option>
                                         </select>
                                       </td>                                </tr>
@@ -126,6 +128,7 @@
 
                                               <td class="text-center" *ngIf="subCode.Id ==0">
                                                 <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                        <option>اختيار دولة--</option>
                                                         <option *ngFor="let country of countries" value="{{country.id}}">{{country.arName}}</option>
                                                 </select>
                                               </td>
@@ -152,6 +155,7 @@
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                     <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
                                         <select class="form-control"  style="width: 100% !important; text-align:center">
+                                                <option>Choose Country--</option>
                                                 <option *ngFor="let country of countries" value="{{country.id}}">{{country.enName}}</option>
                                         </select>
                                       </td>                                

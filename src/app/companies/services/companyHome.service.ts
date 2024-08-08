@@ -62,8 +62,14 @@ export class CompanyHomeService {
    }
    GetCompanyById(id:number){
     var headers= this.sharedService.getHeaders();
-    debugger
+    
      var response = this.http.get(environment.apiUrl+`Company/GetCompany?id=${id}`, { headers });
+     return response;
+   }
+   GetPdf(id:number){
+    var headers= this.sharedService.getHeaders();
+    
+     var response = this.http.get(environment.apiUrl+`Pdf/GetPdf?id=${id}`, { headers });
      return response;
    }
    UpdateCompany(id:number,Model: IAddCompany){
@@ -72,7 +78,7 @@ export class CompanyHomeService {
      return response;
    }
    UpdateCompanyToRecearcher(id:number,Model: ICompany[]){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompanyToRecearcher?id=${id}`, Model, { headers });
      return response;
@@ -83,9 +89,14 @@ export class CompanyHomeService {
      return response;
    }
    GetCompanyPdfs(id:number){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var response = this.http.get(environment.apiUrl+`Pdf/GetPdfs?companyId=${id}`, { headers });
+     return response;
+   }
+   DeletePdf(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Pdf/DeletePdf?id=${id}`, { headers });
      return response;
    }
 }

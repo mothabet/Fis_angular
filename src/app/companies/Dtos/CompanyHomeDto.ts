@@ -75,5 +75,6 @@ export interface IGetPdfDto{
     id:number,
     arName : string,
     enName : string,
+    path : string,
     companyId : number
 }

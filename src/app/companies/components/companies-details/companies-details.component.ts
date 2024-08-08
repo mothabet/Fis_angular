@@ -3,7 +3,9 @@ import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-companies-details',
@@ -17,7 +19,7 @@ export class CompaniesDetailsComponent implements OnInit {
   selectedFiles: File[] = [];
   pdf!: IPdfDto;
   companyPdfs!: IGetPdfDto[];
-  constructor(private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
+  constructor(private http: HttpClient,private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
 
   }
   ngOnInit(): void {
@@ -26,6 +28,7 @@ export class CompaniesDetailsComponent implements OnInit {
     this.GetCompanyPdfs(+this.companyId);
   }
   ngAfterViewInit(): void {
+    
     this.showLoader = false;
   }
   GetCompanyById(id: number) {
@@ -76,10 +79,9 @@ export class CompaniesDetailsComponent implements OnInit {
           fileInput.value = '';
           this.GetCompanyPdfs(+this.companyId);
           this.showLoader = false;
-          // Clear the file input
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedServices.handleError(err);
           this.showLoader = false;
         },
@@ -94,15 +96,67 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          
           this.companyPdfs = res.Data;
         }
       },
       error: (err: any) => {
-        debugger
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
     };
     this.companyServices.GetCompanyPdfs(id).subscribe(observer);
+  }
+  showAlert(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeletePdf(id);
+      }
+    });
+  }
+  DeletePdf(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetCompanyPdfs(+this.companyId);
+        this.GetCompanyPdfs(+this.companyId)
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.companyServices.DeletePdf(id).subscribe(observer);
+  }
+  GetPdfPath(url: string): void {
+    
+    this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
+      
+      const fileName = url.substring(url.lastIndexOf('/') + 1);
+      saveAs(blob, fileName);
+    });
+  }
+  downloadPdf(path : string): void {
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const pdfUrl = 'https://www.esu.edu/computing_communication_services/web-services/documents/23-24/fake.pdf';
+    this.http.get(proxyUrl + pdfUrl, { responseType: 'blob' }).subscribe((blob: Blob) => {
+      saveAs(blob, 'fake.pdf');
+    });
   }
 }
