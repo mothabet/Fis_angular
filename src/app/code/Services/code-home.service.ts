@@ -16,9 +16,9 @@ export class CodeHomeService {
     var resopnse = this.http.post(environment.apiUrl+`Code/AddCode?lang=2`, Model, { headers });
     return resopnse;
   }
-  GetAllCodes(pageNumber:number, textSearch : string =''){
+  GetAllCodes(pageNumber:number, textSearch : string ='',withNull:boolean = true){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=false`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetAllCodes?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
      return resopnse;
    }
    DeleteCode(id:number){

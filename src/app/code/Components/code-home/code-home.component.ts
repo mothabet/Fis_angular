@@ -103,11 +103,9 @@ export class CodeHomeComponent {
     this.GetAllCodes(page);
   }
   saveCode(): void {
-    debugger
     this.showLoader = true;
-    if (this.codeForm.valid && this.codeForm.value.TypeId == "1") {
+    if (this.codeForm.valid && this.codeForm.value.TypeId == "1" && (this.addSubCode.length === 0 || !this.addSubCode.every(sub => sub.arName && sub.enName))) {
       // Check if subCode has more than zero entries and each entry has valid values
-      if (this.addSubCode.length === 0 || !this.addSubCode.every(sub => sub.arName && sub.enName)) {
         Swal.fire({
           icon: 'error',
           title: 'يجب ادخال بيانات الجدول بشكل صحيح',
@@ -116,9 +114,8 @@ export class CodeHomeComponent {
         });
         this.showLoader = false;
         return;
-      }
     }
-    if (this.codeForm.valid && this.searchTerm != "") {
+    if (this.codeForm.valid && (this.searchTerm != "" && this.searchTerm != null)) {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
         arName: this.searchTerm,
