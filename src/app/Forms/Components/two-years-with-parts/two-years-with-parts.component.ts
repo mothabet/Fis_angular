@@ -19,11 +19,11 @@ export class TwoYearsWithPartsComponent {
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
-  countries! : IGetCountriesDto[];
-  activities! : IGetActivitiesDto[];
+  countries!: IGetCountriesDto[];
+  activities!: IGetActivitiesDto[];
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    
-    
+
+
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
@@ -70,13 +70,13 @@ export class TwoYearsWithPartsComponent {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  addSubCodeRow(code:ICode){
-    const subCode:ISubCode={
-      arName:'',
-      codeId:0,
-      enName:'',
-      Id:0,
-      QuestionCode:''
+  addSubCodeRow(code: ICode) {
+    const subCode: ISubCode = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: ''
     }
     code.SubCodes.push(subCode);
   }
@@ -115,5 +115,18 @@ export class TwoYearsWithPartsComponent {
       },
     };
     this.formServices.GetCountries().subscribe(observer);
+  }
+  onArCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
+    if (selectedCountry) {
+      subCode.enCountry = selectedCountry.enName;
+    }
+  }
+
+  onEnCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
+    if (selectedCountry) {
+      subCode.arCountry = selectedCountry.arName;
+    }
   }
 }

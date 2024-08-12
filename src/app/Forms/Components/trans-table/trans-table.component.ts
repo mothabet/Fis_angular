@@ -31,6 +31,7 @@ export class TransTableComponent {
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
+    debugger
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -121,6 +122,19 @@ export class TransTableComponent {
       },
     };
     this.formServices.GetCountries().subscribe(observer);
+  }
+  onArCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
+    if (selectedCountry) {
+      subCode.enCountry = selectedCountry.enName;
+    }
+  }
+
+  onEnCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
+    if (selectedCountry) {
+      subCode.arCountry = selectedCountry.arName;
+    }
   }
 }
 

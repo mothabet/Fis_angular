@@ -38,6 +38,19 @@ export class QuarterTableComponent {
   ngAfterViewInit(): void {
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
   }
+  onArCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
+    if (selectedCountry) {
+      subCode.enCountry = selectedCountry.enName;
+    }
+  }
+
+  onEnCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
+    if (selectedCountry) {
+      subCode.arCountry = selectedCountry.arName;
+    }
+  }
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {

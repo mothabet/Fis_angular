@@ -10,6 +10,8 @@ import { TwoYearsWithPartsComponent } from './Components/two-years-with-parts/tw
 import { OneYearWithPartsComponent } from './Components/one-year-with-parts/one-year-with-parts.component';
 import { QuarterFormCoverComponent } from './Components/quarter-form-cover/quarter-form-cover.component';
 import { QuarterTableComponent } from './Components/quarter-table/quarter-table.component';
+import { WorkDataComponent } from './Components/work-data/work-data.component';
+import { CertificationComponent } from './Components/certification/certification.component';
 
 
 
@@ -23,7 +25,9 @@ import { QuarterTableComponent } from './Components/quarter-table/quarter-table.
     TwoYearsWithPartsComponent,
     OneYearWithPartsComponent,
     QuarterFormCoverComponent,
-    QuarterTableComponent
+    QuarterTableComponent,
+    WorkDataComponent,
+    CertificationComponent
   ],
   imports: [
     CommonModule,

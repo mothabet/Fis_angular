@@ -12,8 +12,16 @@
     (click)="activateCover()">
         <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
     </div>
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}"
+    (click)="activateWorkData()">
+        <a [routerLink]="['/WorkData',formId,companyId]">بيانات العمل</a>
+    </div>
     <div class="clipped-element-first arrow"  [ngClass]="{'active': table.id === tableId}"
     *ngFor="let table of coverForm.tables">
         <a (click)="TablesNavigation(table.id)">{{table.arName}}</a>
+    </div>
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}"
+    (click)="activateWorkData()">
+        <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
     </div>
 </div>
