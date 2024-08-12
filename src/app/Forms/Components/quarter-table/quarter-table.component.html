@@ -13,7 +13,7 @@
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
-                            <th scope="col">البيان</th>
+                            <th scope="col"  style="min-width: 420px;">البيان</th>
                             <th class="text-center quarter4" scope="col">30.012.{{+coverForm.reviewYear + 1}} Position
                             </th>
                             <th class="text-center quarter4" scope="col">Transactions</th>
@@ -27,7 +27,7 @@
                             </th>
                             <th class="text-center quarter1" scope="col">Transactions</th>
                             <th class="text-center" scope="col">Year End {{coverForm.reviewYear}} Position</th>
-                            <th class="text-start" scope="col">Items</th>
+                            <th class="text-start" scope="col"  style="min-width: 420px;">Items</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,10 +127,23 @@
                                 <tr *ngFor="let subCode of formContent.code.SubCodes; let i = index">
 
                                               <td class="text-center" *ngIf="subCode.Id ==0">
-                                                <select class="form-control"  style="width: 100% !important; text-align:center">
-                                                        <option>اختيار دولة--</option>
-                                                        <option *ngFor="let country of countries" value="{{country.id}}">{{country.arName}}</option>
+                                                <div style="display: flex;">
+                                                        <select class="form-control" [(ngModel)]="subCode.arName"
+                                                    (ngModelChange)="onArCountryChange(subCode)"
+                                                    style="width: 47% !important; text-align:center;margin: 5px;">
+                                                    <option value="">اختيار مصدر المال--</option>
+                                                    <option *ngFor="let country of countries" [value]="country.arName">
+                                                        {{country.arName}}</option>
                                                 </select>
+                                                <select class="form-control" [(ngModel)]="subCode.enName"
+                                                    (ngModelChange)="onEnCountryChange(subCode)"
+                                                    style="width: 47% !important; text-align:center">
+                                                    <option value="">اختيار جنسية المستثمر--</option>
+                                                    <option *ngFor="let country of countries" [value]="country.enName">
+                                                        {{ country.arName }}
+                                                    </option>
+                                                </select>
+                                                    </div>
                                               </td>
                                     <td class="text-center quarter4" [ngClass]="coverForm.typeQuarter == 4 ? 'colActive' : ''"><input disabled class="quarter4" type="number"
                                             placeholder="0" /></td>
@@ -154,10 +167,23 @@
                                     </td>
                                     <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                     <td style="min-width: 250px;" class="text-center" *ngIf="subCode.Id ==0">
-                                        <select class="form-control"  style="width: 100% !important; text-align:center">
-                                                <option>Choose Country--</option>
-                                                <option *ngFor="let country of countries" value="{{country.id}}">{{country.enName}}</option>
-                                        </select>
+                                        <div style="display: flex;">
+                                                <select class="form-control" [(ngModel)]="subCode.arName"
+                                                    (ngModelChange)="onArCountryChange(subCode)"
+                                                    style="width: 47% !important; text-align:center;margin: 5px;">
+                                                    <option value="">Choose Source of money--</option>
+                                                    <option *ngFor="let country of countries" [value]="country.arName">
+                                                        {{country.enName}}</option>
+                                                </select>
+                                                <select class="form-control" [(ngModel)]="subCode.enName"
+                                                    (ngModelChange)="onEnCountryChange(subCode)"
+                                                    style="width: 47% !important; text-align:center">
+                                                    <option value="">Choose Investor Nationality--</option>
+                                                    <option *ngFor="let country of countries" [value]="country.enName">
+                                                        {{ country.enName }}
+                                                    </option>
+                                                </select>
+                                            </div>
                                       </td>                                
                                 </tr>
                             </ng-container>

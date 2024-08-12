@@ -1,0 +1,93 @@
+<app-loader *ngIf="Loader"></app-loader>
+
+<div class="main-content p-4 main card" style="flex: 1">
+    <!-- header -->
+    <app-top-screen [title]="'بيانات العمل'"></app-top-screen>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="companies-details form-details prev-form" style="max-width: 74rem;">
+        <div class="header-nav" style="margin-bottom: -10px">
+            <app-navigate-tables-types [coverForm]="coverForm"
+                [isWorkDataActive]="isWorkDataActive"></app-navigate-tables-types>
+            <!-- start table -->
+            
+            <div class="content companies projection-table">
+                <div class="header d-flex flex-wrap">
+                    <div class="title flex-fill">
+                        بيانات عامة
+                    </div>
+                    <div class="title flex-fill en">
+                        General Information
+                    </div>
+                </div>
+                <div class="table-responsive company-table">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="t-header">
+                                <th class="col-3" scope="col">البيان</th>
+                                <th class="text-center col-3" scope="col"></th>
+                                <th class="text-start col-3" scope="col">Items</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let workQues of workData">
+                                <td style="text-wrap: balance;">{{workQues.arName}}</td>
+                                <td class="text-center">
+                                    <input type="text" style="width: 100%;" />
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">{{workQues.enName}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;">الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالة
+                                    المنشأة)</td>
+                                <td class="text-center">
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">The Legal Type of Organization (tick
+                                    approprate reponse)</td>
+                            </tr>
+                            <tr *ngFor="let workChk of workDataChk; let i = index">
+                                <td style="text-wrap: balance;">{{workChk.arName}}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" style="width: 100%;" [checked]="workChk.selected"
+                                        (change)="onCheckboxChange(i)" />
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">{{workChk.enName}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;">الفترة او السنه الماليه</td>
+                                <td class="text-center" style="display: flex;">
+                                    <div class="input-floating-label mb-0" style="padding: inherit;">
+                                        <input type="date" style="width: 100%;">
+                                        <label for="user" style="font-size: larger;">To</label>
+                                    </div>
+                                    <div class="input-floating-label mb-0" style="padding: inherit;">
+                                        <input type="date" style="width: 100%;">
+                                        <label for="user" style="font-size: larger;">From</label>
+                                    </div>
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">Accounting Period</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;">استخدم المربع ادناه لوصف النشاط الرئيسى</td>
+                                <td class="text-center">
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">Use the box below to describe the
+                                    main activity</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;"></td>
+                                <td class="text-center">
+                                    <textarea style="width: 100%;"></textarea>
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- end table -->
+            <!-- end content -->
+        </div>
+    </div>
+</div>

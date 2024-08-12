@@ -21,8 +21,12 @@ import { QuarterFormCoverComponent } from './Forms/Components/quarter-form-cover
 import { QuarterTableComponent } from './Forms/Components/quarter-table/quarter-table.component';
 import { HomemessagesComponent } from './messages/components/homemessages/homemessages.component';
 import { HomeCompanyMessagesComponent } from './company-messages/Components/home-company-messages/home-company-messages.component';
+import { WorkDataComponent } from './Forms/Components/work-data/work-data.component';
+import { CertificationComponent } from './Forms/Components/certification/certification.component';
 
 const routes: Routes = [
+  { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },
+  { path: 'WorkData/:formId/:companyId', component: WorkDataComponent, canActivate: [LoginGuard] },
   { path: 'QuarterTable/:formId/:tableId', component: QuarterTableComponent, canActivate: [LoginGuard] },
   { path: 'QuarterFormCover/:formId', component: QuarterFormCoverComponent, canActivate: [LoginGuard] },
   { path: 'TransTable/:formId/:tableId', component: TransTableComponent, canActivate: [LoginGuard] },
