@@ -4,10 +4,11 @@ import { IAddCode, ICode } from '../../Dtos/CodeHomeDto';
 import { CodeHomeService } from '../../Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
-import { IAddSubCode } from '../../Dtos/SubCodeHomeDto';
+import { IAddSubCode, ISubCode } from '../../Dtos/SubCodeHomeDto';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
+import { SubCodeHomeService } from '../../Services/sub-code-home.service';
 
 @Component({
   selector: 'app-code-home',
@@ -19,7 +20,9 @@ export class CodeHomeComponent {
   codeForm!: FormGroup;
   codes: ICode[] = [];
   code!: IAddCode;
-  subCode: IAddSubCode[] = [];
+  addSubCode: IAddSubCode[] = [];
+  subCodes: ISubCode[] = [];
+  subCode!: ISubCode;
   showLoader: boolean = false;
   noData: boolean = false;
   add: boolean = true;
@@ -30,24 +33,49 @@ export class CodeHomeComponent {
   typeId : number = 1;
   tableColumns = ['English Full Name', 'الاسم بالكامل', 'الرمز','الرقم'];
   searchText: string = '';
+  isDropdownOpen = false;
+  searchTerm: string = '';
+  filteredSubCodes: ISubCode[] = [];
+  QuestionCode:string='';
+  enName:string='';
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
+    private subCodeHomeService: SubCodeHomeService,
     private sharedService: SharedService
   ) { }
 
   ngOnInit(): void {
     this.codeForm = this.formBuilder.group({
-      arName: ['', Validators.required],
+      arName: [''],
       enName: ['', Validators.required],
       QuestionCode: [''],
       TypeId: [1,Validators.required],
+      searchTerm:['']
     });
 
     this.GetAllCodes(this.currentPage);
+    this.GetAllSubCodes();
+  }
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  filterSubCodes() {
+    this.filteredSubCodes = this.subCodes.filter(code =>
+      code.arName.includes(this.searchTerm)
+    );
+  }
+
+  selectCode(code: ISubCode) {
+    this.searchTerm = code.arName;
+    this.isDropdownOpen = false;
+    this.codeForm.patchValue({ arName: code.arName });
+    this.GetSubCodesById(code.Id);
+    // Perform any additional logic, like setting a FormControl value
   }
   addRow(){
-    this.subCode.push({
+    this.addSubCode.push({
       QuestionCode: '',
       arName: '',
       enName: '',
@@ -60,25 +88,26 @@ export class CodeHomeComponent {
   
     // Ensure that value is correctly assigned based on field type
     if (field === 'QuestionCode' || field === 'arName' || field === 'enName') {
-      this.subCode[index][field] = value;
+      this.addSubCode[index][field] = value;
     }
   }
   removeItem(index: number): void {
-    this.subCode.splice(index, 1);
+    this.addSubCode.splice(index, 1);
   }
   areAllFieldsFilled(): boolean {
-    return this.subCode.every(item => item.arName && item.enName);
+    return this.addSubCode.every(item => item.arName && item.enName);
   }
   onPageChange(page: number) {
-    debugger
+    
     this.currentPage = page;
     this.GetAllCodes(page);
   }
   saveCode(): void {
+    debugger
     this.showLoader = true;
     if (this.codeForm.valid && this.codeForm.value.TypeId == "1") {
       // Check if subCode has more than zero entries and each entry has valid values
-      if (this.subCode.length === 0 || !this.subCode.every(sub => sub.arName && sub.enName)) {
+      if (this.addSubCode.length === 0 || !this.addSubCode.every(sub => sub.arName && sub.enName)) {
         Swal.fire({
           icon: 'error',
           title: 'يجب ادخال بيانات الجدول بشكل صحيح',
@@ -89,16 +118,16 @@ export class CodeHomeComponent {
         return;
       }
     }
-    if (this.codeForm.valid) {
+    if (this.codeForm.valid && this.searchTerm != "") {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
-        arName: this.codeForm.value.arName,
+        arName: this.searchTerm,
         enName: this.codeForm.value.enName,
         TypeId:Number(this.codeForm.value.TypeId),
-        addSubCodeDtos : this.subCode
+        addSubCodeDtos : this.addSubCode
       };
-      debugger
-      console.log(this.subCode);
+      
+      console.log(this.addSubCode);
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -138,14 +167,15 @@ export class CodeHomeComponent {
       enName: '',
       TypeId : null
     });
-    this.subCode = []
+    this.addSubCode = [];
+    this.add = true;
   }
   GetAllCodes(page: number, textSearch : string = ''): void {
-    debugger
+    
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
@@ -185,7 +215,7 @@ export class CodeHomeComponent {
   }
 
   DeleteCode(id: number): void {
-    debugger
+    
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -209,17 +239,19 @@ export class CodeHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.code = res.Data.codeDto;
-          this.subCode = res.Data.getSubCodeDtos
-          debugger
+          this.addSubCode = res.Data.getSubCodeDtos
+          
           this.codeForm.patchValue({
             QuestionCode: this.code.QuestionCode,
             arName: this.code.arName,
             enName: this.code.enName,
             TypeId:this.code.TypeId,
           });
+          debugger
+          this.searchTerm = this.code.arName;
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addCodeBtn');
@@ -240,7 +272,7 @@ export class CodeHomeComponent {
     this.showLoader = true;
     if (this.codeForm.valid && this.codeForm.value.TypeId == "1") {
       // Check if subCode has more than zero entries and each entry has valid values
-      if (this.subCode.length === 0 || !this.subCode.every(sub => sub.arName && sub.enName)) {
+      if (this.addSubCode.length === 0 || !this.addSubCode.every(sub => sub.arName && sub.enName)) {
         Swal.fire({
           icon: 'error',
           title: 'يجب ادخال بيانات الجدول بشكل صحيح',
@@ -251,17 +283,17 @@ export class CodeHomeComponent {
         return;
       }
     }
-    if (this.codeForm.valid) {
+    if (this.codeForm.valid && this.searchTerm != "") {
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
-        arName: this.codeForm.value.arName,
+        arName: this.searchTerm,
         enName: this.codeForm.value.enName,
         TypeId:this.codeForm.value.TypeId,
-        addSubCodeDtos: this.subCode
+        addSubCodeDtos: this.addSubCode
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -277,7 +309,7 @@ export class CodeHomeComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -294,7 +326,7 @@ export class CodeHomeComponent {
     }
   }
   reset() {
-    this.subCode = [];
+    this.addSubCode = [];
     this.add = true;
     this.codeForm = this.formBuilder.group({
       QuestionCode: ['', Validators.required],
@@ -351,5 +383,45 @@ export class CodeHomeComponent {
   }
   codeSearch(){
     this.GetAllCodes(this.currentPage,this.searchText);
+  }
+  GetAllSubCodes(page: number=0, textSearch : string = ''): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {        
+        if (res.Data) {
+          this.subCodes = res.Data.getSubCodeDtos;
+          this.filteredSubCodes = this.subCodes;
+        }
+        else {
+          this.subCodes = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.subCodeHomeService.GetAllSubCodes(page,textSearch).subscribe(observer);
+  }
+  GetSubCodesById(id:number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          debugger
+          this.subCode = res.Data;
+          console.log(this.subCode);
+          this.enName = this.subCode.enName;
+          this.QuestionCode = this.subCode.QuestionCode;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.subCodeHomeService.GetSubCodesById(id).subscribe(observer);
   }
 }

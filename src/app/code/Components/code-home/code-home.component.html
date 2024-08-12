@@ -9,33 +9,13 @@
       <div class="title">قائمة محتوي الاستماره</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-            (keydown.enter)="codeSearch()"
-            [(ngModel)]="searchText"
-          />
-          <i
-            class="fa fa-search icon"
-            (click)="codeSearch()"
-            id="search-icon"
-            aria-hidden="true"
-          ></i>
+          <input class="form-control" type="text" name="search" placeholder="البحث" (keydown.enter)="codeSearch()"
+            [(ngModel)]="searchText" />
+          <i class="fa fa-search icon" (click)="codeSearch()" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button
-            type="button"
-            class="btn btn-add"
-            data-bs-toggle="modal"
-            data-bs-target="#addCode"
-          >
-            <img
-              src="../../../../assets/images/briefcase-plus-outli.png"
-              alt=""
-              id="addCodeBtn"
-            />
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addCodeBtn" />
             إضافة محتوي استماره
           </button>
           <button type="button" (click)="printPdf()" class="btn btn-download">
@@ -71,16 +51,10 @@
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a> -->
               <button class="icon" (click)="showAlert(item.Id)">
-                <img
-                  src="../../../../assets/images/trash-can-outline.png"
-                  alt=""
-                />
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
               </button>
               <button class="icon" (click)="editCode(item.Id)">
-                <img
-                  src="../../../../assets/images/pencil-outline.png"
-                  alt=""
-                />
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
             </td>
           </tr>
@@ -101,25 +75,13 @@
   </div>
   <!-- end content -->
 </div>
-<app-pagination
-  [pageNumber]="currentPage"
-  [lastPage]="isLastPage"
-  [emptyData]="noData"
-  [pagesCount]="totalPages"
-  (pageChange)="onPageChange($event)"
-></app-pagination>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <!--start modal -->
 
 <!--start add researcher modal -->
-<div
-  class="modal company-modal fade"
-  id="addCode"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
->
+<div class="modal company-modal fade" id="addCode" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-0">
@@ -132,84 +94,53 @@
         <div class="modal-body pb-1">
           <div class="row">
             <div class="form-group col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                id="inputField"
-                formControlName="arName"
-              />
-              <label for="inputField">الاسم بالكامل</label>
-              <div
-                *ngIf="
-                  codeForm.controls['arName'].invalid &&
-                  (codeForm.controls['arName'].dirty ||
-                    codeForm.controls['arName'].touched)
-                "
-              >
-                <small
-                  *ngIf="codeForm.controls['arName'].errors?.['required']"
-                  class="text-danger"
-                >
-                  يجب ادخال الاسم بالكامل.
-                </small>
+              <div class="dropdown" [class.show]="isDropdownOpen">
+                <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                  (click)="toggleDropdown()" [(ngModel)]="searchTerm" (input)="filterSubCodes()"
+                  formControlName="searchTerm" />
+                <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px;
+                width: 100%;
+                text-align: right;">
+                  <li *ngFor="let code of filteredSubCodes" class="dropdown-item" (click)="selectCode(code)">
+                    {{ code.arName }}
+                  </li>
+                </ul>
               </div>
+              <label for="inputField">الاسم بالكامل</label>
             </div>
+
             <div class="form-group col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                id="inputField"
-                formControlName="enName"
-              />
+              <input class="form-control input-modal" type="text" id="inputField" formControlName="enName"
+                [(ngModel)]="enName" />
               <label for="inputField">English Full Name</label>
-              <div
-                *ngIf="
+              <div *ngIf="
                   codeForm.controls['enName'].invalid &&
                   (codeForm.controls['enName'].dirty ||
                     codeForm.controls['enName'].touched)
-                "
-              >
-                <small
-                  *ngIf="codeForm.controls['enName'].errors?.['required']"
-                  class="text-danger"
-                >
+                ">
+                <small *ngIf="codeForm.controls['enName'].errors?.['required']" class="text-danger">
                   English Name is required.
                 </small>
               </div>
             </div>
             <div class="form-group col-sm-6 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                id="inputField"
-                formControlName="QuestionCode"
-                (input)="onlyNumber($event)"
-              />
+              <input class="form-control input-modal" type="text" id="inputField" formControlName="QuestionCode"
+                (input)="onlyNumber($event)" [(ngModel)]="QuestionCode" />
               <label for="inputField">الرمز</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
-              <select
-                formControlName="TypeId"
-                id="inputField"
-                class="form-control"
-                [(ngModel)]="typeId"
-              >
+              <select formControlName="TypeId" id="inputField" class="form-control" [(ngModel)]="typeId">
                 <option selected value="1">عادي</option>
                 <option value="2">انشطه</option>
                 <option value="3">بلاد</option>
+                <option value="4">نعم ام لا</option>
+                <option value="5">حدد</option>
               </select>
               <label for="inputField">نوع محتوي الاستماره</label>
             </div>
             <hr *ngIf="typeId == 1" />
-            <div
-              class="table-responsive company-table research-table table-border"
-              *ngIf="typeId == 1"
-            >
-              <button
-                (click)="addRow()"
-                class="btn btn-save"
-                [disabled]="!areAllFieldsFilled()"
-              >
+            <div class="table-responsive company-table research-table table-border" *ngIf="typeId == 1">
+              <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
                 اضافة سطر
               </button>
               <table class="table table-borderless">
@@ -224,42 +155,23 @@
                 </thead>
 
                 <tbody>
-                  <tr *ngFor="let item of subCode; let i = index">
+                  <tr *ngFor="let item of addSubCode; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td class="text-center">
-                      <input
-                        type="text"
-                        [(ngModel)]="item.arName"
-                        (input)="updateSubCode(i, 'arName', $event)"
-                        value="{{ item.arName }}"
-                      />
+                      <input type="text" [(ngModel)]="item.arName" (input)="updateSubCode(i, 'arName', $event)"
+                        value="{{ item.arName }}" />
                     </td>
                     <td class="text-center">
-                      <input
-                        type="text"
-                        [(ngModel)]="item.enName"
-                        (input)="updateSubCode(i, 'enName', $event)"
-                        value="{{ item.enName }}"
-                      />
+                      <input type="text" [(ngModel)]="item.enName" (input)="updateSubCode(i, 'enName', $event)"
+                        value="{{ item.enName }}" />
                     </td>
                     <td class="text-center">
-                      <input
-                        type="text"
-                        [(ngModel)]="item.QuestionCode"
-                        (input)="updateSubCode(i, 'QuestionCode', $event)"
-                        value="{{ item.QuestionCode }}"
-                      />
+                      <input type="text" [(ngModel)]="item.QuestionCode"
+                        (input)="updateSubCode(i, 'QuestionCode', $event)" value="{{ item.QuestionCode }}" />
                     </td>
                     <td class="text-center td-actions">
-                      <button
-                        class="icon"
-                        (click)="removeItem(i)"
-                        style="border: none; background-color: transparent"
-                      >
-                        <img
-                          src="../../../../assets/images/trash-can-outline.png"
-                          alt=""
-                        />
+                      <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
+                        <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                       </button>
                       <!-- <button class="icon" (click)="editCode(item.Id)">
                         <img src="../../../../assets/images/pencil-outline.png" alt="Edit" />
@@ -267,40 +179,22 @@
                     </td>
                   </tr>
                 </tbody>
-                
+
               </table>
             </div>
           </div>
         </div>
         <div class="modal-footer pt-0">
-          <button
-            type="button"
-            class="btn btn-cancel"
-            data-bs-dismiss="modal"
-            id="btnCancel"
-            (click)="reset()"
-          >
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
             إلغاء
           </button>
           <button type="button" class="btn btn-reset" (click)="resetForm()">
             إعادة ملء
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="saveCode()"
-            *ngIf="add"
-
-          >
+          <button type="button" class="btn btn-save" (click)="saveCode()" *ngIf="add">
             حفظ
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="updateCode()"
-            *ngIf="!add"
-
-          >
+          <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
             تعديل
           </button>
         </div>
@@ -311,26 +205,13 @@
 <!--end add researcher modal -->
 
 <!--start linked company modal -->
-<div
-  class="modal company-modal fade"
-  id="companyLink"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
->
+<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-      <div
-        class="modal-title pt-3 modal-header d-flex justify-content-between pt-0"
-      >
+      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
         <h5>ربط بالشركة</h5>
         <div class="search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
       </div>

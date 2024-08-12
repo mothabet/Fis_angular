@@ -16,6 +16,12 @@ export class SubCodeHomeService {
     var resopnse = this.http.post(environment.apiUrl+`SubCodes/AddSubCode?lang=2`, Model, { headers });
     return resopnse;
   }
+  GetSubCodesByCodeId(id:number){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`SubCodes/GetSubCodesByCodeId?id=${id}&lang=2`, { headers });
+     return resopnse;
+  }
   GetSubCodesById(id:number){
     debugger
     var headers= this.sharedService.getHeaders();

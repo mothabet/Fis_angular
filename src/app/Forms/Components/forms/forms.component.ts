@@ -1168,7 +1168,7 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.subCodeService.GetSubCodesById(Number(id)).subscribe(observer);
+    this.subCodeService.GetSubCodesByCodeId(Number(id)).subscribe(observer);
   }
   GetCodeById(id: number) {
     this.Loader = true;
