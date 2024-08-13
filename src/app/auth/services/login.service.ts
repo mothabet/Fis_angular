@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ILogin } from '../Dtos/AuthDto';
 import { environment } from 'src/environments/environment.development';
 import * as CryptoJS from 'crypto-js';
-
+import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
@@ -31,17 +31,22 @@ export class LoginService {
   getToken(): string {
     const secretKey = 'your-256-bit-secret-key';
     const encryptedToken = this.cookieService.get('ATKFIS');
-    
+
     if (encryptedToken) {
       const bytes = CryptoJS.AES.decrypt(encryptedToken, secretKey);
       const decryptedToken = bytes.toString(CryptoJS.enc.Utf8);
       return decryptedToken;
     }
-    
+
     return '';
   }
   deleteToken() {
     const token = this.cookieService.delete('ATKFIS');
     return token;
+  }
+  decodedToken(token: string) : any {
+    const decodedToken = jwtDecode(token);
+    // Log the decoded data
+    return decodedToken
   }
 }

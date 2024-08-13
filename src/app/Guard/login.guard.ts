@@ -10,21 +10,17 @@ export class LoginGuard {
 
   canActivate(): boolean {
     const isLoggedIn = this.authService.getToken();
+    // this.authService.decodedToken(isLoggedIn);
     if (isLoggedIn != "") {
-      // this.userService.GetCurrentUser().subscribe((res: any) => {
-      //   this.user = res.data;
-      //   if (this.user != null) {
-      //     return true;
-      //   }
-      //   else {
-      //     this.router.navigate(['/Login']);
-      //     return false;
-      //   }
-      // }, err => {
-      //   this.router.navigate(['/Login']);
-      //   return false;
-      // })
+      let res = this.authService.decodedToken(isLoggedIn);  
+    const role = res.roles;
+    debugger
+    if(role === 'Admin'){
       return true;
+    }
+    else{
+      return true;
+    }
     } else {
       this.router.navigate(['/Login']);
       return false;

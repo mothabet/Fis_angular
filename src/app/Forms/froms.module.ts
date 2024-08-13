@@ -12,6 +12,7 @@ import { QuarterFormCoverComponent } from './Components/quarter-form-cover/quart
 import { QuarterTableComponent } from './Components/quarter-table/quarter-table.component';
 import { WorkDataComponent } from './Components/work-data/work-data.component';
 import { CertificationComponent } from './Components/certification/certification.component';
+import { PrevFormComponent } from './Components/prev-form/prev-form.component';
 
 
 
@@ -27,7 +28,8 @@ import { CertificationComponent } from './Components/certification/certification
     QuarterFormCoverComponent,
     QuarterTableComponent,
     WorkDataComponent,
-    CertificationComponent
+    CertificationComponent,
+    PrevFormComponent
   ],
   imports: [
     CommonModule,

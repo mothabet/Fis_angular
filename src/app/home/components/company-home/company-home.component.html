@@ -1,0 +1,75 @@
+<div class="main-content p-4 main card " style="flex: 1;">
+    <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
+
+    <!-- start content -->
+    <div class="companies user-home">
+        <div class="header d-flex card-box">
+            <div class="title">
+                استماره 2022
+            </div>
+            <div class="btns d-flex">
+                <div class="search">
+                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                    <img src="./images/list-box-outline.png" alt="">
+                    الإرشادات
+                </button>
+                <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
+                    <img src="./images/printer-outline.png" alt="">
+                    طباعة pdf
+                </button>
+                <button type="button" class="btn btn-download">
+                    <img src="./images/file-excel-outline.png" alt="">
+                    تنزيل xls
+                </button>
+                <button type="button" class="btn btn-save">
+                    <img src="./images/content-save-outline.png" alt="">
+                    حفظ
+                </button>
+                <button type="button" class="btn btn-accept">
+                    موافقة
+                </button>
+                <button type="button" class="btn btn-exit">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- start footer -->
+        <footer class="projection-notes d-flex flex-wrap my-3 card-box">
+            <p class="ar flex-fill">
+                ملاحضة : في حالة عدم توفر بعض البيانات ، يكفى تقديم تقديرات دقيقة من جانبكم للبنود المطلوبة
+            </p>
+            <p class="en flex-fill">
+                Note: Even if the figures are very tentative, please provide your best estimates.
+            </p>
+        </footer>
+        <!-- end footer -->
+    </div>
+
+    <!-- start modal -->
+    <div class="modal company-modal fade" id="addNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header d-block">
+                    <h5 class="modal-title">إدراج ملاحظة</h5>
+                    <h5 class="modal-title subtitle">جدول 9: الاستمارات المخططة فى عمان (2015-2010)</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <textarea placeholder="أكنب ملاحظة"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="button" class="btn btn-save">حفظ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end modal -->
+</div>
