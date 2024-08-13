@@ -49,7 +49,12 @@
                                             style="background-color: #00af9d; border-radius: 5px;"
                                             (click)="addSubCodeRow(formContent.code)">
                                             <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
-
+                                        </button>
+                                        <button *ngIf="formContent.code.TypeId != 1"
+                                            style="background-color: white; border-radius: 5px;"
+                                            (click)="addSubCodeRow(formContent.code)">
+                                            <img src=".././../../../assets/images/trash-can-outline.PNG"
+                                                class="img-fluid">
                                         </button>
                                     </td>
                                     <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
