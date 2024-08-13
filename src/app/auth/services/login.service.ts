@@ -44,9 +44,47 @@ export class LoginService {
     const token = this.cookieService.delete('ATKFIS');
     return token;
   }
-  decodedToken(token: string) : any {
-    const decodedToken = jwtDecode(token);
-    // Log the decoded data
-    return decodedToken
+  decodedToken(token: string): any {
+    debugger
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      // Log the decoded data
+      return decodedToken
+    }
+    else
+      return ""
+  }
+  isAdminRoute(url: string): boolean {
+    const adminRoutes = [
+      'Home', 
+      'Forms', 
+      'Companies', 
+      'Researcher', 
+      'Auditing-Rules', 
+      'Codes', 
+      'Messages', 
+      'CopmanyMessages', 
+      'Certification', 
+      'WorkData', 
+      'QuarterTable', 
+      'QuarterFormCover', 
+      'TransTable', 
+      'PeriodTable', 
+      'TableWithoutTrans', 
+      'OneYearWithParts', 
+      'TwoYearsWithParts', 
+      'FormDetails',
+      'Companies-Details',
+      'Researcher-Details'
+    ];
+    return adminRoutes.includes(url);
+  }
+  
+
+  isCompanyRoute(url: string): boolean {
+    const companyRoutes = [
+      'CompanyHome', 'PrevForm'
+    ];
+    return companyRoutes.includes(url);
   }
 }

@@ -8,27 +8,31 @@ import { LoginService } from '../auth/services/login.service';
 export class LogoutGuard {
   constructor(private router: Router, private authService: LoginService) { }
 
-  canActivate(): boolean {
+  canActivate(route: any): boolean {
     const isLoggedIn = this.authService.getToken();
     if (isLoggedIn == "") {
       return true;
     } else {
-      // this.userService.GetCurrentUser().subscribe((res: any) => {
-      //   this.user = res.data;
-      //   if (this.user != null) {
-      //     this.router.navigate(['/Home']);
-      //     return false;
-      //   }
-      //   else {
-      //     return true;
+      let res = this.authService.decodedToken(isLoggedIn);  
+      const role = res.roles;
+      const url: string = route.url[0].path;
 
-      //   }
-      // }, err => {
-      //   return true;
-
-      // })
-      this.router.navigate(['/Home']);
-      return true;
+      if (role === 'Admin' && this.authService.isAdminRoute(url)) {
+        return true;
+      } 
+      else if (role === 'Admin' && !(this.authService.isAdminRoute(url))) {
+        this.router.navigate(['/Home']);
+        return true;
+      } 
+      else if (role === 'Company' && !(this.authService.isCompanyRoute(url))) {
+        this.router.navigate(['/CompanyHome']);
+        return true;
+      } 
+      else if (role === 'Company' && this.authService.isCompanyRoute(url)) {
+        return true;
+      } 
+      
+      return false;
     }
   }
 }

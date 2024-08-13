@@ -55,19 +55,17 @@ export class CodeHomeComponent {
       searchTerm:['']
     });
 
-    this.GetAllCodes(this.currentPage);
+    this.GetAllCodes(this.currentPage,this.searchText);
     this.GetAllSubCodes();
   }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-
   filterSubCodes() {
     this.filteredSubCodes = this.subCodes.filter(code =>
       code.arName.includes(this.searchTerm)
     );
   }
-
   selectCode(code: ISubCode) {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
@@ -101,7 +99,7 @@ export class CodeHomeComponent {
   onPageChange(page: number) {
     
     this.currentPage = page;
-    this.GetAllCodes(page);
+    this.GetAllCodes(page,this.searchText);
   }
   saveCode(): void {
     this.showLoader = true;
@@ -133,7 +131,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1);
+          this.GetAllCodes(1,this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -194,7 +192,6 @@ export class CodeHomeComponent {
     };
     this.codeHomeService.GetAllCodesWithSubCodesPerant(page,textSearch).subscribe(observer);
   }
-
   showAlert(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
@@ -211,13 +208,12 @@ export class CodeHomeComponent {
       }
     });
   }
-
   DeleteCode(id: number): void {
     
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllCodes(1);
+        this.GetAllCodes(1,this.searchText);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -297,7 +293,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1);
+          this.GetAllCodes(1,this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -380,7 +376,7 @@ export class CodeHomeComponent {
     doc.save('Codes.pdf');
   }
   codeSearch(){
-    this.GetAllCodes(this.currentPage,this.searchText);
+    this.GetAllCodes(1,this.searchText);
   }
   GetAllSubCodes(page: number=0, textSearch : string = ''): void {
     this.showLoader = true;
