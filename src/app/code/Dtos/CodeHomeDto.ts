@@ -13,5 +13,6 @@ export interface ICode{
     enName: string,
     TypeId : number;
     QuestionCode:string
+    Department : string | null
     SubCodes:ISubCode[]
 }

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/shared/services/sidebar.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
-
+import { jwtDecode } from 'jwt-decode';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,9 +15,9 @@ import Swal from 'sweetalert2';
 export class LoginComponent {
   logInForm!: FormGroup;
   showLoader: boolean = false;
-  constructor(private formBuilder: FormBuilder, private loginService:LoginService, 
-    private router: Router, private sidebarService: SidebarService,private sharedService: SharedService) {
-    
+  constructor(private formBuilder: FormBuilder, private loginService: LoginService,
+    private router: Router, private sidebarService: SidebarService, private sharedService: SharedService) {
+
   }
   ngOnInit() {
     this.sidebarService.hide();
@@ -26,12 +26,12 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
   }
-  
+
   ngOnDestroy(): void {
     this.sidebarService.show();
 
   }
-  Login(){
+  Login() {
     this.showLoader = true;
     if (this.logInForm.valid) {
       const Model: ILogin = {
@@ -41,6 +41,7 @@ export class LoginComponent {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
+            
             this.loginService.saveToken(res.Data.Token);
             this.showLoader = false;
             this.router.navigate(['/Home']);
@@ -56,7 +57,7 @@ export class LoginComponent {
     else {
       Swal.fire({
         icon: 'error',
-        title:"يجب ادخال البيانات بشكل صحيح",
+        title: "يجب ادخال البيانات بشكل صحيح",
         showConfirmButton: false,
         timer: 2000
       });

@@ -29,16 +29,27 @@
         </div>
       </li>
 
-      <li class="sidebar-item"  routerLink="/Home" routerLinkActive="active">
+      <li class="sidebar-item"  routerLink="/Home" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
         </a>
       </li>
-
-      <li class="sidebar-item">
+      <li class="sidebar-item"  routerLink="/CompanyHome" routerLinkActive="active" *ngIf="role === 'Company'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-house icon"></i>
+          <span class="">الرئيسية</span>
+        </a>
+      </li>
+      <li class="sidebar-item"  routerLink="/PrevForm" routerLinkActive="active" *ngIf="role === 'Company'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-file-lines icon"></i>
+          <span class="">الاستمارات السابقه</span>
+        </a>
+      </li>
+      <li class="sidebar-item"  *ngIf="role === 'Admin'">
         <div class="has-dropdown">
-          <a routerLink="Forms" href="./forms.html" class="sidebar-link">
+          <a routerLink="Forms" href="./forms.html" class="sidebar-link" *ngIf="role === 'Admin'">
             <i class="fa-solid fa-file-lines icon"></i>
             <span>الاستمارات</span>
           </a>
@@ -65,43 +76,37 @@
           </li>
         </ul>
       </li>
-
-      <li class="sidebar-item">
+      <li class="sidebar-item"  *ngIf="role === 'Admin'">
         <a routerLink="Auditing-Rules" class="sidebar-link">
           <i class="fa-solid fa-database icon"></i>
           <span>قواعد التدقيق</span>
         </a>
       </li>
-
-      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" >
+      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active"  *ngIf="role === 'Admin'">
         <a class="sidebar-link"  routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
           <span>الشركات</span>
         </a>
       </li>
-
-      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active">
+      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active"  *ngIf="role === 'Admin'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
           <span>الباحثين</span>
         </a>
       </li>
-
-      <li class="sidebar-item">
+      <li class="sidebar-item"  *ngIf="role === 'Admin'">
         <a href="#" class="sidebar-link">
           <i class="fa-solid fa-chart-line icon"></i>
           <span>التقارير</span>
         </a>
       </li>
-
-      <li class="sidebar-item">
+      <li class="sidebar-item"  *ngIf="role === 'Admin'">
         <a href="#" class="sidebar-link">
           <i class="fa-solid fa-chart-simple icon"></i>
           <span>تكبير البيانات</span>
         </a>
       </li>
-
-      <li class="sidebar-item">
+      <li class="sidebar-item"  *ngIf="role === 'Admin'">
         <div class="has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting">
           <a class="sidebar-link" id="setting-icon">
             <i class="fa-solid fa-gear icon"></i>

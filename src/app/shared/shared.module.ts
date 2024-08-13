@@ -9,6 +9,7 @@ import { TopScreenComponent } from './components/top-screen/top-screen.component
 import { LoaderComponent } from './components/loader/loader.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { NavigateTablesTypesComponent } from './components/navigate-tables-types/navigate-tables-types.component';
+import { NgxEditorModule } from 'ngx-editor';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { NavigateTablesTypesComponent } from './components/navigate-tables-types
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxEditorModule,
   ],
   exports: [
     NavigateTablesTypesComponent,
@@ -31,11 +33,12 @@ import { NavigateTablesTypesComponent } from './components/navigate-tables-types
     TopScreenComponent,
     LoaderComponent,
     PaginationComponent,
-    AppRoutingModule, 
+    AppRoutingModule,
     FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxEditorModule,
   ]
 })
 export class SharedModule { }

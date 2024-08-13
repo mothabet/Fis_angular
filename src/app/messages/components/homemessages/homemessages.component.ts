@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { HomemessagesService } from '../../services/homemessages.service';
 import { IAddMessage, IMessage } from '../../Dtos/MessageDto';
 import Swal from 'sweetalert2';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-homemessages',
   templateUrl: './homemessages.component.html',
   styleUrls: ['./homemessages.component.css']
 })
-export class HomemessagesComponent implements OnInit {
+export class HomemessagesComponent implements OnInit,OnDestroy {
   messageForm!: FormGroup;
   showLoader: boolean = false;
   messages: IMessage[] = [];
@@ -28,12 +29,20 @@ export class HomemessagesComponent implements OnInit {
   buttonText: string = 'إنشاء رسالة';
   typeMessage: number = 1;
   searchText: string = '';
+  editor!: Editor;
+  editoren!: Editor;
+  emailEn = '';
+  emailAr = '';
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private messageService: HomemessagesService,
     private sharedService: SharedService,
   ) { }
+  ngOnDestroy(): void {
+    this.editor.destroy();
+    this.editoren.destroy();
+  }
   ngOnInit(): void {
     this.messageForm = this.formBuilder.group({
       arDetails: ['', Validators.required],
@@ -45,6 +54,8 @@ export class HomemessagesComponent implements OnInit {
       typeMessage: [''],
     });
     this.GetAllMessages(1);
+    this.editor = new Editor();
+    this.editoren = new Editor();
   }
   AddMessage(typeMessage: number): void {
     this.showLoader = true;

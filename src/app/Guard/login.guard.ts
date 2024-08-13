@@ -8,26 +8,34 @@ import { LoginService } from '../auth/services/login.service';
 export class LoginGuard {
   constructor(private router: Router, private authService: LoginService) { }
 
-  canActivate(): boolean {
+  canActivate(route: any): boolean {
     const isLoggedIn = this.authService.getToken();
     if (isLoggedIn != "") {
-      // this.userService.GetCurrentUser().subscribe((res: any) => {
-      //   this.user = res.data;
-      //   if (this.user != null) {
-      //     return true;
-      //   }
-      //   else {
-      //     this.router.navigate(['/Login']);
-      //     return false;
-      //   }
-      // }, err => {
-      //   this.router.navigate(['/Login']);
-      //   return false;
-      // })
-      return true;
+      let res = this.authService.decodedToken(isLoggedIn);  
+      const role = res.roles;
+      const url: string = route.url[0].path;
+
+      if (role === 'Admin' && this.authService.isAdminRoute(url)) {
+        return true;
+      } 
+      else if (role === 'Admin' && !(this.authService.isAdminRoute(url))) {
+        this.router.navigate(['/Home']);
+        return true;
+      } 
+      else if (role === 'Company' && !(this.authService.isCompanyRoute(url))) {
+        this.router.navigate(['/CompanyHome']);
+        return true;
+      } 
+      else if (role === 'Company' && this.authService.isCompanyRoute(url)) {
+        return true;
+      } 
+      
+      return false;
     } else {
       this.router.navigate(['/Login']);
       return false;
     }
   }
+
+  
 }

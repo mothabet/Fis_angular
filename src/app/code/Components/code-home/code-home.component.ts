@@ -38,6 +38,7 @@ export class CodeHomeComponent {
   filteredSubCodes: ISubCode[] = [];
   QuestionCode:string='';
   enName:string='';
+  skipOld :number = 0
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
@@ -54,19 +55,17 @@ export class CodeHomeComponent {
       searchTerm:['']
     });
 
-    this.GetAllCodes(this.currentPage);
+    this.GetAllCodes(this.currentPage,this.searchText);
     this.GetAllSubCodes();
   }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-
   filterSubCodes() {
     this.filteredSubCodes = this.subCodes.filter(code =>
       code.arName.includes(this.searchTerm)
     );
   }
-
   selectCode(code: ISubCode) {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
@@ -100,7 +99,7 @@ export class CodeHomeComponent {
   onPageChange(page: number) {
     
     this.currentPage = page;
-    this.GetAllCodes(page);
+    this.GetAllCodes(page,this.searchText);
   }
   saveCode(): void {
     this.showLoader = true;
@@ -132,7 +131,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1);
+          this.GetAllCodes(1,this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -168,17 +167,17 @@ export class CodeHomeComponent {
     this.add = true;
   }
   GetAllCodes(page: number, textSearch : string = ''): void {
-    
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+        debugger
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.codes = res.Data.getCodeDtos;
+          this.codes = res.Data.getCodesWithSubCodesParents;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
+          this.skipOld = res.Data.skipOld;
           this.resetForm();
         }
         else {
@@ -191,9 +190,8 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(page,textSearch).subscribe(observer);
+    this.codeHomeService.GetAllCodesWithSubCodesPerant(page,textSearch).subscribe(observer);
   }
-
   showAlert(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
@@ -210,13 +208,12 @@ export class CodeHomeComponent {
       }
     });
   }
-
   DeleteCode(id: number): void {
     
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllCodes(1);
+        this.GetAllCodes(1,this.searchText);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -296,7 +293,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1);
+          this.GetAllCodes(1,this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -379,7 +376,7 @@ export class CodeHomeComponent {
     doc.save('Codes.pdf');
   }
   codeSearch(){
-    this.GetAllCodes(this.currentPage,this.searchText);
+    this.GetAllCodes(1,this.searchText);
   }
   GetAllSubCodes(page: number=0, textSearch : string = ''): void {
     this.showLoader = true;
