@@ -52,10 +52,10 @@
               <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a> -->
-              <button class="icon" (click)="showAlert(item.Id)">
+              <button class="icon" (click)="showAlert(item.Id,item.Department)">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="" />
               </button>
-              <button class="icon" (click)="editCode(item.Id)">
+              <button class="icon" (click)="editCode(item.Id,item.Department)">
                 <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
             </td>

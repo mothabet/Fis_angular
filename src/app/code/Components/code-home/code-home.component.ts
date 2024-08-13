@@ -173,6 +173,7 @@ export class CodeHomeComponent {
         debugger
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
+          debugger
           this.codes = res.Data.getCodesWithSubCodesParents;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
@@ -192,7 +193,8 @@ export class CodeHomeComponent {
     };
     this.codeHomeService.GetAllCodesWithSubCodesPerant(page,textSearch).subscribe(observer);
   }
-  showAlert(id: number): void {
+  showAlert(id: number,Department:string|null): void {
+    debugger
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -204,11 +206,11 @@ export class CodeHomeComponent {
       cancelButtonText: 'لا'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.DeleteCode(id);
+        this.DeleteCode(id,Department);
       }
     });
   }
-  DeleteCode(id: number): void {
+  DeleteCode(id: number,Department:string|null): void {
     
     this.showLoader = true;
     const observer = {
@@ -227,9 +229,9 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.DeleteCode(id).subscribe(observer);
+    this.codeHomeService.DeleteCode(id,Department??"").subscribe(observer);
   }
-  editCode(id: number): void {
+  editCode(id: number,Department:string|null): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
