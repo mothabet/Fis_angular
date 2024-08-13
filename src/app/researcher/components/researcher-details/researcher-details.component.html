@@ -142,9 +142,8 @@
             <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
                 <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
                 <div class="search">
-                    <input (keydown.enter)="researcherCompanySerach()"
-                    [(ngModel)]="text"
-                     class="form-control" type="text" name="search" placeholder="البحث" />
+                    <input (keydown.enter)="researcherCompanySerach()" [(ngModel)]="text" class="form-control"
+                        type="text" name="search" placeholder="البحث" />
                     <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
                 </div>
             </div>
@@ -163,7 +162,9 @@
                     <tbody>
                         <tr *ngFor="let company of researcher.companies">
                             <td>
-                                <input type="checkbox" name="companyName1" id="companyName1" />
+                                <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
+                                    [checked]="isSelected(company.id)" type="checkbox" name="companyName1"
+                                    id="companyName1" />
                                 {{company.arName}}
                             </td>
                             <td class="text-center">{{company.compRegNumber}}</td>
@@ -171,7 +172,7 @@
                             <td class="text-center">184510</td>
                             <td class="text-center">الترفيه</td>
                             <td class="text-center">{{company.address}}</td>
-                        </tr>  
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -180,41 +181,47 @@
                     <div class="row">
                         <div class="col-sm-12 mb-2">
                             <div class="input-floating-label mb-0">
-                                <select class="form-control" style="width: 100%" (change)="onSelectMessage($event)">
-                                    <option selected disabled value="0" id="messageType" name="messageType">
+                                <select class="form-control" style="width: 100%" name="formType"
+                                    (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0">
                                         --اختار الاستماره--
                                     </option>
-                                    <option *ngFor="let form of forms" value="{{form.id}}">{{form.arName}}</option>
+                                    <option *ngFor="let form of forms" [value]="form.id">{{form.arName}}</option>
                                 </select>
                                 <label for="user">الاستماره</label>
                             </div>
                         </div>
                         <div class="col-sm-12 mb-2">
                             <div class="input-floating-label mb-0">
-                                <select class="form-control" style="width: 100%" (change)="onSelectMessage($event)">
-                                    <option selected disabled value="0" id="messageType" name="messageType">
+                                <select class="form-control" style="width: 100%" name="messageType"
+                                    (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0">
                                         --اختار الرساله--
                                     </option>
-                                    <option *ngFor="let message of messages" value="{{message.Id}}">{{message.arName}}</option>
+                                    <option *ngFor="let message of messages" [value]="message.Id">{{message.arName}}
+                                    </option>
                                 </select>
                                 <label for="user">الرسالة</label>
                             </div>
                         </div>
                         <div class="col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة" [value]="selectedMessage?.arSubject || ''"/>
+                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة"
+                                [value]="selectedMessage?.arSubject || ''" readonly />
                         </div>
                         <div class="col-sm-12 mb-2">
-                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة">{{ selectedMessage?.arDetails || '' }}</textarea>
+                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"
+                                readonly>{{ selectedMessage?.arDetails || '' }}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer pt-0" style="border-top: none">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
                         إلغاء
                     </button>
-                    <button type="button" class="btn btn-save">إرسال</button>
+                    <button (click)="onSubmit()" type="button" class="btn btn-save">إرسال</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>

@@ -54,3 +54,10 @@ export interface IGetActivitiesDto {
     arName : string,
     enName : string,
 }
+export interface SendCompanyFormsDto {
+    companiesIds: number[];
+    formId: number;
+    messageId: number;
+    emailTitle: string;
+    emailBody: string;
+  }

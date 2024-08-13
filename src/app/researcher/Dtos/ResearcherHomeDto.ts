@@ -24,3 +24,4 @@ export interface IResearcher {
     compRegNumber: number,
     companies : ICompany[]
 }
+

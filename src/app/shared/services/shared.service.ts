@@ -36,7 +36,7 @@ export class SharedService {
               icon: 'error',
               title: err.error.Errors[0],
               showConfirmButton: false,
-              timer: 1500
+              timer: 2000
             });
           }
           else{

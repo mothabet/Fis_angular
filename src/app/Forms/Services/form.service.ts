@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAddForm } from '../Dtos/FormDto';
+import { IAddForm, SendCompanyFormsDto } from '../Dtos/FormDto';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -32,7 +32,6 @@ export class FormService {
    }
 
    GetActivities(){
-    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?lang=2`,{ headers });
      return resopnse;
@@ -100,4 +99,9 @@ export class FormService {
      var resopnse = this.http.put(environment.apiUrl+`FormContent/UpdateFormContent?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
+   sendForm(formDto: SendCompanyFormsDto) {
+    const headers = this.sharedService.getHeaders();
+    const response = this.http.post(environment.apiUrl+`Form/SendForm`, formDto, { headers });
+    return response;
+  }
 }

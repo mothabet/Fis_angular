@@ -18,6 +18,7 @@ export class TableWithoutTransComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';
+  isChecked!: boolean;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   countries! : IGetCountriesDto[];
@@ -84,6 +85,7 @@ export class TableWithoutTransComponent {
     this.formServices.GetFormById(id).subscribe(observer);
   }
   addSubCodeRow(code:ICode){
+    debugger
     const subCode:ISubCode={
       arName:'',
       codeId:0,

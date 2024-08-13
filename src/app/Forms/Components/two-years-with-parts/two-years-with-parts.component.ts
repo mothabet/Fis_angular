@@ -16,11 +16,13 @@ export class TwoYearsWithPartsComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';
+  isChecked!: boolean;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
+  selectedValue!: string;
   constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -33,6 +35,11 @@ export class TwoYearsWithPartsComponent {
     this.GetActivites();
     this.GetCountrites();
   }
+  onRadioChange(event: Event, value: string) {
+    this.selectedValue = value;
+    // Handle additional logic if needed
+  }
+
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
@@ -80,6 +87,13 @@ export class TwoYearsWithPartsComponent {
     }
     code.SubCodes.push(subCode);
   }
+  removeSubCodeRow(code: ICode, subCode: ISubCode) {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index > -1) {
+      code.SubCodes.splice(index, 1);
+    }
+  }
+  
   GetActivites() {
     debugger
     const observer = {

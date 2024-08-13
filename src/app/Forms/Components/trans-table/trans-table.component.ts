@@ -17,6 +17,7 @@ export class TransTableComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';
+  isChecked!: boolean;
   table!: IGetTableDto;
   form!:IGetFormDto;
   lastYear = 0;

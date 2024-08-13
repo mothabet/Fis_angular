@@ -16,6 +16,7 @@ import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 export class TableWithPeriodComponent implements OnInit {
   Loader: boolean = false;
   formId: string = '';
+  isChecked!: boolean;
   tableId: string = '';
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
@@ -41,7 +42,10 @@ export class TableWithPeriodComponent implements OnInit {
       subCode.enCountry = selectedCountry.enName;
     }
   }
-
+  getColspan(length: number, type: 'first' | 'second'): number {
+    const halfLength = Math.floor(length / 2);
+    return type === 'first' ? halfLength : halfLength + (length % 2);
+  }
   onEnCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
     if (selectedCountry) {
@@ -91,6 +95,7 @@ export class TableWithPeriodComponent implements OnInit {
     }
   }
   addSubCodeRow(code:ICode){
+    debugger
     const subCode:ISubCode={
       arName:'',
       codeId:0,

@@ -15,6 +15,7 @@ import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 })
 export class OneYearWithPartsComponent {
   Loader: boolean = false;
+  isChecked!: boolean;
   formId: string = '';
   tableId: string = '';
   table!: IGetTableDto;

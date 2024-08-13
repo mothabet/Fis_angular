@@ -41,4 +41,5 @@ export class ResearcherHomeService {
      var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
+   
 }

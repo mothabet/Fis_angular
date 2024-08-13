@@ -28,3 +28,8 @@ table {
     background-color: rgb(202 227 224);
     color: black;
   }
+  /* radio-button.component.css */
+label {
+  position: static;
+}
+
