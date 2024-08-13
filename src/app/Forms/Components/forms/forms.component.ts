@@ -58,7 +58,8 @@ export class FormsComponent implements OnInit {
     Id: 0,
     QuestionCode: '',
     SubCodes: [],
-    TypeId: 0
+    TypeId: 0,
+    Department:''
   }
   Type: number = 0;
   formType: number = 0;

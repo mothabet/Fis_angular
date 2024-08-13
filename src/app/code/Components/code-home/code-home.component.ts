@@ -38,6 +38,7 @@ export class CodeHomeComponent {
   filteredSubCodes: ISubCode[] = [];
   QuestionCode:string='';
   enName:string='';
+  skipOld :number = 0
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
@@ -168,17 +169,17 @@ export class CodeHomeComponent {
     this.add = true;
   }
   GetAllCodes(page: number, textSearch : string = ''): void {
-    
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+        debugger
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.codes = res.Data.getCodeDtos;
+          this.codes = res.Data.getCodesWithSubCodesParents;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
+          this.skipOld = res.Data.skipOld;
           this.resetForm();
         }
         else {
@@ -191,7 +192,7 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(page,textSearch).subscribe(observer);
+    this.codeHomeService.GetAllCodesWithSubCodesPerant(page,textSearch).subscribe(observer);
   }
 
   showAlert(id: number): void {

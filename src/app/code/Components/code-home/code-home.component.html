@@ -31,6 +31,7 @@
         <thead>
           <tr class="t-header">
             <th scope="col">رقم</th>
+            <th class="text-center" scope="col">القسم</th>
             <th class="text-center" scope="col">الرمز</th>
             <th class="text-center" scope="col">الاسم</th>
             <th class="text-center" scope="col">Name</th>
@@ -43,6 +44,7 @@
             <td>
               {{ i + 1 }}
             </td>
+            <td class="text-center">{{ item.Department }}</td>
             <td class="text-center">{{ item.QuestionCode }}</td>
             <td class="text-center">{{ item.arName }}</td>
             <td class="text-center">{{ item.enName }}</td>
