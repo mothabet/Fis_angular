@@ -1,42 +1,37 @@
-import { Component, Input, Renderer2 } from '@angular/core';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
-import { IGetTableDto } from '../../Dtos/TableDto';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormService } from '../../Services/form.service';
-import { SharedService } from 'src/app/shared/services/shared.service';
-import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
+import { FormService } from 'src/app/Forms/Services/form.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
-  selector: 'app-quarter-table',
-  templateUrl: './quarter-table.component.html',
-  styleUrls: ['./quarter-table.component.css']
+  selector: 'app-shared-table-with-period',
+  templateUrl: './shared-table-with-period.component.html',
+  styleUrls: ['./shared-table-with-period.component.css']
 })
-export class QuarterTableComponent {
+export class SharedTableWithPeriodComponent {
   Loader: boolean = false;
+  isChecked!: boolean;
   @Input() formId!: string;
   @Input() tableId!: string;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
-  tablePartsCount = 0;
+  years: number[] = [];
+  formYear : string = '';
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-
-
+  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+    
+    
   }
   ngOnInit(): void {
-    
-    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
-  }
-  ngAfterViewInit(): void {
-    this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
@@ -44,7 +39,10 @@ export class QuarterTableComponent {
       subCode.enCountry = selectedCountry.enName;
     }
   }
-
+  getColspan(length: number, type: 'first' | 'second'): number {
+    const halfLength = Math.floor(length / 2);
+    return type === 'first' ? halfLength : halfLength + (length % 2);
+  }
   onEnCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
     if (selectedCountry) {
@@ -55,16 +53,14 @@ export class QuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
-          this.tablePartsCount = this.table.tableParts.length
         }
+        console.log(this.table)
       },
       error: (err: any) => {
-        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -76,12 +72,11 @@ export class QuarterTableComponent {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
-        debugger
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
-          this.modifyInputById(this.coverForm.typeQuarter);
-
+          this.formYear = this.coverForm.reviewYear;
+          this.generateYearsList();
         }
       },
       error: (err: any) => {
@@ -91,28 +86,25 @@ export class QuarterTableComponent {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  modifyInputById(id: number): void {
-    const inputs = document.getElementsByClassName('quarter' + id) as HTMLCollectionOf<HTMLInputElement>;
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i];
-      input.style.backgroundColor = 'rgb(202 227 224)';
-      input.style.color = 'black';
-      input.disabled = false;
+  generateYearsList(): void {
+    for (let i = 0; i < 5; i++) {
+      this.years.push(+this.formYear + i);
     }
   }
-  addSubCodeRow(code: ICode) {
-    const subCode: ISubCode = {
-      arName: '',
-      codeId: 0,
-      enName: '',
-      Id: 0,
-      QuestionCode: '',
+  addSubCodeRow(code:ICode){
+    debugger
+    const subCode:ISubCode={
+      arName:'',
+      codeId:0,
+      enName:'',
+      Id:0,
+      QuestionCode:'',
       subCodes:[]
     }
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    
+    debugger
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -123,7 +115,7 @@ export class QuarterTableComponent {
         }
       },
       error: (err: any) => {
-        
+        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -147,4 +139,5 @@ export class QuarterTableComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
+
 }

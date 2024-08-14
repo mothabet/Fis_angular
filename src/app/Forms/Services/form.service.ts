@@ -93,6 +93,11 @@ export class FormService {
      var resopnse = this.http.get(environment.apiUrl+`FormContent/GetFormContentById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
+   GetCompanyForms(id:number , pageType:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Form/GetCompanyForms?companyId=${id}&lang=2&pageType=${pageType}`, { headers });
+     return resopnse;
+   }
    UpdateFormContent(id:number,Model: IAddQuestion){
     
     var headers= this.sharedService.getHeaders();

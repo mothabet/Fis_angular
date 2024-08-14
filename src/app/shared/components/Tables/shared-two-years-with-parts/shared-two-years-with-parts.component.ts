@@ -6,6 +6,7 @@ import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+
 @Component({
   selector: 'app-shared-two-years-with-parts',
   templateUrl: './shared-two-years-with-parts.component.html',
@@ -27,6 +28,8 @@ export class SharedTwoYearsWithPartsComponent {
 
   }
   ngOnInit(): void {
+    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -80,7 +83,8 @@ export class SharedTwoYearsWithPartsComponent {
       codeId: 0,
       enName: '',
       Id: 0,
-      QuestionCode: ''
+      QuestionCode: '',
+      subCodes:[]
     }
     code.SubCodes.push(subCode);
   }
@@ -140,5 +144,4 @@ export class SharedTwoYearsWithPartsComponent {
       subCode.arCountry = selectedCountry.arName;
     }
   }
-
 }
