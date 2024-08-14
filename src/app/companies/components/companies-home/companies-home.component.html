@@ -429,7 +429,7 @@
                 <div *ngFor="let email of compEmails.controls; let i = index" class="col-6 mb-2" [formGroupName]="i">
                   <div class="d-flex align-items-center">
                     <input formControlName="Email" class="form-control input-modal me-2" type="email" placeholder="البريد الإلكتروني">
-                    <button class="icon btn btn-danger text-white" (click)="removeEmailField(i)">
+                    <button class="icon btn text-white" (click)="removeEmailField(i)">
                       <img src="../../../../assets/images/trash-can-outline.png" alt="">
                     </button>
                   </div>

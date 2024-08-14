@@ -3,7 +3,7 @@ import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { IAddCompany, ICompaniesPDF, ICompany, } from '../../Dtos/CompanyHomeDto';
+import { IAddCompany, ICompaniesPDF, ICompany, ICompanyEmail, } from '../../Dtos/CompanyHomeDto';
 import { IDropdownList } from '../../Dtos/SharedDto';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
@@ -191,6 +191,7 @@ export class CompaniesHomeComponent implements OnInit {
         debugger
         this.showLoader = false;
         if (res.Data) {
+          debugger
           this.companies = res.Data.getCompaniesDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
@@ -594,6 +595,7 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
+          debugger
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
           this.GetWilayat(this.company.governoratesId)
           this.onWilayaChange();
@@ -603,7 +605,6 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            debugger
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -630,6 +631,8 @@ export class CompaniesHomeComponent implements OnInit {
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
             });
+            this.initializeForm();
+
           }
           debugger
           this.id = id;
@@ -643,6 +646,23 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetCompanyById(id).subscribe(observer);
   }
+  // Method to initialize the form array
+initializeForm() {
+  // Initialize the form array with non-empty emails
+  this.company.companyEmails
+    .filter((emailObj: ICompanyEmail) => emailObj.Email)  // Filter out empty emails
+    .forEach((emailObj: ICompanyEmail) => {
+      this.compEmails.push(this.formBuilder.group({ Email: [emailObj.Email] }));
+    });
+
+  // Remove the initial empty input if it exists
+  if (this.compEmails.length > 0 && !this.compEmails.at(0).get('Email')?.value) {
+    this.compEmails.removeAt(0);
+  }
+}
+
+// Call this method when you need to initialize the form
+
   updateCompany() {
     this.showLoader = true;
     if (this.companyForm.valid) {
