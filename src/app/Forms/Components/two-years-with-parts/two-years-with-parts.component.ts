@@ -16,7 +16,6 @@ export class TwoYearsWithPartsComponent {
   Loader: boolean = false;
   formId: string = '';
   tableId: string = '';
-  isChecked!: boolean;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;

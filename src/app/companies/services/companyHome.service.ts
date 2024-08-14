@@ -73,6 +73,11 @@ export class CompanyHomeService {
      var response = this.http.get(environment.apiUrl+`Pdf/GetPdf?id=${id}`, { headers });
      return response;
    }
+   GetCompanyByUserId(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Company/GetCompanyByUserId?id=${id}`, { headers });
+     return response;
+   }
    UpdateCompany(id:number,Model: IAddCompany){
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });

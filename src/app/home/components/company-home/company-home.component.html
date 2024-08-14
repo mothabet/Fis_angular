@@ -8,26 +8,25 @@
                 استماره 2022
             </div>
             <div class="btns d-flex">
-                <div class="search">
-                    <input class="form-control" type="text" name="search" placeholder="البحث">
-                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
-                </div>
-                <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
-                <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
                     <img src="./images/printer-outline.png" alt="">
                     طباعة pdf
                 </button>
-                <button type="button" class="btn btn-download">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-download">
                     <img src="./images/file-excel-outline.png" alt="">
                     تنزيل xls
                 </button>
-                <button type="button" class="btn btn-save">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-save">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
+                <label *ngIf="role == 'Researcher'" >
+                    الحالة
+                </label>
                 <button type="button" class="btn btn-accept">
                     موافقة
                 </button>
@@ -36,9 +35,7 @@
                 </button>
             </div>
         </div>
-
-
-
+        <app-shared-work-data [formId]="formId"></app-shared-work-data>
         <!-- start footer -->
         <footer class="projection-notes d-flex flex-wrap my-3 card-box">
             <p class="ar flex-fill">
@@ -50,7 +47,6 @@
         </footer>
         <!-- end footer -->
     </div>
-
     <!-- start modal -->
     <div class="modal company-modal fade" id="addNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">

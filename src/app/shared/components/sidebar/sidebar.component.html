@@ -35,13 +35,13 @@
           <span class="">الرئيسية</span>
         </a>
       </li>
-      <li class="sidebar-item"  routerLink="/CompanyHome" routerLinkActive="active" *ngIf="role === 'Company'">
+      <li class="sidebar-item"  routerLink="/CompanyHome" routerLinkActive="active" *ngIf="role === 'Company' || role === 'Researcher'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
         </a>
       </li>
-      <li class="sidebar-item"  routerLink="/PrevForm" routerLinkActive="active" *ngIf="role === 'Company'">
+      <li class="sidebar-item"  routerLink="/PrevForm" routerLinkActive="active" *ngIf="role === 'Company' || role === 'Researcher'">
         <a class="sidebar-link">
           <i class="fa-solid fa-file-lines icon"></i>
           <span class="">الاستمارات السابقه</span>

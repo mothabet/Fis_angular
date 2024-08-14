@@ -1,19 +1,18 @@
 import { Component, Input, Renderer2 } from '@angular/core';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
-import { IGetTableDto } from '../../Dtos/TableDto';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormService } from '../../Services/form.service';
-import { SharedService } from 'src/app/shared/services/shared.service';
-import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
+import { FormService } from 'src/app/Forms/Services/form.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
-  selector: 'app-quarter-table',
-  templateUrl: './quarter-table.component.html',
-  styleUrls: ['./quarter-table.component.css']
+  selector: 'app-shared-quarter-table',
+  templateUrl: './shared-quarter-table.component.html',
+  styleUrls: ['./shared-quarter-table.component.css']
 })
-export class QuarterTableComponent {
+export class SharedQuarterTableComponent {
   Loader: boolean = false;
   @Input() formId!: string;
   @Input() tableId!: string;
@@ -147,4 +146,5 @@ export class QuarterTableComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
+
 }
