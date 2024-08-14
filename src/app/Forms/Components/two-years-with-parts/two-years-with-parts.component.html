@@ -77,113 +77,135 @@
                                         {{formContent.code.enName}}</td>
                                 </tr>
                                 <ng-container>
-                                    <tr *ngFor="let subCode of formContent.code.SubCodes">
-                                        <td *ngIf="formContent.code.TypeId == 1"
-                                            style="text-wrap: balance; text-align: center !important;color: #00af9d;">
-                                            {{subCode.arName}}</td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                            <select class="form-control"
-                                                style="width: 100% !important; text-align:center">
-                                                <option value="0">اختيار نشاط--</option>
-                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                    {{activity.arName}}</option>
-                                            </select>
-                                            <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                    <ng-container *ngFor="let subCode of formContent.code.SubCodes">
+                                        <tr>
+                                            <td *ngIf="formContent.code.TypeId == 1"
+                                                style="text-wrap: balance; text-align: right !important;color: #133c8b; padding-right: 25px !important;">
+                                               - {{subCode.arName}}</td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                                <select class="form-control"
+                                                    style="width: 100% !important; text-align:center">
+                                                    <option value="0">اختيار نشاط--</option>
+                                                    <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                        {{activity.arName}}</option>
+                                                </select>
+                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"
                                                 (click)="addSubCodeRow(formContent.code)">
                                                 <img src=".././../../../assets/images/trash-can-outline.png"
                                                     class="img-fluid">
                                             </button> -->
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                            <div style="display: flex;">
-                                                <select class="form-control" [(ngModel)]="subCode.arName"
-                                                    (ngModelChange)="onArCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center;margin: 5px;">
-                                                    <option value="">اختيار مصدر المال--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.arName">
-                                                        {{country.arName}}</option>
-                                                </select>
-                                                <select class="form-control" [(ngModel)]="subCode.enName"
-                                                    (ngModelChange)="onEnCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center">
-                                                    <option value="">اختيار جنسية المستثمر--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.enName">
-                                                        {{ country.arName }}
-                                                    </option>
-                                                </select>
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                            </td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                                <div style="display: flex;">
+                                                    <select class="form-control" [(ngModel)]="subCode.arName"
+                                                        (ngModelChange)="onArCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center;margin: 5px;">
+                                                        <option value="">اختيار مصدر المال--</option>
+                                                        <option *ngFor="let country of countries"
+                                                            [value]="country.arName">
+                                                            {{country.arName}}</option>
+                                                    </select>
+                                                    <select class="form-control" [(ngModel)]="subCode.enName"
+                                                        (ngModelChange)="onEnCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center">
+                                                        <option value="">اختيار جنسية المستثمر--</option>
+                                                        <option *ngFor="let country of countries"
+                                                            [value]="country.enName">
+                                                            {{ country.arName }}
+                                                        </option>
+                                                    </select>
+                                                    <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                     style="background-color: white; border-radius: 5px;margin: 10px;"
                                                     (click)="addSubCodeRow(formContent.code)">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
                                                 </button> -->
-                                            </div>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 5">
-                                            <div style="display: flex;justify-content: center;">
-                                                <input type="text" style="width: 300px !important;" />
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                </div>
+                                            </td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 5">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <input type="text" style="width: 300px !important;" />
+                                                    <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                     style="background-color: white; border-radius: 5px;margin: 10px;"
                                                     (click)="addSubCodeRow(formContent.code)">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
                                                 </button> -->
-                                            </div>
+                                                </div>
 
-                                        </td>
-                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                                type="number" placeholder="0" /></td>
-                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                                type="number" placeholder="0" /></td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4">
-                                            <input disabled type="text" value="{{subCode.QuestionCode}}" />
-                                        </td>
-                                        <td class="text-start" *ngIf="formContent.code.TypeId == 1"
-                                            style="text-wrap: balance; text-align: center !important; color: #00af9d;">
-                                            {{subCode.enName}}</td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                            <select class="form-control"
-                                                style="width: 100% !important; text-align:center">
-                                                <option value="0">Choose Activity --</option>
-                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                    {{activity.enName}}</option>
-                                            </select>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                            <div style="display: flex;">
-                                                <select class="form-control" [(ngModel)]="subCode.arName"
-                                                    (ngModelChange)="onArCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center;margin: 5px;">
-                                                    <option value="">Choose Source of money--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.arName">
-                                                        {{country.enName}}</option>
+                                            </td>
+                                            <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                    type="number" placeholder="0" /></td>
+                                            <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                    type="number" placeholder="0" /></td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId != 4">
+                                                <input disabled type="text" value="{{subCode.QuestionCode}}" />
+                                            </td>
+                                            <td class="text-start" *ngIf="formContent.code.TypeId == 1"
+                                            style="text-wrap: balance; text-align: left !important;color: #133c8b; padding-left: 25px !important;">
+                                                {{subCode.enName}} -</td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                                <select class="form-control"
+                                                    style="width: 100% !important; text-align:center">
+                                                    <option value="0">Choose Activity --</option>
+                                                    <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                        {{activity.enName}}</option>
                                                 </select>
-                                                <select class="form-control" [(ngModel)]="subCode.enName"
-                                                    (ngModelChange)="onEnCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center">
-                                                    <option value="">Choose Investor Nationality--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.enName">
-                                                        {{ country.enName }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </td>
+                                            </td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                                <div style="display: flex;">
+                                                    <select class="form-control" [(ngModel)]="subCode.arName"
+                                                        (ngModelChange)="onArCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center;margin: 5px;">
+                                                        <option value="">Choose Source of money--</option>
+                                                        <option *ngFor="let country of countries"
+                                                            [value]="country.arName">
+                                                            {{country.enName}}</option>
+                                                    </select>
+                                                    <select class="form-control" [(ngModel)]="subCode.enName"
+                                                        (ngModelChange)="onEnCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center">
+                                                        <option value="">Choose Investor Nationality--</option>
+                                                        <option *ngFor="let country of countries"
+                                                            [value]="country.enName">
+                                                            {{ country.enName }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
 
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 5">
-                                            <div style="display: flex;justify-content: center;">
-                                                <input type="text" style="width: 300px !important;" />
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 5">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <input type="text" style="width: 300px !important;" />
 
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                    <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                     style="background-color: white; border-radius: 5px;margin: 10px;"
                                                     (click)="addSubCodeRow(formContent.code)">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
                                                 </button> -->
-                                            </div>
+                                                </div>
 
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                        <ng-container *ngFor="let _subCode of subCode.subCodes">
+                                            <tr *ngIf="formContent.code.TypeId == 1">
+                                                <td class="text-start"  style="text-wrap: balance; text-align: right !important;color: #00af9d; padding-right: 40px !important;">
+                                                   => {{_subCode.arName}}
+                                                </td>
+                                                <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                        type="number" placeholder="0" /></td>
+                                                <td *ngFor="let part of table.tableParts" class="text-center"><input
+                                                        type="number" placeholder="0" /></td>
+                                                        <td class="text-center">
+                                                            <input disabled type="text" value="{{subCode.QuestionCode}}" />
+                                                <td class="text-start"
+                                                style="text-wrap: balance; text-align: left !important;color: #00af9d; padding-left: 40px !important;">
+                                                    {{_subCode.enName}} <=</td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-container>
                                 </ng-container>
                             </ng-container>
                         </tbody>

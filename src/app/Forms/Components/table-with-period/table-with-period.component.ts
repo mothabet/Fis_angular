@@ -101,7 +101,8 @@ export class TableWithPeriodComponent implements OnInit {
       codeId:0,
       enName:'',
       Id:0,
-      QuestionCode:''
+      QuestionCode:'',
+      subCodes:[]
     }
     code.SubCodes.push(subCode);
   }
