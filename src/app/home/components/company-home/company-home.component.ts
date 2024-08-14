@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -14,8 +15,11 @@ export class CompanyHomeComponent implements OnInit{
   Loader = false;
   companyId!:number;
   formId!:string;
+  coverForm!: any[];
+  tableId!:string;
   constructor(private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
-
+        this.formId = '203'
+        this.tableId = '59'
   }
   ngOnInit(): void {
     this.Loader = true;
@@ -27,7 +31,6 @@ export class CompanyHomeComponent implements OnInit{
     this.role = result.roles;
     const observer = {
       next: (res: any) => {
-        debugger
         this.companyId = res.Data;
         this.GetCompanyForms();
       },
@@ -40,11 +43,12 @@ export class CompanyHomeComponent implements OnInit{
   
   }
   GetCompanyForms(){
-    debugger
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
-        this.formId = '205';
+        this.coverForm = res.Data
+        
       },
       error: (err: any) => {
         debugger

@@ -12,7 +12,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 })
 export class SharedWorkDataComponent implements OnInit{
   @Input() formId!: string;
-  coverForm!: ICoverFormDetailsDto;
+  @Input() coverForm!: ICoverFormDetailsDto;
   Loader: boolean = false;
   isWorkDataActive:boolean = false;
   workData: IWorkDataQuesDto[] = [
@@ -45,8 +45,7 @@ export class SharedWorkDataComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    debugger
-    this.GetFormById(+this.formId);
+    this.GetFormById(+this.formId)
     this.isWorkDataActive = true;
   }
   

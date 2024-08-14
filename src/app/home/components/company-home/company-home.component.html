@@ -1,6 +1,23 @@
 <div class="main-content p-4 main card " style="flex: 1;">
     <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
-
+    <!-- <div class="header d-flex card-box">
+        <div class="title" >
+            
+        </div>
+    </div> -->
+    <div class="companies-details form-details prev-form">
+        <div class="header-nav" style="margin-bottom: -10px;">
+            <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
+                <ul class="links">
+                    <li class="active" *ngFor="let _form of coverForm">
+                        <a href="./form-details.html">{{_form.form.arName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
     <!-- start content -->
     <div class="companies user-home">
         <div class="header d-flex card-box">
@@ -8,11 +25,13 @@
                 استماره 2022
             </div>
             <div class="btns d-flex">
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-send" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal"
+                    data-bs-target="#addCompany">
                     <img src="./images/printer-outline.png" alt="">
                     طباعة pdf
                 </button>
@@ -24,7 +43,7 @@
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <label *ngIf="role == 'Researcher'" >
+                <label *ngIf="role == 'Researcher'">
                     الحالة
                 </label>
                 <button type="button" class="btn btn-accept">
@@ -35,7 +54,8 @@
                 </button>
             </div>
         </div>
-        <app-shared-work-data [formId]="formId"></app-shared-work-data>
+        <app-shared-two-years-with-parts [formId]="formId" [tableId]="tableId"></app-shared-two-years-with-parts>
+        <app-shared-one-year-with-parts [formId]="formId" [tableId]="tableId"></app-shared-one-year-with-parts>
         <!-- start footer -->
         <footer class="projection-notes d-flex flex-wrap my-3 card-box">
             <p class="ar flex-fill">

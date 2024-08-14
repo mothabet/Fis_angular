@@ -45,7 +45,6 @@ export class LoginService {
     return token;
   }
   decodedToken(token: string): any {
-    debugger
     if (token) {
       const decodedToken = jwtDecode(token);
       // Log the decoded data
@@ -83,7 +82,18 @@ export class LoginService {
 
   isCompanyRoute(url: string): boolean {
     const companyRoutes = [
-      'CompanyHome', 'PrevForm'
+      'CompanyHome', 'PrevForm','Certification', 
+      'WorkData', 
+      'QuarterTable', 
+      'QuarterFormCover', 
+      'TransTable', 
+      'PeriodTable', 
+      'TableWithoutTrans', 
+      'OneYearWithParts', 
+      'TwoYearsWithParts', 
+      'FormDetails',
+      'Companies-Details',
+      'SharedTwoYearsWithParts'
     ];
     return companyRoutes.includes(url);
   }
