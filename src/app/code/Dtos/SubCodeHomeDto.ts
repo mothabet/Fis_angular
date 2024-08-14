@@ -10,5 +10,5 @@ export interface ISubCode{
     enName: string,
     QuestionCode:string,
     codeId :number
-    // subCodes:ISubCode[]
+    subCodes:ISubCode[]
 }

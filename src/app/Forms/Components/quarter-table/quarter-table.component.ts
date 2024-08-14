@@ -106,7 +106,8 @@ export class QuarterTableComponent {
       codeId: 0,
       enName: '',
       Id: 0,
-      QuestionCode: ''
+      QuestionCode: '',
+      subCodes:[]
     }
     code.SubCodes.push(subCode);
   }
