@@ -141,6 +141,8 @@
   tabindex="-1"
   aria-labelledby="add"
   aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
 >
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
@@ -451,6 +453,7 @@
             class="btn btn-cancel"
             data-bs-dismiss="modal"
             id="btnCancel"
+            (click)="resetFormWithAdd()"
           >
             إلغاء
           </button>
