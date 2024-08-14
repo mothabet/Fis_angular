@@ -46,7 +46,7 @@ export class CompaniesHomeComponent implements OnInit {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  tableColumns = ['رقم الهاتف','عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
+  tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
@@ -75,29 +75,42 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: [0],
       governoratesId: [0],
       wilayatId: [0],
-      // compEmails: this.formBuilder.array([
-      //   this.formBuilder.group({
-      //     Email: ['', [Validators.required, Validators.email]]
-      //   })
-      // ])
+      compEmails: this.formBuilder.array([this.createEmailField()])
     });
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username
   }
+  // Getter for the form array
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;
+  }
+  get isAddButtonDisabled(): boolean {
+    return this.compEmails.controls.every(control => !control.value.Email);
+  }
+  // Method to create an email field
+  createEmailField(): FormGroup {
+    return this.formBuilder.group({
+      Email: ['', [Validators.required, Validators.email]]
+    });
+  }
+
+  // Method to add a new email field
+  addEmailField(): void {
+    this.compEmails.push(this.createEmailField());
+  }
+
+  // Method to remove an email field by index
+  removeEmailField(index: number): void {
+    if (this.compEmails.length > 1) {
+      this.compEmails.removeAt(index);
+    }
   }
   onPageChange(page: number) {
     debugger
     this.currentPage = page;
     this.GetCompanies('', page);
   }
-  addEmail(): void {
-    this.compEmails.push(this.formBuilder.control('', [Validators.required, Validators.email]));
-  }
-  removeEmail(): void {
-    this.compEmails.removeAt(this.compEmails.length - 1)
-  }
+
   GetSectorActvities(sectorId: number) {
     const observer = {
       next: (res: any) => {
@@ -347,7 +360,13 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
-    if(this.companyForm.value.subActivityId == 0){
+    debugger
+    // Validate that at least one email is provided
+    const emailArray = this.companyForm.value.compEmails;
+    const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
+
+
+    if (this.companyForm.value.subActivityId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب اختيار النشاط الثانوي',
@@ -355,7 +374,7 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
-    else if(this.companyForm.value.sectorId == 0){
+    else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب القطاع',
@@ -363,7 +382,7 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
-    else if(this.companyForm.value.activityId == 0){
+    else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب النشاط الرئيسي',
@@ -371,7 +390,7 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
-    else if(this.companyForm.value.governoratesId == 0){
+    else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب رقم المنطقه',
@@ -379,7 +398,7 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
-    else if(this.companyForm.value.wilayatId == 0){
+    else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب رقم الولايه',
@@ -387,7 +406,17 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
+    else if (!emailProvided) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب إدخال بريد إلكتروني واحد على الأقل',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      return; // Stop the form submission
+    }
     else if (this.companyForm.valid) {
+      debugger
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -413,12 +442,12 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        companyEmails: this.companyForm.value.companyEmails
+        companyEmails: this.companyForm.value.compEmails
       }
-      debugger
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
+          debugger
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -428,9 +457,9 @@ export class CompaniesHomeComponent implements OnInit {
           this.showLoader = false;
         },
         error: (err: any) => {
-          this.showLoader =false;
+          this.showLoader = false;
           this.sharedService.handleError(err);
-          
+
         },
       };
       this.companyHomeServices.addCompany(Model).subscribe(observer);
@@ -481,8 +510,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetSectors();
     this.GetGovernorates();
     this.generateRandomCredentials();
-    if (this.add)
-    {
+    if (this.add) {
       this.GetCompanyCode();
       this.resetForm();
     }
@@ -758,8 +786,7 @@ export class CompaniesHomeComponent implements OnInit {
       id: company.id
     }));
   }
-  closePopup()
-  {
+  closePopup() {
     this.add = true;
     this.resetForm();
   }

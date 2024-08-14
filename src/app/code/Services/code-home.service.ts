@@ -32,9 +32,9 @@ export class CodeHomeService {
      var resopnse = this.http.delete(environment.apiUrl+`Code/DeleteCode?id=${id}&department=${Department}&lang=2`, { headers });
      return resopnse;
    }
-   GetCodeById(id:number){
+   GetCodeById(id:number,Department:string){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&lang=2`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Code/GetCodeById?id=${id}&department=${Department}&lang=2`, { headers });
      return resopnse;
    }
    UpdateCode(id:number,Model: IAddCode){

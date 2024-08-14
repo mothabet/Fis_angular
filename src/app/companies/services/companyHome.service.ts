@@ -51,6 +51,7 @@ export class CompanyHomeService {
     return response;
   }
   addCompany(Model: IAddCompany) {
+    debugger
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Company/AddCompany`, Model, { headers });
     return response;

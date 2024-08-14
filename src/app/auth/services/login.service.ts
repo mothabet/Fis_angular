@@ -45,7 +45,6 @@ export class LoginService {
     return token;
   }
   decodedToken(token: string): any {
-    debugger
     if (token) {
       const decodedToken = jwtDecode(token);
       // Log the decoded data
