@@ -25,6 +25,7 @@ import { WorkDataComponent } from './Forms/Components/work-data/work-data.compon
 import { CertificationComponent } from './Forms/Components/certification/certification.component';
 import { CompanyHomeComponent } from './home/components/company-home/company-home.component';
 import { PrevFormComponent } from './Forms/Components/prev-form/prev-form.component';
+import { SharedTwoYearsWithPartsComponent } from './shared/components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 
 const routes: Routes = [
   { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },

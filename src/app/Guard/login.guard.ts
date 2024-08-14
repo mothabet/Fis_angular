@@ -10,23 +10,23 @@ export class LoginGuard {
 
   canActivate(route: any): boolean {
     const isLoggedIn = this.authService.getToken();
+    debugger
     if (isLoggedIn != "") {
       let res = this.authService.decodedToken(isLoggedIn);  
       const role = res.roles;
       const url: string = route.url[0].path;
-debugger
-      if (role === 'Admin' && this.authService.isAdminRoute(url)) {
+      if (role === 'Company' ||role === 'Admin' && this.authService.isAdminRoute(url)) {
         return true;
       } 
-      else if (role === 'Admin' && !(this.authService.isAdminRoute(url))) {
+      else if (role === 'Company' ||role === 'Admin' && !(this.authService.isAdminRoute(url))) {
         this.router.navigate(['/Home']);
         return true;
       } 
-      else if ((role === 'Company' || role === 'Researcher') && !(this.authService.isCompanyRoute(url))) {
+      else if ((role === 'Company' || role === 'Researchers') && !(this.authService.isCompanyRoute(url))) {
         this.router.navigate(['/CompanyHome']);
         return true;
       } 
-      else if ((role === 'Company' || role === 'Researcher') && this.authService.isCompanyRoute(url)) {
+      else if ((role === 'Company' || role === 'Researchers') && this.authService.isCompanyRoute(url)) {
         return true;
       } 
       

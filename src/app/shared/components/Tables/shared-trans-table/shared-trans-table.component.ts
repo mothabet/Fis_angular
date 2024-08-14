@@ -18,7 +18,7 @@ export class SharedTransTableComponent {
   @Input() tableId!: string;
   isChecked!: boolean;
   table!: IGetTableDto;
-  form!:IGetFormDto;
+  form!:ICoverFormDetailsDto;
   lastYear = 0;
   nextYear = 0;
   transaction = 0;

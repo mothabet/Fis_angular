@@ -28,8 +28,6 @@ export class SharedTwoYearsWithPartsComponent {
 
   }
   ngOnInit(): void {
-    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();

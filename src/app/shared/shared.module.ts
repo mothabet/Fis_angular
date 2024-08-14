@@ -10,13 +10,14 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { NavigateTablesTypesComponent } from './components/navigate-tables-types/navigate-tables-types.component';
 import { NgxEditorModule } from 'ngx-editor';
-import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 import { SharedTransTableComponent } from './components/Tables/shared-trans-table/shared-trans-table.component';
 import { SharedTableWithoutTransComponent } from './components/Tables/shared-table-without-trans/shared-table-without-trans.component';
 import { SharedTableWithPeriodComponent } from './components/Tables/shared-table-with-period/shared-table-with-period.component';
 import { SharedQuarterTableComponent } from './components/Tables/shared-quarter-table/shared-quarter-table.component';
 import { SharedWorkDataComponent } from './components/Tables/shared-work-data/shared-work-data.component';
 import { SharedOneYearWithPartsComponent } from './components/Tables/shared-one-year-with-parts/shared-one-year-with-parts.component';
+import { SharedFormCoverComponent } from './components/Tables/shared-form-cover/shared-form-cover.component';
+import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { SharedOneYearWithPartsComponent } from './components/Tables/shared-one-
     SharedQuarterTableComponent,
     SharedWorkDataComponent,
     SharedOneYearWithPartsComponent,
+    SharedFormCoverComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +45,7 @@ import { SharedOneYearWithPartsComponent } from './components/Tables/shared-one-
     FormsModule
   ],
   exports: [
+    SharedFormCoverComponent,
     SharedTransTableComponent,
     SharedTableWithoutTransComponent,
     SharedTableWithPeriodComponent,
