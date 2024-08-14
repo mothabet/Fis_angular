@@ -1187,7 +1187,7 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.codeService.GetCodeById(Number(id)).subscribe(observer);
+    this.codeService.GetCodeById(Number(id),"").subscribe(observer);
   }
   getControlErrors(controlName: string): string[] {
     const control = this.formForm.get(controlName);

@@ -262,7 +262,7 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetCodeById(id).subscribe(observer);
+    this.codeHomeService.GetCodeById(id,Department??"").subscribe(observer);
   }
   updateCode() {
     this.showLoader = true;

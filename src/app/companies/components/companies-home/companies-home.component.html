@@ -424,27 +424,25 @@
               />
               <label for="inputField">النوع القانوني</label>
             </div>
-            <!-- <div class="col-sm-12 mb-2 d-flex flex-column" style="gap: 8px;">
-                            <div formArrayName="compEmails" class="row mb-4">
-                                <div *ngFor="let emailControl of compEmails.controls; let i = index" [formGroupName]="i"
-                                    class="col-6 mb-2">
-                                    <input formControlName="Email" class="form-control input-modal" type="email"
-                                        placeholder="البريد الإلكتروني">
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2">
-                                <button *ngIf="compEmails.length > 1" type="button" class="btn btn-add mx-2"
-                                    (click)="removeEmail()" style="min-width: 90px;">
-                                    إزالة
-                                    <img src="./images/plus-circle-outline.png" alt="">
-                                </button>
-                                <button type="button" class="btn btn-add" (click)="addEmail()" style="min-width: 90px;">
-                                    أضف
-                                    <img src="./images/plus-circle-outline.png" alt="">
-                                </button>
-
-                            </div>
-                        </div> -->
+            <div class="col-sm-12 mb-2">
+              <div formArrayName="compEmails" class="row mb-4">
+                <div *ngFor="let email of compEmails.controls; let i = index" class="col-6 mb-2" [formGroupName]="i">
+                  <div class="d-flex align-items-center">
+                    <input formControlName="Email" class="form-control input-modal me-2" type="email" placeholder="البريد الإلكتروني">
+                    <button class="icon btn text-white" (click)="removeEmailField(i)">
+                      <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-add" style="min-width: 90px;" (click)="addEmailField()" [disabled]="isAddButtonDisabled">
+                  أضف
+                  <img src="../../../../assets/images/plus-circle-outline.png" alt="">
+                </button>
+              </div>
+            </div>
+            
           </div>
         </div>
         <div class="modal-footer pt-0" style="border-top: none">
