@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { FormService } from '../../Services/form.service';
+import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IGetTableDto } from '../../Dtos/TableDto';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
-
+import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { FormService } from 'src/app/Forms/Services/form.service';
 @Component({
-  selector: 'app-two-years-with-parts',
-  templateUrl: './two-years-with-parts.component.html',
-  styleUrls: ['./two-years-with-parts.component.css']
+  selector: 'app-shared-two-years-with-parts',
+  templateUrl: './shared-two-years-with-parts.component.html',
+  styleUrls: ['./shared-two-years-with-parts.component.css']
 })
-export class TwoYearsWithPartsComponent {
+export class SharedTwoYearsWithPartsComponent {
+  @Input() formId!: string;
+  @Input() tableId!: string;
   Loader: boolean = false;
-  formId: string = '';
-  tableId: string = '';
+  isChecked!: boolean;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
@@ -27,8 +27,6 @@ export class TwoYearsWithPartsComponent {
 
   }
   ngOnInit(): void {
-    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -142,4 +140,5 @@ export class TwoYearsWithPartsComponent {
       subCode.arCountry = selectedCountry.arName;
     }
   }
+
 }

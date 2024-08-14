@@ -10,6 +10,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { NavigateTablesTypesComponent } from './components/navigate-tables-types/navigate-tables-types.component';
 import { NgxEditorModule } from 'ngx-editor';
+import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { NgxEditorModule } from 'ngx-editor';
     TopScreenComponent,
     LoaderComponent,
     PaginationComponent,
-    NavigateTablesTypesComponent
+    NavigateTablesTypesComponent,
+    SharedTwoYearsWithPartsComponent,
   ],
   imports: [
     CommonModule,
@@ -26,8 +28,10 @@ import { NgxEditorModule } from 'ngx-editor';
     ReactiveFormsModule,
     HttpClientModule,
     NgxEditorModule,
+    FormsModule
   ],
   exports: [
+    SharedTwoYearsWithPartsComponent,
     NavigateTablesTypesComponent,
     SidebarComponent,
     TopScreenComponent,
