@@ -70,11 +70,11 @@ export class NavigateTablesTypesComponent implements OnInit {
               console.error('Unknown tableType');
               return;
           }
-          navigationPromise.then(() => {
-            window.location.reload();
-          }).catch((err) => {
-            console.error('Navigation error:', err);
-          });
+          // navigationPromise.then(() => {
+          //   window.location.reload();
+          // }).catch((err) => {
+          //   console.error('Navigation error:', err);
+          // });
         if (res.Data) {
           this.Loader = false;
         }
