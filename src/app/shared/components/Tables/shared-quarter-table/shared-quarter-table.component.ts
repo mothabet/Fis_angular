@@ -146,5 +146,7 @@ export class SharedQuarterTableComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
-
+  inputChange(event:any){
+    console.log(event);
+  }
 }
