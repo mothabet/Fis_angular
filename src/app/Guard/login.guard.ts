@@ -24,7 +24,7 @@ export class LoginGuard {
         return true;
       } 
       else if (role === 'Company' && !(this.authService.isCompanyRoute(url))) {
-        this.router.navigate(['/CompanyHome',res.id]);
+        this.router.navigate(['/CompanyHome',0]);
         return true;
       } 
       else if (role === 'Company' && this.authService.isCompanyRoute(url)) {
