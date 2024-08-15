@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -13,19 +14,25 @@ export class NavigateTablesTypesComponent implements OnInit {
   @Input() isCoverActive: boolean = false;
   @Input() isWorkDataActive: boolean = false;
   @Input() isCertificationActive: boolean = false;
+  @Input() sharedTableType!: number;
   @Output() coverActivated: EventEmitter<void> = new EventEmitter();
   @Output() workDataActivated: EventEmitter<void> = new EventEmitter();
   @Output() certificationActivated: EventEmitter<void> = new EventEmitter();
+  @Output() sharedType: EventEmitter<void> = new EventEmitter();
   Loader: boolean = false;
   tableType!: number;
   formId!: string;
+  role: string = "";
   companyId!: string;
   tableId: number | null = null;
-  constructor(private activeRouter: ActivatedRoute, private sharedServices: SharedService, private formServices: FormService, private router: Router) { }
+  constructor(private authService: LoginService, private activeRouter: ActivatedRoute, private sharedServices: SharedService, private formServices: FormService, private router: Router) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);
+    this.role = result.roles;
     this.tableId = tableIdParam ? +tableIdParam : null;
   }
   TablesNavigation(id: number) {
@@ -33,44 +40,45 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   GetTableById(id: number): void {
     this.Loader = true;
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
         this.tableType = res.Data.Type;
         this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
         let navigationPromise;
-
-        switch (this.tableType) {
-          case 1:
-            navigationPromise = this.router.navigate(['/TransTable', this.formId, id]);
-            break;
-          case 2:
-            navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id]);
-            break;
-          case 3:
-            navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id]);
-            break;
-          case 4:
-            navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id]);
-            break;
-          case 5:
-            navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id]);
-            break;
-          case 0:
-            navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id]);
-            break;
-          default:
-            console.error('Unknown tableType');
-            return;
-        }
+          switch (this.tableType) {
+            case 1:
+              navigationPromise = this.router.navigate(['/TransTable', this.formId, id]);
+              break;
+            case 2:
+              navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id]);
+              break;
+            case 3:
+              navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id]);
+              break;
+            case 4:
+              navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id]);
+              break;
+            case 5:
+              navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id]);
+              break;
+            case 0:
+              navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id]);
+              break;
+            default:
+              console.error('Unknown tableType');
+              return;
+          }
+          navigationPromise.then(() => {
+            window.location.reload();
+          }).catch((err) => {
+            console.error('Navigation error:', err);
+          });
         if (res.Data) {
           this.Loader = false;
         }
-        navigationPromise.then(() => {
-          window.location.reload();
-        }).catch((err) => {
-          console.error('Navigation error:', err);
-        });
+
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);

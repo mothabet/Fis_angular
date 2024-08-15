@@ -1,91 +1,47 @@
-<div class="main-content p-4 main card " style="flex: 1;">
-    <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
-    <!-- <div class="header d-flex card-box">
-        <div class="title" >
-            
-        </div>
-    </div> -->
-    <div class="companies-details form-details prev-form">
-        <div class="header-nav" style="margin-bottom: -10px;">
-            <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
-                <ul class="links">
-                    <li class="active" *ngFor="let _form of coverForm">
-                        <a href="./form-details.html">{{_form.form.arName}}</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
-    <!-- start content -->
-    <div class="companies user-home">
-        <div class="header d-flex card-box">
-            <div class="title">
-                استماره 2022
-            </div>
-            <div class="btns d-flex">
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-send" data-bs-toggle="modal"
-                    data-bs-target="#sendFormCompany">
-                    <img src="./images/list-box-outline.png" alt="">
-                    الإرشادات
-                </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal"
-                    data-bs-target="#addCompany">
-                    <img src="./images/printer-outline.png" alt="">
-                    طباعة pdf
-                </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-download">
-                    <img src="./images/file-excel-outline.png" alt="">
-                    تنزيل xls
-                </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-save">
-                    <img src="./images/content-save-outline.png" alt="">
-                    حفظ
-                </button>
-                <label *ngIf="role == 'Researcher'">
-                    الحالة
-                </label>
-                <button type="button" class="btn btn-accept">
-                    موافقة
-                </button>
-                <button type="button" class="btn btn-exit">
-                    إغلاق
-                </button>
-            </div>
-        </div>
-        <app-shared-two-years-with-parts [formId]="formId" [tableId]="tableId"></app-shared-two-years-with-parts>
-        <app-shared-one-year-with-parts [formId]="formId" [tableId]="tableId"></app-shared-one-year-with-parts>
-        <!-- start footer -->
-        <footer class="projection-notes d-flex flex-wrap my-3 card-box">
-            <p class="ar flex-fill">
-                ملاحضة : في حالة عدم توفر بعض البيانات ، يكفى تقديم تقديرات دقيقة من جانبكم للبنود المطلوبة
-            </p>
-            <p class="en flex-fill">
-                Note: Even if the figures are very tentative, please provide your best estimates.
-            </p>
-        </footer>
-        <!-- end footer -->
-    </div>
-    <!-- start modal -->
-    <div class="modal company-modal fade" id="addNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header d-block">
-                    <h5 class="modal-title">إدراج ملاحظة</h5>
-                    <h5 class="modal-title subtitle">جدول 9: الاستمارات المخططة فى عمان (2015-2010)</h5>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <textarea placeholder="أكنب ملاحظة"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
-                        <button type="button" class="btn btn-save">حفظ</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- end modal -->
+<app-loader *ngIf="Loader"></app-loader>
+<div  style="padding: 30px 30px 0px 30px;">
+    <app-top-screen [title]="'الاستمارات الحالية للشركة'"></app-top-screen>
+
 </div>
+<div class="row" style="margin: 0px 40px;
+    padding: 0px 10px 10px 10px;">
+    <div class="col-3" style="    cursor: pointer;
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    background-color: white;margin: 15px;" (click)="formNavigate(form.form.id);" *ngFor="let form of coverForm">
+        <div class="user-img" style="margin-bottom: 15px;">        
+            <img src=".././../../../assets/images//file-document-outline.png">
+        </div>
+      <h4>{{form.form.arName}}</h4>
+      <p *ngIf="form.form.Type == 1">
+        {{form.form.reviewYear}} - سنوية
+      </p>
+      <p *ngIf="form.form.Type == 2">
+        {{form.form.reviewYear}} - ربعية
+      </p>
+      <div class="shine"></div>
+      <div class="background">
+        <div class="tiles">
+          <div class="tile tile-1"></div>
+          <div class="tile tile-2"></div>
+          <div class="tile tile-3"></div>
+          <div class="tile tile-4"></div>
+  
+          <div class="tile tile-5"></div>
+          <div class="tile tile-6"></div>
+          <div class="tile tile-7"></div>
+          <div class="tile tile-8"></div>
+  
+          <div class="tile tile-9"></div>
+          <div class="tile tile-10"></div>
+        </div>
+  
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+      </div>
+    </div>
+  </div>
+  

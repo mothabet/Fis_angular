@@ -15,10 +15,10 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);  
       const role = res.roles;
       const url: string = route.url[0].path;
-      if (role === 'Company' ||role === 'Admin' && this.authService.isAdminRoute(url)) {
+      if (role === 'Admin' && this.authService.isAdminRoute(url)) {
         return true;
       } 
-      else if (role === 'Company' ||role === 'Admin' && !(this.authService.isAdminRoute(url))) {
+      else if (role === 'Admin' && !(this.authService.isAdminRoute(url))) {
         this.router.navigate(['/Home']);
         return true;
       } 

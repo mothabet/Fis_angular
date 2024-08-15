@@ -1,4 +1,4 @@
-<div class="header-nav" style="margin-bottom: -10px">
+<div class="header-nav" style="margin-bottom: -10px" *ngIf="role == 'Admin'">
     <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
         <ul class="links">
             <li>
@@ -7,21 +7,48 @@
         </ul>
     </div>
 </div>
-<div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;" >
-    <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}"
-    (click)="activateCover()">
+<div class="companies user-home" *ngIf="role == 'Company'">
+    <div class="header d-flex card-box">
+        <div class="title">
+            {{coverForm.arName}} </div>
+        <div class="btns d-flex">
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                <img src="./images/list-box-outline.png" alt="">
+                الإرشادات
+            </button>
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
+                <img src="./images/printer-outline.png" alt="">
+                طباعة pdf
+            </button>
+            <button type="button" class="btn btn-download">
+                <img src="./images/file-excel-outline.png" alt="">
+                تنزيل xls
+            </button>
+            <button type="button" class="btn btn-save">
+                <img src="./images/content-save-outline.png" alt="">
+                حفظ
+            </button>
+            <button type="button" class="btn btn-accept">
+                موافقة
+            </button>
+            <button type="button" class="btn btn-exit">
+                إغلاق
+            </button>
+        </div>
+    </div>
+</div>
+<div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
         <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
     </div>
-    <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}"
-    (click)="activateWorkData()">
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
         <a [routerLink]="['/WorkData',formId,companyId]">بيانات العمل</a>
     </div>
-    <div class="clipped-element-first arrow"  [ngClass]="{'active': table.id === tableId}"
-    *ngFor="let table of coverForm.tables">
+    <div class="clipped-element-first arrow" [ngClass]="{'active': table.id === tableId}"
+        *ngFor="let table of coverForm.tables">
         <a (click)="TablesNavigation(table.id)">{{table.arName}}</a>
     </div>
-    <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}"
-    (click)="activateWorkData()">
+    <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}" (click)="activateWorkData()">
         <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
     </div>
 </div>

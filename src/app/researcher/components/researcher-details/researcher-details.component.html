@@ -100,7 +100,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let company of researcher.companies">
+                            <tr *ngFor="let company of companies">
                                 <td>{{company.arName}}</td>
                                 <td class="text-center">021124444</td>
                                 <td class="text-center">{{company.id}}</td>
@@ -115,8 +115,8 @@
                                 <td *ngIf="!company.status" class="text-center status-active"
                                     style="color: red !important;">غير نشط</td>
                                 <td class="text-center">
-                                    <button class="btn btn-form">
-                                        <a href="./form-details.html">إستماره</a>
+                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
+                                        <a >إستماره</a>
                                     </button>
                                 </td>
                             </tr>

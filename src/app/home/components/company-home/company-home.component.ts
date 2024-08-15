@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
@@ -16,16 +17,15 @@ export class CompanyHomeComponent implements OnInit{
   companyId!:number;
   formId!:string;
   coverForm!: any[];
-  tableId!:string;
-  constructor(private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
-        this.formId = '203'
-        this.tableId = '59'
+  
+  constructor(private router: Router,private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
+        
   }
   ngOnInit(): void {
-    this.Loader = true;
-    this.GetCompany();
+    this.GetCompany()
   }
   GetCompany(){
+    this.Loader = true
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
@@ -45,18 +45,36 @@ export class CompanyHomeComponent implements OnInit{
   GetCompanyForms(){
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         this.coverForm = res.Data
-        
       },
       error: (err: any) => {
-        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
     this.formServices.GetCompanyForms(this.companyId,1).subscribe(observer);
-  
+  }
+  formNavigate(id: number) {
+    this.GetFormById(id)
+  }
+
+  GetFormById(id: number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.formId = res.Data.id
+        debugger
+        if (res.Data.Type == 1)
+          this.router.navigate(['/FormDetails', this.formId]);
+        else if (res.Data.Type == 2)
+          this.router.navigate(['/QuarterFormCover', this.formId]);
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormById(id).subscribe(observer);
   }
 }

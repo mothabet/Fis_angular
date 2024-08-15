@@ -25,6 +25,7 @@ export class SharedFormCoverComponent implements OnInit{
   period: number = 0;
   formContent!: IGetQuestionDto[]
   isCoverActive = false;
+  sharedTableType!:number;
   constructor(private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
   }

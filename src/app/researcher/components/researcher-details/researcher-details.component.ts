@@ -23,6 +23,7 @@ export class ResearcherDetailsComponent implements OnInit {
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
   forms: IGetFormDto[] = [];
+  companies:any;
   selectedCompanyIds: number[] = [];
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
@@ -36,12 +37,12 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetAllMessages(0, '')
     this.GetAllForms();
   }
+
   GetResearcherById(id: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
-        debugger
         if (res.Data) {
           this.researcher = res.Data;
           this.companiesCount = this.researcher.companies.length;
@@ -103,10 +104,8 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
           this.forms = res.Data;
-          debugger
         } else {
           const element = document.getElementById('items');
           if (element) {
