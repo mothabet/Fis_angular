@@ -206,11 +206,11 @@
                         </div>
                         <div class="col-sm-12 mb-2">
                             <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة"
-                                [value]="selectedMessage.arSubject || ''" readonly />
+                                [value]="selectedMessage == undefined ? '' : selectedMessage.arSubject" readonly />
                         </div>
                         <div class="col-sm-12 mb-2">
                             <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"
-                                readonly>{{ selectedMessage.arDetails || '' }}</textarea>
+                                readonly>{{ selectedMessage == undefined ? '' : selectedMessage.arDetails}}</textarea>
                         </div>
                     </div>
                 </div>

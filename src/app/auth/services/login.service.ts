@@ -97,4 +97,22 @@ export class LoginService {
     ];
     return companyRoutes.includes(url);
   }
+
+  isResearcherRoute(url: string): boolean {
+    const researcherRoutes = [
+      'CompanyHome', 'PrevForm','Certification', 
+      'WorkData', 
+      'QuarterTable', 
+      'QuarterFormCover', 
+      'TransTable', 
+      'PeriodTable', 
+      'TableWithoutTrans', 
+      'OneYearWithParts', 
+      'TwoYearsWithParts', 
+      'FormDetails',
+      'Researcher-Details',
+      'SharedTwoYearsWithParts'
+    ];
+    return researcherRoutes.includes(url);
+  }
 }

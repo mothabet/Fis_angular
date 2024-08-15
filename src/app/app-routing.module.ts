@@ -49,7 +49,7 @@ const routes: Routes = [
   { path: 'CopmanyMessages/:companyId', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
-  { path: 'CompanyHome', component: CompanyHomeComponent, canActivate: [LoginGuard] },
+  { path: 'CompanyHome/:companyId', component: CompanyHomeComponent, canActivate: [LoginGuard] },
   { path: 'PrevForm', component: PrevFormComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }

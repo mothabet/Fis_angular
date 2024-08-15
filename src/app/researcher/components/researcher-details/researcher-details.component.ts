@@ -8,6 +8,7 @@ import { HomemessagesService } from 'src/app/messages/services/homemessages.serv
 import { IGetFormDto, SendCompanyFormsDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import Swal from 'sweetalert2';
+import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 
 @Component({
   selector: 'app-researcher-details',
@@ -19,11 +20,11 @@ export class ResearcherDetailsComponent implements OnInit {
   researcher!: IResearcher;
   researcherId!: string;
   companiesCount: number = 0;
+  companies! : ICompany[]
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
   forms: IGetFormDto[] = [];
-  companies:any;
   selectedCompanyIds: number[] = [];
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
@@ -44,7 +45,11 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
+          debugger
           this.researcher = res.Data;
+          this.companies = res.Data.companies
+          debugger
+          console.log(this.companies)
           this.companiesCount = this.researcher.companies.length;
         }
       },
@@ -68,6 +73,7 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.messages = [];
+          debugger
           res.Data.getMessagesDtos.forEach((message: IMessage) => {
             switch (message.typeMessage) {
               case 2:
@@ -92,7 +98,6 @@ export class ResearcherDetailsComponent implements OnInit {
     const selectedMessageId = event.target.value;
     this.selectedMessage = this.messages.find(message => message.Id == selectedMessageId)!;
     const selectedValue = event.target.value;
-    debugger
     if (event.target.name === 'formType') {
       this.selectedFormId = +selectedValue; // Convert to number
     } else if (event.target.name === 'messageType') {
