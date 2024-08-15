@@ -9,11 +9,13 @@ import { LoginService } from 'src/app/auth/services/login.service';
 })
 export class SidebarComponent implements OnInit {
   role:string = "";
+  id:number=0;
   constructor(private router: Router, private authService: LoginService) { }
 
   ngOnInit(): void {
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);  
     this.role = res.roles;
+    this.id = res.id;
   }
 }

@@ -33,21 +33,21 @@
                                 </button> 
                             </td>
                             <td class="text-center quarter4"><input disabled class="quarter4" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter4"><input disabled class="quarter4" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter3"><input disabled class="quarter3" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter3"><input disabled class="quarter3" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter2"><input disabled class="quarter2" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)" /></td>
                             <td class="text-center quarter2"><input disabled class="quarter2" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter1"><input disabled class="quarter1" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter1"><input disabled class="quarter1" type="number"
-                                    placeholder="0" /></td>
+                                    placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                             <td class="text-start" style="text-wrap: balance;min-width: 250px;">
                                 {{formContent.code.enName}}</td>
@@ -56,24 +56,24 @@
                             <tr *ngFor="let subCode of formContent.code.SubCodes">
                                     <td class="sub-list-item" style="text-align: center;color: #00af9d; text-wrap: balance;">{{ subCode.arName }}</td>
                                     <td class="text-center quarter4"><input disabled class="quarter4" type="number"
-                                        placeholder="0" /></td>
+                                        placeholder="0" (input)="inputChange($event)"/></td>
                                 <td class="text-center quarter4"><input disabled class="quarter4" type="number"
-                                        placeholder="0" />
+                                        placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter3"><input disabled class="quarter3" type="number"
-                                        placeholder="0" /></td>
+                                        placeholder="0" (input)="inputChange($event)"/></td>
                                 <td class="text-center quarter3"><input disabled class="quarter3" type="number"
-                                        placeholder="0" />
+                                        placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter2"><input disabled class="quarter2" type="number"
-                                        placeholder="0" /></td>
+                                        placeholder="0" (input)="inputChange($event)"/></td>
                                 <td class="text-center quarter2"><input disabled class="quarter2" type="number"
-                                        placeholder="0" />
+                                        placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter1"><input disabled class="quarter1" type="number"
-                                        placeholder="0" /></td>
+                                        placeholder="0" (input)="inputChange($event)"/></td>
                                 <td class="text-center quarter1"><input disabled class="quarter1" type="number"
-                                        placeholder="0" />
+                                        placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                                 <td class="text-start" style="min-width: 250px;text-align: center !important;color: #00af9d; text-wrap: balance;">{{subCode.enName}}</td>

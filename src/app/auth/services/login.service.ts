@@ -25,8 +25,6 @@ export class LoginService {
 
     // Save the encrypted token in a cookie
     this.cookieService.set('ATKFIS', encryptedToken);
-
-    console.log('Token saved:', encryptedToken);
   }
   getToken(): string {
     const secretKey = 'your-256-bit-secret-key';
