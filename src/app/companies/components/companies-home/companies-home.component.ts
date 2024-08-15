@@ -504,6 +504,47 @@ export class CompaniesHomeComponent implements OnInit {
       compBuild: '',
       webSite: '',
     });
+    (this.companyForm.get('emails') as FormArray).clear();
+    // إضافة حقل واحد فارغ على الأقل
+    this.addEmailField();
+    this.generateRandomCredentials();
+    this.GetCompanyCode();
+  }
+  resetFormWithAdd() {
+    this.companyForm.reset({
+      userName: '',
+      password: '',
+      arName: '',
+      enName: '',
+      municipalityNumber: '',
+      compRegNumber: '',
+      accountingPeriod: [''],
+      completionAccPeriod: '',
+      phoneNumber: '',
+      telNumber: '',
+      fax: '',
+      address: '',
+      mailBox: '',
+      postalCode: '',
+      dateOfWork: '',
+      legalType: '',
+      sectorId: '',
+      activityId: '',
+      subActivityId: '',
+      governoratesId: '',
+      wilayatId: '',
+      email_2: '',
+      email_1: '',
+      compValue: '',
+      compBuild: '',
+      webSite: '',
+    });
+    (this.companyForm.get('emails') as FormArray).clear();
+    // إضافة حقل واحد فارغ على الأقل
+    this.addEmailField();
+
+    this.add = true;
+
     this.generateRandomCredentials();
     this.GetCompanyCode();
   }
@@ -647,21 +688,21 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetCompanyById(id).subscribe(observer);
   }
   // Method to initialize the form array
-initializeForm() {
-  // Initialize the form array with non-empty emails
-  this.company.companyEmails
-    .filter((emailObj: ICompanyEmail) => emailObj.Email)  // Filter out empty emails
-    .forEach((emailObj: ICompanyEmail) => {
-      this.compEmails.push(this.formBuilder.group({ Email: [emailObj.Email] }));
-    });
+  initializeForm() {
+    // Initialize the form array with non-empty emails
+    this.company.companyEmails
+      .filter((emailObj: ICompanyEmail) => emailObj.Email)  // Filter out empty emails
+      .forEach((emailObj: ICompanyEmail) => {
+        this.compEmails.push(this.formBuilder.group({ Email: [emailObj.Email] }));
+      });
 
-  // Remove the initial empty input if it exists
-  if (this.compEmails.length > 0 && !this.compEmails.at(0).get('Email')?.value) {
-    this.compEmails.removeAt(0);
+    // Remove the initial empty input if it exists
+    if (this.compEmails.length > 0 && !this.compEmails.at(0).get('Email')?.value) {
+      this.compEmails.removeAt(0);
+    }
   }
-}
 
-// Call this method when you need to initialize the form
+  // Call this method when you need to initialize the form
 
   updateCompany() {
     this.showLoader = true;
