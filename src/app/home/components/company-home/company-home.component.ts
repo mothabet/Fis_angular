@@ -1,5 +1,5 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
@@ -15,13 +15,15 @@ export class CompanyHomeComponent implements OnInit{
   role:string = "";
   Loader = false;
   companyId!:number;
+  temp : string = ''
   formId!:string;
   coverForm!: any[];
   
-  constructor(private router: Router,private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
+  constructor(private activeRouter: ActivatedRoute,private router: Router,private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
         
   }
   ngOnInit(): void {
+    
     this.GetCompany()
   }
   GetCompany(){
@@ -29,6 +31,10 @@ export class CompanyHomeComponent implements OnInit{
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
+    debugger
+    if (this.activeRouter.snapshot.paramMap.get('companyId')) {
+      this.companyId = +this.activeRouter.snapshot.paramMap.get('companyId')!;
+    }
     const observer = {
       next: (res: any) => {
         this.companyId = res.Data;
@@ -39,7 +45,7 @@ export class CompanyHomeComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.companyServices.GetCompanyByUserId(result.id).subscribe(observer);
+    this.companyServices.GetCompanyByUserId(result.id , this.companyId).subscribe(observer);
   
   }
   GetCompanyForms(){

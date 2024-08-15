@@ -105,6 +105,7 @@ export class FormService {
      return resopnse;
    }
    sendForm(formDto: SendCompanyFormsDto) {
+    debugger
     const headers = this.sharedService.getHeaders();
     const response = this.http.post(environment.apiUrl+`Form/SendForm`, formDto, { headers });
     return response;
