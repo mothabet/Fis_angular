@@ -4,9 +4,11 @@
         {{title}}
     </h4>
     <div class="user d-flex justify-content-between align-items-center">
+        <button style="border: 1px solid;" type="button" class="btn " data-bs-toggle="modal">
+            الصفحة الرئيسية
+        </button>
         <div class="dropdown">
-            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                aria-expanded="false">
+            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
                 EN
                 <!-- <i class="fa-solid fa-chevron-down"></i> -->
             </button>
@@ -21,17 +23,19 @@
             <img src=".././../../../assets/images/avatar.PNG" class="img-fluid">
         </div>
         <div class="dropdown">
-            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                aria-expanded="false">
-               <span class="current-lang">أهلا بك محمد ثابت</span>
+
+            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="current-lang">أهلا بك {{arName}}</span>
                 <i class="fa-solid fa-chevron-down"></i>
-   
+
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-             <li><a class="dropdown-item second-lang" href="#">الملف الشخصي  </a></li>
-                <li><a class="dropdown-item second-lang" (click)="LogOut()" >تسجيل الخروج</a></li>
-                
-            </ul>  
+                <li><a class="dropdown-item second-lang" href="#">الملف الشخصي </a></li>
+                <li><a class="dropdown-item second-lang" (click)="LogOut()">تسجيل الخروج</a></li>
+
+            </ul>
+
         </div>
+
     </div>
 </div>

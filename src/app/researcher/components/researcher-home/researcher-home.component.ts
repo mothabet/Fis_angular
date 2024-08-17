@@ -226,6 +226,7 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
           this.researcher = res.Data;
           this.researcher.phone = this.researcher.phone.replace(this.phoneCode.toString(), '');
@@ -248,6 +249,7 @@ export class ResearcherHomeComponent {
         }
       },
       error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
       },

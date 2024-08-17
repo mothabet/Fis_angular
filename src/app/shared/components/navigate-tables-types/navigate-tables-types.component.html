@@ -7,31 +7,37 @@
         </ul>
     </div>
 </div>
-<div class="companies user-home" *ngIf="role == 'Company'">
+<div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
     <div class="header d-flex card-box">
         <div class="title">
             {{coverForm.arName}} </div>
         <div class="btns d-flex">
+            <button type="button" class="btnStatus" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الإرسال
+            </button>
             <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                 <img src="./images/list-box-outline.png" alt="">
                 الإرشادات
             </button>
-            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
+            <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCompany">
                 <img src="./images/printer-outline.png" alt="">
                 طباعة pdf
             </button>
-            <button type="button" class="btn btn-download">
+            <button *ngIf="role == 'Company'" type="button" class="btn btn-download">
                 <img src="./images/file-excel-outline.png" alt="">
                 تنزيل xls
             </button>
-            <button type="button" class="btn btn-save">
+            <button *ngIf="role == 'Company'" type="button" class="btn btn-save">
                 <img src="./images/content-save-outline.png" alt="">
                 حفظ
             </button>
-            <button type="button" class="btn btn-accept">
+            <button *ngIf="role == 'Company'" type="button" class="btn btn-accept">
                 موافقة
             </button>
-            <button type="button" class="btn btn-exit">
+            <button *ngIf="role == 'Researchers'" type="button" class="btn btn-accept">
+                إكتمال
+            </button>
+            <button *ngIf="role == 'Researchers'" type="button" class="btn btn-exit">
                 إغلاق
             </button>
         </div>
@@ -42,7 +48,7 @@
         <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
     </div>
     <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
-        <a [routerLink]="['/WorkData',formId,companyId]">بيانات العمل</a>
+        <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>
     </div>
     <div class="clipped-element-first arrow" [ngClass]="{'active': table.id === tableId}"
         *ngFor="let table of coverForm.tables">

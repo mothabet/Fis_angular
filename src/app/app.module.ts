@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +13,7 @@ import { CodeModule } from './code/code.module';
 import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompanyMessagesModule } from './company-messages/company-messages.module';
+import { LoginService } from './auth/services/login.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,4 +39,6 @@ import { CompanyMessagesModule } from './company-messages/company-messages.modul
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+ }

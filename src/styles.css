@@ -35,3 +35,10 @@ td{
   min-width: 65px;
   text-wrap: balance !important;
 }
+.btnStatus{
+  color: black !important;
+  height: 30px;
+  border: 0px !important;
+  padding: 0px 10px 0px 10px;
+  background-color: #f0f0f0 !important;
+}
