@@ -64,16 +64,17 @@ export class SharedTableWithPeriodComponent {
           this.table = res.Data;
           this.table.formContents.forEach((formContent: IGetQuestionDto) => {
             // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-            formContent.values = Array(this.years.length).fill(0);
+            formContent.values = [0, ...Array(this.table.period ).fill(0)];
 
             // Initialize the `values` array for each subCode
             if (formContent.code.SubCodes) {
                 formContent.code.SubCodes.forEach((subCode: any) => {
                     // Set the first value to 0, and the rest based on the number of parts
-                    subCode.values = [0, ...Array(this.years.length - 1).fill(0)];
+                    subCode.values = [0, ...Array(this.years.length ).fill(0)];
                 });
             }
-        });
+          });
+          debugger
         }
       },
       error: (err: any) => {
