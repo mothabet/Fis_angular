@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -57,8 +58,19 @@ export class SharedTableWithPeriodComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
+          this.table.formContents.forEach((formContent: IGetQuestionDto) => {
+            // Initialize the `values` array with zeroes, ensuring the first value is set to 0
+            formContent.values = Array(this.years.length).fill(0);
+
+            // Initialize the `values` array for each subCode
+            if (formContent.code.SubCodes) {
+                formContent.code.SubCodes.forEach((subCode: any) => {
+                    // Set the first value to 0, and the rest based on the number of parts
+                    subCode.values = [0, ...Array(this.years.length - 1).fill(0)];
+                });
+            }
+        });
         }
-        console.log(this.table)
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
@@ -92,7 +104,7 @@ export class SharedTableWithPeriodComponent {
     }
   }
   addSubCodeRow(code:ICode){
-    debugger
+    
     const subCode:ISubCode={
       arName:'',
       codeId:0,
@@ -104,18 +116,17 @@ export class SharedTableWithPeriodComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.activities = res.Data;
-          console.log(this.activities)
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -129,7 +140,6 @@ export class SharedTableWithPeriodComponent {
         if (res.Data) {
           this.Loader = false;
           this.countries = res.Data;
-          console.log(this.countries)
         }
       },
       error: (err: any) => {

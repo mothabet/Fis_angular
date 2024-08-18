@@ -12,3 +12,12 @@ export interface ISubCode{
     codeId :number
     subCodes:ISubCode[]
 }
+export interface ISubCodeForm{
+    Id:number,
+    arName: string,
+    enName: string,
+    QuestionCode:string,
+    codeId :number
+    subCodes:ISubCode[]
+    values: number[];
+}

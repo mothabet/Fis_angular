@@ -43,11 +43,30 @@ export class SharedTransTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
-          console.log(this.table);
+          this.table.formContents.forEach((formContent: any) => {
+            formContent.values = formContent.values || [0, 0, 0];
+            formContent.values[1] = formContent.values[1] || 0;
+            formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
+            formContent.values[0] = formContent.values[2] || 0;
+  
+            // If there are subCodes, ensure their values are also initialized
+            if (formContent.code.SubCodes) {
+              formContent.code.SubCodes.forEach((subCode: any) => {
+                // Initialize subCode `values` array if it doesn't exist
+                subCode.values = subCode.values || [0, 0, 0];
+          
+                // Ensure the `values` array has the correct length and initial values
+                subCode.values[0] = subCode.values[0] || 0; // lastYear
+                subCode.values[2] = 0; // Set transaction explicitly to 0
+                subCode.values[1] = subCode.values[1] || 0; // nextYear
+              });
+            }
+          });
+  
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -71,8 +90,8 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  calculateTransaction() {
-    this.transaction = this.lastYear - this.nextYear;
+  calculateTransaction(item:any) {
+    item.values[2] = item.values[1] - item.values[0];
   }
   addSubCodeRow(code:ICode){
     const subCode:ISubCode={
@@ -86,7 +105,7 @@ export class SharedTransTableComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -97,7 +116,7 @@ export class SharedTransTableComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

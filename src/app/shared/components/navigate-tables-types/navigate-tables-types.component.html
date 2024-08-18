@@ -1,3 +1,4 @@
+<app-loader *ngIf="Loader"></app-loader>
 <div class="header-nav" style="margin-bottom: -10px" *ngIf="role == 'Admin'">
     <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
         <ul class="links">
@@ -27,7 +28,7 @@
                 <img src="./images/file-excel-outline.png" alt="">
                 تنزيل xls
             </button>
-            <button *ngIf="role == 'Company'" type="button" class="btn btn-save">
+            <button *ngIf="role == 'Company'" type="button" class="btn btn-save" (click)="displayFormContents()">
                 <img src="./images/content-save-outline.png" alt="">
                 حفظ
             </button>
@@ -51,8 +52,8 @@
         <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>
     </div>
     <div class="clipped-element-first arrow" [ngClass]="{'active': table.id === tableId}"
-        *ngFor="let table of coverForm.tables">
-        <a (click)="TablesNavigation(table.id)">{{table.arName}}</a>
+        *ngFor="let table of coverForm.tables" (click)="TablesNavigation(table.id)" style="cursor: pointer !important;">
+        <a >{{table.arName}}</a>
     </div>
     <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}" (click)="activateWorkData()">
         <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>

@@ -1,6 +1,6 @@
 <div class="companies-details form-details prev-form" style="max-width: 74rem;">
     <div class="header-nav" style="margin-bottom: -10px">
-        <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
+        <app-navigate-tables-types [coverForm]="coverForm" [table]="table"></app-navigate-tables-types>
         <!-- start table -->
         <div class="table-responsive company-table">
             <table class="table table-borderless">
@@ -33,7 +33,7 @@
                                 </button>
                             </td>
                             <td class="text-center">
-                                <input type="number" placeholder="0" />
+                                <input type="number" placeholder="0" [(ngModel)]="formContent.values[0]"/>
                             </td>
                             <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="table.tableParts.length/2">
                                 <input type="checkbox" [(ngModel)]="isChecked"> لا
@@ -46,9 +46,11 @@
                                 </label>
                             </td>
                             <ng-container *ngIf="formContent.code.TypeId != 4">
-                                <td *ngFor="let part of table.tableParts" class="text-center"><input type="number"
-                                        placeholder="0" />
-                                </td>
+                                <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                    <td class="text-center">
+                                        <input type="number" [(ngModel)]="formContent.values[i+1]" />
+                                    </td>
+                                </ng-container>
                             </ng-container>
                             <td class="text-center"><input type="text" disabled
                                     value="{{formContent.code.QuestionCode}}" />
@@ -112,11 +114,11 @@
 
                                     </td>
                                 <td class="text-center">
-                                    <input type="number" placeholder="0" />
+                                    <input type="number" placeholder="0" [(ngModel)]="subCode.values[0]"/>
                                 </td>
-                                <td class="text-center" *ngFor="let part of table.tableParts"><input type="number"
-                                        placeholder="0" />
-                                    </td>
+                                <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                    <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i]" /></td>
+                                  </ng-container>
                                 <td class="text-center"><input disabled type="text"
                                         value="{{subCode.QuestionCode}}" />
                                 </td>

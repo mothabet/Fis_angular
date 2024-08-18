@@ -1,4 +1,4 @@
-import { ICode } from "src/app/code/Dtos/CodeHomeDto";
+import { ICode, ICodeForm } from "src/app/code/Dtos/CodeHomeDto";
 
 export interface IAddQuestion {
   tableId: number;
@@ -10,5 +10,5 @@ export interface IGetQuestionDto {
   tableId: number;
   codeId: number;
   values: number[];
-  code:ICode;
+  code:ICodeForm;
 }

@@ -33,7 +33,7 @@
                     </button>
                   </td>
                   <td class="text-center">
-                    <input type="number" placeholder="0" />
+                    <input type="number" placeholder="0" [(ngModel)]="formContent.values[0]"/>
                   </td>
                   <td *ngIf="formContent.code.TypeId == 4"
                     [attr.colspan]="getColspan(years.length, 'first')">
@@ -108,9 +108,9 @@
                       </div>
                     </td>
                     <td class="text-center">
-                      <input type="number" placeholder="0" />
+                      <input type="number" placeholder="0" [(ngModel)]="subCode.values[0]"/>
                     </td>
-                    <td class="text-center" *ngFor="let year of years">
+                    <td class="text-center" *ngFor="let year of years; let i = index">
                       <input type="number" placeholder="0" />
                     </td>
                     <td class="text-center">

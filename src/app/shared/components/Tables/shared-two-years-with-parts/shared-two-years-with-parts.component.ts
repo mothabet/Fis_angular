@@ -6,6 +6,7 @@ import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 
 @Component({
   selector: 'app-shared-two-years-with-parts',
@@ -44,20 +45,32 @@ export class SharedTwoYearsWithPartsComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          this.Loader = false;
           this.table = res.Data;
-          console.log(this.table)
-          this.tablePartsCount = this.table.tableParts.length
+          this.tablePartsCount = this.table.tableParts.length;
+          this.table.formContents.forEach((formContent: IGetQuestionDto) => {
+            // Calculate the total number of parts (doubled)
+            const totalPartsCount = this.tablePartsCount * 2;
+
+            // Initialize the `values` array for the main content
+            formContent.values = Array(totalPartsCount).fill(0);
+
+            // Initialize the `values` array for each subcode
+            if (formContent.code.SubCodes) {
+              formContent.code.SubCodes.forEach((subCode: any) => {
+                subCode.values = Array(totalPartsCount).fill(0);
+              });
+            }
+          });
         }
       },
       error: (err: any) => {
-        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
     this.formServices.GetTableById(id).subscribe(observer);
   }
+
   GetFormById(id: number): void {
     this.Loader = true;
     const observer = {
