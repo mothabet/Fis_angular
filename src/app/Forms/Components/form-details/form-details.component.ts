@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICoverFormDetailsDto, IGetFormDto } from '../../Dtos/FormDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { IGetQuestionDto } from '../../Dtos/QuestionDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-form-details',
@@ -25,7 +26,9 @@ export class FormDetailsComponent implements OnInit {
   period: number = 0;
   formContent!: IGetQuestionDto[]
   isCoverActive = false;
-  constructor(private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+
+  constructor(private authService: LoginService,private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
   }
   ngOnInit(): void {
@@ -33,6 +36,9 @@ export class FormDetailsComponent implements OnInit {
     this.type = this.activeRouter.snapshot.paramMap.get('type')!;
     this.isCoverActive = true
     this.GetFormById(+this.formId,this.type);
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   GetFormById(id: number , type:string): void {
     this.Loader = true;

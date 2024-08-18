@@ -5,5 +5,6 @@
     <app-top-screen [title]="'عرض الاستمارة'"></app-top-screen>
     <!-- end-header -->
     <!-- start content -->
-    <app-shared-table-without-trans [formId]="formId" [tableId]="tableId"></app-shared-table-without-trans>
+    <app-shared-table-without-trans [formId]="formId" style="max-width: 92rem;min-width: 92rem;" *ngIf="role == 'Researchers'"></app-shared-table-without-trans>
+    <app-shared-table-without-trans [formId]="formId" style="max-width: 74rem;" *ngIf="role != 'Researchers'"></app-shared-table-without-trans>
 </div>

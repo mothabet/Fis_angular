@@ -26,7 +26,6 @@ export class NavigateTablesTypesComponent implements OnInit {
   formId!: string;
   role: string = "";
   temp: string = "";
-
   companyId!: string;
   tableId: number | null = null;
   @Input() table: any;

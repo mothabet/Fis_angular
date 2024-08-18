@@ -13,6 +13,30 @@
                 data-bs-target="#sendFormCompany">
                 حالة الإستمارة : تم الارسال للشركة
             </button>
+            <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
+            <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
+            <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
+            <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
+            <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
+            <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
+                data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة
+            </button>
         </div>
     </div>
     <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
@@ -20,8 +44,7 @@
             <div class="title">
                 {{coverForm.arName}} </div>
             <div class="btns d-flex">
-                <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
-                    data-bs-target="#sendFormCompany">
+                <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal">
                     حالة الإستمارة : تم الارسال للشركة
                 </button>
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">

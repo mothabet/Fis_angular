@@ -7,6 +7,7 @@ import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto 
 import { inputs } from '@syncfusion/ej2-angular-diagrams/src/diagram/diagram.component';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-trans-table',
@@ -25,18 +26,22 @@ export class TransTableComponent {
   transaction = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+
+  constructor(private authService: LoginService,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
-    debugger
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   GetTableById(id: number): void {
     this.Loader = true;

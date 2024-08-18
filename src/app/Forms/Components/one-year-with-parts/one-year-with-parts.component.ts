@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-one-year-with-parts',
@@ -23,11 +24,15 @@ export class OneYearWithPartsComponent {
   tablePartsCount = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+  constructor(private authService: LoginService,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
 }

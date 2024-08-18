@@ -7,6 +7,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-quarter-table',
@@ -22,7 +23,8 @@ export class QuarterTableComponent {
   tablePartsCount = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+  constructor(private authService: LoginService,private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
@@ -34,6 +36,9 @@ export class QuarterTableComponent {
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   ngAfterViewInit(): void {
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized

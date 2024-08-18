@@ -9,6 +9,7 @@ import { IGetFormDto, SendCompanyFormsDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import Swal from 'sweetalert2';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-researcher-details',
@@ -16,6 +17,7 @@ import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
   styleUrls: ['./researcher-details.component.css']
 })
 export class ResearcherDetailsComponent implements OnInit {
+  role:string = "";
   showLoader: boolean = false;
   researcher!: IResearcher;
   researcherId!: string;
@@ -29,7 +31,7 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
-  constructor(private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+  constructor(private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
   ngOnInit(): void {
@@ -37,6 +39,9 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetResearcherById(+this.researcherId);
     this.GetAllMessages(0, '')
     this.GetAllForms();
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
 
   GetResearcherById(id: number) {

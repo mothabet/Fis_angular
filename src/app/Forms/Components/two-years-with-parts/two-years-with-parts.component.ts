@@ -6,6 +6,7 @@ import { IGetTableDto } from '../../Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from '../../Dtos/FormDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-two-years-with-parts',
@@ -22,7 +23,9 @@ export class TwoYearsWithPartsComponent {
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   selectedValue!: string;
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+
+  constructor(private authService: LoginService,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
@@ -33,6 +36,9 @@ export class TwoYearsWithPartsComponent {
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   onRadioChange(event: Event, value: string) {
     this.selectedValue = value;

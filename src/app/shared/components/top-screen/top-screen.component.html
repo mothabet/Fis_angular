@@ -4,7 +4,7 @@
         {{title}}
     </h4>
     <div class="user d-flex justify-content-between align-items-center">
-        <button style="border: 1px solid;" type="button" class="btn " data-bs-toggle="modal">
+        <button  style="border: 1px solid;" type="button" class="btn " data-bs-toggle="modal" *ngIf="role == 'Researchers'">
             الصفحة الرئيسية
         </button>
         <div class="dropdown">

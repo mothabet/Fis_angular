@@ -3,7 +3,7 @@
     <app-top-screen [title]="'الاستمارات الحالية للشركة'"></app-top-screen>
 
 </div>
-<div class="row" style="margin: 0px 40px;
+<div *ngIf="coverForm" class="row" style="margin: 0px 40px;
     padding: 0px 10px 10px 10px;">
     <div class="col-3" style="    cursor: pointer;
     border: 1px solid;
@@ -44,4 +44,9 @@
       </div>
     </div>
   </div>
+  <div *ngIf="!coverForm" class="no-data-container">
+    <img src=".././../../../assets/images/nodata.png" class="img-fluid no-data-image">
+    <h1 class="no-data-text">لا يوجد بيانات</h1>
+</div>
+
   

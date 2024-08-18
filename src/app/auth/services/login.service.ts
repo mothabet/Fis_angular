@@ -53,6 +53,7 @@ export class LoginService {
   }
   isAdminRoute(url: string): boolean {
     const adminRoutes = [
+      'CompanyHome',
       'Home', 
       'Forms', 
       'Companies', 

@@ -22,6 +22,7 @@ export class TopScreenComponent implements OnInit
     this.arName = result.arName;
   }
   LogOut() {
+    debugger
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
 

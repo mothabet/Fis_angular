@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormService } from '../../Services/form.service';
 import { IWorkDataChkDto, IWorkDataQuesDto } from '../../Dtos/WorkDataDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-work-data',
@@ -41,13 +42,18 @@ export class WorkDataComponent implements OnInit{
     { arName: 'فرع شركة اجنبية', enName: 'Branch of Foreign Enterprise',selected : false},
     { arName: 'أخرى (حدد)', enName: 'Other (specify)',selected : false}
   ];
-  constructor(private formServices: FormService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+
+  constructor(private authService: LoginService,private formServices: FormService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.GetFormById(+this.formId);
     this.isWorkDataActive = true;
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   GetFormById(id: number): void {
     this.Loader = true;

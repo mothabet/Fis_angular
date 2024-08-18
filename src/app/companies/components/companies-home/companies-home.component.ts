@@ -191,7 +191,6 @@ export class CompaniesHomeComponent implements OnInit {
         debugger
         this.showLoader = false;
         if (res.Data) {
-          debugger
           this.companies = res.Data.getCompaniesDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;

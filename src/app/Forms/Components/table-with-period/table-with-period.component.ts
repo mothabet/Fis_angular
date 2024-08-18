@@ -7,6 +7,7 @@ import { IGetQuestionDto } from '../../Dtos/QuestionDto';
 import { IGetTableDto } from '../../Dtos/TableDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-table-with-period',
@@ -24,7 +25,9 @@ export class TableWithPeriodComponent implements OnInit {
   formYear : string = '';
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+
+  constructor(private authService: LoginService,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
   }
@@ -35,6 +38,9 @@ export class TableWithPeriodComponent implements OnInit {
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    this.role = result.roles;
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
