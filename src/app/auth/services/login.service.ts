@@ -114,4 +114,14 @@ export class LoginService {
     ];
     return researcherRoutes.includes(url);
   }
+  isTableRoute(url: string): boolean {
+    const companyRoutes = [
+      'TransTable', 
+      'PeriodTable', 
+      'TableWithoutTrans', 
+      'OneYearWithParts', 
+      'TwoYearsWithParts', 
+    ];
+    return companyRoutes.includes(url);
+  }
 }

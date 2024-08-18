@@ -11,7 +11,6 @@ export class CodeHomeService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddCode(Model: IAddCode){
-    debugger
    var headers= this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl+`Code/AddCode?lang=2`, Model, { headers });
     return resopnse;

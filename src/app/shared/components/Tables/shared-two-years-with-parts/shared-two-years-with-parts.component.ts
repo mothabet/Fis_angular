@@ -111,18 +111,15 @@ export class SharedTwoYearsWithPartsComponent {
   }
   
   GetActivites() {
-    debugger
     const observer = {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.activities = res.Data;
-          console.log(this.activities)
         }
       },
       error: (err: any) => {
-        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -136,7 +133,6 @@ export class SharedTwoYearsWithPartsComponent {
         if (res.Data) {
           this.Loader = false;
           this.countries = res.Data;
-          console.log(this.countries)
         }
       },
       error: (err: any) => {
