@@ -62,6 +62,7 @@ export class SharedTableWithPeriodComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
+          this.generateYearsList(this.table.period);
           this.table.formContents.forEach((formContent: IGetQuestionDto) => {
             // Initialize the `values` array with zeroes, ensuring the first value is set to 0
             formContent.values = [0, ...Array(this.table.period ).fill(0)];
@@ -74,7 +75,6 @@ export class SharedTableWithPeriodComponent {
                 });
             }
           });
-          debugger
         }
       },
       error: (err: any) => {
@@ -93,7 +93,6 @@ export class SharedTableWithPeriodComponent {
           this.Loader = false;
           this.coverForm = res.Data;
           this.formYear = this.coverForm.reviewYear;
-          this.generateYearsList();
         }
       },
       error: (err: any) => {
@@ -103,8 +102,8 @@ export class SharedTableWithPeriodComponent {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  generateYearsList(): void {
-    for (let i = 0; i < 5; i++) {
+  generateYearsList(period:number): void {
+    for (let i = 0; i < period; i++) {
       this.years.push(+this.formYear + i);
     }
   }
