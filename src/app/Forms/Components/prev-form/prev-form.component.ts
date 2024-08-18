@@ -40,7 +40,6 @@ export class PrevFormComponent {
       },
     };
     this.companyServices.GetCompanyByUserId(result.id).subscribe(observer);
-  
   }
   GetCompanyForms(){
     const observer = {
@@ -64,7 +63,6 @@ export class PrevFormComponent {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        debugger
         if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId , null]);
         else if (res.Data.Type == 2)

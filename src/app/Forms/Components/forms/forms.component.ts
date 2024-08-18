@@ -1265,7 +1265,7 @@ export class FormsComponent implements OnInit {
         this.formId = res.Data.id
         debugger
         if (res.Data.Type == 1)
-          this.router.navigate(['/FormDetails', this.formId , 'null']);
+          this.router.navigate(['/FormDetails', this.formId , 'null',0]);
         else if (res.Data.Type == 2)
           this.router.navigate(['/QuarterFormCover', this.formId]);
       },

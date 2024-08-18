@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IAddFormDataDto } from '../components/navigate-tables-types/Dtos/FormDataDto';
 import { SharedService } from './shared.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
+import { IAddFormDataDto } from '../Dtos/FormDataDto';
 
 @Injectable({
   providedIn: 'root'

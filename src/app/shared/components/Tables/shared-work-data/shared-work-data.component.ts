@@ -13,7 +13,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 export class SharedWorkDataComponent implements OnInit{
   @Input() formId!: string;
   @Input() coverForm!: ICoverFormDetailsDto;
-  Loader: boolean = false;
+  Loader: boolean = false;  
+  companyId!:string;
   isWorkDataActive:boolean = false;
   workData: IWorkDataQuesDto[] = [
     { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise' },
@@ -45,6 +46,7 @@ export class SharedWorkDataComponent implements OnInit{
 
   }
   ngOnInit(): void {
+    this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetFormById(+this.formId)
     this.isWorkDataActive = true;
   }
@@ -63,7 +65,7 @@ export class SharedWorkDataComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   onCheckboxChange(selectedIndex: number): void {
     this.workDataChk.forEach((item, index) => {

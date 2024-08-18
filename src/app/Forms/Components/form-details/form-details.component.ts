@@ -19,6 +19,7 @@ export class FormDetailsComponent implements OnInit {
   coverForm!: ICoverFormDetailsDto;
   noTables = true;
   formId: string = '';
+  companyId: string = '';
   type: string = '';
   table!: IGetTableDto;
   years!: number[];
@@ -33,32 +34,12 @@ export class FormDetailsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.type = this.activeRouter.snapshot.paramMap.get('type')!;
     this.isCoverActive = true
-    this.GetFormById(+this.formId,this.type);
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
   }
-  GetFormById(id: number , type:string): void {
-    this.Loader = true;
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.coverForm = res.Data;
-          if (res.Data.tables.length > 0)
-            this.noTables = false;
-          this.Loader = false;
-          console.log(this.coverForm)
-        }
-      },
-      error: (err: any) => {
-
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetFormById(id,this.type).subscribe(observer);
-  }
+  
 }

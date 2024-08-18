@@ -7,45 +7,77 @@
                     <a [routerLink]="['/FormDetails',formId,null]">{{coverForm.arName}}</a>
                 </li>
             </ul>
+            <div class="btns d-flex">
+                <div class="btns d-flex">
+                    <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم الارسال للشركة
+                    </button>
+                    <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم فتح رابط الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم البدا في تعبئة الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم حفظ الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم تعبئة الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم اغلاق الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم اعتماد الاستمارة
+                    </button>
+                </div>
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                    <img src="./images/list-box-outline.png" alt="">
+                    الإرشادات
+                </button>
+            </div>
         </div>
-        <div class="btns d-flex">
-            <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-            <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الارسال للشركة
-            </button>
-        </div>
+        
     </div>
     <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
         <div class="header d-flex card-box">
             <div class="title">
                 {{coverForm.arName}} </div>
             <div class="btns d-flex">
-                <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal">
+                <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
                     حالة الإستمارة : تم الارسال للشركة
+                </button>
+                <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم فتح رابط الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم البدا في تعبئة الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم حفظ الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم تعبئة الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اغلاق الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اعتماد الاستمارة
                 </button>
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
@@ -64,7 +96,7 @@
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-accept"  (click)="ApproveData()">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-accept" (click)="ApproveData()">
                     موافقة
                 </button>
                 <button *ngIf="role == 'Researchers'" type="button" class="btn btn-accept">
@@ -78,7 +110,7 @@
     </div>
     <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
         <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
-            <a [routerLink]="['/FormDetails',formId, null]">الغلاف</a>
+            <a [routerLink]="['/FormDetails',formId, null,companyId]">الغلاف</a>
         </div>
         <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
             <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>

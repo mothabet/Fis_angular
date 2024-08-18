@@ -70,9 +70,8 @@ export class CompanyHomeComponent implements OnInit{
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        debugger
         if (res.Data.Type == 1)
-          this.router.navigate(['/FormDetails', this.formId,'null']);
+          this.router.navigate(['/FormDetails', this.formId,'null',this.companyId]);
         else if (res.Data.Type == 2)
           this.router.navigate(['/QuarterFormCover', this.formId]);
       },
@@ -81,6 +80,6 @@ export class CompanyHomeComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'').subscribe(observer);
   }
 }

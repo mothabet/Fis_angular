@@ -21,6 +21,7 @@ export class SharedQuarterTableComponent {
   tablePartsCount = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
+  companyId!:string;
   constructor(private route: ActivatedRoute,private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -30,6 +31,7 @@ export class SharedQuarterTableComponent {
     this.route.paramMap.subscribe(params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
+      this.companyId = params.get('companyId')!;
       this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -90,7 +92,7 @@ export class SharedQuarterTableComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   modifyInputById(id: number): void {
     const inputs = document.getElementsByClassName('quarter' + id) as HTMLCollectionOf<HTMLInputElement>;

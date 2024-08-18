@@ -19,6 +19,7 @@ export class SharedFormCoverComponent implements OnInit{
   coverForm!: ICoverFormDetailsDto;
   noTables = true;
   @Input() formId!: string;
+  @Input() companyId!: string;
   table!: IGetTableDto;
   years!: number[];
   currentYear: number = 0;
@@ -55,6 +56,6 @@ export class SharedFormCoverComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
 }

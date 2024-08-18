@@ -23,7 +23,8 @@ export class SharedTransTableComponent {
   nextYear = 0;
   transaction = 0;
   countries! : IGetCountriesDto[];
-  activities! : IGetActivitiesDto[];
+  activities! : IGetActivitiesDto[];  
+  companyId!:string;
   constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -32,6 +33,7 @@ export class SharedTransTableComponent {
     this.route.paramMap.subscribe(params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
+      this.companyId = params.get('companyId')!;
       this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -92,7 +94,7 @@ export class SharedTransTableComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   calculateTransaction(item:any) {
     item.values[2] = item.values[1] - item.values[0];

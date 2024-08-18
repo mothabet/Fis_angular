@@ -23,6 +23,7 @@ export class SharedOneYearWithPartsComponent {
   tablePartsCount = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
+  companyId!:string;
   constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
@@ -33,6 +34,7 @@ export class SharedOneYearWithPartsComponent {
     this.route.paramMap.subscribe(params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
+      this.companyId = params.get('companyId')!;
       this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -100,7 +102,7 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   addSubCodeRow(code:ICode){
     const subCode:ISubCode={

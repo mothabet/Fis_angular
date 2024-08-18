@@ -20,6 +20,7 @@ export class SharedTableWithoutTransComponent {
   coverForm!: ICoverFormDetailsDto;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
+  companyId!:string;
   constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
@@ -30,6 +31,7 @@ export class SharedTableWithoutTransComponent {
     this.route.paramMap.subscribe(params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
+      this.companyId = params.get('companyId')!;
       this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
@@ -99,7 +101,7 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   addSubCodeRow(code:ICode){
     debugger

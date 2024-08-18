@@ -7,8 +7,8 @@ import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import Swal from 'sweetalert2';
 import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
-import { IAddFormDataDto, IDataDto } from './Dtos/FormDataDto';
 import { NavigateTablesTypesService } from '../../services/navigate-tables-types.service';
+import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -40,6 +40,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
+    debugger
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);
@@ -60,19 +61,19 @@ export class NavigateTablesTypesComponent implements OnInit {
         let navigationPromise;
         switch (this.tableType) {
           case 1:
-            navigationPromise = this.router.navigate(['/TransTable', this.formId, id]);
+            navigationPromise = this.router.navigate(['/TransTable', this.formId, id,this.companyId]);
             break;
           case 2:
-            navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id]);
+            navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id,this.companyId]);
             break;
           case 3:
-            navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id]);
+            navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id,this.companyId]);
             break;
           case 4:
-            navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id]);
+            navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id,this.companyId]);
             break;
           case 5:
-            navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id]);
+            navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id,this.companyId]);
             break;
           case 0:
             navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id]);

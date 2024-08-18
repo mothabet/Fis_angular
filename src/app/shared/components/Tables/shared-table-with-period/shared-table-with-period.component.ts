@@ -24,6 +24,7 @@ export class SharedTableWithPeriodComponent {
   formYear : string = '';
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
+  companyId!:string;
   constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
     
     
@@ -33,6 +34,7 @@ export class SharedTableWithPeriodComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.GetTableById(+this.tableId);
+      this.companyId = params.get('companyId')!;
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
@@ -100,7 +102,7 @@ export class SharedTableWithPeriodComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
   }
   generateYearsList(period:number): void {
     for (let i = 0; i < period; i++) {
