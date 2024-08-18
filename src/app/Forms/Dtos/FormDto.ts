@@ -32,6 +32,7 @@ export interface ICoverFormDetailsDto{
     arNotes : string,
     enNotes : string,
     reviewYear : string,
+    status:number
 }
 export interface IGetTablesDto {
     id:number,

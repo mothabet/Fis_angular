@@ -18,6 +18,7 @@ export class FormDetailsComponent implements OnInit {
   coverForm!: ICoverFormDetailsDto;
   noTables = true;
   formId: string = '';
+  type: string = '';
   table!: IGetTableDto;
   years!: number[];
   currentYear: number = 0;
@@ -29,10 +30,11 @@ export class FormDetailsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    this.type = this.activeRouter.snapshot.paramMap.get('type')!;
     this.isCoverActive = true
-    this.GetFormById(+this.formId);
+    this.GetFormById(+this.formId,this.type);
   }
-  GetFormById(id: number): void {
+  GetFormById(id: number , type:string): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -51,6 +53,6 @@ export class FormDetailsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormById(id,this.type).subscribe(observer);
   }
 }

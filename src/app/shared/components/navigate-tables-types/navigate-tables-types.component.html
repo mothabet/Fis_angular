@@ -1,10 +1,15 @@
-<div class="header-nav" style="margin-bottom: -10px" *ngIf="role == 'Admin'">
+<div class="header-nav" style="margin-bottom: -10px" >
     <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
         <ul class="links">
             <li>
-                <a [routerLink]="['/FormDetails']">{{coverForm.arName}}</a>
+                <a [routerLink]="['/FormDetails',formId,null]">{{coverForm.arName}}</a>
             </li>
         </ul>
+    </div>
+    <div class="btns d-flex">
+        <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+            حالة الإستمارة : تم الارسال للشركة            
+        </button>
     </div>
 </div>
 <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
@@ -12,8 +17,8 @@
         <div class="title">
             {{coverForm.arName}} </div>
         <div class="btns d-flex">
-            <button type="button" class="btnStatus" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
-                حالة الإستمارة : تم الإرسال
+            <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                حالة الإستمارة : تم الارسال للشركة            
             </button>
             <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                 <img src="./images/list-box-outline.png" alt="">
@@ -45,7 +50,7 @@
 </div>
 <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
     <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
-        <a [routerLink]="['/FormDetails',formId]">الغلاف</a>
+        <a [routerLink]="['/FormDetails',formId, null]">الغلاف</a>
     </div>
     <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
         <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>

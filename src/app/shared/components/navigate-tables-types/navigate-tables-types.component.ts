@@ -23,6 +23,8 @@ export class NavigateTablesTypesComponent implements OnInit {
   tableType!: number;
   formId!: string;
   role: string = "";
+  temp: string = "";
+
   companyId!: string;
   tableId: number | null = null;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute, private sharedServices: SharedService, private formServices: FormService, private router: Router) { }
@@ -30,6 +32,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
+    console.log(this.coverForm)
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
@@ -70,11 +73,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               console.error('Unknown tableType');
               return;
           }
-          // navigationPromise.then(() => {
-          //   window.location.reload();
-          // }).catch((err) => {
-          //   console.error('Navigation error:', err);
-          // });
+
         if (res.Data) {
           this.Loader = false;
         }

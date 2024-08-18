@@ -21,18 +21,20 @@ export class SharedQuarterTableComponent {
   tablePartsCount = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,private renderer: Renderer2, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
     
-    // this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    // this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
-    this.GetTableById(+this.tableId);
+    this.route.paramMap.subscribe(params => {
+      this.formId = params.get('formId')!;
+      this.tableId = params.get('tableId')!;
+      this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    });
   }
   ngAfterViewInit(): void {
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized

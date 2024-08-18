@@ -24,15 +24,19 @@ export class SharedTransTableComponent {
   transaction = 0;
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
-    this.GetTableById(+this.tableId);
+    this.route.paramMap.subscribe(params => {
+      this.formId = params.get('formId')!;
+      this.tableId = params.get('tableId')!;
+      this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    });
   }
   GetTableById(id: number): void {
     this.Loader = true;

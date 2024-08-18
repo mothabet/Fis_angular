@@ -60,9 +60,9 @@ export class FormService {
      var resopnse = this.http.put(environment.apiUrl+`Table/UpdateTable?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
-   GetFormById(id:number){
+   GetFormById(id:number,type:string = ''){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Form/GetFormById?id=${id}&lang=2`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Form/GetFormById?id=${id}&lang=2&type=${type}`, { headers });
      return resopnse;
    }
    UpdateForm(id:number,Model: IAddForm){

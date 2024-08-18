@@ -23,15 +23,19 @@ export class SharedTwoYearsWithPartsComponent {
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   selectedValue!: string;
-  constructor(private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
-    this.GetTableById(+this.tableId);
+    this.route.paramMap.subscribe(params => {
+      this.formId = params.get('formId')!;
+      this.tableId = params.get('tableId')!;
+      this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    });
   }
   onRadioChange(event: Event, value: string) {
     this.selectedValue = value;
