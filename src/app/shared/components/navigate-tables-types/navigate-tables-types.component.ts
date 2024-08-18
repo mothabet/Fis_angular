@@ -111,207 +111,17 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    if (this.table.Type == "1") {
-      let invalidEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
-        // Check if values array is long enough
-        const hasSufficientValues = formContent.values.length >= 3;
-
-        // Validate main formContent fields
-        const mainInvalid = hasSufficientValues && (
-          formContent.values[0] === 0 || formContent.values[1] === 0 || formContent.values[2] === 0 ||
-          formContent.values[0] === null || formContent.values[1] === null || formContent.values[2] === null
-        );
-        // Validate subCodes fields if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) => {
-          // Check if subCode values array is long enough
-          const subCodeHasSufficientValues = subCode.values.length >= 3;
-
-          return subCodeHasSufficientValues && (
-            subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
-            subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null
-          );
-        });
-        return mainInvalid || subCodesInvalid;
-      });
-
-      if (invalidEntries.length > 0) {
-        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
-        invalidEntries.forEach((entry: IGetQuestionDto) => {
-          // Include the main code if it's invalid
-          if (entry.code.TypeId != 4) {
-            if (entry.values.length >= 3 &&
-              (entry.values[0] === 0 || entry.values[1] === 0 || entry.values[2] === 0 ||
-                entry.values[0] === null || entry.values[1] === null || entry.values[2] === null))
-              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
-          }
-          // Include subCodes errors
-          if (entry.code.SubCodes) {
-            entry.code.SubCodes.forEach((subCode: any) => {
-              if (subCode.values.length >= 3 &&
-                (subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
-                  subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null)) {
-                errorMessage += `${subCode.arName}\n`; // Use 'SubCode' or any label as needed
-              }
-            });
-          }
-        });
-        this.removeTable(this.table.id);
-      } else {
-        this.addTableToListInLocalStorage(this.table);
-      }
-    }
-    else if (this.table.Type == "2") {
-      let invalidEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
-        // Check if values array is long enough
-        const hasSufficientValues = formContent.values.length >= 2;
-        // Validate main formContent fields
-        const mainInvalid = hasSufficientValues && (
-          formContent.values[0] === 0 || formContent.values[1] === 0 ||
-          formContent.values[0] === null || formContent.values[1] === null
-        );
-        // Validate subCodes fields if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) => {
-          debugger
-          // Check if subCode values array is long enough
-          const subCodeHasSufficientValues = subCode.values.length >= 2;
-
-          return subCodeHasSufficientValues && (
-            subCode.values[0] === 0 || subCode.values[1] === 0 ||
-            subCode.values[0] === null || subCode.values[1] === null
-          );
-        });
-        return mainInvalid || subCodesInvalid;
-      });
-
-      if (invalidEntries.length > 0) {
-        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
-        invalidEntries.forEach((entry: IGetQuestionDto) => {
-          // Include the main code if it's invalid
-          if (entry.code.TypeId != 4) {
-            if (entry.values.length >= 2 &&
-              (entry.values[0] === 0 || entry.values[1] === 0 ||
-                entry.values[0] === null || entry.values[1] === null))
-              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
-          }
-          // Include subCodes errors
-          if (entry.code.SubCodes) {
-            entry.code.SubCodes.forEach((subCode: any) => {
-              if (subCode.values.length >= 2 &&
-                (subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
-                  subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null)) {
-                errorMessage += `${subCode.arName}\n`; // Use 'SubCode' or any label as needed
-              }
-            });
-          }
-        });
-        this.removeTable(this.table.id);
-      } else {
-        this.addTableToListInLocalStorage(this.table);
-      }
-    }
-    else if (this.table.Type == "3") {
-      let invalidPartsEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
-        // Validate main values
-        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
-
-        // Validate subCode values if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
-          subCode.values.some((value: number) => value === 0 || value === null)
-        );
-
-        return mainValuesInvalid || subCodesInvalid;
-      });
-
-      if (invalidPartsEntries.length > 0) {
-        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
-        invalidPartsEntries.forEach((entry: IGetQuestionDto) => {
-          // Include the main code if it's invalid
-          if (entry.code.TypeId != 4) {
-            if (entry.values.some(value => value === 0 || value === null)) {
-              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
-            }
-          }
-          // Include subCodes errors
-          if (entry.code.SubCodes) {
-            entry.code.SubCodes.forEach((subCode: any) => {
-              if (subCode.values.some((value: any) => value === 0 || value === null)) {
-                errorMessage += `${subCode.arName}\n`;
-              }
-            });
-          }
-        });
-        this.removeTable(this.table.id);
-      } else {
-        this.addTableToListInLocalStorage(this.table);
-      }
-    }
-    else if (this.table.Type == "4") {
-      let invalidPartsEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
-        // Validate main values
-        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
-
-        // Validate subCode values if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
-          subCode.values.some((value: number) => value === 0 || value === null)
-        );
-
-        return mainValuesInvalid || subCodesInvalid;
-      });
-
-      if (invalidPartsEntries.length > 0) {
-        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
-        invalidPartsEntries.forEach((entry: IGetQuestionDto) => {
-          // Include the main code if it's invalid
-          if (entry.code.TypeId != 4) {
-            if (entry.values.some(value => value === 0 || value === null)) {
-              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
-            }
-          }
-          // Include subCodes errors
-          if (entry.code.SubCodes) {
-            entry.code.SubCodes.forEach((subCode: any) => {
-              if (subCode.values.some((value: any) => value === 0 || value === null)) {
-                errorMessage += `${subCode.arName}\n`;
-              }
-            });
-          }
-        });
-        this.removeTable(this.table.id);
-        
-      } else {
-        this.addTableToListInLocalStorage(this.table);
-      }
-    }
-    else if (this.table.Type == "5") {
-      let invalidPartsEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
-        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
-          subCode.values.some((value: number) => value === 0 || value === null)
-        );
-        return mainValuesInvalid || subCodesInvalid;
-      });
-
-      if (invalidPartsEntries.length > 0) {
-        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
-        invalidPartsEntries.forEach((entry: IGetQuestionDto) => {
-          if (entry.code.TypeId != 4) {
-            if (entry.values.some(value => value === 0 || value === null)) {
-              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
-            }
-          }
-          if (entry.code.SubCodes) {
-            entry.code.SubCodes.forEach((subCode: any) => {
-              if (subCode.values.some((value: any) => value === 0 || value === null)) {
-                errorMessage += `${subCode.arName}\n`;
-              }
-            });
-          }
-        });
-        this.removeTable(this.table.id);
-      } else {
-        this.addTableToListInLocalStorage(this.table);
-      }
-    }
+    debugger
+    if (this.table.Type == "1")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "2")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "3")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "4")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "5")
+      this.addTableToListInLocalStorage(this.table);
   }
   addTableToListInLocalStorage(table: any): void {
     const storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
@@ -347,13 +157,14 @@ export class NavigateTablesTypesComponent implements OnInit {
       (table) => !tablesList.some((storedTable) => storedTable.id === table.id)
     );
     let errors = "";
-    for (let item = 0; item < missingTables.length; item++) {   
+    for (let item = 0; item < missingTables.length; item++) {
       errors += `يجب ادخال بيانات ${missingTables[item].arName} بشكل صحيح\n`;
     }
-    let commonTables = this.coverForm.tables.filter(
-      (table) => tablesList.some((storedTable) => storedTable.id === table.id)
+    let commonTables = tablesList.filter(
+      (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
     );
-    for (let item = 0; item < commonTables.length; item++) {   
+    for (let item = 0; item < commonTables.length; item++) {
+      debugger
       console.log(commonTables[item]);
       let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
         // Validate main values
@@ -366,76 +177,150 @@ export class NavigateTablesTypesComponent implements OnInit {
 
         return mainValuesInvalid || subCodesInvalid;
       });
-      if(invalidPartsEntries.length>0)
-      errors += `يجب ادخال بيانات ${missingTables[item].arName} بشكل صحيح\n`;
+      if (invalidPartsEntries.length > 0)
+        errors += `يجب ادخال بيانات ${commonTables[item].arName} بشكل صحيح\n`;
     }
     if (errors != "") {
       alert(errors);
       this.Loader = false; // Make sure to reset the Loader in this case
       return; // Stop execution here
     }
-    if (this.coverForm.tables.length === tablesList.length) {
-      var dataDtosList: IDataDto[] = [];
-      for (let index = 0; index < tablesList.length; index++) {
-        for (let i = 0; i < tablesList[index].formContents.length; i++) {
-          var codesList: number[] = [];
-          for (let j = 0; j < tablesList[index].formContents[i].values.length; j++) {
-            var codes = tablesList[index].formContents[i].values[j];
-            codesList.push(codes);
+    var dataDtosList: IDataDto[] = [];
+    for (let index = 0; index < tablesList.length; index++) {
+      for (let i = 0; i < tablesList[index].formContents.length; i++) {
+        var codesList: number[] = [];
+        for (let j = 0; j < tablesList[index].formContents[i].values.length; j++) {
+          var codes = tablesList[index].formContents[i].values[j];
+          codesList.push(codes);
+        }
+        var dataDtos: IDataDto = {
+          TableId: tablesList[index].id,
+          questionId: tablesList[index].formContents[i].code.QuestionCode,
+          codes: codesList,
+        };
+        dataDtosList.push(dataDtos);
+        for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
+          var codesListSub: number[] = [];
+          for (let x = 0; x < tablesList[index].formContents[i].code.SubCodes[r].values.length; x++) {
+            var codes = tablesList[index].formContents[i].code.SubCodes[r].values[x];
+            codesListSub.push(codes);
           }
-          var dataDtos: IDataDto = {
+          var dataDtosSub: IDataDto = {
             TableId: tablesList[index].id,
-            questionId: tablesList[index].formContents[i].code.QuestionCode,
-            codes: codesList,
+            questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
+            codes: codesListSub,
           };
-          dataDtosList.push(dataDtos);
-          for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
-            var codesListSub: number[] = [];
-            for (let x = 0; x < tablesList[index].formContents[i].code.SubCodes[r].values.length; x++) {
-              var codes = tablesList[index].formContents[i].code.SubCodes[r].values[x];
-              codesListSub.push(codes);
-            }
-            var dataDtosSub: IDataDto = {
-              TableId: tablesList[index].id,
-              questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
-              codes: codesListSub,
-            };
-            dataDtosList.push(dataDtosSub);
-          }
+          dataDtosList.push(dataDtosSub);
         }
       }
-      var addFormDataDto: IAddFormDataDto = {
-        dataDtos: dataDtosList,
-        FormId: this.coverForm.id,
-      };
-      console.log(addFormDataDto);
-      const observer = {
-        next: (res: any) => {
-          localStorage.removeItem(`tablesList${this.coverForm.id}`);
-          this.Loader = false;
-          Swal.fire({
-            icon: 'success',
-            title: res.Message,
-            showConfirmButton: false,
-            timer: 2000,
-          });
-        },
-        error: (err: any) => {
-          this.sharedServices.handleError(err);
-          this.Loader = false;
-        },
-      };
-      this.navigateTablesTypesService.AddFormData(addFormDataDto).subscribe(observer);
-    } else {
-      this.Loader = false;
-      Swal.fire({
-        icon: 'error',
-        title: "يجب ادخال جميع بيانات صفوف الجداول",
-        showConfirmButton: false,
-        timer: 2000,
-      });
     }
+    var addFormDataDto: IAddFormDataDto = {
+      dataDtos: dataDtosList,
+      FormId: this.coverForm.id,
+    };
+    console.log(addFormDataDto);
+    const observer = {
+      next: (res: any) => {
+        localStorage.removeItem(`tablesList${this.coverForm.id}`);
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.navigateTablesTypesService.AddFormData(addFormDataDto,"Approve").subscribe(observer);
+
   }
-  
+  SaveData() {
+    this.Loader = true;
+    this.displayFormContents();
+    let storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
+    let tablesList: IGetTableDto[] = storedTables ? JSON.parse(storedTables) : [];
+    let errors = "";
+    let commonTables = tablesList.filter(
+      (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
+    );
+    for (let item = 0; item < commonTables.length; item++) {
+      debugger
+      console.log(commonTables[item]);
+      let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
+        // Validate main values
+        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
+
+        // Validate subCode values if present
+        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
+          subCode.values.some((value: number) => value === 0 || value === null)
+        );
+
+        return mainValuesInvalid || subCodesInvalid;
+      });
+      if (invalidPartsEntries.length > 0)
+        errors += `يجب ادخال بيانات ${commonTables[item].arName} بشكل صحيح\n`;
+    }
+    if (errors != "") {
+      alert(errors);
+      this.Loader = false; // Make sure to reset the Loader in this case
+      return; // Stop execution here
+    }
+    var dataDtosList: IDataDto[] = [];
+    for (let index = 0; index < tablesList.length; index++) {
+      for (let i = 0; i < tablesList[index].formContents.length; i++) {
+        var codesList: number[] = [];
+        for (let j = 0; j < tablesList[index].formContents[i].values.length; j++) {
+          var codes = tablesList[index].formContents[i].values[j];
+          codesList.push(codes);
+        }
+        var dataDtos: IDataDto = {
+          TableId: tablesList[index].id,
+          questionId: tablesList[index].formContents[i].code.QuestionCode,
+          codes: codesList,
+        };
+        dataDtosList.push(dataDtos);
+        for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
+          var codesListSub: number[] = [];
+          for (let x = 0; x < tablesList[index].formContents[i].code.SubCodes[r].values.length; x++) {
+            var codes = tablesList[index].formContents[i].code.SubCodes[r].values[x];
+            codesListSub.push(codes);
+          }
+          var dataDtosSub: IDataDto = {
+            TableId: tablesList[index].id,
+            questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
+            codes: codesListSub,
+          };
+          dataDtosList.push(dataDtosSub);
+        }
+      }
+    }
+    var addFormDataDto: IAddFormDataDto = {
+      dataDtos: dataDtosList,
+      FormId: this.coverForm.id,
+    };
+    console.log(addFormDataDto);
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.navigateTablesTypesService.AddFormData(addFormDataDto, "Save").subscribe(observer);
+
+  }
+
 
 }

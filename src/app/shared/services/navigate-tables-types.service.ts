@@ -10,10 +10,10 @@ import { environment } from 'src/environments/environment.development';
 export class NavigateTablesTypesService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
-  AddFormData(Model: IAddFormDataDto) {
+  AddFormData(Model: IAddFormDataDto,btnTpe:string = "") {
     debugger
     var headers = this.sharedService.getHeaders();
-    var resopnse = this.http.post(environment.apiUrl + `FormData/AddFormData?lang=2`, Model, { headers });
+    var resopnse = this.http.post(environment.apiUrl + `FormData/AddFormData?lang=2&btnTpe=${btnTpe}`, Model, { headers });
     return resopnse;
   }
 }
