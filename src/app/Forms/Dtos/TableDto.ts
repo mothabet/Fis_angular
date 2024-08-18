@@ -24,6 +24,7 @@ export interface IGetTableDto {
     enNotes:string,
     Type: string,
     formId:number,
+    period:number,
     IsActive: boolean,
     formContents :IGetQuestionDto[]
     tableParts :IGetTableParts[]
