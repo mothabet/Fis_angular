@@ -95,7 +95,7 @@ export class TableWithPeriodComponent implements OnInit {
     }
   }
   addSubCodeRow(code:ICode){
-    debugger
+    
     const subCode:ISubCode={
       arName:'',
       codeId:0,
@@ -107,7 +107,7 @@ export class TableWithPeriodComponent implements OnInit {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -118,7 +118,7 @@ export class TableWithPeriodComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

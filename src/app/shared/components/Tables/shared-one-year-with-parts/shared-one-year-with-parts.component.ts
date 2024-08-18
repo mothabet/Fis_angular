@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -55,25 +56,35 @@ export class SharedOneYearWithPartsComponent {
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
-      next: (res: any) => {
-        debugger
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.table = res.Data;
-          console.log(this.table)
-          this.tablePartsCount = this.table.tableParts.length
-          console.log(this.tablePartsCount)
-        }
-      },
-      error: (err: any) => {
-        debugger
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
+        next: (res: any) => {
+            this.Loader = false;
+            if (res.Data) {
+                this.table = res.Data;
+                this.tablePartsCount = this.table.tableParts.length;
+
+                // Initialize the `values` array for each formContent based on `tablePartsCount`
+                this.table.formContents.forEach((formContent: IGetQuestionDto) => {
+                    // Initialize the `values` array with zeroes, ensuring the first value is set to 0
+                    formContent.values = Array(this.tablePartsCount).fill(0);
+
+                    // Initialize the `values` array for each subCode
+                    if (formContent.code.SubCodes) {
+                        formContent.code.SubCodes.forEach((subCode: any) => {
+                            // Set the first value to 0, and the rest based on the number of parts
+                            subCode.values = [0, ...Array(this.tablePartsCount - 1).fill(0)];
+                        });
+                    }
+                });
+            }
+        },
+        error: (err: any) => {
+            this.sharedServices.handleError(err);
+            this.Loader = false;
+        },
     };
     this.formServices.GetTableById(id).subscribe(observer);
-  }
+}
+
   GetFormById(id: number): void {
     this.Loader = true;
     const observer = {
@@ -138,5 +149,8 @@ export class SharedOneYearWithPartsComponent {
       },
     };
     this.formServices.GetCountries().subscribe(observer);
+  }
+  calculateSum(values: number[]): number {
+    return values.reduce((acc, val) => acc + (val || 0), 0);
   }
 }

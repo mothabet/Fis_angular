@@ -17,7 +17,6 @@ export class TopScreenComponent implements OnInit
   ngOnInit(): void {
     this.Loader = true
     const isLoggedIn = this.authService.getToken();
-    debugger
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
     this.arName = result.arName;

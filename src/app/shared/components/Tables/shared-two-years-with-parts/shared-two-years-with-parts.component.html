@@ -1,6 +1,6 @@
 <div class="companies-details form-details prev-form" style="max-width: 74rem;">
     <div class="header-nav" style="margin-bottom: -10px">
-        <app-navigate-tables-types  [coverForm]="coverForm"></app-navigate-tables-types>
+        <app-navigate-tables-types  [coverForm]="coverForm" [table]="table"></app-navigate-tables-types>
         <!-- start table -->
         <div class="content companies projection-table" style="max-width: 74rem;">
             <div class="header d-flex flex-wrap">
@@ -55,13 +55,12 @@
                                     </label>
                                 </td>
                                 <ng-container *ngIf="formContent.code.TypeId != 4">
-                                    <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                            type="number" placeholder="0" />
-                                    </td>
-                                </ng-container>
-                                <ng-container *ngIf="formContent.code.TypeId != 4">
-                                    <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                            type="number" placeholder="0" /></td>
+                                    <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                        <td class="text-center"><input type="number"  [(ngModel)]="formContent.values[i]" /></td>
+                                    </ng-container>
+                                    <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                        <td class="text-center"><input type="number"  [(ngModel)]="formContent.values[i + table.tableParts.length]" /></td>
+                                    </ng-container>
                                 </ng-container>
 
                                 <td class="text-center"><input disabled type="text"
@@ -128,10 +127,14 @@
                                             </div>
 
                                         </td>
-                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                                type="number" placeholder="0" /></td>
-                                        <td *ngFor="let part of table.tableParts" class="text-center"><input
-                                                type="number" placeholder="0" /></td>
+                                        <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                            <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i]" /></td>
+                                          </ng-container>
+                                      
+                                          <!-- Second set of tableParts for subcodes -->
+                                          <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                            <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i + table.tableParts.length]" /></td>
+                                          </ng-container>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4">
                                             <input disabled type="text" value="{{subCode.QuestionCode}}" />
                                         </td>

@@ -3,6 +3,7 @@ import { SharedService } from '../../services/shared.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -27,6 +28,8 @@ export class NavigateTablesTypesComponent implements OnInit {
 
   companyId!: string;
   tableId: number | null = null;
+  @Input() table: any;
+  formContents: any[] = [];
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute, private sharedServices: SharedService, private formServices: FormService, private router: Router) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
@@ -43,7 +46,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   GetTableById(id: number): void {
     this.Loader = true;
-    
+
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -73,7 +76,11 @@ export class NavigateTablesTypesComponent implements OnInit {
               console.error('Unknown tableType');
               return;
           }
-
+          // navigationPromise.then(() => {
+          //   window.location.reload();
+          // }).catch((err) => {
+          //   console.error('Navigation error:', err);
+          // });
         if (res.Data) {
           this.Loader = false;
         }
@@ -98,4 +105,191 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.certificationActivated.emit();
     this.tableId = null;
   }
+  displayFormContents() {
+    debugger
+    if (this.table.Type == 1) {
+      let invalidEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
+        // Check if values array is long enough
+        const hasSufficientValues = formContent.values.length >= 3;
+  
+        // Validate main formContent fields
+        const mainInvalid = hasSufficientValues && (
+          formContent.values[0] === 0 || formContent.values[1] === 0 || formContent.values[2] === 0 ||
+          formContent.values[0] === null || formContent.values[1] === null || formContent.values[2] === null
+        );
+  
+        console.log('mainInvalid:', mainInvalid); // Debugging line
+  
+        // Validate subCodes fields if present
+        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) => {
+          // Check if subCode values array is long enough
+          const subCodeHasSufficientValues = subCode.values.length >= 3;
+  
+          return subCodeHasSufficientValues && (
+            subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
+            subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null
+          );
+        });
+  
+        console.log('subCodesInvalid:', subCodesInvalid); // Debugging line
+  
+        return mainInvalid || subCodesInvalid;
+      });
+  
+      if (invalidEntries.length > 0) {
+        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
+        invalidEntries.forEach((entry: IGetQuestionDto) => {
+          // Include the main code if it's invalid
+          if (entry.code.TypeId != 4) {
+            if (entry.values.length >= 3 &&
+              (entry.values[0] === 0 || entry.values[1] === 0 || entry.values[2] === 0 ||
+                entry.values[0] === null || entry.values[1] === null || entry.values[2] === null))
+              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
+          }
+          // Include subCodes errors
+          if (entry.code.SubCodes) {
+            entry.code.SubCodes.forEach((subCode: any) => {
+              if (subCode.values.length >= 3 &&
+                (subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
+                  subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null)) {
+                errorMessage += `${subCode.arName}\n`; // Use 'SubCode' or any label as needed
+              }
+            });
+          }
+        });
+        alert(errorMessage);
+      } else {
+        alert('تم ادخال جميع قيم صفوف هذا الجدول');
+      }
+    } 
+    else if (this.table.Type == 2) {
+      let invalidEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
+        // Check if values array is long enough
+        const hasSufficientValues = formContent.values.length >= 2;
+        // Validate main formContent fields
+        const mainInvalid = hasSufficientValues && (
+          formContent.values[0] === 0 || formContent.values[1] === 0 ||
+          formContent.values[0] === null || formContent.values[1] === null
+        );
+  
+        console.log('mainInvalid:', mainInvalid); // Debugging line
+  
+        // Validate subCodes fields if present
+        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) => {
+          debugger
+          // Check if subCode values array is long enough
+          const subCodeHasSufficientValues = subCode.values.length >= 2;
+  
+          return subCodeHasSufficientValues && (
+            subCode.values[0] === 0 || subCode.values[1] === 0 ||
+            subCode.values[0] === null || subCode.values[1] === null
+          );
+        });
+  
+        console.log('subCodesInvalid:', subCodesInvalid); // Debugging line
+  
+        return mainInvalid || subCodesInvalid;
+      });
+  
+      if (invalidEntries.length > 0) {
+        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
+        invalidEntries.forEach((entry: IGetQuestionDto) => {
+          // Include the main code if it's invalid
+          if (entry.code.TypeId != 4) {
+            if (entry.values.length >= 2 &&
+              (entry.values[0] === 0 || entry.values[1] === 0 ||
+                entry.values[0] === null || entry.values[1] === null))
+              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
+          }
+          // Include subCodes errors
+          if (entry.code.SubCodes) {
+            entry.code.SubCodes.forEach((subCode: any) => {
+              if (subCode.values.length >= 2 &&
+                (subCode.values[0] === 0 || subCode.values[1] === 0 || subCode.values[2] === 0 ||
+                  subCode.values[0] === null || subCode.values[1] === null || subCode.values[2] === null)) {
+                errorMessage += `${subCode.arName}\n`; // Use 'SubCode' or any label as needed
+              }
+            });
+          }
+        });
+        alert(errorMessage);
+      } else {
+        alert('تم ادخال جميع قيم صفوف هذا الجدول');
+      }
+    } 
+    else if (this.table.Type == 3) {
+      let invalidPartsEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
+        // Validate main values
+        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
+  
+        // Validate subCode values if present
+        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
+          subCode.values.some((value: number) => value === 0 || value === null)
+        );
+  
+        return mainValuesInvalid || subCodesInvalid;
+      });
+  
+      if (invalidPartsEntries.length > 0) {
+        let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
+        invalidPartsEntries.forEach((entry: IGetQuestionDto) => {
+          // Include the main code if it's invalid
+          if (entry.code.TypeId != 4) {
+            if (entry.values.some(value => value === 0 || value === null)) {
+              errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
+            }
+          }
+          // Include subCodes errors
+          if (entry.code.SubCodes) {
+            entry.code.SubCodes.forEach((subCode: any) => {
+              if (subCode.values.some((value:any) => value === 0 || value === null)) {
+                errorMessage += `${subCode.arName}\n`;
+              }
+            });
+          }
+        });
+        alert(errorMessage);
+      } else {
+        alert('تم ادخال جميع قيم صفوف هذا الجدول');
+      }
+    }
+    else if (this.table.Type == 4){
+debugger
+let invalidPartsEntries = this.table.formContents.filter((formContent: IGetQuestionDto) => {
+  // Validate main values
+  const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
+
+  // Validate subCode values if present
+  const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
+    subCode.values.some((value: number) => value === 0 || value === null)
+  );
+
+  return mainValuesInvalid || subCodesInvalid;
+});
+
+if (invalidPartsEntries.length > 0) {
+  let errorMessage = 'يجب إدخال قيمة في الصفوف التالية:\n';
+  invalidPartsEntries.forEach((entry: IGetQuestionDto) => {
+    // Include the main code if it's invalid
+    if (entry.code.TypeId != 4) {
+      if (entry.values.some(value => value === 0 || value === null)) {
+        errorMessage += `${entry.code.arName}\n`; // Use 'رمز' or any label as needed
+      }
+    }
+    // Include subCodes errors
+    if (entry.code.SubCodes) {
+      entry.code.SubCodes.forEach((subCode: any) => {
+        if (subCode.values.some((value:any) => value === 0 || value === null)) {
+          errorMessage += `${subCode.arName}\n`;
+        }
+      });
+    }
+  });
+  alert(errorMessage);
+} else {
+  alert('تم ادخال جميع قيم صفوف هذا الجدول');
+}
+    }
+  }
+  
 }
