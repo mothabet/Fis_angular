@@ -6,6 +6,7 @@ import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto 
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 @Component({
   selector: 'app-shared-trans-table',
@@ -25,12 +26,14 @@ export class SharedTransTableComponent {
   countries! : IGetCountriesDto[];
   activities! : IGetActivitiesDto[];  
   companyId!:string;
+  formData! : IDataDto[];
   constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
+      
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
@@ -38,13 +41,14 @@ export class SharedTransTableComponent {
     this.GetFormById(+this.formId);
     this.GetActivites();
     this.GetCountrites();
+    this.GetFormData();
     });
   }
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -111,7 +115,6 @@ export class SharedTransTableComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -129,6 +132,38 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetActivities().subscribe(observer);
   }
+
+  GetFormData() {
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.formData = res.Data[0].dataDtos
+          debugger
+          this.table.formContents.forEach((formContent, index) => {
+            const dataDto = this.formData.find(dto => dto.questionId === formContent.code.QuestionCode);
+            if (dataDto) {
+              formContent.values = dataDto.codes.slice(0, 3); // Assuming you want the first three codes to map to the formContent
+              
+              formContent.code.SubCodes.forEach((subCode, subIndex) => {
+                const subCodeData = dataDto.codes[subIndex];
+                if (subCodeData) {
+                  subCode.values = [subCodeData]; // You can adjust this based on your needs
+                }
+              });
+            }
+          });
+        }
+      },
+      error: (err: any) => {
+        
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormData(+this.formId,+this.companyId).subscribe(observer);
+  }
+
   GetCountrites() {
     const observer = {
       next: (res: any) => {

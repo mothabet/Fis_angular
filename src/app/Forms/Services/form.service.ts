@@ -36,6 +36,12 @@ export class FormService {
      var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?lang=2`,{ headers });
      return resopnse;
    }
+
+   GetFormData(formId:number , companyId:number = 0){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`FormData/GetAllFormData?lang=2&formId=${formId}&companyId=${companyId}`,{ headers });
+     return resopnse;
+   }
    
   DeleteForm(id:number){
     var headers= this.sharedService.getHeaders();
