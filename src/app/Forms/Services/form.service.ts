@@ -37,9 +37,9 @@ export class FormService {
      return resopnse;
    }
 
-   GetFormData(formId:number , companyId:number = 0){
+   GetFormData(formId:number , companyId:number = 0,tableId=0){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`FormData/GetAllFormData?lang=2&formId=${formId}&companyId=${companyId}`,{ headers });
+     var resopnse = this.http.get(environment.apiUrl+`FormData/GetAllFormData?lang=2&formId=${formId}&companyId=${companyId}&tableId=${tableId}`,{ headers });
      return resopnse;
    }
    

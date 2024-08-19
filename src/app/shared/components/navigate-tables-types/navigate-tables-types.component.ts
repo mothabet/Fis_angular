@@ -197,6 +197,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           TableId: tablesList[index].id,
           questionId: tablesList[index].formContents[i].code.QuestionCode,
           codes: codesList,
+          level :1
         };
         dataDtosList.push(dataDtos);
         for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
@@ -209,6 +210,7 @@ export class NavigateTablesTypesComponent implements OnInit {
             TableId: tablesList[index].id,
             questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
             codes: codesListSub,
+            level:2
           };
           dataDtosList.push(dataDtosSub);
         }
@@ -281,6 +283,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           TableId: tablesList[index].id,
           questionId: tablesList[index].formContents[i].code.QuestionCode,
           codes: codesList,
+          level:1
         };
         dataDtosList.push(dataDtos);
         for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
@@ -293,6 +296,7 @@ export class NavigateTablesTypesComponent implements OnInit {
             TableId: tablesList[index].id,
             questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
             codes: codesListSub,
+            level:2
           };
           dataDtosList.push(dataDtosSub);
         }
