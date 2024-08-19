@@ -61,7 +61,6 @@ export class FormService {
      return resopnse;
    }
    UpdateTable(id:number,Model: IAddTableDto){
-    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Table/UpdateTable?id=${id}&lang=2`, Model, { headers });
      return resopnse;
@@ -116,4 +115,15 @@ export class FormService {
     const response = this.http.post(environment.apiUrl+`Form/SendForm`, formDto, { headers });
     return response;
   }
+  CompleteForm(formId: number , companyId : number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Form/CompleteForm?formId=${formId}&companyId=${companyId}`, { headers });
+     return resopnse;
+   }
+   CloseForm(formId: number , companyId : number){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Form/CloseForm?formId=${formId}&companyId=${companyId}`, { headers });
+     return resopnse;
+   }
 }

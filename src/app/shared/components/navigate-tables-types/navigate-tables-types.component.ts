@@ -321,6 +321,45 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.navigateTablesTypesService.AddFormData(addFormDataDto, "Save").subscribe(observer);
 
   }
+  CompleteForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.CompleteForm(+this.formId,+this.companyId).subscribe(observer);
 
-
+  }
+  CloseForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.CloseForm(+this.formId,+this.companyId).subscribe(observer);
+  }
 }
