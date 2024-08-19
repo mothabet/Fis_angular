@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
@@ -72,16 +73,7 @@ export class SharedTransTableComponent {
             }
           });
           this.GetFormData();
-          const storedTables = localStorage.getItem(`tablesList${this.formId}`);
-          if (storedTables) {
-            let tablesList: any[] = [];
-            tablesList = JSON.parse(storedTables);
-            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
-            if (tableIndex !== -1) { // Ensure that the table is found
-              this.table = tablesList[tableIndex]; // Retrieve the entire table object
-            }
-          }
-
+          
         }
       },
       error: (err: any) => {
@@ -147,43 +139,62 @@ export class SharedTransTableComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
           if (!(res.Data.length > 0)) {
             this.checkFormData = false;
+            const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+          if (storedTables) {
+            let tablesList: any[] = [];
+            tablesList = JSON.parse(storedTables);
+            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+            if (tableIndex !== -1) { // Ensure that the table is found
+              this.table = tablesList[tableIndex]; // Retrieve the entire table object
+            }
+          }
+          this.Loader = false;
             return;
           }
-          this.checkFormData = true
-          debugger
-          this.formData = res.Data[0].dataDtos
-          debugger
+          this.checkFormData = true;
+          this.formData = res.Data[0].dataDtos;
+  
+          // Iterate over each form content and map the data accordingly
           this.table.formContents.forEach((formContent, index) => {
-            const dataDto = this.formData.find(dto => dto.questionId == formContent.code.QuestionCode);
-            debugger
-            if (dataDto) {
-              if (dataDto.level == 1)
+            // Loop through each item in formData
+            this.formData.forEach(dataDto => {
+              if (dataDto.level == 1 && formContent.code.QuestionCode == dataDto.questionId) {
+                // If it's level 1, assign to formContent values
                 formContent.values = dataDto.codes.slice(0, 3);
-              else if (dataDto.level == 2) {
+              } else if (dataDto.level === 2) {
+                // If it's level 2, find the corresponding subCode
                 formContent.code.SubCodes.forEach((subCode, subIndex) => {
-                  subIndex = index
-                  const subCodeData = dataDto.codes[subIndex];
-                  if (subCodeData) {
-                    subCode.values = [subCodeData]; // You can adjust this based on your needs
+                  // Check if the QuestionCode matches
+                  if (subCode.QuestionCode == dataDto.questionId) {
+                    subCode.values = dataDto.codes.slice(0, 3);
                   }
                 });
               }
-            }
+            });
           });
+          
         }
+        const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+          if (storedTables) {
+            let tablesList: any[] = [];
+            tablesList = JSON.parse(storedTables);
+            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+            if (tableIndex !== -1) { // Ensure that the table is found
+              this.table = tablesList[tableIndex]; // Retrieve the entire table object
+            }
+          }
+
       },
       error: (err: any) => {
-
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
     this.formServices.GetFormData(+this.formId, +this.companyId, +this.tableId).subscribe(observer);
   }
-
+  
   GetCountrites() {
     const observer = {
       next: (res: any) => {

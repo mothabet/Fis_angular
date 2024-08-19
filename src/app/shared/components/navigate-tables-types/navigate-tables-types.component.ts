@@ -208,7 +208,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
           var dataDtosSub: IDataDto = {
             TableId: tablesList[index].id,
-            questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
+            questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
             codes: codesListSub,
             level:2
           };
@@ -294,7 +294,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
           var dataDtosSub: IDataDto = {
             TableId: tablesList[index].id,
-            questionId: tablesList[index].formContents[i].code.SubCodes[r].Id,
+            questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
             codes: codesListSub,
             level:2
           };

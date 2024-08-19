@@ -7,6 +7,7 @@ import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
+import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 
 @Component({
   selector: 'app-shared-two-years-with-parts',
@@ -25,6 +26,8 @@ export class SharedTwoYearsWithPartsComponent {
   activities!: IGetActivitiesDto[];
   selectedValue!: string;
   companyId!: string;
+  formData!: IDataDto[];
+  checkFormData: boolean = false;
   constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -34,20 +37,7 @@ export class SharedTwoYearsWithPartsComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-
-      // Sequentially await each method to ensure proper execution order
-      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
-      if (storedTables) {
-        let tablesList: any[] = [];
-        tablesList = JSON.parse(storedTables);
-        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
-        if (tableIndex !== -1) { // Ensure that the table is found
-          this.table = tablesList[tableIndex]; // Retrieve the entire table object
-          this.tablePartsCount = this.table.tableParts.length;
-        }
-        else
-          this.GetTableById(+this.tableId);
-      }
+      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -55,7 +45,6 @@ export class SharedTwoYearsWithPartsComponent {
   }
   onRadioChange(event: Event, value: string) {
     this.selectedValue = value;
-    // Handle additional logic if needed
   }
 
   GetTableById(id: number): void {
@@ -81,6 +70,8 @@ export class SharedTwoYearsWithPartsComponent {
             }
           });
         }
+        this.GetFormData();
+
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
@@ -169,5 +160,68 @@ export class SharedTwoYearsWithPartsComponent {
     if (selectedCountry) {
       subCode.arCountry = selectedCountry.arName;
     }
+  }
+  GetFormData() {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          if (!(res.Data.length > 0)) {
+            this.checkFormData = false;
+            const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+          if (storedTables) {
+            let tablesList: any[] = [];
+            tablesList = JSON.parse(storedTables);
+            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+            if (tableIndex !== -1) { // Ensure that the table is found
+              this.table = tablesList[tableIndex]; // Retrieve the entire table object
+            }
+          }
+          this.Loader = false;
+            return;
+          }
+          this.checkFormData = true;
+          this.formData = res.Data[0].dataDtos;
+  
+          // Iterate over each form content and map the data accordingly
+          this.table.formContents.forEach((formContent, index) => {
+            // Loop through each item in formData
+            this.formData.forEach(dataDto => {
+              if (dataDto.level == 1 && formContent.code.QuestionCode == dataDto.questionId) {
+                // If it's level 1, assign to formContent values
+                formContent.values = dataDto.codes.slice(0, 3);
+              } else if (dataDto.level === 2) {
+                // If it's level 2, find the corresponding subCode
+                formContent.code.SubCodes.forEach((subCode, subIndex) => {
+                  // Check if the QuestionCode matches
+                  if (subCode.QuestionCode == dataDto.questionId) {
+                    subCode.values = dataDto.codes.slice(0, 3);
+                  }
+                });
+              }
+            });
+          });
+          
+        }
+        debugger
+        const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+          if (storedTables) {
+            let tablesList: any[] = [];
+            tablesList = JSON.parse(storedTables);
+            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+            if (tableIndex !== -1) { // Ensure that the table is found
+              this.table = tablesList[tableIndex]; // Retrieve the entire table object
+            }
+          }
+          this.Loader = false;
+
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormData(+this.formId, +this.companyId, +this.tableId).subscribe(observer);
   }
 }

@@ -49,6 +49,12 @@ export class CompanyHomeComponent implements OnInit{
   
   }
   GetCompanyForms(){
+    let _id = 1;
+    const isLoggedIn = this.authService.getToken();
+    let res = this.authService.decodedToken(isLoggedIn);  
+    this.role = res.roles;
+    if(this.role == "Researchers")
+      _id = 3;
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -59,7 +65,7 @@ export class CompanyHomeComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetCompanyForms(this.companyId,1).subscribe(observer);
+    this.formServices.GetCompanyForms(this.companyId,_id).subscribe(observer);
   }
   formNavigate(id: number) {
     this.GetFormById(id)
