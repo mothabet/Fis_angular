@@ -28,19 +28,31 @@ export class SharedOneYearWithPartsComponent {
     
     
   }
-  ngOnInit(): void {
-    // this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    // this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
-    this.route.paramMap.subscribe(params => {
+  ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
-    this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
+
+      // Sequentially await each method to ensure proper execution order
+      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+      if (storedTables) {
+        let tablesList: any[] = [];
+        tablesList = JSON.parse(storedTables);
+        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+        debugger
+        if (tableIndex !== -1) { // Ensure that the table is found
+          this.table = tablesList[tableIndex]; // Retrieve the entire table object
+          this.tablePartsCount = this.table.tableParts.length;
+
+        }
+        else
+          this.GetTableById(+this.tableId);
+      }
+      this.GetFormById(+this.formId);
+      this.GetActivites();
+      this.GetCountrites();
     });
-    
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
@@ -63,7 +75,7 @@ export class SharedOneYearWithPartsComponent {
             if (res.Data) {
                 this.table = res.Data;
                 this.tablePartsCount = this.table.tableParts.length;
-
+debugger
                 // Initialize the `values` array for each formContent based on `tablePartsCount`
                 this.table.formContents.forEach((formContent: IGetQuestionDto) => {
                     // Initialize the `values` array with zeroes, ensuring the first value is set to 0
@@ -93,7 +105,7 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          debugger
+          
           this.coverForm = res.Data;
         }
       },
@@ -116,7 +128,7 @@ export class SharedOneYearWithPartsComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -127,7 +139,7 @@ export class SharedOneYearWithPartsComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

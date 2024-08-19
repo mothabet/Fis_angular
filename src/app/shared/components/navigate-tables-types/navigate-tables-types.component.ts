@@ -40,7 +40,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
-    debugger
+    
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);
@@ -111,7 +111,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    debugger
+    
     if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
@@ -164,7 +164,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
     );
     for (let item = 0; item < commonTables.length; item++) {
-      debugger
+      
       console.log(commonTables[item]);
       let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
         // Validate main values
@@ -248,7 +248,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
     );
     for (let item = 0; item < commonTables.length; item++) {
-      debugger
+      
       console.log(commonTables[item]);
       let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
         // Validate main values

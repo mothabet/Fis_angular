@@ -21,23 +21,36 @@ export class SharedTableWithPeriodComponent {
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   years: number[] = [];
-  formYear : string = '';
-  countries! : IGetCountriesDto[];
-  activities! : IGetActivitiesDto[];
-  companyId!:string;
-  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    
-    
+  formYear: string = '';
+  countries!: IGetCountriesDto[];
+  activities!: IGetActivitiesDto[];
+  companyId!: string;
+  constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+
+
   }
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+  ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
-      this.GetTableById(+this.tableId);
       this.companyId = params.get('companyId')!;
-    this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
+
+      // Sequentially await each method to ensure proper execution order
+      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+      if (storedTables) {
+        let tablesList: any[] = [];
+        tablesList = JSON.parse(storedTables);
+        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+        if (tableIndex !== -1) { // Ensure that the table is found
+          this.table = tablesList[tableIndex]; // Retrieve the entire table object
+          this.generateYearsList(this.table.period);
+        }
+        else
+          this.GetTableById(+this.tableId);
+      }
+      this.GetFormById(+this.formId);
+      this.GetActivites();
+      this.GetCountrites();
     });
   }
   onArCountryChange(subCode: any) {
@@ -67,14 +80,14 @@ export class SharedTableWithPeriodComponent {
           this.generateYearsList(this.table.period);
           this.table.formContents.forEach((formContent: IGetQuestionDto) => {
             // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-            formContent.values = [0, ...Array(this.table.period ).fill(0)];
+            formContent.values = [0, ...Array(this.table.period).fill(0)];
 
             // Initialize the `values` array for each subCode
             if (formContent.code.SubCodes) {
-                formContent.code.SubCodes.forEach((subCode: any) => {
-                    // Set the first value to 0, and the rest based on the number of parts
-                    subCode.values = [0, ...Array(this.years.length ).fill(0)];
-                });
+              formContent.code.SubCodes.forEach((subCode: any) => {
+                // Set the first value to 0, and the rest based on the number of parts
+                subCode.values = [0, ...Array(this.years.length).fill(0)];
+              });
             }
           });
         }
@@ -102,27 +115,27 @@ export class SharedTableWithPeriodComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
+    this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  generateYearsList(period:number): void {
+  generateYearsList(period: number): void {
     for (let i = 0; i < period; i++) {
       this.years.push(+this.formYear + i);
     }
   }
-  addSubCodeRow(code:ICode){
-    
-    const subCode:ISubCode={
-      arName:'',
-      codeId:0,
-      enName:'',
-      Id:0,
-      QuestionCode:'',
-      subCodes:[]
+  addSubCodeRow(code: ICode) {
+
+    const subCode: ISubCode = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: []
     }
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    
+
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -132,7 +145,7 @@ export class SharedTableWithPeriodComponent {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

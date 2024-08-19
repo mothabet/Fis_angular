@@ -18,26 +18,37 @@ export class SharedTableWithoutTransComponent {
   isChecked!: boolean;
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
-  countries! : IGetCountriesDto[];
-  activities! : IGetActivitiesDto[];
-  companyId!:string;
-  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    
-    
+  countries!: IGetCountriesDto[];
+  activities!: IGetActivitiesDto[];
+  companyId!: string;
+  constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+
+
   }
-  ngOnInit(): void {
-    // this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-    // this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
-    this.route.paramMap.subscribe(params => {
+  ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
-    this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
+
+      // Sequentially await each method to ensure proper execution order
+      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+      if (storedTables) {
+        let tablesList: any[] = [];
+        tablesList = JSON.parse(storedTables);
+        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+        if (tableIndex !== -1) { // Ensure that the table is found
+          this.table = tablesList[tableIndex]; // Retrieve the entire table object
+        }
+        else
+          this.GetTableById(+this.tableId);
+      }
+      this.GetFormById(+this.formId);
+      this.GetActivites();
+      this.GetCountrites();
     });
   }
+
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
@@ -58,18 +69,19 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
+          debugger
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
             formContent.values = formContent.values || [0, 0];
             formContent.values[1] = formContent.values[1] || 0;
             formContent.values[0] = formContent.values[2] || 0;
-  
+
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Initialize subCode `values` array if it doesn't exist
                 subCode.values = subCode.values || [0, 0];
-          
+
                 // Ensure the `values` array has the correct length and initial values
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
                 subCode.values[1] = subCode.values[1] || 0; // nextYear
@@ -101,17 +113,17 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
+    this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  addSubCodeRow(code:ICode){
+  addSubCodeRow(code: ICode) {
     debugger
-    const subCode:ISubCode={
-      arName:'',
-      codeId:0,
-      enName:'',
-      Id:0,
-      QuestionCode:'',
-      subCodes:[]
+    const subCode: ISubCode = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: []
     }
     code.SubCodes.push(subCode);
   }

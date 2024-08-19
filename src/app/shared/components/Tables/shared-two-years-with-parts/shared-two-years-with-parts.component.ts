@@ -24,20 +24,33 @@ export class SharedTwoYearsWithPartsComponent {
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   selectedValue!: string;
-  companyId!:string;
-  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  companyId!: string;
+  constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
   }
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+  ngOnInit() {
+    this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
-    this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
+
+      // Sequentially await each method to ensure proper execution order
+      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
+      if (storedTables) {
+        let tablesList: any[] = [];
+        tablesList = JSON.parse(storedTables);
+        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
+        if (tableIndex !== -1) { // Ensure that the table is found
+          this.table = tablesList[tableIndex]; // Retrieve the entire table object
+          this.tablePartsCount = this.table.tableParts.length;
+        }
+        else
+          this.GetTableById(+this.tableId);
+      }
+      this.GetFormById(+this.formId);
+      this.GetActivites();
+      this.GetCountrites();
     });
   }
   onRadioChange(event: Event, value: string) {
@@ -92,7 +105,7 @@ export class SharedTwoYearsWithPartsComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
+    this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
     const subCode: ISubCode = {
@@ -101,7 +114,7 @@ export class SharedTwoYearsWithPartsComponent {
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes:[]
+      subCodes: []
     }
     code.SubCodes.push(subCode);
   }
@@ -111,7 +124,7 @@ export class SharedTwoYearsWithPartsComponent {
       code.SubCodes.splice(index, 1);
     }
   }
-  
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
