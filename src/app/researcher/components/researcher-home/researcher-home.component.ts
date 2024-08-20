@@ -300,16 +300,7 @@ export class ResearcherHomeComponent {
   }
   reset() {
     this.add = true;
-    this.researcherForm = this.formBuilder.group({
-      userName: ['', Validators.required],
-      password: ['', Validators.required],
-      arName: ['', Validators.required],
-      enName: ['', Validators.required],
-      status: ['', Validators.required],
-      phone: ['', Validators.required],
-      email: ['', Validators.required],
-    });
-    this.generateRandomCredentials();
+    this.resetForm();
   }
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;

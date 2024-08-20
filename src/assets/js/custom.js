@@ -20,15 +20,15 @@ $(document).ready(function () {
 
         if (window.innerWidth > 769) {
 
-            menuToggle.addEventListener("click", function () {
-                document.querySelector("#sidebar").classList.toggle("expand");
-            });
-            search.addEventListener("click", function () {
-                document.querySelector("#sidebar").classList.add("expand");
-            });
-            setting.addEventListener("click", function () {
-                document.querySelector("#sidebar").classList.add("expand");
-            });
+            // menuToggle.addEventListener("click", function () {
+            //     document.querySelector("#sidebar").classList.toggle("expand");
+            // });
+            // search.addEventListener("click", function () {
+            //     document.querySelector("#sidebar").classList.add("expand");
+            // });
+            // setting.addEventListener("click", function () {
+            //     document.querySelector("#sidebar").classList.add("expand");
+            // });
         } else {
             document.querySelector("#sidebar").classList.add("expand");
             document.querySelector("#searchList").classList.add("close-menu");

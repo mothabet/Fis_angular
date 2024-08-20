@@ -66,7 +66,7 @@ export class TableWithoutTransComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -91,7 +91,6 @@ export class TableWithoutTransComponent {
     this.formServices.GetFormById(id).subscribe(observer);
   }
   addSubCodeRow(code:ICode){
-    debugger
     const subCode:ISubCode={
       arName:'',
       codeId:0,
@@ -103,7 +102,7 @@ export class TableWithoutTransComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -114,7 +113,7 @@ export class TableWithoutTransComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

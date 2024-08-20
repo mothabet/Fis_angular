@@ -7,5 +7,9 @@ export interface IDataDto{
     TableId:number,
     questionId:string|number,
     codes : number[]
-    level : number
+    level : number,
+    codeId : number,
+    codeType:number,
+    valueCheck:boolean,
+    parentCodeId:number
 }

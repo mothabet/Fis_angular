@@ -7,6 +7,7 @@ import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 @Component({
   selector: 'app-shared-table-without-trans',
   templateUrl: './shared-table-without-trans.component.html',
@@ -18,12 +19,14 @@ export class SharedTableWithoutTransComponent {
   @Input() tableId!: string;
   isChecked!: boolean;
   table!: IGetTableDto;
+  tableFormData!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
-  checkFormData: boolean = false;
+  tablePartsCount = 0;
+
   constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -33,7 +36,6 @@ export class SharedTableWithoutTransComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-
       // Sequentially await each method to ensure proper execution order      
       this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
@@ -41,14 +43,12 @@ export class SharedTableWithoutTransComponent {
       this.GetCountrites();
     });
   }
-
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
       subCode.enCountry = selectedCountry.enName;
     }
   }
-
   onEnCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
     if (selectedCountry) {
@@ -56,7 +56,6 @@ export class SharedTableWithoutTransComponent {
     }
   }
   GetTableById(id: number): void {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -64,13 +63,11 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          debugger
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
             formContent.values = formContent.values || [0, 0];
+            formContent.values[0] = formContent.values[0] || 0;
             formContent.values[1] = formContent.values[1] || 0;
-            formContent.values[0] = formContent.values[2] || 0;
-
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
@@ -87,7 +84,7 @@ export class SharedTableWithoutTransComponent {
         this.GetFormData();
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -112,7 +109,6 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
-    debugger
     const subCode: ISubCode = {
       arName: '',
       codeId: 0,
@@ -124,7 +120,6 @@ export class SharedTableWithoutTransComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -135,7 +130,7 @@ export class SharedTableWithoutTransComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -163,62 +158,184 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
-          if (!(res.Data.length > 0)) {
-            this.checkFormData = false;
-            const storedTables = localStorage.getItem(`tablesList${this.formId}`);
-          if (storedTables) {
-            let tablesList: any[] = [];
-            tablesList = JSON.parse(storedTables);
-            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
-            if (tableIndex !== -1) { // Ensure that the table is found
-              this.table = tablesList[tableIndex]; // Retrieve the entire table object
-            }
-          }
-          this.Loader = false;
-            return;
-          }
-          this.checkFormData = true;
-          this.formData = res.Data[0].dataDtos;
-  
-          // Iterate over each form content and map the data accordingly
-          this.table.formContents.forEach((formContent, index) => {
-            // Loop through each item in formData
-            this.formData.forEach(dataDto => {
-              if (dataDto.level == 1 && formContent.code.QuestionCode == dataDto.questionId) {
-                // If it's level 1, assign to formContent values
-                formContent.values = dataDto.codes.slice(0, 3);
-              } else if (dataDto.level === 2) {
-                // If it's level 2, find the corresponding subCode
-                formContent.code.SubCodes.forEach((subCode, subIndex) => {
-                  // Check if the QuestionCode matches
-                  if (subCode.QuestionCode == dataDto.questionId) {
-                    subCode.values = dataDto.codes.slice(0, 3);
-                  }
-                });
+          if (res.Data.length > 0) {
+            const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
+              // Check if the TableId already exists in the accumulator
+              if (!acc[item.TableId]) {
+                acc[item.TableId] = {
+                  TableId: item.TableId,
+                  items: []
+                };
               }
-            });
-          });
-          
-        }
-        const storedTables = localStorage.getItem(`tablesList${this.formId}`);
-          if (storedTables) {
-            let tablesList: any[] = [];
-            tablesList = JSON.parse(storedTables);
-            const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
-            if (tableIndex !== -1) { // Ensure that the table is found
-              this.table = tablesList[tableIndex]; // Retrieve the entire table object
-            }
-          }
-          this.Loader = false;
+              // Push the current item into the corresponding TableId group
+              acc[item.TableId].items.push(item);
+              return acc;
+            }, {});
+            debugger
+            // Convert the grouped object into an array of tables
+            const tablesList = Object.values(groupedTables);
+            this.formData = res.Data[0].dataDtos;
 
+            const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
+            if (storedCoverForm) {
+              this.coverForm = JSON.parse(storedCoverForm);
+            }
+            tablesList.forEach((table: any) => {
+              debugger
+              const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
+              table.items.forEach((item: any) => {
+                this.GetTableByIdForGetFormData(item.TableId);
+                if(this.tableFormData.Type == "1"){
+                  this.tableFormData.formContents.forEach((formContent: any) => {
+                    formContent.values = formContent.values || [0, 0, 0];
+                    formContent.values[1] = formContent.values[1] || 0;
+                    formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
+                    formContent.values[0] = formContent.values[2] || 0;
+        
+                    // If there are subCodes, ensure their values are also initialized
+                    if (formContent.code.SubCodes) {
+                      formContent.code.SubCodes.forEach((subCode: any) => {
+                        // Initialize subCode `values` array if it doesn't exist
+                        subCode.values = subCode.values || [0, 0, 0];
+        
+                        // Ensure the `values` array has the correct length and initial values
+                        subCode.values[0] = subCode.values[0] || 0; // lastYear
+                        subCode.values[2] = 0; // Set transaction explicitly to 0
+                        subCode.values[1] = subCode.values[1] || 0; // nextYear
+                      });
+                    }
+                  });
+                }
+                else if (this.tableFormData.Type == "2"){
+                  this.tableFormData.formContents.forEach((formContent: any) => {
+                    formContent.values = formContent.values || [0, 0];
+                    formContent.values[0] = formContent.values[0] || 0;
+                    formContent.values[1] = formContent.values[1] || 0;
+                    // If there are subCodes, ensure their values are also initialized
+                    if (formContent.code.SubCodes) {
+                      formContent.code.SubCodes.forEach((subCode: any) => {
+                        // Initialize subCode `values` array if it doesn't exist
+                        subCode.values = subCode.values || [0, 0];
+        
+                        // Ensure the `values` array has the correct length and initial values
+                        subCode.values[0] = subCode.values[0] || 0; // lastYear
+                        subCode.values[1] = subCode.values[1] || 0; // nextYear
+                      });
+                    }
+                  });
+                }
+                else if (this.tableFormData.Type == "3"){
+                  this.tablePartsCount = this.tableFormData.tableParts.length;
+                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                    // Initialize the `values` array with zeroes, ensuring the first value is set to 0
+                    formContent.values = [0, ...Array(this.tablePartsCount).fill(0)];
+                    // Initialize the `values` array for each subCode
+                    if (formContent.code.SubCodes) {
+                        formContent.code.SubCodes.forEach((subCode: any) => {
+                            // Set the first value to 0, and the rest based on the number of parts
+                            subCode.values = [0, ...Array(this.tablePartsCount).fill(0)];
+                        });
+                    }
+                });
+                }
+                else if (this.tableFormData.Type == "4"){
+                  this.tablePartsCount = this.table.tableParts.length;
+                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                    // Calculate the total number of parts (doubled)
+                    const totalPartsCount = this.tablePartsCount * 2;
+        
+                    // Initialize the `values` array for the main content
+                    formContent.values = Array(totalPartsCount).fill(0);
+        
+                    // Initialize the `values` array for each subcode
+                    if (formContent.code.SubCodes) {
+                      formContent.code.SubCodes.forEach((subCode: any) => {
+                        subCode.values = Array(totalPartsCount).fill(0);
+                      });
+                    }
+                  });
+                }
+                else if (this.tableFormData.Type == "5"){
+                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                    // Initialize the `values` array with zeroes, ensuring the first value is set to 0
+                    formContent.values = [0, ...Array(this.table.period).fill(0)];
+        
+                    // Initialize the `values` array for each subCode
+                    if (formContent.code.SubCodes) {
+                      formContent.code.SubCodes.forEach((subCode: any) => {
+                        // Set the first value to 0, and the rest based on the number of parts
+                        subCode.values = [0, ...Array(this.table.period).fill(0)];
+                      });
+                    }
+                  });
+                }
+                if (tableIndex !== -1) {
+                  this.coverForm.tables[tableIndex] = this.tableFormData;
+                }
+                if(item.codeType ==4){
+                  const level1ItemIndex_ = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
+                  this.coverForm.tables[tableIndex].formContents[level1ItemIndex_].valueCheck = item.valueCheck
+                }
+                else if (item.level == 1) {
+                  const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
+                  // Store the itemIndex of level 1 item
+                  if (level1ItemIndex !== -1) {
+                    this.coverForm.tables[tableIndex].formContents[level1ItemIndex].values = item.codes;
+                  }
+                } else if (item.level == 2) {
+                  // Find the corresponding level 1 item first
+                  const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
+                  if (level1ItemIndex !== -1) {
+                    // Now find the correct subCode within the level 1 item's SubCodes
+                    const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
+                    const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
+                    if (subCodeIndex !== -1) {
+                      subCodes[subCodeIndex].values = item.codes;
+                    }
+                  }
+                }
+              });
+            });
+
+            localStorage.removeItem(`coverForm${this.coverForm.id}`);
+            localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+          }
+        }
+        const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
+        if (storedCoverForm) {
+          this.coverForm = JSON.parse(storedCoverForm);
+        }
+
+        const tableIndex = this.coverForm.tables.findIndex(t => t.id === +this.tableId);
+        if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
+          this.table = this.coverForm.tables[tableIndex];
+        }
+
+        this.Loader = false;
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
-    this.formServices.GetFormData(+this.formId, +this.companyId, +this.tableId).subscribe(observer);
+
+    this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
+  GetTableByIdForGetFormData(id: number): void {
+    this.Loader = true;
+    const observer = {
+        next: (res: any) => {
+            this.Loader = false;
+            if (res.Data) {
+                this.tableFormData = res.Data;
+            }
+        },
+        error: (err: any) => {
+            this.sharedServices.handleError(err);
+            this.Loader = false;
+        },
+    };
+    this.formServices.GetTableById(id).subscribe(observer);
+}
 }

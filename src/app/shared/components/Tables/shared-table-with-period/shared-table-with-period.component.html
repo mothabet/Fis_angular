@@ -37,11 +37,13 @@
                   </td>
                   <td *ngIf="formContent.code.TypeId == 4"
                     [attr.colspan]="getColspan(years.length, 'first')">
-                    <input type="checkbox" [(ngModel)]="isChecked"> لا
+                    <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true" checked name="yesNoOption_{{formContent.code.Id}}"> نعم
+                                <label class="mt-3"></label>
                   </td>
                   <td *ngIf="formContent.code.TypeId == 4"
                     [attr.colspan]="getColspan(years.length, 'second')">
-                    <input type="checkbox" [(ngModel)]="isChecked"> نعم
+                    <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="false" name="yesNoOption_{{formContent.code.Id}}"> لا
+                                <label class="mt-3"></label>
                   </td>
                   <ng-container *ngIf="formContent.code.TypeId != 4">
                     <td class="text-center" *ngFor="let year of years; let i = index">

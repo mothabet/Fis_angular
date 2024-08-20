@@ -31,7 +31,7 @@ export class CompanyHomeComponent implements OnInit{
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
-    debugger
+    
     if (this.activeRouter.snapshot.paramMap.get('companyId')) {
       this.companyId = +this.activeRouter.snapshot.paramMap.get('companyId')!;
     }
