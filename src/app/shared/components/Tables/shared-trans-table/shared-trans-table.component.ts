@@ -135,9 +135,10 @@ export class SharedTransTableComponent {
   }
 
   GetFormData() {
+    this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.Loader = false;
+        debugger
         if (res.Data) {
           if (!(res.Data.length > 0)) {
             this.checkFormData = false;
@@ -160,14 +161,19 @@ export class SharedTransTableComponent {
           this.table.formContents.forEach((formContent, index) => {
             // Loop through each item in formData
             this.formData.forEach(dataDto => {
-              if (dataDto.level == 1 && formContent.code.QuestionCode == dataDto.questionId) {
-                // If it's level 1, assign to formContent values
-                formContent.values = dataDto.codes.slice(0, 3);
+              if (dataDto.level == 1 && formContent.code.Id == dataDto.codeId) {
+                if(dataDto.codeType == 4){
+                  formContent.valueCheck = dataDto.valueCheck;
+                }
+                else{
+                  // If it's level 1, assign to formContent values
+                  formContent.values = dataDto.codes.slice(0, 3);
+                }
               } else if (dataDto.level === 2) {
                 // If it's level 2, find the corresponding subCode
                 formContent.code.SubCodes.forEach((subCode, subIndex) => {
                   // Check if the QuestionCode matches
-                  if (subCode.QuestionCode == dataDto.questionId) {
+                  if (subCode.Id == dataDto.codeId) {
                     subCode.values = dataDto.codes.slice(0, 3);
                   }
                 });
@@ -185,6 +191,7 @@ export class SharedTransTableComponent {
               this.table = tablesList[tableIndex]; // Retrieve the entire table object
             }
           }
+          this.Loader = false;
 
       },
       error: (err: any) => {

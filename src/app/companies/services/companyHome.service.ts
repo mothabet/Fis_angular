@@ -51,7 +51,7 @@ export class CompanyHomeService {
     return response;
   }
   addCompany(Model: IAddCompany) {
-    debugger
+    
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Company/AddCompany`, Model, { headers });
     return response;
@@ -74,7 +74,7 @@ export class CompanyHomeService {
      return response;
    }
    GetCompanyByUserId(id:number , compId:number = 0){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var response = this.http.get(environment.apiUrl+`Company/GetCompanyByUserId?id=${id}&companyId=${compId}`, { headers });
      return response;

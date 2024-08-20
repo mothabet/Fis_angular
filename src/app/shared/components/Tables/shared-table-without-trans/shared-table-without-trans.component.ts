@@ -33,7 +33,6 @@ export class SharedTableWithoutTransComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-
       // Sequentially await each method to ensure proper execution order      
       this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
@@ -41,14 +40,12 @@ export class SharedTableWithoutTransComponent {
       this.GetCountrites();
     });
   }
-
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
       subCode.enCountry = selectedCountry.enName;
     }
   }
-
   onEnCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
     if (selectedCountry) {
@@ -56,7 +53,6 @@ export class SharedTableWithoutTransComponent {
     }
   }
   GetTableById(id: number): void {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -64,13 +60,11 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          debugger
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
             formContent.values = formContent.values || [0, 0];
             formContent.values[1] = formContent.values[1] || 0;
             formContent.values[0] = formContent.values[2] || 0;
-
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
@@ -87,7 +81,7 @@ export class SharedTableWithoutTransComponent {
         this.GetFormData();
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -112,7 +106,6 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
-    debugger
     const subCode: ISubCode = {
       arName: '',
       codeId: 0,
@@ -124,7 +117,6 @@ export class SharedTableWithoutTransComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    debugger
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -135,7 +127,7 @@ export class SharedTableWithoutTransComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -181,19 +173,23 @@ export class SharedTableWithoutTransComponent {
           }
           this.checkFormData = true;
           this.formData = res.Data[0].dataDtos;
-  
           // Iterate over each form content and map the data accordingly
           this.table.formContents.forEach((formContent, index) => {
             // Loop through each item in formData
             this.formData.forEach(dataDto => {
-              if (dataDto.level == 1 && formContent.code.QuestionCode == dataDto.questionId) {
-                // If it's level 1, assign to formContent values
-                formContent.values = dataDto.codes.slice(0, 3);
+              if (dataDto.level == 1 && formContent.code.Id == dataDto.codeId) {
+                if(dataDto.codeType == 4){
+                  formContent.valueCheck = dataDto.valueCheck;
+                }
+                else{
+                  // If it's level 1, assign to formContent values
+                  formContent.values = dataDto.codes.slice(0, 3);
+                }
               } else if (dataDto.level === 2) {
                 // If it's level 2, find the corresponding subCode
                 formContent.code.SubCodes.forEach((subCode, subIndex) => {
                   // Check if the QuestionCode matches
-                  if (subCode.QuestionCode == dataDto.questionId) {
+                  if (subCode.Id == dataDto.codeId) {
                     subCode.values = dataDto.codes.slice(0, 3);
                   }
                 });

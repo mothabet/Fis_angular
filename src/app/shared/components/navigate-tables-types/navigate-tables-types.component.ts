@@ -81,6 +81,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           default:
             return;
         }
+        debugger
         // navigationPromise.then(() => {
         //   window.location.reload();
         // }).catch((err) => {
@@ -153,38 +154,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.displayFormContents();
     let storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
     let tablesList: IGetTableDto[] = storedTables ? JSON.parse(storedTables) : [];
-    let missingTables = this.coverForm.tables.filter(
-      (table) => !tablesList.some((storedTable) => storedTable.id === table.id)
-    );
-    let errors = "";
-    for (let item = 0; item < missingTables.length; item++) {
-      errors += `يجب ادخال بيانات ${missingTables[item].arName} بشكل صحيح\n`;
-    }
-    let commonTables = tablesList.filter(
-      (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
-    );
-    for (let item = 0; item < commonTables.length; item++) {
-      
-      console.log(commonTables[item]);
-      let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
-        // Validate main values
-        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
-
-        // Validate subCode values if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
-          subCode.values.some((value: number) => value === 0 || value === null)
-        );
-
-        return mainValuesInvalid || subCodesInvalid;
-      });
-      if (invalidPartsEntries.length > 0)
-        errors += `يجب ادخال بيانات ${commonTables[item].arName} بشكل صحيح\n`;
-    }
-    if (errors != "") {
-      alert(errors);
-      this.Loader = false; // Make sure to reset the Loader in this case
-      return; // Stop execution here
-    }
     var dataDtosList: IDataDto[] = [];
     for (let index = 0; index < tablesList.length; index++) {
       for (let i = 0; i < tablesList[index].formContents.length; i++) {
@@ -197,7 +166,10 @@ export class NavigateTablesTypesComponent implements OnInit {
           TableId: tablesList[index].id,
           questionId: tablesList[index].formContents[i].code.QuestionCode,
           codes: codesList,
-          level :1
+          level :1,
+          codeId : tablesList[index].formContents[i].code.Id,
+          codeType:0,
+            valueCheck:true
         };
         dataDtosList.push(dataDtos);
         for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
@@ -210,7 +182,10 @@ export class NavigateTablesTypesComponent implements OnInit {
             TableId: tablesList[index].id,
             questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
             codes: codesListSub,
-            level:2
+            level:2,
+            codeId : tablesList[index].formContents[i].code.SubCodes[r].Id,
+            codeType:tablesList[index].formContents[i].code.TypeId,
+            valueCheck:tablesList[index].formContents[i].valueCheck
           };
           dataDtosList.push(dataDtosSub);
         }
@@ -241,6 +216,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
   }
   SaveData() {
+    debugger
     this.Loader = true;
     this.displayFormContents();
     let storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
@@ -251,7 +227,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     );
     for (let item = 0; item < commonTables.length; item++) {
       
-      console.log(commonTables[item]);
       let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
         // Validate main values
         const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
@@ -266,11 +241,6 @@ export class NavigateTablesTypesComponent implements OnInit {
       if (invalidPartsEntries.length > 0)
         errors += `يجب ادخال بيانات ${commonTables[item].arName} بشكل صحيح\n`;
     }
-    if (errors != "") {
-      alert(errors);
-      this.Loader = false; // Make sure to reset the Loader in this case
-      return; // Stop execution here
-    }
     var dataDtosList: IDataDto[] = [];
     for (let index = 0; index < tablesList.length; index++) {
       for (let i = 0; i < tablesList[index].formContents.length; i++) {
@@ -283,7 +253,10 @@ export class NavigateTablesTypesComponent implements OnInit {
           TableId: tablesList[index].id,
           questionId: tablesList[index].formContents[i].code.QuestionCode,
           codes: codesList,
-          level:1
+          level:1,
+          codeId:tablesList[index].formContents[i].code.Id,
+          codeType:tablesList[index].formContents[i].code.TypeId,
+          valueCheck:tablesList[index].formContents[i].valueCheck
         };
         dataDtosList.push(dataDtos);
         for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
@@ -296,7 +269,10 @@ export class NavigateTablesTypesComponent implements OnInit {
             TableId: tablesList[index].id,
             questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
             codes: codesListSub,
-            level:2
+            level:2,
+            codeId:tablesList[index].formContents[i].code.SubCodes[r].Id,
+            codeType:0,
+            valueCheck:true
           };
           dataDtosList.push(dataDtosSub);
         }

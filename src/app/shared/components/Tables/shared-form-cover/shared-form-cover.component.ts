@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { inputs } from '@syncfusion/ej2-angular-diagrams/src/diagram/diagram.component';
 import { ICoverFormDetailsDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -43,7 +42,7 @@ export class SharedFormCoverComponent implements OnInit{
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
+          
           this.coverForm = res.Data;
           if (res.Data.tables.length > 0)
             this.noTables = false;
