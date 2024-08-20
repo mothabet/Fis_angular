@@ -55,13 +55,7 @@ export class SharedWorkDataComponent implements OnInit {
     if (+this.companyId != null || +this.companyId != 0)
     {
       this.GetCompanyById(+this.companyId);
-      this.workData.forEach((item) => {
-        debugger
-        if (item.arName.includes('اسم  المنشأة : ')) {
-          debugger
-          item.inputValue = this.company.arName;
-        }
-      });
+      
     }
   }
   GetCompanyById(id: number) {
@@ -70,7 +64,65 @@ export class SharedWorkDataComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
+          this.workData.forEach((item) => {
+            if (item.arName.includes('اسم  المنشأة : ')) {
+              item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes('الموقع الإلكتروني : ')) {
+              
+              item.inputValue = this.company.webSite;
+            }
+            else if (item.arName.includes('رقم الفاكس : ')) {
+              
+              item.inputValue = this.company.fax;
+            }
+            else if (item.arName.includes('البريد الالكترونى : ')) {
+              
+              item.inputValue = this.company.email;
+            }
+            else if (item.arName.includes('رقم الهاتف : ')) {
+              
+              item.inputValue = this.company.phoneNumber;
+            }
+            else if (item.arName.includes('الرمز البريدى : ')) {
+              
+              item.inputValue = this.company.postalCode;
+            }
+            else if (item.arName.includes('رقم صندوق البريد : ')) {
+              
+              item.inputValue = this.company.mailBox;
+            }
+            else if (item.arName.includes('الولاية : ')) {
+              
+              item.inputValue = this.company.wilayat;
+            }
+            else if (item.arName.includes('المنطقة : ')) {
+              
+              item.inputValue = this.company.governorates;
+            }
+            else if (item.arName.includes('عنوان المنشاة : ')) {
+              
+              item.inputValue = this.company.address;
+            }
+            else if (item.arName.includes('النشاط الثانوى : ')) {
+              
+              item.inputValue = this.company.subActivity;
+            }
+            else if (item.arName.includes('النشاط الاقتصادى الرئيسى : ')) {
+              
+              item.inputValue = this.company.activity;
+            }
+            else if (item.arName.includes('رقم الترخيص البلدي : ')) {
+              
+              item.inputValue = this.company.compRegNumber;
+            }
+            else if (item.arName.includes('رقم السجل التجارى : ')) {
+              
+              item.inputValue = this.company.compRegNumber;
+            }
+          });
         }
+        this.Loader = false;
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
