@@ -10,6 +10,7 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import Swal from 'sweetalert2';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { LoginService } from 'src/app/auth/services/login.service';
+import { TopScreenService } from 'src/app/shared/services/top-screen.service';
 
 @Component({
   selector: 'app-researcher-details',
@@ -31,11 +32,12 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
-  constructor(private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+  constructor(private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
   ngOnInit(): void {
     this.researcherId = this.activeRouter.snapshot.paramMap.get('researcherId')!;
+    this.topScreenServices.setResearcherId(this.researcherId);
     this.GetResearcherById(+this.researcherId);
     this.GetAllMessages(0, '')
     this.GetAllForms();

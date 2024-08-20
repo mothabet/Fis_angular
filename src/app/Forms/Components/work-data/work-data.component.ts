@@ -16,22 +16,6 @@ export class WorkDataComponent implements OnInit{
   Loader: boolean = false;
   formId: string = '';
   isWorkDataActive:boolean = false;
-  workData: IWorkDataQuesDto[] = [
-    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise' },
-    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No' },
-    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number' },
-    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity' },
-    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity' },
-    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location' },
-    { arName: 'المنطقة : ', enName: ' :  Region' },
-    { arName: 'الولاية : ', enName: ' :  Wilayat' },
-    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box' },
-    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code' },
-    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No' },
-    { arName: 'رقم الفاكس : ', enName: ' :  Fax No' },
-    { arName: 'البريد الالكترونى : ', enName: ' :  Email' },
-    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website' },
-  ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship',selected : false},
     { arName: 'تضامنية', enName: 'Simple Partnership',selected : false},
