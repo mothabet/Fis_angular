@@ -10,5 +10,6 @@ export interface IDataDto{
     level : number,
     codeId : number,
     codeType:number,
-    valueCheck:boolean
+    valueCheck:boolean,
+    parentCodeId:number
 }

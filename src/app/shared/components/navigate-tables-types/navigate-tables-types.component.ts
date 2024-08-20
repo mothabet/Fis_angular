@@ -40,16 +40,15 @@ export class NavigateTablesTypesComponent implements OnInit {
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
-    
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
     this.tableId = tableIdParam ? +tableIdParam : null;
+    this.GetFormById(this.formId ?? "0")
   }
   TablesNavigation(id: number) {
     this.GetTableById(id);
-    this.displayFormContents();
   }
   GetTableById(id: number): void {
     this.Loader = true;
@@ -61,19 +60,19 @@ export class NavigateTablesTypesComponent implements OnInit {
         let navigationPromise;
         switch (this.tableType) {
           case 1:
-            navigationPromise = this.router.navigate(['/TransTable', this.formId, id,this.companyId]);
+            navigationPromise = this.router.navigate(['/TransTable', this.formId, id, this.companyId]);
             break;
           case 2:
-            navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id,this.companyId]);
+            navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id, this.companyId]);
             break;
           case 3:
-            navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id,this.companyId]);
+            navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id, this.companyId]);
             break;
           case 4:
-            navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id,this.companyId]);
+            navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id, this.companyId]);
             break;
           case 5:
-            navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id,this.companyId]);
+            navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id, this.companyId]);
             break;
           case 0:
             navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id]);
@@ -81,15 +80,13 @@ export class NavigateTablesTypesComponent implements OnInit {
           default:
             return;
         }
-        debugger
+        this.displayFormContents();
         // navigationPromise.then(() => {
         //   window.location.reload();
         // }).catch((err) => {
         //   console.error('Navigation error:', err);
         // });
-        if (res.Data) {
-          this.Loader = false;
-        }
+        this.Loader = false;
 
       },
       error: (err: any) => {
@@ -112,7 +109,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    
     if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
@@ -125,18 +121,18 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.addTableToListInLocalStorage(this.table);
   }
   addTableToListInLocalStorage(table: any): void {
-    const storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
-
-    let tablesList: any[] = [];
+    let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
+    var coverForm!: ICoverFormDetailsDto
     if (storedTables) {
-      tablesList = JSON.parse(storedTables);
+      coverForm = JSON.parse(storedTables);
+      const tableIndex = coverForm.tables.findIndex(t => t.id === table.id);
+      if (tableIndex !== -1) {
+        coverForm.tables[tableIndex] = table;
+      }
+      localStorage.removeItem(`coverForm${this.coverForm.id}`);
     }
-    const tableIndex = tablesList.findIndex(t => t.id === table.id);
-    if (tableIndex !== -1) {
-      tablesList.splice(tableIndex, 1);
-    }
-    tablesList.push(table);
-    localStorage.setItem(`tablesList${this.coverForm.id}`, JSON.stringify(tablesList));
+
+    localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(coverForm));
   }
   removeTable(tableId: number): void {
     const storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
@@ -166,10 +162,11 @@ export class NavigateTablesTypesComponent implements OnInit {
           TableId: tablesList[index].id,
           questionId: tablesList[index].formContents[i].code.QuestionCode,
           codes: codesList,
-          level :1,
-          codeId : tablesList[index].formContents[i].code.Id,
-          codeType:0,
-            valueCheck:true
+          level: 1,
+          codeId: tablesList[index].formContents[i].code.Id,
+          codeType: tablesList[index].formContents[i].code.TypeId,
+          valueCheck: tablesList[index].formContents[i].valueCheck,
+          parentCodeId: 0
         };
         dataDtosList.push(dataDtos);
         for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
@@ -182,10 +179,11 @@ export class NavigateTablesTypesComponent implements OnInit {
             TableId: tablesList[index].id,
             questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
             codes: codesListSub,
-            level:2,
-            codeId : tablesList[index].formContents[i].code.SubCodes[r].Id,
-            codeType:tablesList[index].formContents[i].code.TypeId,
-            valueCheck:tablesList[index].formContents[i].valueCheck
+            level: 2,
+            codeId: tablesList[index].formContents[i].code.SubCodes[r].Id,
+            codeType: 0,
+            valueCheck: true,
+            parentCodeId:tablesList[index].formContents[i].code.Id
           };
           dataDtosList.push(dataDtosSub);
         }
@@ -212,69 +210,55 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto,"Approve").subscribe(observer);
+    this.navigateTablesTypesService.AddFormData(addFormDataDto, "Approve").subscribe(observer);
 
   }
   SaveData() {
-    debugger
     this.Loader = true;
     this.displayFormContents();
-    let storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
-    let tablesList: IGetTableDto[] = storedTables ? JSON.parse(storedTables) : [];
-    let errors = "";
-    let commonTables = tablesList.filter(
-      (storedTable) => this.coverForm.tables.some((table) => table.id === storedTable.id)
-    );
-    for (let item = 0; item < commonTables.length; item++) {
-      
-      let invalidPartsEntries = commonTables[item].formContents.filter((formContent: IGetQuestionDto) => {
-        // Validate main values
-        const mainValuesInvalid = formContent.values.some((value: number) => value === 0 || value === null);
-
-        // Validate subCode values if present
-        const subCodesInvalid = formContent.code.SubCodes && formContent.code.SubCodes.some((subCode: any) =>
-          subCode.values.some((value: number) => value === 0 || value === null)
-        );
-
-        return mainValuesInvalid || subCodesInvalid;
-      });
-      if (invalidPartsEntries.length > 0)
-        errors += `يجب ادخال بيانات ${commonTables[item].arName} بشكل صحيح\n`;
+    const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
+    var coverForm!: ICoverFormDetailsDto
+    if (storedTables) {
+      coverForm = JSON.parse(storedTables);
     }
     var dataDtosList: IDataDto[] = [];
-    for (let index = 0; index < tablesList.length; index++) {
-      for (let i = 0; i < tablesList[index].formContents.length; i++) {
+    for (let index = 0; index < coverForm.tables.length; index++) {
+      for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
         var codesList: number[] = [];
-        for (let j = 0; j < tablesList[index].formContents[i].values.length; j++) {
-          var codes = tablesList[index].formContents[i].values[j];
-          codesList.push(codes);
-        }
-        var dataDtos: IDataDto = {
-          TableId: tablesList[index].id,
-          questionId: tablesList[index].formContents[i].code.QuestionCode,
-          codes: codesList,
-          level:1,
-          codeId:tablesList[index].formContents[i].code.Id,
-          codeType:tablesList[index].formContents[i].code.TypeId,
-          valueCheck:tablesList[index].formContents[i].valueCheck
-        };
-        dataDtosList.push(dataDtos);
-        for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
-          var codesListSub: number[] = [];
-          for (let x = 0; x < tablesList[index].formContents[i].code.SubCodes[r].values.length; x++) {
-            var codes = tablesList[index].formContents[i].code.SubCodes[r].values[x];
-            codesListSub.push(codes);
+        if (!(coverForm.tables[index].formContents[i].values == undefined)) {
+          for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
+            var codes = coverForm.tables[index].formContents[i].values[j];
+            codesList.push(codes);
           }
-          var dataDtosSub: IDataDto = {
-            TableId: tablesList[index].id,
-            questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
-            codes: codesListSub,
-            level:2,
-            codeId:tablesList[index].formContents[i].code.SubCodes[r].Id,
-            codeType:0,
-            valueCheck:true
+          var dataDtos: IDataDto = {
+            TableId: coverForm.tables[index].id,
+            questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
+            codes: codesList,
+            level: 1,
+            codeId: coverForm.tables[index].formContents[i].code.Id,
+            codeType: coverForm.tables[index].formContents[i].code.TypeId,
+            valueCheck: coverForm.tables[index].formContents[i].valueCheck,
+            parentCodeId:0
           };
-          dataDtosList.push(dataDtosSub);
+          dataDtosList.push(dataDtos);
+          for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
+            var codesListSub: number[] = [];
+            for (let x = 0; x < coverForm.tables[index].formContents[i].code.SubCodes[r].values.length; x++) {
+              var codes = coverForm.tables[index].formContents[i].code.SubCodes[r].values[x];
+              codesListSub.push(codes);
+            }
+            var dataDtosSub: IDataDto = {
+              TableId: coverForm.tables[index].id,
+              questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
+              codes: codesListSub,
+              level: 2,
+              codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
+              codeType: 0,
+              valueCheck: true,
+              parentCodeId:coverForm.tables[index].formContents[i].code.Id
+            };
+            dataDtosList.push(dataDtosSub);
+          }
         }
       }
     }
@@ -319,7 +303,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formServices.CompleteForm(+this.formId,+this.companyId).subscribe(observer);
+    this.formServices.CompleteForm(+this.formId, +this.companyId).subscribe(observer);
 
   }
   CloseForm(): void {
@@ -340,6 +324,29 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formServices.CloseForm(+this.formId,+this.companyId).subscribe(observer);
+    this.formServices.CloseForm(+this.formId, +this.companyId).subscribe(observer);
+  }
+  GetFormById(id: string): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.coverForm = res.Data;
+          const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
+          if (!storedTables) {
+            localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+            this.addTableToListInLocalStorage(this.table)
+          }
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormById(+id, '', +this.companyId).subscribe(observer);
   }
 }
