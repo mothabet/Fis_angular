@@ -34,18 +34,8 @@ export class SharedTableWithoutTransComponent {
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
 
-      // Sequentially await each method to ensure proper execution order
-      const storedTables = localStorage.getItem(`tablesList${this.formId}`);
-      if (storedTables) {
-        let tablesList: any[] = [];
-        tablesList = JSON.parse(storedTables);
-        const tableIndex = tablesList.findIndex(t => t.id == this.tableId);
-        if (tableIndex !== -1) { // Ensure that the table is found
-          this.table = tablesList[tableIndex]; // Retrieve the entire table object
-        }
-        else
-          this.GetTableById(+this.tableId);
-      }
+      // Sequentially await each method to ensure proper execution order      
+      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -66,9 +56,11 @@ export class SharedTableWithoutTransComponent {
     }
   }
   GetTableById(id: number): void {
+    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
