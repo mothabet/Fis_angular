@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
@@ -100,13 +100,15 @@ export class SharedTwoYearsWithPartsComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
-    const subCode: ISubCode = {
+    console.log(code)
+    const subCode: ISubCodeForm = {
       arName: '',
       codeId: 0,
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes: []
+      subCodes: [],
+      values: Array(this.tablePartsCount*2).fill(0) // Initialize values array with 0s based on tablePartsCount
     }
     code.SubCodes.push(subCode);
   }
