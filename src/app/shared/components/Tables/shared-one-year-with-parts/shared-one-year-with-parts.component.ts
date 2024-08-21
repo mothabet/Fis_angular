@@ -157,13 +157,16 @@ export class SharedOneYearWithPartsComponent {
     return values.reduce((acc, val) => acc + (val || 0), 0);
   }
   GetFormData() {
+    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
-          let res = this.authService.decodedToken(isLoggedIn);
-          var role = res.roles;
+          let res_ = this.authService.decodedToken(isLoggedIn);
+          var role = res_.roles;
+          debugger
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -299,15 +302,16 @@ export class SharedOneYearWithPartsComponent {
                   }
                 });
               });
-
+debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
-          if (role === 'Admin' || role === 'Researchers') {
-            const storedCoverForm = localStorage.removeItem(`coverForm${this.coverForm.id}`);
+          else if (role === 'Admin' || role === 'Researchers') {
+            localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
+          debugger
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
