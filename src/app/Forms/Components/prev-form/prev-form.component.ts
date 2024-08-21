@@ -29,6 +29,7 @@ export class PrevFormComponent {
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
+    debugger
     const observer = {
       next: (res: any) => {
         this.companyId = res.Data;
