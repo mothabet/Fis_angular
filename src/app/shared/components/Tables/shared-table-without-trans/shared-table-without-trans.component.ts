@@ -19,14 +19,12 @@ export class SharedTableWithoutTransComponent {
   @Input() tableId!: string;
   isChecked!: boolean;
   table!: IGetTableDto;
-  tableFormData!: IGetTableDto;
+  table2!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
-  tablePartsCount = 0;
-
   constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
 
@@ -56,6 +54,7 @@ export class SharedTableWithoutTransComponent {
     }
   }
   GetTableById(id: number): void {
+    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -82,9 +81,10 @@ export class SharedTableWithoutTransComponent {
           });
         }
         this.GetFormData();
+        debugger
       },
       error: (err: any) => {
-        
+        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -184,10 +184,9 @@ export class SharedTableWithoutTransComponent {
             tablesList.forEach((table: any) => {
               debugger
               const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
-              table.items.forEach((item: any) => {
-                this.GetTableByIdForGetFormData(item.TableId);
-                if(this.tableFormData.Type == "1"){
-                  this.tableFormData.formContents.forEach((formContent: any) => {
+              if (tableIndex !== -1) {
+                if(this.coverForm.tables[tableIndex].Type == "1"){
+                  this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                     formContent.values = formContent.values || [0, 0, 0];
                     formContent.values[1] = formContent.values[1] || 0;
                     formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
@@ -207,8 +206,8 @@ export class SharedTableWithoutTransComponent {
                     }
                   });
                 }
-                else if (this.tableFormData.Type == "2"){
-                  this.tableFormData.formContents.forEach((formContent: any) => {
+                else if(this.coverForm.tables[tableIndex].Type == "2"){
+                  this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                     formContent.values = formContent.values || [0, 0];
                     formContent.values[0] = formContent.values[0] || 0;
                     formContent.values[1] = formContent.values[1] || 0;
@@ -225,25 +224,23 @@ export class SharedTableWithoutTransComponent {
                     }
                   });
                 }
-                else if (this.tableFormData.Type == "3"){
-                  this.tablePartsCount = this.tableFormData.tableParts.length;
-                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                else if(this.coverForm.tables[tableIndex].Type == "3"){
+                  this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                     // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-                    formContent.values = [0, ...Array(this.tablePartsCount).fill(0)];
+                    formContent.values = [0, ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill(0)];
                     // Initialize the `values` array for each subCode
                     if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                             // Set the first value to 0, and the rest based on the number of parts
-                            subCode.values = [0, ...Array(this.tablePartsCount).fill(0)];
+                            subCode.values = [0, ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill(0)];
                         });
                     }
                 });
                 }
-                else if (this.tableFormData.Type == "4"){
-                  this.tablePartsCount = this.table.tableParts.length;
-                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                else if(this.coverForm.tables[tableIndex].Type == "4"){
+                  this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                     // Calculate the total number of parts (doubled)
-                    const totalPartsCount = this.tablePartsCount * 2;
+                    const totalPartsCount = this.coverForm.tables[tableIndex].tableParts.length * 2;
         
                     // Initialize the `values` array for the main content
                     formContent.values = Array(totalPartsCount).fill(0);
@@ -256,23 +253,22 @@ export class SharedTableWithoutTransComponent {
                     }
                   });
                 }
-                else if (this.tableFormData.Type == "5"){
-                  this.tableFormData.formContents.forEach((formContent: IGetQuestionDto) => {
+                else if(this.coverForm.tables[tableIndex].Type == "5"){
+                  this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                     // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-                    formContent.values = [0, ...Array(this.table.period).fill(0)];
+                    formContent.values = [0, ...Array(this.coverForm.tables[tableIndex].period).fill(0)];
         
                     // Initialize the `values` array for each subCode
                     if (formContent.code.SubCodes) {
                       formContent.code.SubCodes.forEach((subCode: any) => {
                         // Set the first value to 0, and the rest based on the number of parts
-                        subCode.values = [0, ...Array(this.table.period).fill(0)];
+                        subCode.values = [0, ...Array(this.coverForm.tables[tableIndex].period).fill(0)];
                       });
                     }
                   });
                 }
-                if (tableIndex !== -1) {
-                  this.coverForm.tables[tableIndex] = this.tableFormData;
-                }
+              }
+              table.items.forEach((item: any) => {
                 if(item.codeType ==4){
                   const level1ItemIndex_ = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                   this.coverForm.tables[tableIndex].formContents[level1ItemIndex_].valueCheck = item.valueCheck
@@ -322,20 +318,4 @@ export class SharedTableWithoutTransComponent {
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  GetTableByIdForGetFormData(id: number): void {
-    this.Loader = true;
-    const observer = {
-        next: (res: any) => {
-            this.Loader = false;
-            if (res.Data) {
-                this.tableFormData = res.Data;
-            }
-        },
-        error: (err: any) => {
-            this.sharedServices.handleError(err);
-            this.Loader = false;
-        },
-    };
-    this.formServices.GetTableById(id).subscribe(observer);
-}
 }

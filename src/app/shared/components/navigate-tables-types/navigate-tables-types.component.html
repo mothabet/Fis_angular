@@ -92,11 +92,11 @@
                     <img src="./images/file-excel-outline.png" alt="">
                     تنزيل xls
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-save" (click)="SaveData()">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-save" (click)="SaveData('Save')">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-accept" (click)="ApproveData()">
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-accept" (click)="SaveData('Approve')">
                     موافقة
                 </button>
                 <button *ngIf="role == 'Researchers'" type="button" class="btn btn-accept" (click)="CompleteForm()">

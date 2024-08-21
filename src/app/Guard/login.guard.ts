@@ -14,7 +14,9 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);  
       const role = res.roles;
       const url: string = route.url[0].path;
-      
+      if(!(this.authService.isTableRoute(url))){
+        localStorage.clear();
+      }
       if (role === 'Admin' && this.authService.isAdminRoute(url)) {
         return true;
       } 

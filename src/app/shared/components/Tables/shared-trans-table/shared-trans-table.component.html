@@ -1,6 +1,6 @@
 <div class="companies-details form-details prev-form" style="width: 100%;">
     <div class="header-nav" style="margin-bottom: -10px">
-        <app-navigate-tables-types [coverForm]="form" [table]="table"></app-navigate-tables-types>
+        <app-navigate-tables-types [coverForm]="coverForm" [table]="table"></app-navigate-tables-types>
         <!-- start table -->
         <div class="content companies projection-table">
             <div class="header d-flex flex-wrap">
@@ -16,10 +16,10 @@
                     <thead>
                         <tr class="t-header">
                             <th scope="col" style="min-width: 420px;">البيان</th>
-                            <th class="text-center" scope="col">نهاية عام Year-end {{form.reviewYear}}</th>
+                            <th class="text-center" scope="col">نهاية عام Year-end {{coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col">التعاملات خلال Transactions during
-                                {{+form.reviewYear - 1}}</th>
-                            <th class="text-center" scope="col">نهاية عام Year-end {{+form.reviewYear - 1}}</th>
+                                {{+coverForm.reviewYear - 1}}</th>
+                            <th class="text-center" scope="col">نهاية عام Year-end {{+coverForm.reviewYear - 1}}</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-start" scope="col" style="min-width: 420px;">Items</th>
                         </tr>

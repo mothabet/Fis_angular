@@ -62,7 +62,6 @@ export class TableWithoutTransComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
-        console.log(this.table)
         }
       },
       error: (err: any) => {
@@ -109,7 +108,6 @@ export class TableWithoutTransComponent {
         if (res.Data) {
           this.Loader = false;
           this.activities = res.Data;
-          console.log(this.activities)
         }
       },
       error: (err: any) => {
@@ -127,7 +125,6 @@ export class TableWithoutTransComponent {
         if (res.Data) {
           this.Loader = false;
           this.countries = res.Data;
-          console.log(this.countries)
         }
       },
       error: (err: any) => {

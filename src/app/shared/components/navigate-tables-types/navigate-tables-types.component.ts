@@ -145,75 +145,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       }
     }
   }
-  ApproveData() {
-    this.Loader = true;
-    this.displayFormContents();
-    let storedTables = localStorage.getItem(`tablesList${this.coverForm.id}`);
-    let tablesList: IGetTableDto[] = storedTables ? JSON.parse(storedTables) : [];
-    var dataDtosList: IDataDto[] = [];
-    for (let index = 0; index < tablesList.length; index++) {
-      for (let i = 0; i < tablesList[index].formContents.length; i++) {
-        var codesList: number[] = [];
-        for (let j = 0; j < tablesList[index].formContents[i].values.length; j++) {
-          var codes = tablesList[index].formContents[i].values[j];
-          codesList.push(codes);
-        }
-        var dataDtos: IDataDto = {
-          TableId: tablesList[index].id,
-          questionId: tablesList[index].formContents[i].code.QuestionCode,
-          codes: codesList,
-          level: 1,
-          codeId: tablesList[index].formContents[i].code.Id,
-          codeType: tablesList[index].formContents[i].code.TypeId,
-          valueCheck: tablesList[index].formContents[i].valueCheck,
-          parentCodeId: 0
-        };
-        dataDtosList.push(dataDtos);
-        for (let r = 0; r < tablesList[index].formContents[i].code.SubCodes.length; r++) {
-          var codesListSub: number[] = [];
-          for (let x = 0; x < tablesList[index].formContents[i].code.SubCodes[r].values.length; x++) {
-            var codes = tablesList[index].formContents[i].code.SubCodes[r].values[x];
-            codesListSub.push(codes);
-          }
-          var dataDtosSub: IDataDto = {
-            TableId: tablesList[index].id,
-            questionId: tablesList[index].formContents[i].code.SubCodes[r].QuestionCode,
-            codes: codesListSub,
-            level: 2,
-            codeId: tablesList[index].formContents[i].code.SubCodes[r].Id,
-            codeType: 0,
-            valueCheck: true,
-            parentCodeId:tablesList[index].formContents[i].code.Id
-          };
-          dataDtosList.push(dataDtosSub);
-        }
-      }
-    }
-    var addFormDataDto: IAddFormDataDto = {
-      dataDtos: dataDtosList,
-      FormId: this.coverForm.id,
-    };
-    console.log(addFormDataDto);
-    const observer = {
-      next: (res: any) => {
-        localStorage.removeItem(`tablesList${this.coverForm.id}`);
-        this.Loader = false;
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto, "Approve").subscribe(observer);
-
-  }
-  SaveData() {
+  SaveData(btnType:string) {
     this.Loader = true;
     this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
@@ -282,7 +214,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto, "Save").subscribe(observer);
+    this.navigateTablesTypesService.AddFormData(addFormDataDto,btnType).subscribe(observer);
 
   }
   CompleteForm(): void {
