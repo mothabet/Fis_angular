@@ -145,7 +145,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       }
     }
   }
-  SaveData(btnType:string) {
+  SaveData(btnType: string) {
     this.Loader = true;
     this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
@@ -170,7 +170,7 @@ export class NavigateTablesTypesComponent implements OnInit {
             codeId: coverForm.tables[index].formContents[i].code.Id,
             codeType: coverForm.tables[index].formContents[i].code.TypeId,
             valueCheck: coverForm.tables[index].formContents[i].valueCheck,
-            parentCodeId:0
+            parentCodeId: 0
           };
           dataDtosList.push(dataDtos);
           for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
@@ -187,7 +187,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
               codeType: 0,
               valueCheck: true,
-              parentCodeId:coverForm.tables[index].formContents[i].code.Id
+              parentCodeId: coverForm.tables[index].formContents[i].code.Id
             };
             dataDtosList.push(dataDtosSub);
           }
@@ -198,9 +198,9 @@ export class NavigateTablesTypesComponent implements OnInit {
       dataDtos: dataDtosList,
       FormId: this.coverForm.id,
     };
-    console.log(addFormDataDto);
     const observer = {
       next: (res: any) => {
+        this.GetFormById(this.formId)
         this.Loader = false;
         Swal.fire({
           icon: 'success',
@@ -208,13 +208,15 @@ export class NavigateTablesTypesComponent implements OnInit {
           showConfirmButton: false,
           timer: 2000,
         });
+        if (btnType === 'Approve')
+          this.router.navigate(['/CompanyHome', 0]);
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto,btnType).subscribe(observer);
+    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType).subscribe(observer);
 
   }
   CompleteForm(): void {
