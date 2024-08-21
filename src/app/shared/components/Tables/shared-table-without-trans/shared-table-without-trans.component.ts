@@ -59,7 +59,6 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -110,6 +109,7 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
+    console.log(code)
     const subCode: ISubCode = {
       arName: '',
       codeId: 0,
