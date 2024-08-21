@@ -56,6 +56,7 @@ export class PrevFormComponent {
     this.formServices.GetCompanyForms(this.companyId,2).subscribe(observer);
   }
   formNavigate(id: number) {
+    debugger
     this.GetFormById(id)
   }
 
@@ -63,9 +64,10 @@ export class PrevFormComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.formId = res.Data.id
         if (res.Data.Type == 1)
-          this.router.navigate(['/FormDetails', this.formId , null]);
+          this.router.navigate(['/FormDetails', this.formId , 'null',this.companyId]);
         else if (res.Data.Type == 2)
           this.router.navigate(['/QuarterFormCover', this.formId]);
       },
