@@ -170,13 +170,13 @@
                     <tr class="footer">
                         <td>الاجمالى</td>
                         <td class="text-center">
-                            <input [disabled]="coverForm.status > 4" type="number" placeholder="0" />
+                            <input type="number" placeholder="0" />
                         </td>
                         <td *ngFor="let part of table.tableParts" class="text-center">
-                            <input [disabled]="coverForm.status > 4" type="number" placeholder="0" />
+                            <input type="number" placeholder="0" />
                         </td>
                         <td class="text-center">
-                            <input [disabled]="coverForm.status > 4" type="text" value="900" />
+                            <input type="text" value="900" />
                         </td>
                         <td class="text-start">Total</td>
                     </tr>

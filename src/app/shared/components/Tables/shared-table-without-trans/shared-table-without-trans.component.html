@@ -34,21 +34,21 @@
                                     </button>
                                 </td>
                                 <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="table.tableParts.length">
-                                    <input [disabled]="coverForm.status > 4" type="radio" [(ngModel)]="formContent.valueCheck" [value]="true" checked
+                                    <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true" checked
                                         name="yesNoOption_{{formContent.code.Id}}"> نعم
                                     <label class="mt-3"></label>
                                 </td>
                                 <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="table.tableParts.length">
-                                    <input [disabled]="coverForm.status > 4" type="radio" [(ngModel)]="formContent.valueCheck" [value]="false"
+                                    <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="false"
                                         name="yesNoOption_{{formContent.code.Id}}"> لا
                                     <label class="mt-3"></label>
                                 </td>
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
-                                    <input [disabled]="coverForm.status > 4" type="number" [(ngModel)]="formContent.values[0]"
+                                    <input type="number" [(ngModel)]="formContent.values[0]"
                                         [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                 </td>
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
-                                    <input [disabled]="coverForm.status > 4" type="number" [(ngModel)]="formContent.values[1]"
+                                    <input type="number" [(ngModel)]="formContent.values[1]"
                                         [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                 </td>
                                 <td class="text-center">
@@ -62,7 +62,7 @@
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                                         {{subCode.arName}}</td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                        <select [disabled]="coverForm.status > 4" class="form-control" style="width: 100% !important; text-align:center">
+                                        <select class="form-control" style="width: 100% !important; text-align:center">
                                             <option value="0">اختيار نشاط--</option>
                                             <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                 {{activity.arName}}</option>
@@ -76,14 +76,14 @@
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                         <div style="display: flex;">
-                                            <select [disabled]="coverForm.status > 4" class="form-control" [(ngModel)]="subCode.arName"
+                                            <select class="form-control" [(ngModel)]="subCode.arName"
                                                 (ngModelChange)="onArCountryChange(subCode)"
                                                 style="width: 47% !important; text-align:center;margin: 5px;">
                                                 <option value="">اختيار مصدر المال--</option>
                                                 <option *ngFor="let country of countries" [value]="country.arName">
                                                     {{country.arName}}</option>
                                             </select>
-                                            <select [disabled]="coverForm.status > 4" class="form-control" [(ngModel)]="subCode.enName"
+                                            <select class="form-control" [(ngModel)]="subCode.enName"
                                                 (ngModelChange)="onEnCountryChange(subCode)"
                                                 style="width: 47% !important; text-align:center">
                                                 <option value="">اختيار جنسية المستثمر--</option>
@@ -101,7 +101,7 @@
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                         <div style="display: flex;justify-content: center;">
-                                            <input [disabled]="coverForm.status > 4" type="text" style="width: 300px !important;" />
+                                            <input type="text" style="width: 300px !important;" />
                                             <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"
                                                 (click)="addSubCodeRow(formContent.code)">
@@ -112,11 +112,11 @@
 
                                     </td>
                                     <td class="text-center">
-                                        <input [disabled]="coverForm.status > 4" type="number" [(ngModel)]="subCode.values[0]"
+                                        <input type="number" [(ngModel)]="subCode.values[0]"
                                             (ngModelChange)="calculateTransaction(formContent)" />
                                     </td>
                                     <td class="text-center">
-                                        <input [disabled]="coverForm.status > 4" type="number" [(ngModel)]="subCode.values[1]"
+                                        <input type="number" [(ngModel)]="subCode.values[1]"
                                             (ngModelChange)="calculateTransaction(formContent)" />
                                     </td>
                                     <td class="text-center">
@@ -126,7 +126,7 @@
                                         style="text-wrap: balance; text-align: center !important; color: #00af9d;">
                                         {{subCode.enName}}</td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                        <select [disabled]="coverForm.status > 4" class="form-control" style="width: 100% !important; text-align:center">
+                                        <select class="form-control" style="width: 100% !important; text-align:center">
                                             <option value="0">Choose Activity --</option>
                                             <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                 {{activity.enName}}</option>
@@ -134,14 +134,14 @@
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                         <div style="display: flex;">
-                                            <select [disabled]="coverForm.status > 4" class="form-control" [(ngModel)]="subCode.arName"
+                                            <select class="form-control" [(ngModel)]="subCode.arName"
                                                 (ngModelChange)="onArCountryChange(subCode)"
                                                 style="width: 47% !important; text-align:center;margin: 5px;">
                                                 <option value="">Choose Source of money--</option>
                                                 <option *ngFor="let country of countries" [value]="country.arName">
                                                     {{country.enName}}</option>
                                             </select>
-                                            <select [disabled]="coverForm.status > 4" class="form-control" [(ngModel)]="subCode.enName"
+                                            <select class="form-control" [(ngModel)]="subCode.enName"
                                                 (ngModelChange)="onEnCountryChange(subCode)"
                                                 style="width: 47% !important; text-align:center">
                                                 <option value="">Choose Investor Nationality--</option>
@@ -154,7 +154,7 @@
 
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                         <div style="display: flex;justify-content: center;">
-                                            <input [disabled]="coverForm.status > 4" type="text" style="width: 300px !important;" />
+                                            <input type="text" style="width: 300px !important;" />
 
                                             <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"
