@@ -125,13 +125,14 @@ export class SharedTransTableComponent {
     item.values[2] = item.values[1] - item.values[0];
   }
   addSubCodeRow(code: ICode) {
-    const subCode: ISubCode = {
+    const subCode: ISubCodeForm = {
       arName: '',
       codeId: 0,
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes: []
+      subCodes: [],
+      values:[0,0,0]
     }
     code.SubCodes.push(subCode);
   }

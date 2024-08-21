@@ -56,7 +56,7 @@ export class CompanyHomeComponent implements OnInit{
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);  
     this.role = res.roles;
-    if(this.role == "Researchers")
+    if(this.role != "Company")
       _id = 3;
     const observer = {
       next: (res: any) => {

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
@@ -59,7 +59,6 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -110,13 +109,15 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
-    const subCode: ISubCode = {
+    console.log(code)
+    const subCode: ISubCodeForm = {
       arName: '',
       codeId: 0,
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes: []
+      subCodes: [],
+      values:[0,0]
     }
     code.SubCodes.push(subCode);
   }

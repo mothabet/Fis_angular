@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -116,13 +116,14 @@ export class SharedTableWithPeriodComponent {
   }
   addSubCodeRow(code: ICode) {
 
-    const subCode: ISubCode = {
+    const subCode: ISubCodeForm = {
       arName: '',
       codeId: 0,
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes: []
+      subCodes: [],
+      values:[0, ...Array(this.years.length).fill(0)]
     }
     code.SubCodes.push(subCode);
   }
@@ -306,7 +307,6 @@ export class SharedTableWithPeriodComponent {
                   }
                 });
               });
-debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
