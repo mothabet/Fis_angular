@@ -69,7 +69,7 @@
                 </button>
                 <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
                     data-bs-target="#sendFormCompany">
-                    حالة الإستمارة : تم تعبئة الاستمارة
+                    حالة الإستمارة : تم الموافقه على الاستمارة
                 </button>
                 <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
                     data-bs-target="#sendFormCompany">
@@ -92,17 +92,17 @@
                     <img src="./images/file-excel-outline.png" alt="">
                     تنزيل xls
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-save" (click)="SaveData('Save')">
+                <button *ngIf="(role == 'Company' && coverForm.status <= 4 )||(role == 'Researchers'&&coverForm.status <= 6) && coverForm.status <= 4" type="button" class="btn btn-save" (click)="SaveData('Save')">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <button *ngIf="role == 'Company'" type="button" class="btn btn-accept" (click)="SaveData('Approve')">
+                <button *ngIf="role == 'Company' && coverForm.status < 5" type="button" class="btn btn-accept" (click)="SaveData('Approve')">
                     موافقة
                 </button>
-                <button *ngIf="role == 'Researchers'" type="button" class="btn btn-accept" (click)="CompleteForm()">
+                <button *ngIf="role == 'Researchers' && coverForm.status < 7" type="button" class="btn btn-accept" (click)="CompleteForm()">
                     إكتمال
                 </button>
-                <button *ngIf="role == 'Researchers'" type="button" class="btn btn-exit" (click)="CloseForm()">
+                <button *ngIf="role == 'Researchers' && coverForm.status <= 6" type="button" class="btn btn-exit" (click)="CloseForm()">
                     إغلاق
                 </button>
             </div>

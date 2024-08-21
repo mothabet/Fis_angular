@@ -16,40 +16,31 @@ export class LoginService {
     return logIn;
   }
   saveToken(token: string) {
-    // Define a secret key for encryption. 
-    // Make sure to use a secure way to manage and store your key.
     const secretKey = 'your-256-bit-secret-key';
-
-    // Encrypt the token
     const encryptedToken = CryptoJS.AES.encrypt(token, secretKey).toString();
-
-    // Save the encrypted token in a cookie
-    this.cookieService.set('ATKFIS', encryptedToken);
+    this.cookieService.set('ATKFIS', encryptedToken, undefined, '/'); // Ensure correct path
   }
+
   getToken(): string {
     const secretKey = 'your-256-bit-secret-key';
     const encryptedToken = this.cookieService.get('ATKFIS');
-
     if (encryptedToken) {
       const bytes = CryptoJS.AES.decrypt(encryptedToken, secretKey);
-      const decryptedToken = bytes.toString(CryptoJS.enc.Utf8);
-      return decryptedToken;
+      return bytes.toString(CryptoJS.enc.Utf8);
     }
-
     return '';
   }
+
   deleteToken() {
-    const token = this.cookieService.delete('ATKFIS');
-    return token;
+    console.log('Deleting token...');
+    this.cookieService.delete('ATKFIS', '/'); // Ensure correct path
   }
+
   decodedToken(token: string): any {
     if (token) {
-      const decodedToken = jwtDecode(token);
-      // Log the decoded data
-      return decodedToken
+      return jwtDecode(token);
     }
-    else
-      return ""
+    return '';
   }
   isAdminRoute(url: string): boolean {
     const adminRoutes = [

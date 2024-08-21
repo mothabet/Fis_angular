@@ -46,7 +46,7 @@
                             <ng-container *ngIf="formContent.code.TypeId != 4">
                                 <ng-container *ngFor="let part of table.tableParts; let i = index">
                                     <td class="text-center">
-                                        <input type="number" [(ngModel)]="formContent.values[i+1]" />
+                                        <input type="number" [(ngModel)]="formContent.values[i+1]" [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0"/>
                                     </td>
                                 </ng-container>
                             </ng-container>
@@ -112,10 +112,10 @@
 
                                 </td>
                                 <td class="text-center">
-                                    <input type="number" [(ngModel)]="subCode.values[0]"/>
+                                    <input type="number" [(ngModel)]="subCode.values[0]" (ngModelChange)="calculateTransaction(formContent)"/>
                                 </td>
                                 <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                    <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i+1]" /></td>
+                                    <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(formContent)"/></td>
                                   </ng-container>
                                 <td class="text-center"><input disabled type="text"
                                         value="{{subCode.QuestionCode}}" />

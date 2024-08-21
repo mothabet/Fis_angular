@@ -52,7 +52,7 @@
                                         [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                 </td>
                                 <td class="text-center">
-                                    <input [disabled]="coverForm.status > 4" type="text" disabled value="{{formContent.code.QuestionCode}}" />
+                                    <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
                                 </td>
                                 <td style="text-wrap: balance;" class="text-start">{{formContent.code.enName}}</td>
                             </tr>
@@ -120,7 +120,7 @@
                                             (ngModelChange)="calculateTransaction(formContent)" />
                                     </td>
                                     <td class="text-center">
-                                        <input [disabled]="coverForm.status > 4" type="text" disabled value="{{subCode.QuestionCode}}" />
+                                        <input type="text" disabled value="{{subCode.QuestionCode}}" />
                                     </td>
                                     <td class="text-start" *ngIf="formContent.code.TypeId == 1"
                                         style="text-wrap: balance; text-align: center !important; color: #00af9d;">

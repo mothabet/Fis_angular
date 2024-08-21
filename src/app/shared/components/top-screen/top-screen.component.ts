@@ -25,6 +25,7 @@ export class TopScreenComponent implements OnInit
     this.researcherId = this.topScreenServices.getResearcherId();
   }
   LogOut() {
+    debugger
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
   }
