@@ -109,6 +109,9 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
+    debugger
+    if(this.table === undefined)
+      return;
     if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
@@ -145,7 +148,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       }
     }
   }
-  SaveData(btnType: string) {
+  SaveData(btnType: string,companyId:number) {
     this.Loader = true;
     this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
@@ -216,7 +219,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType).subscribe(observer);
+    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType,companyId).subscribe(observer);
 
   }
   CompleteForm(): void {
@@ -271,6 +274,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          debugger
           const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (!storedTables) {
             localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));

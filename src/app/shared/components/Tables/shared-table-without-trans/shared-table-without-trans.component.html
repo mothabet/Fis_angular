@@ -44,11 +44,11 @@
                                     <label class="mt-3"></label>
                                 </td>
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
-                                    <input type="number" [(ngModel)]="formContent.values[0]"
+                                    <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[0]"
                                         [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                 </td>
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
-                                    <input type="number" [(ngModel)]="formContent.values[1]"
+                                    <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[1]"
                                         [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                 </td>
                                 <td class="text-center">
