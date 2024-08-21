@@ -222,6 +222,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
+        this.coverForm.status = 7;
         Swal.fire({
           icon: 'success',
           title: res.Message,
@@ -243,6 +244,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
+        this.coverForm.status = 6;
         Swal.fire({
           icon: 'success',
           title: res.Message,
