@@ -119,7 +119,6 @@ export class SharedOneYearWithPartsComponent {
     code.SubCodes.push(subCode);
   }
   GetActivites() {
-    
     const observer = {
       next: (res: any) => {
         this.Loader = false;
@@ -154,9 +153,26 @@ export class SharedOneYearWithPartsComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
-  calculateSum(values: number[]): number {
-    return values.reduce((acc, val) => acc + (val || 0), 0);
+  calculateTransaction(formContent: IGetQuestionDto) {
+    if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
+      // Initialize sums to zero
+      const sums: number[] = [];
+  
+      // Determine the maximum number of values in any subCode
+      formContent.code.SubCodes.forEach((subCode: any) => {
+        subCode.values.forEach((value: number, index: number) => {
+          if (!sums[index]) {
+            sums[index] = 0;
+          }
+          sums[index] += value || 0;
+        });
+      });
+  
+      // Update formContent values with the calculated sums
+      formContent.values = sums;
+    }
   }
+  
   GetFormData() {
     debugger
     this.Loader = true;

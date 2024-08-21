@@ -56,11 +56,11 @@
                                 </td>
                                 <ng-container *ngIf="formContent.code.TypeId != 4">
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                        <td class="text-center"><input [disabled]="coverForm.status > 4" type="number"
+                                        <td class="text-center"><input type="number"
                                                 [(ngModel)]="formContent.values[i]" /></td>
                                     </ng-container>
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                        <td class="text-center"><input [disabled]="coverForm.status > 4" type="number"
+                                        <td class="text-center"><input type="number"
                                                 [(ngModel)]="formContent.values[i + table.tableParts.length]" /></td>
                                     </ng-container>
                                 </ng-container>
@@ -128,13 +128,13 @@
 
                                         </td>
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                            <td class="text-center"><input [disabled]="coverForm.status > 4" type="number"
+                                            <td class="text-center"><input type="number"
                                                     [(ngModel)]="subCode.values[i]" /></td>
                                         </ng-container>
 
                                         <!-- Second set of tableParts for subcodes -->
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                            <td class="text-center"><input [disabled]="coverForm.status > 4" type="number"
+                                            <td class="text-center"><input type="number"
                                                     [(ngModel)]="subCode.values[i + table.tableParts.length]" /></td>
                                         </ng-container>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4">
