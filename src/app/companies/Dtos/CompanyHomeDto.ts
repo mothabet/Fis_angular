@@ -16,6 +16,7 @@ export interface ICompany {
     mailBox: string,
     wilayatId: number,
     wilayat: string,
+    webSite: string,
     postalCode: string,
     phoneNumber: string,
     email: string,

@@ -78,7 +78,8 @@ export class CompaniesHomeComponent implements OnInit {
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
     this.GetCompanies('', 1);
-    this.username = this.companyForm.value.username
+    this.username = this.companyForm.value.username;
+    console.log(this.compEmails.controls)
   }
   // Getter for the form array
   get compEmails(): FormArray {
@@ -106,14 +107,16 @@ export class CompaniesHomeComponent implements OnInit {
     }
   }
   onPageChange(page: number) {
-    debugger
+
     this.currentPage = page;
     this.GetCompanies('', page);
   }
 
   GetSectorActvities(sectorId: number) {
+
     const observer = {
       next: (res: any) => {
+
         if (res.Data) {
           this.Activities = res.Data;
         }
@@ -156,7 +159,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+
         if (err.status) {
           switch (err.status) {
             case 400:
@@ -188,7 +191,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+
         this.showLoader = false;
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
@@ -203,7 +206,7 @@ export class CompaniesHomeComponent implements OnInit {
         this.showLoader = false;
       },
       error: (err: any) => {
-        debugger
+
         this.showLoader = false;
         if (err.status) {
           switch (err.status) {
@@ -345,7 +348,7 @@ export class CompaniesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+
           this.username = `FISC0${res.Data}`;
           this.CompanyCode = res.Data;
         }
@@ -360,7 +363,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
-    debugger
+
     // Validate that at least one email is provided
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
@@ -416,7 +419,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      debugger
+
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -447,7 +450,7 @@ export class CompaniesHomeComponent implements OnInit {
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
-          debugger
+
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -503,9 +506,10 @@ export class CompaniesHomeComponent implements OnInit {
       compBuild: '',
       webSite: '',
     });
-    (this.companyForm.get('emails') as FormArray).clear();
+    if (this.companyForm.get('emails'))
+      (this.companyForm.get('emails') as FormArray).clear();
     // إضافة حقل واحد فارغ على الأقل
-    this.addEmailField();
+    // this.addEmailField();
     this.generateRandomCredentials();
     this.GetCompanyCode();
   }
@@ -538,9 +542,9 @@ export class CompaniesHomeComponent implements OnInit {
       compBuild: '',
       webSite: '',
     });
-    (this.companyForm.get('emails') as FormArray).clear();
-    // إضافة حقل واحد فارغ على الأقل
-    this.addEmailField();
+    if (this.companyForm.get('emails'))
+      (this.companyForm.get('emails') as FormArray).clear();    // إضافة حقل واحد فارغ على الأقل
+    // this.addEmailField();
 
     this.add = true;
 
@@ -576,7 +580,7 @@ export class CompaniesHomeComponent implements OnInit {
     });
   }
   DeleteCompany(id: number): void {
-    debugger
+
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -597,7 +601,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.DeleteCompany(id).subscribe(observer);
   }
   showAlert(id: number): void {
-    debugger
+
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -609,7 +613,7 @@ export class CompaniesHomeComponent implements OnInit {
       cancelButtonText: 'لا'
     }).then((result) => {
       if (result.isConfirmed) {
-        debugger
+
         this.DeleteCompany(id);
       }
     });
@@ -635,7 +639,7 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
-          debugger
+
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
           this.GetWilayat(this.company.governoratesId)
           this.onWilayaChange();
@@ -674,7 +678,7 @@ export class CompaniesHomeComponent implements OnInit {
             this.initializeForm();
 
           }
-          debugger
+
           this.id = id;
           this.CompanyCode = id.toString();
         }
@@ -705,7 +709,58 @@ export class CompaniesHomeComponent implements OnInit {
 
   updateCompany() {
     this.showLoader = true;
-    if (this.companyForm.valid) {
+    const emailArray = this.companyForm.value.compEmails;
+    const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
+    if (this.companyForm.value.subActivityId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اختيار النشاط الثانوي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.value.sectorId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب القطاع',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.value.activityId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب النشاط الرئيسي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.value.governoratesId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب رقم المنطقه',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.value.wilayatId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب رقم الولايه',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (!emailProvided) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب إدخال بريد إلكتروني واحد على الأقل',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -731,7 +786,7 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        companyEmails: this.companyForm.value.companyEmails
+        companyEmails: this.companyForm.value.compEmails
       }
       const observer = {
         next: (res: any) => {
@@ -775,7 +830,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetCompanies(this.searchText, 1);
   }
   GetSectorActivities_UpdatePop(sectorId: number, activityId: number) {
-    debugger
+
     if (this.Sectors)
       this.GetSectorActvities(sectorId)
     if (this.Activities)
@@ -800,7 +855,7 @@ export class CompaniesHomeComponent implements OnInit {
     doc.text('الشركات', 10, 10);
 
     // Generate the table
-    debugger
+
     autoTable(doc, {
       head: [columns],
       body: data.map(item => [
@@ -832,7 +887,7 @@ export class CompaniesHomeComponent implements OnInit {
   }
   printPdf() {
     this.companiesPDF = this.transformToPDF(this.companies);
-    debugger
+
     this.generatePdf(this.companiesPDF, this.tableColumns);
   }
   transformToPDF(companies: ICompany[]): ICompaniesPDF[] {

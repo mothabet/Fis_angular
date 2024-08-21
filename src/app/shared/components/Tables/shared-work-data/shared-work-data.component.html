@@ -26,7 +26,7 @@
                         <tr *ngFor="let workQues of workData">
                             <td style="text-wrap: balance;">{{workQues.arName}}</td>
                             <td class="text-center">
-                                <input type="text" style="width: 100%;" />
+                                <input type="text" style="width: 100%;" value="{{workQues.inputValue}}"/>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">{{workQues.enName}}</td>
                         </tr>

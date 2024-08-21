@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { SidebarService } from './shared/services/sidebar.service';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ export class AppComponent {
   Loader = false;
   showSidebar = true;
   subcription!: Subscription;
-  constructor(private service: SidebarService, private titleService: Title,private authService: LoginService) {
+  constructor(private cdr: ChangeDetectorRef,private service: SidebarService, private titleService: Title,private authService: LoginService) {
 
   }
   ngOnInit() {
@@ -26,6 +26,8 @@ export class AppComponent {
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
+    if(this.role == 'Researchers')
+      this.showSidebar = false
   }
   ngOnDestroy(): void {
     this.subcription.unsubscribe();
