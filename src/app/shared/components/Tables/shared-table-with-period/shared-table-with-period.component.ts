@@ -123,7 +123,9 @@ export class SharedTableWithPeriodComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values:[0, ...Array(this.years.length).fill(0)]
+      values:[0, ...Array(this.years.length).fill(0)],
+      connectedWithId:0,
+      connectedWithLevel:0
     }
     code.SubCodes.push(subCode);
   }

@@ -5,7 +5,8 @@ export interface IAddCode {
     arName: string,
     enName: string,
     TypeId: number|null,
-    addSubCodeDtos : IAddSubCode[]
+    addSubCodeDtos : IAddSubCode[],
+    id_Level :string
 }
 export interface ICode{
     Id:number,
@@ -23,6 +24,15 @@ export interface ICodeForm{
     enName: string,
     TypeId : number;
     QuestionCode:string
-    Department : string | null
-    SubCodes:ISubCodeForm[]
+    Department : string | null,
+    connectedWithId:number|null,
+    connectedWithLevel:number|null,
+    SubCodes:ISubCodeForm[],
+
+}
+export interface IGetAllCodesAndSubCodesAndSubSubCodes{
+    id:number,
+    arName: string,
+    enName: string,
+    Level:number
 }

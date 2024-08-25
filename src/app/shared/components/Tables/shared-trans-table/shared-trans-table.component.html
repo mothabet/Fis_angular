@@ -48,14 +48,14 @@
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[1]"
                                             (ngModelChange)="calculateTransactionFormContent(formContent)" type="number"
-                                            [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
+                                            [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" class="tableInputParent"/>
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[2]" type="number" disabled />
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[0]"
-                                            (ngModelChange)="calculateTransactionFormContent(formContent)" type="number"
+                                            (ngModelChange)="calculateTransactionFormContent(formContent)" type="number" class="tableInputParent"
                                             [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
                                     </td>
                                 </ng-container>

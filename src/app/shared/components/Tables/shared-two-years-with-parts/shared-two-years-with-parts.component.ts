@@ -108,7 +108,9 @@ export class SharedTwoYearsWithPartsComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: Array(this.tablePartsCount*2).fill(0) // Initialize values array with 0s based on tablePartsCount
+      values: Array(this.tablePartsCount*2).fill(0), // Initialize values array with 0s based on tablePartsCount,
+      connectedWithId:0,
+      connectedWithLevel:0
     }
     code.SubCodes.push(subCode);
   }
