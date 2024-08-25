@@ -1498,6 +1498,19 @@ a.sidebar-link span {
     font-weight: 600;
 }
 
+#formsStatics .modal-content select {
+    border-radius: 6px;
+    padding: 8px .75rem !important;
+}
+
+#formsStatics .modal-content .modal-subtitle h6 {
+    font-weight: 600;
+}
+
+#formsStatics .modal-content .form-title {
+    font-weight: 600;
+}
+
 /* end companies */
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ResearcherHomeService } from '../../services/researcher-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IResearcher } from '../../Dtos/ResearcherHomeDto';
@@ -33,7 +33,8 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
   formStatics!:any[]
-  constructor(private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+  formsStaticsStatus!:any[]
+  constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
   ngOnInit(): void {
@@ -87,7 +88,38 @@ export class ResearcherDetailsComponent implements OnInit {
     this.researcherServices.GetFormsStatistics(+this.researcherId).subscribe(observer);
   }
 
+  GetFormsByStatus(status:number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res.Data) {
+          this.formsStaticsStatus = res.Data
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherServices.GetFormsByStatus(+this.researcherId,status).subscribe(observer);
+  }
+
   openModal() {
+    const modalElement = document.getElementById('formsStatics');
+    if (modalElement) {
+      this.renderer.addClass(modalElement, 'show');
+      this.renderer.setStyle(modalElement, 'display', 'block');
+      this.renderer.setStyle(modalElement, 'opacity', '1');
+    }
+  }
+  closeModal() {
+    const modalElement = document.getElementById('formsStatics');
+    if (modalElement) {
+      this.renderer.removeClass(modalElement, 'show');
+      this.renderer.setStyle(modalElement, 'display', 'none');
+      this.renderer.setStyle(modalElement, 'opacity', '0');
+    }
   }
 
   researcherCompanySerach() {

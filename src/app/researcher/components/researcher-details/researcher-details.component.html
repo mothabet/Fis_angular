@@ -36,7 +36,7 @@
 
     <!--start total -->
     <div class="row totals">
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" >
             <div class="card company text-center">
                 <div class="header py-3">
                     <div class="total-num">
@@ -48,18 +48,19 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics" >
-            <div class="card company text-center" style="cursor: pointer;" (click)="openModal()">
-                <div class="header py-3">
-                    <div class="total-num">
-                        {{static.count}}
-                    </div>
-                    <div class="total-title">
-                        {{static.name}}
-                    </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics">
+            <div class="card company text-center"  data-bs-toggle="modal"
+            data-bs-target="#formsStatics" style="cursor: pointer;"  (click)="GetFormsByStatus(static.id)">
+              <div class="header py-3">
+                <div class="total-num">
+                  {{static.count}}
                 </div>
+                <div class="total-title">
+                  {{static.name}}
+                </div>
+              </div>
             </div>
-        </div>
+          </div>
         
     </div>
     <!--end total -->
@@ -215,48 +216,34 @@
     </div>
 </div>
 
-<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics" aria-hidden="true">
+<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header pb-1">
-                <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
-            </div>
-            <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
-                <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
-                <div class="search">
-                    <input (keydown.enter)="researcherCompanySerach()" [(ngModel)]="text" class="form-control"
-                        type="text" name="search" placeholder="البحث" />
-                    <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-                </div>
+            <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">الاستمارات</h5>
             </div>
             <div class="table-responsive company-modal-table mx-2">
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
-                            <th scope="col">اسم الشركة</th>
-                            <th class="text-center" scope="col">رقم السجل التجاري</th>
-                            <th class="text-center" scope="col">رقم الشركة</th>
-                            <th class="text-center" scope="col">رمز النشاط</th>
-                            <th class="text-center" scope="col">النشاط</th>
-                            <th class="text-center" scope="col">عنوان الشركة</th>
+                            <th scope="col"></th>
+                            <th scope="col" style="text-align: center;">اسم الشركة</th>
+                            <th scope="col" style="text-align: center;">اسم الإستمارة</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let company of researcher.companies">
-                            <td>
-                                <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
-                                    [checked]="isSelected(company.id)" type="checkbox" name="companyName1"
-                                    id="companyName1" />
-                                {{company.arName}}
-                            </td>
-                            <td class="text-center">{{company.compRegNumber}}</td>
-                            <td class="text-center">{{company.id}}</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">{{company.address}}</td>
+                        <tr *ngFor="let form of formsStaticsStatus; let i = index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{form.companyName}}</td>
+                            <td class="text-center">{{form.formName}}</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="modal-footer pt-0" style="border-top: none">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
+                    إلغاء
+                </button>
             </div>
         </div>
     </div>
