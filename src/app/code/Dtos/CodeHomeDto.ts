@@ -34,5 +34,6 @@ export interface IGetAllCodesAndSubCodesAndSubSubCodes{
     id:number,
     arName: string,
     enName: string,
-    Level:number
+    Level:number,
+    Code:string
 }

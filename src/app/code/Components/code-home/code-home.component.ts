@@ -236,18 +236,22 @@ export class CodeHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
         if (res.Data) {
           this.code = res.Data.codeDto;
           this.addSubCode = res.Data.getSubCodeDtos
-          
+          this.addSubCode = res.Data.getSubCodeDtos.map((subCode: any) => {
+            return {
+              ...subCode,
+              id_Level: `${subCode.connectedWithId}_${subCode.connectedWithLevel}`
+            };
+          });
           this.codeForm.patchValue({
             QuestionCode: this.code.QuestionCode,
             arName: this.code.arName,
             enName: this.code.enName,
             TypeId:this.code.TypeId,
+            connectedWith:`${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`
           });
-          debugger
           this.searchTerm = this.code.arName;
           this.showLoader = false;
           this.add = false;
@@ -291,7 +295,6 @@ export class CodeHomeComponent {
       };
       const observer = {
         next: (res: any) => {
-          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -426,7 +429,6 @@ export class CodeHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
           debugger
           this.codesAndSub = res.Data;
