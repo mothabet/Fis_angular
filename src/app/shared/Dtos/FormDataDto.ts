@@ -11,5 +11,9 @@ export interface IDataDto{
     codeId : number,
     codeType:number,
     valueCheck:boolean,
-    parentCodeId:number
+    parentCodeId:number,
+    connectedWithId:number|null,
+    connectedWithLevel:number|null,
+    TableArName:string|null,
+    TableEnName:string|null,
 }

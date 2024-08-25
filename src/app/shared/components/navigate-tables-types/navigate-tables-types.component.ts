@@ -74,9 +74,9 @@ export class NavigateTablesTypesComponent implements OnInit {
           case 5:
             navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id, this.companyId]);
             break;
-          case 0:
-            navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id]);
-            break;
+            case 0:
+              navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id, this.companyId]);
+              break;
           default:
             return;
         }
@@ -109,10 +109,11 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    debugger
-    if(this.table === undefined)
+     if (this.table === undefined)
       return;
-    if (this.table.Type == "1")
+    if (this.table.Type == "0")
+        this.addTableToListInLocalStorage(this.table);
+      else if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
       this.addTableToListInLocalStorage(this.table);
@@ -148,7 +149,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       }
     }
   }
-  SaveData(btnType: string,companyId:number) {
+  SaveData(btnType: string, companyId: number) {
     this.Loader = true;
     this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
@@ -167,13 +168,17 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
           var dataDtos: IDataDto = {
             TableId: coverForm.tables[index].id,
+            TableArName: coverForm.tables[index].arName,
+            TableEnName: coverForm.tables[index].enName,
             questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
             codes: codesList,
             level: 1,
             codeId: coverForm.tables[index].formContents[i].code.Id,
             codeType: coverForm.tables[index].formContents[i].code.TypeId,
             valueCheck: coverForm.tables[index].formContents[i].valueCheck,
-            parentCodeId: 0
+            parentCodeId: 0,
+            connectedWithId: coverForm.tables[index].formContents[i].code.connectedWithId,
+            connectedWithLevel: coverForm.tables[index].formContents[i].code.connectedWithLevel,
           };
           dataDtosList.push(dataDtos);
           for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
@@ -184,13 +189,17 @@ export class NavigateTablesTypesComponent implements OnInit {
             }
             var dataDtosSub: IDataDto = {
               TableId: coverForm.tables[index].id,
+              TableArName: coverForm.tables[index].arName,
+              TableEnName: coverForm.tables[index].enName,
               questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
               codes: codesListSub,
               level: 2,
               codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
               codeType: 0,
               valueCheck: true,
-              parentCodeId: coverForm.tables[index].formContents[i].code.Id
+              parentCodeId: coverForm.tables[index].formContents[i].code.Id,
+              connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
+              connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
             };
             dataDtosList.push(dataDtosSub);
           }
@@ -211,15 +220,13 @@ export class NavigateTablesTypesComponent implements OnInit {
           showConfirmButton: false,
           timer: 2000,
         });
-        if (btnType === 'Approve')
-          this.router.navigate(['/CompanyHome', 0]);
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType,companyId).subscribe(observer);
+    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType, companyId).subscribe(observer);
 
   }
   CompleteForm(): void {
@@ -269,12 +276,10 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
-          debugger
           const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (!storedTables) {
             localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));

@@ -130,7 +130,7 @@
                 (input)="onlyNumber($event)" [(ngModel)]="QuestionCode" />
               <label for="inputField">الرمز</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-3 mb-2">
               <select formControlName="TypeId" id="inputField" class="form-control" [(ngModel)]="typeId">
                 <option selected value="1">عادي</option>
                 <option value="2">انشطه</option>
@@ -139,6 +139,13 @@
                 <option value="5">حدد</option>
               </select>
               <label for="inputField">نوع محتوي الاستماره</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
+              <select formControlName="connectedWith" id="inputField" class="form-control">
+                <option selected value="">--اختر الرمز المرتبط به--</option>
+                <option *ngFor="let item of codesAndSub" [value]="item.id + '_' + item.Level">{{ item.arName }}</option>
+              </select>
+              <label for="inputField">الرمز المرتبط به</label>
             </div>
             <hr *ngIf="typeId == 1" />
             <div class="table-responsive company-table research-table table-border" *ngIf="typeId == 1">
@@ -152,36 +159,44 @@
                     <th class="text-center" scope="col">الاسم بالكامل</th>
                     <th class="text-center" scope="col">English Full Name</th>
                     <th class="text-center" scope="col">الرمز</th>
+                    <th class="text-center" scope="col">الرمز المرتبط به</th>
                     <th class="text-center" scope="col"></th>
                   </tr>
                 </thead>
-
+      
                 <tbody>
                   <tr *ngFor="let item of addSubCode; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td class="text-center">
-                      <input type="text" [(ngModel)]="item.arName" (input)="updateSubCode(i, 'arName', $event)"
-                        value="{{ item.arName }}" />
+                      <input type="text" [value]="item.arName" (input)="updateSubCode(i, 'arName', $event)" />
                     </td>
                     <td class="text-center">
-                      <input type="text" [(ngModel)]="item.enName" (input)="updateSubCode(i, 'enName', $event)"
-                        value="{{ item.enName }}" />
+                      <input type="text" [value]="item.enName" (input)="updateSubCode(i, 'enName', $event)" />
                     </td>
                     <td class="text-center">
-                      <input type="text" [(ngModel)]="item.QuestionCode"
-                        (input)="updateSubCode(i, 'QuestionCode', $event)" value="{{ item.QuestionCode }}" />
+                      <input type="text" [value]="item.QuestionCode" (input)="updateSubCode(i, 'QuestionCode', $event)" />
+                    </td>
+                    <td class="text-center" *ngIf="item.QuestionCode">
+                      <select 
+                        class="form-control" 
+                        (change)="updateSubCode(i, 'id_Level', $event)"
+                      >
+                        <option selected value="">--اختر الرمز المرتبط به--</option>
+                        <option 
+                          *ngFor="let item_ of codesAndSub" 
+                          [value]="item_.id + '_' + item_.Level"
+                        >
+                          {{ item_.arName }}
+                        </option>
+                      </select>                      
                     </td>
                     <td class="text-center td-actions">
                       <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
                         <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                       </button>
-                      <!-- <button class="icon" (click)="editCode(item.Id)">
-                        <img src="../../../../assets/images/pencil-outline.png" alt="Edit" />
-                      </button> -->
                     </td>
                   </tr>
                 </tbody>
-
               </table>
             </div>
           </div>

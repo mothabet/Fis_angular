@@ -114,7 +114,9 @@ export class SharedOneYearWithPartsComponent {
       Id:0,
       QuestionCode:'',
       subCodes:[],
-      values: Array(this.tablePartsCount*2).fill(0)
+      values: Array(this.tablePartsCount*2).fill(0),
+      connectedWithId:0,
+      connectedWithLevel:0
     }
     code.SubCodes.push(subCode);
   }

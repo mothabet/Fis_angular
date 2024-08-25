@@ -3,6 +3,7 @@ export interface IAddSubCode {
     QuestionCode:string,
     arName: string,
     enName: string,
+    id_Level: string,
 }
 export interface ISubCode{
     Id:number,
@@ -20,4 +21,6 @@ export interface ISubCodeForm{
     codeId :number
     subCodes:ISubCode[]
     values: number[];
+    connectedWithId:number|null,
+    connectedWithLevel:number|null,
 }

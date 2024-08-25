@@ -117,7 +117,9 @@ export class SharedTableWithoutTransComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values:[0,0]
+      values:[0,0],
+      connectedWithId:0,
+      connectedWithLevel:0
     }
     code.SubCodes.push(subCode);
   }

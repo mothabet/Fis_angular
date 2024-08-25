@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IAddCode, ICode } from '../../Dtos/CodeHomeDto';
+import { IAddCode, ICode, IGetAllCodesAndSubCodesAndSubSubCodes } from '../../Dtos/CodeHomeDto';
 import { CodeHomeService } from '../../Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
@@ -19,6 +19,7 @@ export class CodeHomeComponent {
   @ViewChild('addCode') addCodeModal!: ElementRef;
   codeForm!: FormGroup;
   codes: ICode[] = [];
+  codesAndSub: IGetAllCodesAndSubCodesAndSubSubCodes[] = [];
   code!: IAddCode;
   addSubCode: IAddSubCode[] = [];
   subCodes: ISubCode[] = [];
@@ -52,11 +53,13 @@ export class CodeHomeComponent {
       enName: ['', Validators.required],
       QuestionCode: [''],
       TypeId: [1,Validators.required],
-      searchTerm:['']
+      searchTerm:[''],
+      connectedWith:[''],
     });
 
     this.GetAllCodes(this.currentPage,this.searchText);
     this.GetAllSubCodes();
+    this.GetAllCodesAndSubCodesAndSubSubCodes();
   }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -78,15 +81,14 @@ export class CodeHomeComponent {
       QuestionCode: '',
       arName: '',
       enName: '',
-      Id:0
+      Id:0,
+      id_Level:''
     });
   }
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
+    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
     const value = inputElement.value;
-  
-    // Ensure that value is correctly assigned based on field type
-    if (field === 'QuestionCode' || field === 'arName' || field === 'enName') {
+    if (field === 'QuestionCode' || field === 'arName' || field === 'enName' || field === 'id_Level') {
       this.addSubCode[index][field] = value;
     }
   }
@@ -120,9 +122,10 @@ export class CodeHomeComponent {
         arName: this.searchTerm,
         enName: this.codeForm.value.enName,
         TypeId:Number(this.codeForm.value.TypeId),
-        addSubCodeDtos : this.addSubCode
+        addSubCodeDtos : this.addSubCode,
+        id_Level : this.codeForm.value.connectedWith
       };
-      
+      debugger
       console.log(this.addSubCode);
       const observer = {
         next: (res: any) => {
@@ -170,10 +173,8 @@ export class CodeHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          debugger
           this.codes = res.Data.getCodesWithSubCodesParents;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
@@ -285,7 +286,8 @@ export class CodeHomeComponent {
         arName: this.searchTerm,
         enName: this.codeForm.value.enName,
         TypeId:this.codeForm.value.TypeId,
-        addSubCodeDtos: this.addSubCode
+        addSubCodeDtos: this.addSubCode,
+        id_Level : this.codeForm.value.connectedWith
       };
       const observer = {
         next: (res: any) => {
@@ -419,5 +421,26 @@ export class CodeHomeComponent {
       },
     };
     this.subCodeHomeService.GetSubCodesById(id).subscribe(observer);
+  }
+  GetAllCodesAndSubCodesAndSubSubCodes(page: number=0, textSearch : string = ''): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          debugger
+          this.codesAndSub = res.Data;
+        }
+        else {
+          this.codesAndSub = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.codeHomeService.GetAllCodesAndSubCodesAndSubSubCodes(page,textSearch).subscribe(observer);
   }
 }
