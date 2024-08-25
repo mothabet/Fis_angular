@@ -18,6 +18,7 @@ import { SharedWorkDataComponent } from './components/Tables/shared-work-data/sh
 import { SharedOneYearWithPartsComponent } from './components/Tables/shared-one-year-with-parts/shared-one-year-with-parts.component';
 import { SharedFormCoverComponent } from './components/Tables/shared-form-cover/shared-form-cover.component';
 import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
+import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quarter-form-cover/shared-quarter-form-cover.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two
     SharedWorkDataComponent,
     SharedOneYearWithPartsComponent,
     SharedFormCoverComponent,
+    SharedQuarterFormCoverComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +56,7 @@ import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two
     SharedOneYearWithPartsComponent,
     SharedTwoYearsWithPartsComponent,
     NavigateTablesTypesComponent,
+    SharedQuarterFormCoverComponent,
     SidebarComponent,
     TopScreenComponent,
     LoaderComponent,

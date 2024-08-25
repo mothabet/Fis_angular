@@ -35,6 +35,11 @@ export class ResearcherHomeService {
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
+   GetFormsStatistics(id:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Form/FormsStatistics?researcherId=${id}&lang=2`, { headers });
+     return resopnse;
+   }
    updateResearcher(id:number,Model: IAddResearcher){
     debugger
     var headers= this.sharedService.getHeaders();

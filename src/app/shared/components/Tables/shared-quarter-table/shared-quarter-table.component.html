@@ -1,6 +1,6 @@
 <div class="companies-details form-details prev-form" style="width: 100%;">
     <div class="header-nav" style="margin-bottom: -10px">
-        <app-navigate-tables-types [coverForm]="coverForm"></app-navigate-tables-types>
+        <app-navigate-tables-types [coverForm]="coverForm" [table]="table"></app-navigate-tables-types>
         <!-- start table -->
         <div class="table-responsive company-table">
             <table class="table table-borderless">
@@ -9,16 +9,16 @@
                         <th scope="col"  style="min-width: 420px;">البيان</th>
                         <th class="text-center quarter4" scope="col">30.012.{{+coverForm.reviewYear + 1}} Position
                         </th>
-                        <th class="text-center quarter4" scope="col">Transactions</th>
+                        <th class="text-center transaction4" scope="col">Transactions</th>
                         <th class="text-center quarter3" scope="col">30.09.{{+coverForm.reviewYear + 1}} Position
                         </th>
-                        <th class="text-center quarter3" scope="col">Transactions</th>
+                        <th class="text-center transaction3" scope="col">Transactions</th>
                         <th class="text-center quarter2" scope="col">30.06.{{+coverForm.reviewYear + 1}} Position
                         </th>
-                        <th class="text-center quarter2" scope="col">Transactions</th>
+                        <th class="text-center transaction2" scope="col">Transactions</th>
                         <th class="text-center quarter1" scope="col">30.03.{{+coverForm.reviewYear + 1}} Position
                         </th>
-                        <th class="text-center quarter1" scope="col">Transactions</th>
+                        <th class="text-center transaction1" scope="col">Transactions</th>
                         <th class="text-center" scope="col">Year End {{coverForm.reviewYear}} Position</th>
                         <th class="text-start" scope="col"  style="min-width: 420px;">Items</th>
                     </tr>
@@ -34,19 +34,19 @@
                             </td>
                             <td class="text-center quarter4"><input disabled class="quarter4" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
-                            <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                            <td class="text-center transaction4"><input disabled class="transaction4" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center quarter3"><input disabled class="quarter3" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
-                            <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                            <td class="text-center transaction3"><input disabled class="transaction3" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
-                            <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                            <td class="text-center quarter2"><input disabled class="quarter2" type="number" 
                                     placeholder="0" (input)="inputChange($event)" /></td>
-                            <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                            <td class="text-center transaction2"><input disabled class="transaction2" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
-                            <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                            <td class="text-center quarter1"><input disabled class="quarter1" type="number" 
                                     placeholder="0" (input)="inputChange($event)"/></td>
-                            <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                            <td class="text-center transaction1"><input disabled class="transaction1" type="number"
                                     placeholder="0" (input)="inputChange($event)"/></td>
                             <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                             <td class="text-start" style="text-wrap: balance;min-width: 250px;">
@@ -57,22 +57,22 @@
                                     <td class="sub-list-item" style="text-align: center;color: #00af9d; text-wrap: balance;">{{ subCode.arName }}</td>
                                     <td class="text-center quarter4"><input disabled class="quarter4" type="number"
                                         placeholder="0" (input)="inputChange($event)"/></td>
-                                <td class="text-center quarter4"><input disabled class="quarter4" type="number"
+                                <td class="text-center transaction4"><input disabled class="transaction4" type="number"
                                         placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter3"><input disabled class="quarter3" type="number"
                                         placeholder="0" (input)="inputChange($event)"/></td>
-                                <td class="text-center quarter3"><input disabled class="quarter3" type="number"
+                                <td class="text-center transaction3"><input disabled class="transaction3" type="number"
                                         placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter2"><input disabled class="quarter2" type="number"
                                         placeholder="0" (input)="inputChange($event)"/></td>
-                                <td class="text-center quarter2"><input disabled class="quarter2" type="number"
+                                <td class="text-center transaction2"><input disabled class="transaction2" type="number"
                                         placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center quarter1"><input disabled class="quarter1" type="number"
                                         placeholder="0" (input)="inputChange($event)"/></td>
-                                <td class="text-center quarter1"><input disabled class="quarter1" type="number"
+                                <td class="text-center transaction1"><input disabled class="transaction1" type="number"
                                         placeholder="0" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center"><input disabled type="number" placeholder="0" /></td>
@@ -84,13 +84,13 @@
                     <tr class="footer">
                         <td>الاجمالى</td>
                         <td class="text-center quarter4"><input disabled type="number" placeholder="0" /></td>
-                        <td class="text-center quarter4"><input disabled type="number" placeholder="0" /></td>
+                        <td class="text-center transaction4"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center quarter3"><input disabled type="number" placeholder="0" /></td>
-                        <td class="text-center quarter3"><input disabled type="number" placeholder="0" /></td>
-                        <td class="text-center quarter2"><input disabled type="number" placeholder="0" /></td>
-                        <td class="text-center quarter2"><input disabled type="number" placeholder="0" /></td>
+                        <td class="text-center transaction3"><input disabled type="number" placeholder="0" /></td>
+                        <td class="text-center quarter2"><input disabled type="number" placeholder="0"/></td>
+                        <td class="text-center transaction2"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center quarter1"><input disabled type="number" placeholder="0" /></td>
-                        <td class="text-center quarter1"><input disabled type="number" placeholder="0" /></td>
+                        <td class="text-center transaction1"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-start">Total</td>
                     </tr>

@@ -32,6 +32,7 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
+  formStatics!:any[]
   constructor(private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
@@ -44,6 +45,7 @@ export class ResearcherDetailsComponent implements OnInit {
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
+    this.GetFormsStatistics()
   }
 
   GetResearcherById(id: number) {
@@ -66,6 +68,26 @@ export class ResearcherDetailsComponent implements OnInit {
       },
     };
     this.researcherServices.GetResearcherById(id).subscribe(observer);
+  }
+
+  GetFormsStatistics() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res.Data) {
+          this.formStatics = res.Data
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherServices.GetFormsStatistics(+this.researcherId).subscribe(observer);
+  }
+
+  openModal() {
   }
 
   researcherCompanySerach() {

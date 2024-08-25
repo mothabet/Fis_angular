@@ -82,7 +82,7 @@ export class CompanyHomeComponent implements OnInit{
         if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId,'null',this.companyId]);
         else if (res.Data.Type == 2)
-          this.router.navigate(['/QuarterFormCover', this.formId]);
+          this.router.navigate(['/QuarterFormCover', this.formId,'null',this.companyId]);
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);

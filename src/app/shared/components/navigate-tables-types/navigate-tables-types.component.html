@@ -110,7 +110,8 @@
     </div>
     <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
         <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
-            <a [routerLink]="['/FormDetails',formId, null,companyId]">الغلاف</a>
+            <a *ngIf="!coverForm.typeQuarter" [routerLink]="['/FormDetails',formId, null,companyId]">الغلاف</a>
+            <a *ngIf="coverForm.typeQuarter" [routerLink]="['/QuarterFormCover',formId, null,companyId]">الغلاف</a>
         </div>
         <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
             <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>

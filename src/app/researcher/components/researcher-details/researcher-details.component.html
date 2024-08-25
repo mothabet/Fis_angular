@@ -36,7 +36,7 @@
 
     <!--start total -->
     <div class="row totals">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="card company text-center">
                 <div class="header py-3">
                     <div class="total-num">
@@ -48,30 +48,19 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <div class="card invest text-center">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics" >
+            <div class="card company text-center" style="cursor: pointer;" (click)="openModal()">
                 <div class="header py-3">
                     <div class="total-num">
-                        0
+                        {{static.count}}
                     </div>
                     <div class="total-title">
-                        إجمالي الشركات التى تم مسحها
+                        {{static.name}}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <div class="card researcher text-center">
-                <div class="header py-3">
-                    <div class="total-num">
-                        0
-                    </div>
-                    <div class="total-title">
-                        إجمالي الشركات التى تم الإنتهاء منها
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
     <!--end total -->
 
@@ -222,6 +211,53 @@
                 </div>
             </form>
 
+        </div>
+    </div>
+</div>
+
+<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1">
+                <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
+            </div>
+            <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
+                <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
+                <div class="search">
+                    <input (keydown.enter)="researcherCompanySerach()" [(ngModel)]="text" class="form-control"
+                        type="text" name="search" placeholder="البحث" />
+                    <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col">اسم الشركة</th>
+                            <th class="text-center" scope="col">رقم السجل التجاري</th>
+                            <th class="text-center" scope="col">رقم الشركة</th>
+                            <th class="text-center" scope="col">رمز النشاط</th>
+                            <th class="text-center" scope="col">النشاط</th>
+                            <th class="text-center" scope="col">عنوان الشركة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let company of researcher.companies">
+                            <td>
+                                <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
+                                    [checked]="isSelected(company.id)" type="checkbox" name="companyName1"
+                                    id="companyName1" />
+                                {{company.arName}}
+                            </td>
+                            <td class="text-center">{{company.compRegNumber}}</td>
+                            <td class="text-center">{{company.id}}</td>
+                            <td class="text-center">184510</td>
+                            <td class="text-center">الترفيه</td>
+                            <td class="text-center">{{company.address}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

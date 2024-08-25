@@ -58,12 +58,29 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
-          this.tablePartsCount = this.table.tableParts.length
+          this.table.formContents.forEach((formContent: any) => {
+            formContent.values = formContent.values || [0, 0, 0];
+            formContent.values[1] = formContent.values[1] || 0;
+            // formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
+            // formContent.values[0] = formContent.values[2] || 0;
+
+            // If there are subCodes, ensure their values are also initialized
+            // if (formContent.code.SubCodes) {
+            //   formContent.code.SubCodes.forEach((subCode: any) => {
+            //     // Initialize subCode `values` array if it doesn't exist
+            //     subCode.values = subCode.values || [0, 0, 0];
+
+            //     // Ensure the `values` array has the correct length and initial values
+            //     subCode.values[0] = subCode.values[0] || 0; // lastYear
+            //     subCode.values[2] = 0; // Set transaction explicitly to 0
+            //     subCode.values[1] = subCode.values[1] || 0; // nextYear
+            //   });
+            // }
+          });
         }
       },
       error: (err: any) => {
@@ -96,11 +113,19 @@ export class SharedQuarterTableComponent {
   }
   modifyInputById(id: number): void {
     const inputs = document.getElementsByClassName('quarter' + id) as HTMLCollectionOf<HTMLInputElement>;
+    const transactions = document.getElementsByClassName('transaction' + id) as HTMLCollectionOf<HTMLInputElement>;
+
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i];
       input.style.backgroundColor = 'rgb(202 227 224)';
       input.style.color = 'black';
       input.disabled = false;
+    }
+    for (let i = 0; i < transactions.length; i++) {
+      const transaction = transactions[i];
+      transaction.style.backgroundColor = 'rgb(202 227 224)';
+      transaction.style.color = 'black';
+      transaction.disabled = true;
     }
   }
   addSubCodeRow(code: ICode) {

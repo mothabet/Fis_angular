@@ -30,8 +30,8 @@ import { SharedTwoYearsWithPartsComponent } from './shared/components/Tables/sha
 const routes: Routes = [
   { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },
   { path: 'WorkData/:formId/:companyId', component: WorkDataComponent, canActivate: [LoginGuard] },
-  { path: 'QuarterTable/:formId/:tableId', component: QuarterTableComponent, canActivate: [LoginGuard] },
-  { path: 'QuarterFormCover/:formId', component: QuarterFormCoverComponent, canActivate: [LoginGuard] },
+  { path: 'QuarterTable/:formId/:tableId/:companyId', component: QuarterTableComponent, canActivate: [LoginGuard] },
+  { path: 'QuarterFormCover/:formId/:type/:companyId', component: QuarterFormCoverComponent, canActivate: [LoginGuard] },
   { path: 'TransTable/:formId/:tableId/:companyId', component: TransTableComponent, canActivate: [LoginGuard] },
   { path: 'PeriodTable/:formId/:tableId/:companyId', component: TableWithPeriodComponent, canActivate: [LoginGuard] },
   { path: 'TableWithoutTrans/:formId/:tableId/:companyId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },
