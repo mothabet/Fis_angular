@@ -109,6 +109,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
+    debugger
      if (this.table === undefined)
       return;
     if (this.table.Type == "0")
@@ -154,6 +155,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto
+    debugger
     if (storedTables) {
       coverForm = JSON.parse(storedTables);
     }
