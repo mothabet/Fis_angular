@@ -43,6 +43,7 @@ export class SharedQuarterTableComponent {
     });
   }
   ngAfterViewInit(): void {
+    debugger
     this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
   }
   onArCountryChange(subCode: any) {
@@ -67,11 +68,11 @@ export class SharedQuarterTableComponent {
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
-            formContent.values = formContent.values || [0, 0, 0, 0, 0, 0, 0, 0];
+            formContent.values = formContent.values || [0, 0, 0, 0, 0];
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Initialize subCode `values` array if it doesn't exist
-                subCode.values = subCode.values || [0, 0, 0, 0, 0, 0, 0, 0];
+                subCode.values = subCode.values || [0, 0, 0, 0, 0];
               });
             }
           });
@@ -107,29 +108,8 @@ export class SharedQuarterTableComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   modifyInputById(id: number): void {
-    debugger
-    for (let i = 1; i <= id; i++) {
-      // Select all inputs with class name 'quarter' + i (for ids less than the provided id)
-      const inputs = document.getElementsByClassName('quarter' + i) as HTMLCollectionOf<HTMLInputElement>;
-      const transactions = document.getElementsByClassName('transaction' + i) as HTMLCollectionOf<HTMLInputElement>;
-
-      for (let j = 0; j < inputs.length; j++) {
-        const input = inputs[j];
-        if (i == id)
-          input.style.backgroundColor = 'rgb(202 227 224)';
-        input.style.color = 'black';
-        input.disabled = false;
-      }
-      for (let j = 0; j < transactions.length; j++) {
-        const transaction = transactions[j];
-        if (i == id)
-          transaction.style.backgroundColor = 'rgb(202 227 224)';
-        transaction.style.color = 'black';
-        transaction.disabled = true;
-      }
-    }
+    
   }
-
   addSubCodeRow(code: ICode) {
     const subCode: ISubCode = {
       arName: '',
@@ -181,16 +161,13 @@ export class SharedQuarterTableComponent {
     console.log(event);
   }
   GetFormData() {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          debugger
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -326,7 +303,6 @@ export class SharedQuarterTableComponent {
                   }
                 });
               });
-              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -345,6 +321,9 @@ export class SharedQuarterTableComponent {
           if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
             this.table = this.coverForm.tables[tableIndex];
           }
+          debugger
+          this.modifyInputById(this.coverForm.typeQuarter);
+
         }
         // this.modifyInputById(this.coverForm.typeQuarter);
         this.Loader = false;
@@ -354,7 +333,18 @@ export class SharedQuarterTableComponent {
         this.Loader = false;
       },
     };
-
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
+  getSumOfValues(index: number): number {
+    return this.table.formContents.reduce((sum, formContent) => {
+      return sum + (formContent.values[index] || 0);
+    }, 0);
+  }
+  getDifferenceBetweenSums(index1: number, index2: number): number {
+    const sum1 = this.getSumOfValues(index1);
+    const sum2 = this.getSumOfValues(index2);
+    return sum1 - sum2;
+  }
+    
+  
 }

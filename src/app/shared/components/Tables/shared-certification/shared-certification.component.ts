@@ -5,11 +5,11 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
-  selector: 'app-certification',
-  templateUrl: './certification.component.html',
-  styleUrls: ['./certification.component.css']
+  selector: 'app-shared-certification',
+  templateUrl: './shared-certification.component.html',
+  styleUrls: ['./shared-certification.component.css']
 })
-export class CertificationComponent {
+export class SharedCertificationComponent {
   coverForm!: ICoverFormDetailsDto;
   Loader: boolean = false;
   @Input() formId!: string;
