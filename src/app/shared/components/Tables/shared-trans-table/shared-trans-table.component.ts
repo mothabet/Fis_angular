@@ -156,7 +156,6 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetActivities().subscribe(observer);
   }
-
   GetFormData() {
     debugger
     this.Loader = true;
