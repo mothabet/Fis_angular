@@ -1,31 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
-import { FormService } from '../../Services/form.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
+import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-certification',
   templateUrl: './certification.component.html',
   styleUrls: ['./certification.component.css']
 })
-export class CertificationComponent implements OnInit{
+export class CertificationComponent {
   coverForm!: ICoverFormDetailsDto;
   Loader: boolean = false;
-  formId: string = '';
+  @Input() formId!: string;
   isCertificationActive:boolean = false;
-  role:string = "";
-  constructor(private authService: LoginService,private formServices: FormService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private formServices: FormService,private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.GetFormById(+this.formId);
-    this.isCertificationActive = true;const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
-    debugger
-    this.role = result.roles;
+    this.isCertificationActive = true;
   }
   GetFormById(id: number): void {
     this.Loader = true;

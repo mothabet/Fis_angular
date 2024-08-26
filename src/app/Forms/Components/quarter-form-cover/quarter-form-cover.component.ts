@@ -22,6 +22,7 @@ export class QuarterFormCoverComponent implements OnInit{
       this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
       const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
+    debugger
     this.role = result.roles;
     }
 }
