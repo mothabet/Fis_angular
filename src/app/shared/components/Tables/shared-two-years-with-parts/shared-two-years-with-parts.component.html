@@ -211,6 +211,18 @@
                                         </tr>
                                     </ng-container>
                                 </ng-container>
+                                <tr class="footer" *ngIf="table.IsTotal">
+                                    <td>الاجمالى</td>
+                                    <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                                        <input type="number" disabled placeholder="0" [value]="getSumOfValues(i)" />
+                                    </td>
+                                    <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                                        <input type="number" disabled placeholder="0"
+                                            [value]="getSumOfValues(table.tableParts.length + i)" />
+                                    </td>
+                                    <td></td>
+                                    <td class="text-start">Total</td>
+                                </tr>
                             </ng-container>
                         </ng-container>
                     </tbody>

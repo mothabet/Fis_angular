@@ -5,7 +5,8 @@ export interface IAddForm {
     enName : string,
     arNotes : string,
     enNotes : string,
-    IsActive : string,
+    IsActive : boolean,
+    IsTotal:boolean,
     Type : string,
     reviewYear:number,
     typeQuarter:string
@@ -18,6 +19,7 @@ export interface IGetFormDto {
     arNotes : string,
     enNotes : string,
     IsActive : boolean,
+    IsTotal:boolean,
     Type : number,
     tables :IGetTableDto[],
     reviewYear:string,
@@ -41,6 +43,7 @@ export interface IGetTablesDto {
     enHeading : string,
     arHeading : string,
     IsActive : boolean,
+    IsTotal:boolean,
     formId : number
 }
 

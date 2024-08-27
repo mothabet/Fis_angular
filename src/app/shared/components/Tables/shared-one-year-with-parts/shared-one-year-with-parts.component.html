@@ -7,7 +7,6 @@
                 <thead>
                     <tr class="t-header">
                         <th scope="col" colspan="" style="min-width: 420px;">البيان</th>
-                        <th scope="col" colspan="">Total الاجمالى</th>
                         <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end
                             {{coverForm.reviewYear}}</th>
                         <th class="text-center" scope="col" colspan="">الرمز Code</th>
@@ -31,9 +30,6 @@
                                     (click)="addSubCodeRow(formContent.code)">
                                     <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
                                 </button>
-                            </td>
-                            <td class="text-center">
-                                <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[0]"/>
                             </td>
                             <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="table.tableParts.length/2">
                                 <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true" checked name="yesNoOption_{{formContent.code.Id}}"> نعم
@@ -111,9 +107,6 @@
                                     </div>
 
                                 </td>
-                                <td class="text-center">
-                                    <input type="number" [(ngModel)]="subCode.values[0]" (ngModelChange)="calculateTransaction(formContent)"/>
-                                </td>
                                 <ng-container *ngFor="let part of table.tableParts; let i = index">
                                     <td class="text-center"><input type="number"  [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(formContent)"/></td>
                                   </ng-container>
@@ -167,19 +160,14 @@
                             </tr>
                         </ng-container>
                     </ng-container>
-                    <tr class="footer">
+                    <tr class="footer" *ngIf="table.IsTotal">
                         <td>الاجمالى</td>
-                        <td class="text-center">
-                            <input type="number" placeholder="0" />
+                        <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                          <input type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)"/>
                         </td>
-                        <td *ngFor="let part of table.tableParts" class="text-center">
-                            <input type="number" placeholder="0" />
-                        </td>
-                        <td class="text-center">
-                            <input type="text" value="900" />
-                        </td>
+                        <td></td>
                         <td class="text-start">Total</td>
-                    </tr>
+                      </tr>
                 </tbody>
             </table>
         </div>

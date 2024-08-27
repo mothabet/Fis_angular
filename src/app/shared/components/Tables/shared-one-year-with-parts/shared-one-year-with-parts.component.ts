@@ -176,16 +176,16 @@ export class SharedOneYearWithPartsComponent {
   }
   
   GetFormData() {
-    debugger
+    
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          debugger
+          
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -321,7 +321,7 @@ export class SharedOneYearWithPartsComponent {
                   }
                 });
               });
-debugger
+
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -330,7 +330,7 @@ debugger
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          debugger
+          
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -351,5 +351,10 @@ debugger
     };
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
+  }
+  getSumOfValues(index: number): number {
+    return this.table.formContents.reduce((sum, formContent) => {
+      return sum + (formContent.values[index] || 0);
+    }, 0);
   }
 }

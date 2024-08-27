@@ -51,7 +51,6 @@ export class SharedTransTableComponent {
 
         this.Loader = false;
         if (res.Data) {
-          debugger
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
@@ -157,16 +156,14 @@ export class SharedTransTableComponent {
     this.formServices.GetActivities().subscribe(observer);
   }
   GetFormData() {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          debugger
+          
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -190,8 +187,8 @@ export class SharedTransTableComponent {
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);
               }
+              
               tablesList.forEach((table: any) => {
-
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
                   if (this.coverForm.tables[tableIndex].Type == "1") {
@@ -302,7 +299,7 @@ export class SharedTransTableComponent {
                   }
                 });
               });
-              debugger
+              
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -311,7 +308,7 @@ export class SharedTransTableComponent {
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          debugger
+          
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -362,5 +359,15 @@ export class SharedTransTableComponent {
     if (selectedCountry) {
       subCode.arCountry = selectedCountry.arName;
     }
+  }
+  getSumOfValues(index: number): number {
+    return this.table.formContents.reduce((sum, formContent) => {
+      return sum + (formContent.values[index] || 0);
+    }, 0);
+  }
+  getDifferenceBetweenSums(index1: number, index2: number): number {
+    const sum1 = this.getSumOfValues(index1);
+    const sum2 = this.getSumOfValues(index2);
+    return sum1 - sum2;
   }
 }

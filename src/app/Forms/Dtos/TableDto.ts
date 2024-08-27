@@ -11,6 +11,7 @@ export interface IAddTableDto {
     Type: string,
     formId:number,
     IsActive: boolean,
+    IsTotal:boolean,
     period: number,
     tableParts : IAddTablePartsDto[]
 }
@@ -26,6 +27,7 @@ export interface IGetTableDto {
     formId:number,
     period:number,
     IsActive: boolean,
+    IsTotal:boolean,
     formContents :IGetQuestionDto[]
     tableParts :IGetTableParts[]
 }

@@ -84,7 +84,7 @@ export class FormsComponent implements OnInit {
       enName: ['', Validators.required],
       arNotes: ['', Validators.required],
       enNotes: ['', Validators.required],
-      isActive: [true, Validators.required],
+      IsActive: [true, Validators.required],
       type: ['', Validators.required],
       reviewYear: ['', Validators.required],
       typeQuarter: ['']
@@ -97,6 +97,7 @@ export class FormsComponent implements OnInit {
       arNotes: ['', Validators.required],
       enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
+      IsTotal:[true,Validators.required],
       Type: [0, Validators.required],
       formId: [''],
       period: [''],
@@ -116,7 +117,7 @@ export class FormsComponent implements OnInit {
       enName: '',
       arNotes: '',
       enNotes: '',
-      isActive: true,
+      IsActive: true,
       type: '',
       reviewYear: '',
       typeQuarter: ''
@@ -511,7 +512,8 @@ export class FormsComponent implements OnInit {
         enName: this.formForm.value.enName,
         arNotes: this.formForm.value.arNotes,
         enNotes: this.formForm.value.enNotes,
-        IsActive: this.formForm.value.isActive, // Corrected to match the interface
+        IsActive: this.formForm.value.IsActive,
+        IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter
@@ -675,7 +677,7 @@ export class FormsComponent implements OnInit {
             enName: this.addForm.enName,
             arNotes: this.addForm.arNotes,
             enNotes: this.addForm.enNotes,
-            isActive: this.addForm.IsActive,
+            IsActive: this.addForm.IsActive,
             type: this.addForm.Type,
             reviewYear: this.addForm.reviewYear,
             typeQuarter: this.addForm.typeQuarter
@@ -708,7 +710,8 @@ export class FormsComponent implements OnInit {
         enName: this.formForm.value.enName,
         arNotes: this.formForm.value.arNotes,
         enNotes: this.formForm.value.enNotes,
-        IsActive: this.formForm.value.isActive,
+        IsActive: this.formForm.value.IsActive,
+        IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter
@@ -762,6 +765,7 @@ export class FormsComponent implements OnInit {
         Type: this.tableForm.value.Type,
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
+        IsTotal: this.tableForm.value.IsTotal,
         period: Number(this.tableForm.value.period),
         tableParts: this.addTableParts
       };
@@ -834,7 +838,7 @@ export class FormsComponent implements OnInit {
       arNotes: '',
       Type: 0,
       fromId: '',
-      isActive: true,
+      IsActive: true,
     });
     this.addTableParts = [];
     this._addTable = true;
@@ -894,7 +898,8 @@ export class FormsComponent implements OnInit {
             enNotes: this.addTable.enNotes,
             Type: this.addTable.Type,
             fromId: this.addTable.formId,
-            isActive: this.addTable.IsActive,
+            IsActive: this.addTable.IsActive,
+            IsTotal:this.addTable.IsTotal,
             period: this.tableForm.value.period,
           });
           this.addTableParts = res.Data.tableParts;
@@ -940,6 +945,7 @@ export class FormsComponent implements OnInit {
         Type: this.tableForm.value.Type,
         formId: this.idFormTables,
         IsActive: this.tableForm.value.IsActive,
+        IsTotal : this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
         tableParts: this.addTableParts
       };
@@ -1200,7 +1206,7 @@ export class FormsComponent implements OnInit {
       if (controlName == 'enName') controlName = 'Form Name in English';
       if (controlName == 'arNotes') controlName = 'ملاحظات بالعربى';
       if (controlName == 'enNotes') controlName = 'Notes in English';
-      if (controlName == 'isActive') controlName = 'حالة الاستماره';
+      if (controlName == 'IsActive') controlName = 'حالة الاستماره';
       if (controlName == 'type') controlName = 'نوع الاستماره';
       if (controlName == 'reviewYear') controlName = 'تاريخ المسح الاستماره';
 

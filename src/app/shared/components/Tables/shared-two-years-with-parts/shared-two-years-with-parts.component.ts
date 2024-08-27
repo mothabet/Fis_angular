@@ -362,5 +362,9 @@ debugger
       formContent.values = sums;
     }
   }
-  
+  getSumOfValues(index: number): number {
+    return this.table.formContents.reduce((sum, formContent) => {
+      return sum + (formContent.values[index] || 0);
+    }, 0);
+  }
 }
