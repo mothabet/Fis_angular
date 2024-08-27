@@ -157,9 +157,6 @@ export class SharedQuarterTableComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
-  inputChange(event: any) {
-    console.log(event);
-  }
   GetFormData() {
     this.Loader = true;
     const observer = {
@@ -345,7 +342,6 @@ export class SharedQuarterTableComponent {
     const sum2 = this.getSumOfValues(index2);
     return sum1 - sum2;
   }
-    
   getSumOfParentChildes(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       // Add the value of formContent at the specified index
@@ -363,4 +359,57 @@ export class SharedQuarterTableComponent {
       return sum;
     }, 0);
   }
+  changeStatus(status:number){
+    if(status < 3)
+      this.BeginningForm();
+  }
+  BeginningForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetFormById(+this.formId)       
+        this.Loader = false; 
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+
+  }
+  onValueChange(formContent: IGetQuestionDto) {
+    setTimeout(() => {
+      this.calculateTransaction(formContent);
+    }, 0);
+  }
+  
+  calculateTransaction(formContent: IGetQuestionDto) {
+    if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
+      // Initialize sums to zero
+      let sumValue4 = 0;
+      let sumValue3 = 0;
+      let sumValue2 = 0;
+      let sumValue1 = 0;
+      let sumValue0 = 0;
+  
+      // Sum all subCode values[1] and values[0]
+      formContent.code.SubCodes.forEach((subCode: any) => {
+        sumValue4 += subCode.values[4] || 0;
+        sumValue3 += subCode.values[3] || 0;
+        sumValue2 += subCode.values[2] || 0;
+        sumValue1 += subCode.values[1] || 0;
+        sumValue0 += subCode.values[0] || 0;
+      });
+  
+      // Update formContent values
+      formContent.values[4] = sumValue4;
+      formContent.values[3] = sumValue3;
+      formContent.values[2] = sumValue2;
+      formContent.values[1] = sumValue1;
+      formContent.values[0] = sumValue0;
+    }
+  }
+  
 }
