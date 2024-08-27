@@ -20,6 +20,7 @@
                         </th>
                         <th class="text-center transaction1" scope="col">Transactions</th>
                         <th class="text-center" scope="col" style="color: black;">Year End {{coverForm.reviewYear}} Position</th>
+                        <th class="text-center" scope="col">الرمز Code</th>
                         <th class="text-start" scope="col"  style="min-width: 420px;">Items</th>
                     </tr>
                 </thead>
@@ -49,6 +50,9 @@
                             <td class="text-center transaction1"><input disabled class="transaction1" type="number"
                                 [(ngModel)]="formContent.values[2]-formContent.values[0]" (input)="inputChange($event)"/></td>
                             <td style="color: black;" class="text-center"><input style="color: black;" type="number" [(ngModel)]="formContent.values[0]" /></td>
+                            <td class="text-center">
+                                <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
+                            </td>
                             <td class="text-start" style="text-wrap: balance;min-width: 250px;">
                                 {{formContent.code.enName}}</td>
                         </tr>
@@ -76,6 +80,9 @@
                                         [(ngModel)]="subCode.values[2] - subCode.values[0]" (input)="inputChange($event)"/>
                                 </td>
                                 <td class="text-center" style="color: black;"><input  type="number" [(ngModel)]="subCode.values[0]" style="color: black;"/></td>
+                                <td class="text-center">
+                                    <input type="text" disabled value="{{subCode.QuestionCode}}" />
+                                </td>
                                 <td class="text-start" style="min-width: 250px;text-align: center !important;color: #00af9d; text-wrap: balance;">{{subCode.enName}}</td>
                             </tr>
                         </ng-container>
@@ -90,6 +97,7 @@
                         <td class="text-center quarter2"><input disabled type="number" placeholder="0"/></td>
                         <td class="text-center transaction2"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center quarter1"><input disabled type="number" placeholder="0" /></td>
+                        <td class="text-center transaction1"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center transaction1"><input disabled type="number" placeholder="0" /></td>
                         <td class="text-center" style="color: black;"><input style="color: black;" disabled type="number" placeholder="0" /></td>
                         <td class="text-start">Total</td>
