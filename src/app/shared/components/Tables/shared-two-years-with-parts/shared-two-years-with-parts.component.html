@@ -58,14 +58,14 @@
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
                                         <td class="text-center"><input type="number" [(ngModel)]="formContent.values[i]"
                                                 class="tableInputParent"
-                                                [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
+                                                [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0"  (input)="changeStatus(coverForm.status)"/>
                                         </td>
                                     </ng-container>
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
                                         <td class="text-center"><input type="number"
                                                 [(ngModel)]="formContent.values[i + table.tableParts.length]"
                                                 class="tableInputParent"
-                                                [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
+                                                [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" (input)="changeStatus(coverForm.status)"/>
                                         </td>
                                     </ng-container>
                                 </ng-container>
@@ -134,14 +134,14 @@
                                         </td>
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
                                             <td class="text-center"><input type="number" [(ngModel)]="subCode.values[i]"
-                                                    (ngModelChange)="calculateTransaction(formContent)" /></td>
+                                                    (ngModelChange)="calculateTransaction(formContent,coverForm.status)" /></td>
                                         </ng-container>
 
                                         <!-- Second set of tableParts for subcodes -->
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
                                             <td class="text-center"><input type="number"
                                                     [(ngModel)]="subCode.values[i + table.tableParts.length]"
-                                                    (ngModelChange)="calculateTransaction(formContent)" /></td>
+                                                    (ngModelChange)="calculateTransaction(formContent,coverForm.status)" /></td>
                                         </ng-container>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4">
                                             <input disabled type="text" value="{{subCode.QuestionCode}}" />

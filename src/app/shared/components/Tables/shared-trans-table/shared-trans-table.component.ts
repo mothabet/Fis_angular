@@ -101,7 +101,7 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  calculateTransaction(item: any, formContent: IGetQuestionDto) {
+  calculateTransaction(item: any, formContent: IGetQuestionDto,status:number) {
     item.values[2] = item.values[1] - item.values[0];
     if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
       // Initialize sums to zero
@@ -118,10 +118,14 @@ export class SharedTransTableComponent {
       formContent.values[1] = sumValue1;
       formContent.values[0] = sumValue0;
       formContent.values[2] = sumValue1 - sumValue0;
+      if(status < 3)
+        this.BeginningForm();
     }
   }
-  calculateTransactionFormContent(item: any) {
+  calculateTransactionFormContent(item: any,status:number) {
     item.values[2] = item.values[1] - item.values[0];
+    if(status < 3)
+      this.BeginningForm();
   }
   addSubCodeRow(code: ICode) {
     const subCode: ISubCodeForm = {
@@ -369,5 +373,21 @@ export class SharedTransTableComponent {
     const sum1 = this.getSumOfValues(index1);
     const sum2 = this.getSumOfValues(index2);
     return sum1 - sum2;
+  }
+  BeginningForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetFormById(+this.formId)       
+        this.Loader = false; 
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+
   }
 }

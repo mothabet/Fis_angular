@@ -357,4 +357,25 @@ export class SharedOneYearWithPartsComponent {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
+  changeStatus(status:number){
+    debugger
+    if(status < 3)
+      this.BeginningForm();
+  }
+  BeginningForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetFormById(+this.formId)       
+        this.Loader = false; 
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+
+  }
 }
