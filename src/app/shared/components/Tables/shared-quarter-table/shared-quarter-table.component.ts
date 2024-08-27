@@ -346,5 +346,21 @@ export class SharedQuarterTableComponent {
     return sum1 - sum2;
   }
     
+  getSumOfParentChildes(index: number): number {
+    return this.table.formContents.reduce((sum, formContent) => {
+      // Add the value of formContent at the specified index
+      debugger
+      sum += formContent.values[index] || 0;
   
+      // Check if formContent has SubCodes and sum only those where subCode.codeId matches formContent.code.id
+      if (formContent.code.TypeId === 1 && formContent.code.SubCodes) {
+        sum += formContent.code.SubCodes.reduce((subSum, subCode) => {
+          // Only add the value if subCode.codeId matches formContent.code.id
+          return subCode.codeId === formContent.code.Id ? subSum + (subCode.values[index] || 0) : subSum;
+        }, 0);
+      }
+  
+      return sum;
+    }, 0);
+  }
 }
