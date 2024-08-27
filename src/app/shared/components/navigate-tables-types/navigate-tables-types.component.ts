@@ -3,7 +3,6 @@ import { SharedService } from '../../services/shared.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
-import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import Swal from 'sweetalert2';
 import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -74,9 +73,9 @@ export class NavigateTablesTypesComponent implements OnInit {
           case 5:
             navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id, this.companyId]);
             break;
-            case 0:
-              navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id, this.companyId]);
-              break;
+          case 0:
+            navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id, this.companyId]);
+            break;
           default:
             return;
         }
@@ -110,11 +109,11 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   displayFormContents() {
     debugger
-     if (this.table === undefined)
+    if (this.table === undefined)
       return;
     if (this.table.Type == "0")
-        this.addTableToListInLocalStorage(this.table);
-      else if (this.table.Type == "1")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
       this.addTableToListInLocalStorage(this.table);
@@ -219,8 +218,8 @@ export class NavigateTablesTypesComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: res.Message,
-          showConfirmButton: false,
-          timer: 2000,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
         });
       },
       error: (err: any) => {
@@ -240,8 +239,8 @@ export class NavigateTablesTypesComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: res.Message,
-          showConfirmButton: false,
-          timer: 2000,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
         });
       }
       ,
@@ -262,8 +261,8 @@ export class NavigateTablesTypesComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: res.Message,
-          showConfirmButton: false,
-          timer: 2000,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
         });
       }
       ,
