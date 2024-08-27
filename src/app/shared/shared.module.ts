@@ -19,6 +19,7 @@ import { SharedOneYearWithPartsComponent } from './components/Tables/shared-one-
 import { SharedFormCoverComponent } from './components/Tables/shared-form-cover/shared-form-cover.component';
 import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quarter-form-cover/shared-quarter-form-cover.component';
+import { SharedCertificationComponent } from './components/Tables/shared-certification/shared-certification.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quar
     SharedOneYearWithPartsComponent,
     SharedFormCoverComponent,
     SharedQuarterFormCoverComponent,
+    SharedCertificationComponent,
   ],
   imports: [
     CommonModule,
@@ -67,6 +69,7 @@ import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quar
     ReactiveFormsModule,
     HttpClientModule,
     NgxEditorModule,
+    SharedCertificationComponent
   ]
 })
 export class SharedModule { }

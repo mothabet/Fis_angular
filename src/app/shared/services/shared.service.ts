@@ -31,20 +31,20 @@ export class SharedService {
     if (err.status) {
       switch (err.status) {
         case 400:
-          if(err.error.Error != null){
+          if (err.error.Error != null) {
             Swal.fire({
               icon: 'error',
               title: err.error.Errors[0],
-              showConfirmButton: false,
-              timer: 2000
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
             });
           }
-          else{
+          else {
             Swal.fire({
               icon: 'error',
               title: err.error.Message,
-              showConfirmButton: false,
-              timer: 1500
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
             });
           }
           break;
@@ -52,48 +52,48 @@ export class SharedService {
           Swal.fire({
             icon: 'error',
             title: `Unauthorized ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
           break;
         case 403:
           Swal.fire({
             icon: 'error',
             title: `Forbidden ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
           break;
         case 404:
           Swal.fire({
             icon: 'error',
             title: `Not Found ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
           break;
         case 500:
           Swal.fire({
             icon: 'error',
             title: `Internal Server Error ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
           break;
         default:
           Swal.fire({
             icon: 'error',
             title: `An unexpected error occurred ${err.message}`,
-            showConfirmButton: false,
-            timer: 1500
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
       }
     } else {
       Swal.fire({
         icon: 'error',
         title: `An unknown error occurred ${err.message}`,
-        showConfirmButton: false,
-        timer: 1500
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
       });
     }
   }

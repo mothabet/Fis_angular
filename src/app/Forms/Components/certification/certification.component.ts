@@ -3,6 +3,7 @@ import { ICoverFormDetailsDto } from '../../Dtos/FormDto';
 import { FormService } from '../../Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-certification',
@@ -14,13 +15,17 @@ export class CertificationComponent implements OnInit{
   Loader: boolean = false;
   formId: string = '';
   isCertificationActive:boolean = false;
-  constructor(private formServices: FormService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  role:string = "";
+  constructor(private authService: LoginService,private formServices: FormService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.GetFormById(+this.formId);
-    this.isCertificationActive = true;
+    this.isCertificationActive = true;const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);  
+    debugger
+    this.role = result.roles;
   }
   GetFormById(id: number): void {
     this.Loader = true;
