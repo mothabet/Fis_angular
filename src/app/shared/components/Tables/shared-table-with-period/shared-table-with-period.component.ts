@@ -339,7 +339,7 @@ export class SharedTableWithPeriodComponent {
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  calculateTransaction(formContent: IGetQuestionDto) {
+  calculateTransaction(formContent: IGetQuestionDto,status:number) {
     if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
       // Initialize sums to zero
       const sums: number[] = [];
@@ -356,11 +356,33 @@ export class SharedTableWithPeriodComponent {
   
       // Update formContent values with the calculated sums
       formContent.values = sums;
+    if(status < 3)
+      this.BeginningForm();
     }
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       return sum + (formContent.values[index] || 0);
     }, 0);
+  }
+  changeStatus(status:number){
+    if(status < 3)
+      this.BeginningForm();
+  }
+  BeginningForm(): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetFormById(+this.formId)       
+        this.Loader = false; 
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+
   }
 }
