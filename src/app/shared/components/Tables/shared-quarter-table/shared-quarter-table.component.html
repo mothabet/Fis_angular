@@ -34,24 +34,24 @@
                                 </button> 
                             </td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''" [disabled]="coverForm.typeQuarter < 4" type="number"
-                                [(ngModel)]="formContent.values[4]" (input)="inputChange($event)"/></td>
+                                [(ngModel)]="formContent.values[4]"  (input)="changeStatus(coverForm.status)"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''" disabled
-                                [value]="formContent.values[4] - formContent.values[3]" (input)="inputChange($event)"/></td>
+                                [value]="formContent.values[4] - formContent.values[3]"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''" [disabled]="coverForm.typeQuarter < 3" type="number"
-                                [(ngModel)]="formContent.values[3]" (input)="inputChange($event)"/></td>
+                                [(ngModel)]="formContent.values[3]" (input)="changeStatus(coverForm.status)"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''" disabled
-                                [value]="formContent.values[3] - formContent.values[2]" (input)="inputChange($event)"/></td>
+                                [value]="formContent.values[3] - formContent.values[2]"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''" [disabled]="coverForm.typeQuarter < 2 || (formContent.code.SubCodes && formContent.code.SubCodes.length > 0)" type="number" 
-                                [value]="getSumOfParentChildes(2)"   [(ngModel)]="formContent.values[2]" (input)="inputChange($event)" /></td>
+                                [(ngModel)]="formContent.values[2]" (input)="changeStatus(coverForm.status)"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''" disabled
-                                [value]="formContent.values[2] - formContent.values[1]" (input)="inputChange($event)"/></td>
+                                [value]="formContent.values[2] - formContent.values[1]"/></td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''" [disabled]="coverForm.typeQuarter < 1" type="number" 
-                                [(ngModel)]="formContent.values[1]" (input)="inputChange($event)"/></td>
+                                [(ngModel)]="formContent.values[1]" (input)="changeStatus(coverForm.status)"/></td>
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
                                     <input [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''" disabled type="number"
                                            [value]="formContent.values[1] - formContent.values[0]" />
                                   </td>
-                            <td style="color: black;" class="text-center"><input style="color: black;" type="number" [(ngModel)]="formContent.values[0]" /></td>
+                            <td style="color: black;" class="text-center"><input style="color: black;" type="number" [(ngModel)]="formContent.values[0]"  (input)="changeStatus(coverForm.status)"/></td>
                             <td class="text-center">
                                 <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
                             </td>
@@ -60,37 +60,56 @@
                         </tr>
                         <ng-container *ngIf="formContent.code.TypeId == 1">
                             <tr *ngFor="let subCode of formContent.code.SubCodes">
-                                    <td class="sub-list-item" style="text-align: center;color: #00af9d; text-wrap: balance;">{{ subCode.arName }}</td>
-                                    <td class="text-center" [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''" [disabled]="coverForm.typeQuarter < 4"  type="number"
-                                        [(ngModel)]="subCode.values[4]" (input)="inputChange($event)"/></td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''" disabled type="number"
-                                    [value]="subCode.values[4] - subCode.values[3]" (input)="inputChange($event)"/>
+                                <td class="sub-list-item" style="text-align: center; color: #00af9d; text-wrap: balance;">{{ subCode.arName }}</td>
+                              
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''">
+                                  <input [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''" [disabled]="coverForm.typeQuarter < 4" type="number"
+                                    [(ngModel)]="subCode.values[4]" (ngModelChange)="onValueChange(formContent)" />
                                 </td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input [disabled]="coverForm.typeQuarter < 3"  type="number"
-                                    [(ngModel)]="subCode.values[3]" (input)="inputChange($event)"/></td>
-                                <td class="text-center"  [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input disabled  type="number"
-                                    [value]="subCode.values[3] - subCode.values[2]" (input)="inputChange($event)"/>
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''">
+                                  <input [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''" disabled type="number"
+                                    [value]="subCode.values[4] - subCode.values[3]" />
                                 </td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input [disabled]="coverForm.typeQuarter < 2" [ngClass]="{'quarter' : coverForm.typeQuarter == 2}" type="number"
-                                    [(ngModel)]="subCode.values[2]" /></td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input [ngClass]="{'transaction' : coverForm.typeQuarter == 2}" disabled type="number"
-                                    [value]="subCode.values[2] - subCode.values[1]" (input)="inputChange($event)"/>
+                              
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''">
+                                  <input [disabled]="coverForm.typeQuarter < 3" type="number" [(ngModel)]="subCode.values[3]" [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''"
+                                    (ngModelChange)="onValueChange(formContent)" />
                                 </td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input [disabled]="coverForm.typeQuarter < 1" [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''" type="number"
-                                        [(ngModel)]="subCode.values[1]" (input)="inputChange($event)"/></td>
-                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 1?'transaction' : ''"><input [ngClass]="coverForm.typeQuarter == 1?'transaction' : ''" disabled type="number"
-                                         (input)="inputChange($event)" [value]="subCode.values[1] - subCode.values[0]"/>
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 3 ? 'transaction' : ''">
+                                  <input disabled type="number" [value]="subCode.values[3] - subCode.values[2]" />
                                 </td>
-                                <td class="text-center" style="color: black;"><input  type="number" [(ngModel)]="subCode.values[0]" style="color: black;"/></td>
+                              
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''">
+                                  <input [disabled]="coverForm.typeQuarter < 2" type="number" [(ngModel)]="subCode.values[2]" [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
+                                    (ngModelChange)="onValueChange(formContent)" />
+                                </td>
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 2 ? 'transaction' : ''">
+                                  <input disabled type="number" [value]="subCode.values[2] - subCode.values[1]" />
+                                </td>
+                              
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
+                                  <input [disabled]="coverForm.typeQuarter < 1" type="number" [(ngModel)]="subCode.values[1]" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''"
+                                    (ngModelChange)="onValueChange(formContent)" />
+                                </td>
+                                <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
+                                  <input disabled type="number" [value]="subCode.values[1] - subCode.values[0]" />
+                                </td>
+                              
+                                <td class="text-center" style="color: black;">
+                                  <input type="number" [(ngModel)]="subCode.values[0]" style="color: black;" (ngModelChange)="onValueChange(formContent)" />
+                                </td>
                                 <td class="text-center">
-                                    <input type="text" disabled value="{{subCode.QuestionCode}}" />
+                                  <input type="text" disabled value="{{ subCode.QuestionCode }}" />
                                 </td>
-                                <td class="text-start" style="min-width: 250px;text-align: center !important;color: #00af9d; text-wrap: balance;">{{subCode.enName}}</td>
-                            </tr>
+                                <td class="text-start" style="min-width: 250px; text-align: center !important; color: #00af9d; text-wrap: balance;">
+                                  {{ subCode.enName }}
+                                </td>
+                              </tr>
+                              
                         </ng-container>
                         
                     </ng-container>
-                    <tr class="footer">
+                    <tr class="footer" *ngIf="table.IsTotal">
                         <td>الاجمالى</td>
                     
                         <!-- Sum of formContent.values[4] -->

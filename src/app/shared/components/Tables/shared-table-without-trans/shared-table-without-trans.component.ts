@@ -109,7 +109,6 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   addSubCodeRow(code: ICode) {
-    console.log(code)
     const subCode: ISubCodeForm = {
       arName: '',
       codeId: 0,
