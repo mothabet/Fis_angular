@@ -621,18 +621,19 @@ export class CompaniesHomeComponent implements OnInit {
   validateInput(event: KeyboardEvent) {
     this.sharedService.validateInput(event);
   }
-  onWilayaChange(): void {
-    const selectedWilayaId = this.companyForm.get('wilayatId')?.value;
-    const selectedWilaya = this.Wilayat.find(w => w.id = selectedWilayaId);
-    if (selectedWilaya)
-      this.Wilaya = selectedWilaya.arName
-  }
-  onGovenoratesChange(): void {
-    const selectedGovenoratesId = this.companyForm.get('governoratesId')?.value;
-    const selectedGovenorates = this.Governorates.find(w => w.id = selectedGovenoratesId);
-    if (selectedGovenorates)
-      this.Govenorates = selectedGovenorates.arName
-  }
+  // onWilayaChange(): void {
+  //   const selectedWilayaId = this.companyForm.get('wilayatId')?.value;
+  //   const selectedWilaya = this.Wilayat.find(w => w.id = selectedWilayaId);
+  //   if (selectedWilaya)
+  //     this.Wilaya = selectedWilaya.arName
+  // }
+  // onGovenoratesChange(): void {
+  //   // debugger
+  //   // const selectedGovenoratesId = this.companyForm.get('governoratesId')?.value;
+  //   // const selectedGovenorates = this.Governorates.find(w => w.id = selectedGovenoratesId);
+  //   // if (selectedGovenorates)
+  //   //   this.Govenorates = selectedGovenorates.arName
+  // }
   editCompany(id: number): void {
     this.showLoader = true;
     const observer = {
@@ -642,8 +643,8 @@ export class CompaniesHomeComponent implements OnInit {
 
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
           this.GetWilayat(this.company.governoratesId)
-          this.onWilayaChange();
-          this.onGovenoratesChange();
+          // this.onWilayaChange();
+          // this.onGovenoratesChange();
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addCompanyBtn');
@@ -693,6 +694,7 @@ export class CompaniesHomeComponent implements OnInit {
   // Method to initialize the form array
   initializeForm() {
     // Initialize the form array with non-empty emails
+    this.compEmails.clear();
     this.company.companyEmails
       .filter((emailObj: ICompanyEmail) => emailObj.Email)  // Filter out empty emails
       .forEach((emailObj: ICompanyEmail) => {
