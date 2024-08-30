@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
@@ -42,10 +42,7 @@ export class SharedQuarterTableComponent {
       this.GetCountrites();
     });
   }
-  ngAfterViewInit(): void {
-    debugger
-    this.modifyInputById(this.coverForm.typeQuarter); // Call method after view is initialized
-  }
+  
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
@@ -76,6 +73,7 @@ export class SharedQuarterTableComponent {
               });
             }
           });
+          console.log(this.table.formContents)
           this.GetFormData();
         }
       },
@@ -92,12 +90,13 @@ export class SharedQuarterTableComponent {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
-        debugger
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
-          this.modifyInputById(this.coverForm.typeQuarter);
-
+          let storedTables = localStorage.getItem(`quarterCoverForm`);
+          debugger
+          if (storedTables)
+            this.coverForm.quarterCoverData = JSON.parse(storedTables) as IQuarterCoverFormDataDto;
         }
       },
       error: (err: any) => {
@@ -107,9 +106,7 @@ export class SharedQuarterTableComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  modifyInputById(id: number): void {
-    
-  }
+  
   addSubCodeRow(code: ICode) {
     const subCode: ISubCode = {
       arName: '',
@@ -300,11 +297,13 @@ export class SharedQuarterTableComponent {
                   }
                 });
               });
+              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
           else if (role === 'Admin' || role === 'Researchers') {
+            debugger
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             // this.modifyInputById(this.coverForm.typeQuarter);
             return;
@@ -318,9 +317,6 @@ export class SharedQuarterTableComponent {
           if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
             this.table = this.coverForm.tables[tableIndex];
           }
-          debugger
-          this.modifyInputById(this.coverForm.typeQuarter);
-
         }
         // this.modifyInputById(this.coverForm.typeQuarter);
         this.Loader = false;

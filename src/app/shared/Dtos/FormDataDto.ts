@@ -1,7 +1,8 @@
 
 export interface IAddFormDataDto {
     dataDtos:IDataDto[],
-    FormId:number
+    FormId:number,
+    coverData:string
 }
 export interface IDataDto{
     TableId:number,

@@ -12,17 +12,18 @@ import { LoginService } from 'src/app/auth/services/login.service';
   templateUrl: './quarter-form-cover.component.html',
   styleUrls: ['./quarter-form-cover.component.css']
 })
-export class QuarterFormCoverComponent implements OnInit{
+export class QuarterFormCoverComponent implements OnInit {
   formId: string = '';
-  role:string = "";
-  constructor(private authService: LoginService,private activeRouter: ActivatedRoute) {
+  companyId: string = '';
+  role: string = "";
+  constructor(private authService: LoginService, private activeRouter: ActivatedRoute) {
 
   }
-    ngOnInit(): void {
-      this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
-      const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
-    debugger
+  ngOnInit(): void {
+    this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
+    this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
+    const isLoggedIn = this.authService.getToken();
+    let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
-    }
+  }
 }

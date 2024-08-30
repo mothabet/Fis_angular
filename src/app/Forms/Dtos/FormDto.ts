@@ -34,7 +34,8 @@ export interface ICoverFormDetailsDto{
     arNotes : string,
     enNotes : string,
     reviewYear : string,
-    status:number
+    status:number,
+    quarterCoverData : IQuarterCoverFormDataDto
 }
 export interface IGetTablesDto {
     id:number,
@@ -64,4 +65,12 @@ export interface SendCompanyFormsDto {
     messageId: number;
     emailTitle: string;
     emailBody: string;
+  }
+  export interface IQuarterCoverFormDataDto {
+    establishmentName: string;
+    postalAddress: string;
+    telephoneNumber: string;
+    faxNumber: string;
+    emailAddress:string;
+    geographicalDistribution:string;
   }

@@ -15,6 +15,7 @@ export class LoginGuard {
       const role = res.roles;
       const url: string = route.url[0].path;
       if(!(this.authService.isTableRoute(url))){
+        debugger
         localStorage.clear();
       }
       if (role === 'Admin' && this.authService.isAdminRoute(url)) {

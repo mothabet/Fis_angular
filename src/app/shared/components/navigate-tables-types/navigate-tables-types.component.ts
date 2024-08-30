@@ -4,7 +4,7 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import Swal from 'sweetalert2';
-import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { NavigateTablesTypesService } from '../../services/navigate-tables-types.service';
 import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
@@ -16,6 +16,7 @@ import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 })
 export class NavigateTablesTypesComponent implements OnInit {
   @Input() coverForm!: ICoverFormDetailsDto;
+  @Input() tapType!: number;
   @Input() isCoverActive: boolean = false;
   @Input() isWorkDataActive: boolean = false;
   @Input() isCertificationActive: boolean = false;
@@ -33,6 +34,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   tableId: number | null = null;
   @Input() table!: IGetTableDto;
   formContents: any[] = [];
+  quarterCoverForm !: IQuarterCoverFormDataDto;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
     private navigateTablesTypesService: NavigateTablesTypesService) { }
@@ -48,6 +50,9 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   TablesNavigation(id: number) {
     this.GetTableById(id);
+    debugger
+    if (this.tapType == 1)
+      this.displayFormContents();
   }
   GetTableById(id: number): void {
     this.Loader = true;
@@ -108,7 +113,15 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    
+    // if (this.tapType == 1) {
+    //   debugger
+    //   let quarterCoverForm = localStorage.getItem(`quarterCoverForm`);
+    //   if (quarterCoverForm) {
+    //     this.coverForm.quarterCoverData = JSON.parse(quarterCoverForm);
+    //     localStorage.removeItem(`quarterCoverForm`);
+    //   }
+    //   localStorage.setItem(`quarterCoverForm`, JSON.stringify(this.coverForm.quarterCoverData));
+    // }
     if (this.table === undefined)
       return;
     if (this.table.Type == "0")
@@ -125,6 +138,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.addTableToListInLocalStorage(this.table);
   }
   addTableToListInLocalStorage(table: any): void {
+    debugger
     let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto
     if (storedTables) {
@@ -151,10 +165,11 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   SaveData(btnType: string, companyId: number) {
     this.Loader = true;
-    this.displayFormContents();
+    if (this.tapType == 1)
+      this.displayFormContents();
     const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto
-    
+
     if (storedTables) {
       coverForm = JSON.parse(storedTables);
     }
@@ -207,9 +222,13 @@ export class NavigateTablesTypesComponent implements OnInit {
         }
       }
     }
+    let coverFormData = localStorage.getItem(`quarterCoverForm`);
+    if (!coverFormData)
+      coverFormData=''
     var addFormDataDto: IAddFormDataDto = {
       dataDtos: dataDtosList,
       FormId: this.coverForm.id,
+      coverData: coverFormData
     };
     const observer = {
       next: (res: any) => {
@@ -280,7 +299,9 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
+          this.quarterCoverForm = this.coverForm.quarterCoverData;
           this.coverForm = res.Data;
+          this.coverForm.quarterCoverData = this.quarterCoverForm;
           const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (!storedTables) {
             localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));

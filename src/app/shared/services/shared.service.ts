@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { LoginService } from 'src/app/auth/services/login.service';
+import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -8,8 +9,12 @@ import Swal from 'sweetalert2';
 })
 export class SharedService {
   headers !: HttpHeaders
+  private coverForm!: ICoverFormDetailsDto;
   constructor(private http: HttpClient, private loginService: LoginService) {
-
+    const savedCoverForm = localStorage.getItem('coverForm');
+    if (savedCoverForm) {
+      this.coverForm = JSON.parse(savedCoverForm);
+    }
   }
   getHeaders(): HttpHeaders {
     const token = this.loginService.getToken();

@@ -112,6 +112,8 @@ export class LoginService {
       'TableWithoutTrans', 
       'OneYearWithParts', 
       'TwoYearsWithParts', 
+      'QuarterTable',
+      'QuarterFormCover'
     ];
     return companyRoutes.includes(url);
   }
