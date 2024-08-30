@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddCompany, ICompaniesPDF, ICompany, ICompanyEmail, } from '../../Dtos/CompanyHomeDto';
@@ -47,7 +46,7 @@ export class CompaniesHomeComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 0;
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
-  constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private companyHomeServices: CompanyHomeService
+  constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
@@ -122,29 +121,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
@@ -159,30 +136,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
@@ -206,31 +160,8 @@ export class CompaniesHomeComponent implements OnInit {
         this.showLoader = false;
       },
       error: (err: any) => {
-
+        this.sharedService.handleError(err);
         this.showLoader = false;
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
       },
     };
     this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
@@ -246,30 +177,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetSectors().subscribe(observer);
@@ -282,29 +190,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetWilayat(govId).subscribe(observer);
@@ -317,29 +203,7 @@ export class CompaniesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        if (err.status) {
-          switch (err.status) {
-            case 400:
-              this.toastr.error(err.error.Errors[0]);
-              break;
-            case 401:
-              this.toastr.error('Unauthorized', err.message);
-              break;
-            case 403:
-              this.toastr.error('Forbidden', err.message);
-              break;
-            case 404:
-              this.toastr.error('Not Found', err.message);
-              break;
-            case 500:
-              this.toastr.error('Internal Server Error', err.message);
-              break;
-            default:
-              this.toastr.error('An unexpected error occurred', err.message);
-          }
-        } else {
-          this.toastr.error('An unknown error occurred', err.message);
-        }
+        this.sharedService.handleError(err);
       },
     };
     this.companyHomeServices.GetGovernorates().subscribe(observer);
@@ -348,7 +212,6 @@ export class CompaniesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
           this.username = `FISC0${res.Data}`;
           this.CompanyCode = res.Data;
         }
@@ -363,7 +226,6 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
-
     // Validate that at least one email is provided
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
@@ -580,7 +442,6 @@ export class CompaniesHomeComponent implements OnInit {
     });
   }
   DeleteCompany(id: number): void {
-
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -601,7 +462,6 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.DeleteCompany(id).subscribe(observer);
   }
   showAlert(id: number): void {
-
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -621,30 +481,14 @@ export class CompaniesHomeComponent implements OnInit {
   validateInput(event: KeyboardEvent) {
     this.sharedService.validateInput(event);
   }
-  // onWilayaChange(): void {
-  //   const selectedWilayaId = this.companyForm.get('wilayatId')?.value;
-  //   const selectedWilaya = this.Wilayat.find(w => w.id = selectedWilayaId);
-  //   if (selectedWilaya)
-  //     this.Wilaya = selectedWilaya.arName
-  // }
-  // onGovenoratesChange(): void {
-  //   // debugger
-  //   // const selectedGovenoratesId = this.companyForm.get('governoratesId')?.value;
-  //   // const selectedGovenorates = this.Governorates.find(w => w.id = selectedGovenoratesId);
-  //   // if (selectedGovenorates)
-  //   //   this.Govenorates = selectedGovenorates.arName
-  // }
   editCompany(id: number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
-
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
           this.GetWilayat(this.company.governoratesId)
-          // this.onWilayaChange();
-          // this.onGovenoratesChange();
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addCompanyBtn');
@@ -815,7 +659,12 @@ export class CompaniesHomeComponent implements OnInit {
       };
       this.companyHomeServices.UpdateCompany(this.id, Model).subscribe(observer);
     } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
       this.showLoader = false;
     }
   }

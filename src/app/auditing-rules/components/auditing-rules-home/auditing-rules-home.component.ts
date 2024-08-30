@@ -40,33 +40,20 @@ export class AuditingRulesHomeComponent implements OnInit {
 
   ngOnInit() {
     this.auditForm = this.fb.group({
-      Rule: ['']
+      Rule: [''],
+      codeParent: [0]
     });
     this.showLoader = true; // Show loader before starting requests
-
-  concat(
     this.GetAllCodes(1),
-    this.GetAllSubCodes(1),
-    this.GetAuditRules(1)
-  ).pipe(
-    finalize(() => {
-      this.showLoader = false; // Hide loader after all requests complete
-    })
-  ).subscribe({
-    next: () => {},
-    error: (err) => {
-      this.sharedService.handleError(err);
-    }
-  });
+      this.GetAuditRules(1)
+
   }
 
   onPageChange(page: number) {
     this.currentPage = page;
   }
-
   addSelect() {
-    debugger
-    if(this.selects.length>0){
+    if (this.selects.length > 0) {
       const availableOptions = this.getAvailableOptions();
       if (availableOptions.length > 0) {
         this.selects.push({ options: availableOptions, disabled: false });
@@ -79,7 +66,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         });
       }
     }
-    else{
+    else {
       const availableOptions = this.getAvailableOptionsCode();
       if (availableOptions.length > 0) {
         this.selects.push({ options: availableOptions, disabled: false });
@@ -94,7 +81,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     }
   }
   removeSelect(index: number) {
-    
+
     const removedValue = (document.querySelectorAll('select')[index] as HTMLSelectElement).value;
 
     // Remove the select element
@@ -136,27 +123,28 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.auditForm.patchValue({ Rule: currentValue });
   }
   getAvailableOptions(): ISubCode[] {
-    
     return this.subCodes.filter(code => {
       const questionCode = String(code.QuestionCode).trim();
       return !this.usedOptions.has(questionCode);
     });
   }
   getAvailableOptionsCode(): ISubCode[] {
-    
     return this.codes.filter(code => {
       const questionCode = String(code.QuestionCode).trim();
       return !this.usedOptions.has(questionCode);
     });
   }
-
   onSelectChange(event: Event, index: number) {
+    debugger
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
+    if (index == 0) {
+      const codeId = this.codes.filter((code: ISubCode) => code.QuestionCode == selectedValue);
+      this.GetAllSubCodes(1, codeId[0].Id)
+      this.auditForm.value.codeParent = selectedValue;
+    }
     this.usedOptions.add(selectedValue);
-
     let currentValue = this.auditForm.get('Rule')?.value || '';
-
     if (currentValue === '') {
       currentValue = `${selectedValue}=`;
     } else if (currentValue.endsWith('=')) {
@@ -164,19 +152,15 @@ export class AuditingRulesHomeComponent implements OnInit {
     } else {
       currentValue = `${currentValue}+${selectedValue}`;
     }
-
     this.auditForm.patchValue({ Rule: currentValue });
-
     // Disable the select after choosing a value
     this.selects[index].disabled = true;
   }
-
   isEquationValid(): boolean {
     const rule = this.auditForm.get('Rule')?.value || '';
     const parts = rule.split(/=|\+/).filter((part: any) => part.trim() !== '');
     return parts.length >= 3;
   }
-
   resetAuditRules() {
     this.selects = []; // إزالة جميع الـ <select>ات
     this.usedOptions.clear(); // مسح جميع الخيارات المستخدمة
@@ -184,43 +168,43 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.id = 0;
     this.add = true;
   }
-  GetAllCodes(page: number):  Observable<any>  {
-    return this.codeHomeService.GetAllCodes(page).pipe(
-      switchMap((res: any) => {
+  GetAllCodes(page: number) {
+    const observer = {
+      next: (res: any) => {
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.resetAuditRules();
         } else {
           this.codes = [];
         }
-        return of(null); // Continue to the next observable
-      }),
-      catchError(err => {
+      },
+      error: (err: any) => {
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Continue to the next observable
-      })
-    );
+      },
+    };
+    this.codeHomeService.GetAllCodes(page).subscribe(observer);
   }
-  GetAllSubCodes(page: number): Observable<any> {
-    return this.subCodeHomeService.GetAllSubCodes(page).pipe(
-      switchMap((res: any) => {
+  GetAllSubCodes(page: number, codeId: number) {
+    const observer = {
+      next: (res: any) => {
+        debugger
         if (res.Data) {
           this.subCodes = res.Data.getSubCodeDtos;
-          this.resetAuditRules();
         } else {
           this.subCodes = [];
         }
-        return of(null); // Continue to the next observable
-      }),
-      catchError(err => {
+      },
+      error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Continue to the next observable
-      })
-    );
+      },
+    };
+    this.subCodeHomeService.GetAllSubCodes(page, '', codeId).subscribe(observer);
   }
   SaveAuditRule(): void {
+    this.showLoader = true;
     if (!this.auditForm.valid) {
       Swal.fire({
         icon: 'error',
@@ -231,52 +215,39 @@ export class AuditingRulesHomeComponent implements OnInit {
       this.showLoader = false;
       return;
     }
-  
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
+      codeParent: this.auditForm.value.codeParent,
     };
-  
-    this.showLoader = true;
-  
-    this.auditRuleHomeService.AddAuditRules(Model).pipe(
-      switchMap((res: any) => {
-        // Call GetAuditRules to refresh the list
-        return this.GetAuditRules(1).pipe(
-          switchMap(() => {
-            // Hide loader and show success message
-            this.showLoader = false;
-            return of(res); // Pass the response to the next switchMap
-          })
-        );
-      }),
-      finalize(() => {
-        // Close the modal
+    const observer = {
+      next: (res: any) => {
+        this.GetAuditRules(1)
         const button = document.getElementById('btnCancel');
         if (button) {
           button.click();
         }
-      }),
-      catchError((err: any) => {
+        this.showLoader = false;
+        if (res) {
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      },
+      error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Complete observable chain
-      })
-    ).subscribe((res: any) => {
-      if (res) {
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 2000
-        });
-      }
-    });
+      },
+    };
+    this.auditRuleHomeService.AddAuditRules(Model).subscribe(observer);
   }
-  
-  GetAuditRules(page: number): Observable<any> {
-    return this.auditRuleHomeService.GetAllAuditRules(page).pipe(
-      switchMap((res: any) => {
-        this.noData = !res.Data || res.Data.length === 0;
+  GetAuditRules(page: number) {
+    this.noData = false;
+    const observer = {
+      next: (res: any) => {
         if (res.Data) {
           this.auditRules = res.Data.getAuditRuleDtos;
           this.currentPage = page;
@@ -285,15 +256,18 @@ export class AuditingRulesHomeComponent implements OnInit {
           this.resetAuditRules();
         } else {
           this.auditRules = [];
+          this.noData = !res.Data || res.Data.length === 0;
+
         }
-        return of(null); // Complete observable chain
-      }),
-      catchError(err => {
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Complete observable chain
-      })
-    );
+      },
+    };
+    this.auditRuleHomeService.GetAllAuditRules(page).subscribe(observer);
   }
   showAlert(id: number): void {
     Swal.fire({
@@ -313,35 +287,27 @@ export class AuditingRulesHomeComponent implements OnInit {
   }
   DeleteAuditRule(id: number): void {
     this.showLoader = true;
-  
-    this.auditRuleHomeService.DeleteAuditRule(id).pipe(
-      switchMap((res: any) => {
-        // Call GetAuditRules to refresh the list
-        return this.GetAuditRules(1).pipe(
-          switchMap(() => {
-            // Hide loader and return response to the next switchMap
-            this.showLoader = false;
-            return of(res);
-          })
-        );
-      }),
-      catchError((err: any) => {
+    const observer = {
+      next: (res: any) => {
+        this.GetAuditRules(1)
+        this.showLoader = false;
+        if (res) {
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      },
+      error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Complete observable chain
-      })
-    ).subscribe((res: any) => {
-      if (res) {
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-    });
+      },
+    };
+    this.auditRuleHomeService.DeleteAuditRule(id).subscribe(observer);
   }
-  
   printPdf() {
     this.generatePdf(this.auditRules, this.tableColumns);
   }
@@ -392,7 +358,7 @@ export class AuditingRulesHomeComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          
+
           const rule = res.Data.Rule;
           const codes = rule.split(/[=+]/).map((code: any) => code.trim()).filter((code: any) => code);
 
@@ -402,11 +368,11 @@ export class AuditingRulesHomeComponent implements OnInit {
 
           // Populate selects with options
           codes.forEach((code: string, index: number) => {
-            let availableOptions : ISubCode[]=[]
-            if(this.selects.length > 0){
+            let availableOptions: ISubCode[] = []
+            if (this.selects.length > 0) {
               availableOptions = this.getAvailableOptions();
             }
-            else{
+            else {
               availableOptions = this.getAvailableOptionsCode();
             }
             // Get available options for the select
@@ -452,7 +418,6 @@ export class AuditingRulesHomeComponent implements OnInit {
     };
     this.auditRuleHomeService.GetAuditRulesById(id).subscribe(observer);
   }
-
   UpdateAuditRule() {
     if (!this.auditForm.valid) {
       Swal.fire({
@@ -464,47 +429,37 @@ export class AuditingRulesHomeComponent implements OnInit {
       this.showLoader = false;
       return;
     }
-  
+
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
+      codeParent: this.auditForm.value.codeParent,
     };
-  
+
     this.showLoader = true;
-  
-    this.auditRuleHomeService.UpdateAuditRules(this.id, Model).pipe(
-      switchMap((res: any) => {
-        // Call GetAuditRules to refresh the list
-        return this.GetAuditRules(1).pipe(
-          switchMap(() => {
-            // Hide loader and show success message
-            this.showLoader = false;
-            return of(res); // Pass the response to the next switchMap
-          })
-        );
-      }),
-      finalize(() => {
-        // Close the modal
+
+    const observer = {
+      next: (res: any) => {
+        this.GetAuditRules(1)
         const button = document.getElementById('btnCancel');
         if (button) {
           button.click();
         }
-      }),
-      catchError((err: any) => {
+        this.showLoader = false;
+        if (res) {
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      },
+      error: (err: any) => {
+        debugger
         this.sharedService.handleError(err);
         this.showLoader = false;
-        return of(null); // Complete observable chain
-      })
-    ).subscribe((res: any) => {
-      if (res) {
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 2000
-        });
-      }
-    });
+      },
+    };
+    this.auditRuleHomeService.UpdateAuditRules(this.id, Model).subscribe(observer);
   }
-  
-  
 }

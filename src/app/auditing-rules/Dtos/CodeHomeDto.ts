@@ -1,5 +1,6 @@
 export interface IAddAuditRule {
-    Rule:string
+    Rule:string,
+    codeParent:number
 }
 export interface IAuditRule{
     Id:number,
