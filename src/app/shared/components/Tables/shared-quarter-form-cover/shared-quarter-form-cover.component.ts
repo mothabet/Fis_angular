@@ -75,7 +75,6 @@ export class SharedQuarterFormCoverComponent implements OnInit {
                 geographicalDistribution: "0"
               };
               let storedTables = localStorage.getItem(`quarterCoverForm`);
-              debugger
               if (storedTables)
                 this.coverForm.quarterCoverData = JSON.parse(storedTables) as IQuarterCoverFormDataDto;
               else if (this.coverFormData)
