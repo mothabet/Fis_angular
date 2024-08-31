@@ -23,34 +23,35 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="text-wrap: balance;">اسماء وعناوين الشركات االمشمولة في تقرير هذة المؤسسة</td>
-                            <td class="text-center">                                    
-                                <textarea style="width: 100%;" ></textarea>                                
-                            </td>
-                            <td style="text-wrap: balance;" class="text-start">Names and Addresses of all companies included in this report</td>
+                          <td style="text-wrap: balance;">اسماء وعناوين الشركات االمشمولة في تقرير هذة المؤسسة</td>
+                          <td class="text-center">                                    
+                            <textarea style="width: 100%;" [(ngModel)]="coverForm.certification.companiesDetails" name="companiesDetails"></textarea>                                
+                          </td>
+                          <td style="text-wrap: balance;" class="text-start">Names and Addresses of all companies included in this report</td>
                         </tr>
                         <tr>
-                            <td style="text-wrap: balance;">اسم معبئ الاستمارة : </td>
-                            <td class="text-center">                                    
-                                <input type="text" style="width: 100%;" />                                
-                            </td>
-                            <td style="text-wrap: balance;" class="text-start"> : COMPLETED BY</td>
+                          <td style="text-wrap: balance;">اسم معبئ الاستمارة : </td>
+                          <td class="text-center">                                    
+                            <input type="text" style="width: 100%;" [(ngModel)]="coverForm.certification.completedBy" name="completedBy" />                                
+                          </td>
+                          <td style="text-wrap: balance;" class="text-start"> : COMPLETED BY</td>
                         </tr>
                         <tr>
-                            <td style="text-wrap: balance;">رقم الهاتف : </td>
-                            <td class="text-center">                                    
-                                <input type="text" style="width: 100%;" />                                
-                            </td>
-                            <td style="text-wrap: balance;" class="text-start"> : TELEPHONE NO</td>
+                          <td style="text-wrap: balance;">رقم الهاتف : </td>
+                          <td class="text-center">                                    
+                            <input type="text" style="width: 100%;" [(ngModel)]="coverForm.certification.telephoneNo" name="telephoneNo" />                                
+                          </td>
+                          <td style="text-wrap: balance;" class="text-start"> : TELEPHONE NO</td>
                         </tr>
                         <tr>
-                            <td style="text-wrap: balance;">تاريخ التعبئة : </td>
-                            <td class="text-center">                                    
-                                <input type="date" style="width: 100%;" />                                
-                            </td>
-                            <td style="text-wrap: balance;" class="text-start"> : DATE OF COMPLETION</td>
+                          <td style="text-wrap: balance;">تاريخ التعبئة : </td>
+                          <td class="text-center">                                    
+                            <input type="date" style="width: 100%;" [(ngModel)]="coverForm.certification.dateOfCompletion" name="dateOfCompletion" />                                
+                          </td>
+                          <td style="text-wrap: balance;" class="text-start"> : DATE OF COMPLETION</td>
                         </tr>
-                    </tbody>
+                      </tbody>
+                      
                 </table>
             </div>
         </div>

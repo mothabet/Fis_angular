@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -13,8 +13,8 @@ export class SharedCertificationComponent {
   coverForm!: ICoverFormDetailsDto;
   Loader: boolean = false;
   @Input() formId!: string;
-  isCertificationActive:boolean = false;
-  constructor(private formServices: FormService,private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  isCertificationActive: boolean = false;
+  constructor(private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
@@ -27,7 +27,18 @@ export class SharedCertificationComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          const certificationData: ICertificationDto = {
+            companiesDetails: '',
+            completedBy: '',
+            telephoneNo: '',
+            dateOfCompletion: '',
+          };
           this.coverForm = res.Data;
+          let certification = localStorage.getItem(`certification`);
+          if (certification)
+            this.coverForm.certification = JSON.parse(certification) as ICertificationDto;
+          else
+            this.coverForm.certification = certificationData;
         }
         this.Loader = false;
       },
@@ -37,5 +48,14 @@ export class SharedCertificationComponent {
       },
     };
     this.formServices.GetFormById(id).subscribe(observer);
+  }
+
+  ngOnDestroy() {
+    let certification = localStorage.getItem(`certification`);
+    if (certification) {
+      localStorage.removeItem(`certification`);
+    }
+    localStorage.setItem(`certification`, JSON.stringify(this.coverForm.certification));
+
   }
 }

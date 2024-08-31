@@ -113,15 +113,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = null;
   }
   displayFormContents() {
-    // if (this.tapType == 1) {
-    //   debugger
-    //   let quarterCoverForm = localStorage.getItem(`quarterCoverForm`);
-    //   if (quarterCoverForm) {
-    //     this.coverForm.quarterCoverData = JSON.parse(quarterCoverForm);
-    //     localStorage.removeItem(`quarterCoverForm`);
-    //   }
-    //   localStorage.setItem(`quarterCoverForm`, JSON.stringify(this.coverForm.quarterCoverData));
-    // }
     if (this.table === undefined)
       return;
     if (this.table.Type == "0")
@@ -228,7 +219,8 @@ export class NavigateTablesTypesComponent implements OnInit {
     var addFormDataDto: IAddFormDataDto = {
       dataDtos: dataDtosList,
       FormId: this.coverForm.id,
-      coverData: coverFormData
+      coverData: JSON.stringify(this.coverForm.quarterCoverData),
+      certificationData : JSON.stringify(this.coverForm.quarterCoverData)
     };
     const observer = {
       next: (res: any) => {
