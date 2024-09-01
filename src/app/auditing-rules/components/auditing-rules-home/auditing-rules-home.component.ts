@@ -11,7 +11,7 @@ import { arabicFont } from 'src/app/shared/services/arabic-font';
 import jsPDF from 'jspdf';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
-import { catchError, concat, finalize, Observable, of, switchMap } from 'rxjs';
+import {of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-auditing-rules-home',
@@ -34,6 +34,7 @@ export class AuditingRulesHomeComponent implements OnInit {
   id: number = 0;
   isEditing: boolean = false;
   add: boolean = true;
+  codeParent : string = "";
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private subCodeHomeService: SubCodeHomeService,
     private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService) { }
@@ -41,7 +42,6 @@ export class AuditingRulesHomeComponent implements OnInit {
   ngOnInit() {
     this.auditForm = this.fb.group({
       Rule: [''],
-      codeParent: [0]
     });
     this.showLoader = true; // Show loader before starting requests
     this.GetAllCodes(1),
@@ -135,13 +135,12 @@ export class AuditingRulesHomeComponent implements OnInit {
     });
   }
   onSelectChange(event: Event, index: number) {
-    debugger
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
     if (index == 0) {
       const codeId = this.codes.filter((code: ISubCode) => code.QuestionCode == selectedValue);
-      this.GetAllSubCodes(1, codeId[0].Id)
-      this.auditForm.value.codeParent = selectedValue;
+      this.GetAllSubCodes(1, codeId[0].QuestionCode)
+      this.codeParent = selectedValue;
     }
     this.usedOptions.add(selectedValue);
     let currentValue = this.auditForm.get('Rule')?.value || '';
@@ -185,10 +184,10 @@ export class AuditingRulesHomeComponent implements OnInit {
     };
     this.codeHomeService.GetAllCodes(page).subscribe(observer);
   }
-  GetAllSubCodes(page: number, codeId: number) {
+  GetAllSubCodes(page: number, questionCode: string) {
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.subCodes = res.Data.getSubCodeDtos;
         } else {
@@ -196,12 +195,12 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
     };
-    this.subCodeHomeService.GetAllSubCodes(page, '', codeId).subscribe(observer);
+    this.subCodeHomeService.GetAllSubCodes(page, '', questionCode).subscribe(observer);
   }
   SaveAuditRule(): void {
     this.showLoader = true;
@@ -217,8 +216,9 @@ export class AuditingRulesHomeComponent implements OnInit {
     }
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
-      codeParent: this.auditForm.value.codeParent,
+      codeParent: Number(this.codeParent),
     };
+    debugger
     const observer = {
       next: (res: any) => {
         this.GetAuditRules(1)
@@ -237,7 +237,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -262,7 +262,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         this.showLoader = false;
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -301,7 +301,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -354,69 +354,47 @@ export class AuditingRulesHomeComponent implements OnInit {
   }
   editAuditRules(id: number): void {
     this.showLoader = true;
-    const observer = {
-      next: (res: any) => {
+    let codes: string[] = [];
+    this.auditRuleHomeService.GetAuditRulesById(id).pipe(
+      switchMap((res: any) => {
         this.showLoader = false;
         if (res.Data) {
-
-          const rule = res.Data.Rule;
-          const codes = rule.split(/[=+]/).map((code: any) => code.trim()).filter((code: any) => code);
-
-          // Clear previous selects and usedOptions
-          this.selects = [];
-          this.usedOptions.clear();
-
-          // Populate selects with options
-          codes.forEach((code: string, index: number) => {
-            let availableOptions: ISubCode[] = []
-            if (this.selects.length > 0) {
-              availableOptions = this.getAvailableOptions();
-            }
-            else {
-              availableOptions = this.getAvailableOptionsCode();
-            }
-            // Get available options for the select
-
-            // Create a new select object
-            this.selects.push({
-              options: availableOptions,
-              disabled: true // Disable all selects except the last one
-            });
-
-            // Add code to usedOptions
-            this.usedOptions.add(code);
-          });
-
-          // Update form controls with the values
-          this.auditForm.patchValue({ Rule: rule });
-
-          // Set the value of each select element based on codes[i]
-          setTimeout(() => {
-            this.selects.forEach((select, i) => {
-              const code = codes[i];
-              if (code) {
-                const selectElement = document.querySelectorAll('select')[i] as HTMLSelectElement;
-                if (selectElement) {
-                  selectElement.value = code; // Set the value of the select
-                }
-              }
-            });
-          }, 0); // Use setTimeout to ensure the DOM is updated
-          this.add = false;
-
-          const button = document.getElementById('addAuditRulesBtn');
-          if (button) {
-            button.click();
+          this.auditForm.patchValue({ Rule: res.Data.Rule });
+          this.codeParent = res.Data.codeParent;
+          codes = res.Data.Rule.split(/[=+]/).map((code: any) => code.trim()).filter((code: any) => code);
+          return this.subCodeHomeService.GetAllSubCodes(1,'', this.codeParent);
+        }
+        return of(null);
+      })
+    ).subscribe({
+      next: (subCodeRes: any) => {
+        debugger
+        if (subCodeRes?.Data) {
+          this.subCodes = subCodeRes.Data.getSubCodeDtos;
+          this.selects = codes.map((code: string) => ({
+            options: this.subCodes,
+            disabled: true
+          }));
+          // Open the modal after data is ready
+          const modal = document.getElementById('addCode');
+          if (modal) {
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('role', 'dialog');
+            modal.removeAttribute('aria-hidden');
+            // Add a backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
           }
-          this.id = id;
         }
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
         this.showLoader = false;
-      },
-    };
-    this.auditRuleHomeService.GetAuditRulesById(id).subscribe(observer);
+      }
+    });
   }
   UpdateAuditRule() {
     if (!this.auditForm.valid) {
@@ -429,14 +407,11 @@ export class AuditingRulesHomeComponent implements OnInit {
       this.showLoader = false;
       return;
     }
-
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
-      codeParent: this.auditForm.value.codeParent,
+      codeParent: Number(this.codeParent),
     };
-
     this.showLoader = true;
-
     const observer = {
       next: (res: any) => {
         this.GetAuditRules(1)
@@ -455,7 +430,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },

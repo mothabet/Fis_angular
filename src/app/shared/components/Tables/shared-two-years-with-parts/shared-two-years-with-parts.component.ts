@@ -343,26 +343,10 @@ debugger
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  calculateTransaction(formContent: IGetQuestionDto,status:number) {
-    if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
-      // Initialize sums to zero
-      const sums: number[] = [];
-  
-      // Determine the maximum number of values in any subCode
-      formContent.code.SubCodes.forEach((subCode: any) => {
-        subCode.values.forEach((value: number, index: number) => {
-          if (!sums[index]) {
-            sums[index] = 0;
-          }
-          sums[index] += value || 0;
-        });
-      });
-  
-      // Update formContent values with the calculated sums
-      formContent.values = sums;
+  calculateTransaction(status:number) {
+    
       if(status < 3)
         this.BeginningForm();
-    }
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {

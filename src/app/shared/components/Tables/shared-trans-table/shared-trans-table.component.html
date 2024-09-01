@@ -48,15 +48,14 @@
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[1]"
                                             (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" type="number"
-                                            [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" class="tableInputParent"/>
+                                            class="tableInputParent"/>
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[2]" type="number" disabled />
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[0]"
-                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" type="number" class="tableInputParent"
-                                            [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" />
+                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" type="number" class="tableInputParent" />
                                     </td>
                                 </ng-container>
                                 <td class="text-center">
@@ -121,14 +120,14 @@
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="subCode.values[1]"
-                                            (ngModelChange)="calculateTransaction(subCode,formContent,coverForm.status)" type="number" />
+                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="subCode.values[2]" type="number" disabled />
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="subCode.values[0]"
-                                            (ngModelChange)="calculateTransaction(subCode,formContent,coverForm.status)" type="number" />
+                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />

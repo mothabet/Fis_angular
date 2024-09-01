@@ -469,7 +469,7 @@ export class FormsComponent implements OnInit {
       document.getElementById(name)
     );
     modal.show();
-    debugger
+    
   }
   GetAllCodes(page: number = 0, textSearch: string = ''): void {
     this.Loader = true;
@@ -492,7 +492,7 @@ export class FormsComponent implements OnInit {
   }
   saveForm() {
     const allErrors: string[] = [];
-    debugger
+    
     if (this.formForm.value.type == '2' && this.formForm.value.typeQuarter == '' && (this.formForm.value.reviewYear != '0' || this.formForm.value.reviewYear != '')) {
       allErrors.push('يجب ادخال ربع مسح الاستماره');
       if (this.formForm.valid) {
@@ -522,7 +522,7 @@ export class FormsComponent implements OnInit {
       this.Loader = true;
       const observer = {
         next: (res: any) => {
-          debugger
+          
           if (res.Status == 400) {
             Swal.fire({
               icon: 'error',
@@ -575,7 +575,7 @@ export class FormsComponent implements OnInit {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         this.forms = res.Data;
-        debugger
+        
         if (res.Data) {
 
           this.resetForm();
@@ -682,7 +682,7 @@ export class FormsComponent implements OnInit {
             reviewYear: this.addForm.reviewYear,
             typeQuarter: this.addForm.typeQuarter
           });
-          debugger
+          
           this.reviewYear = this.formForm.value.reviewYear;
           this.Loader = false;
           this.add = false;
@@ -722,7 +722,7 @@ export class FormsComponent implements OnInit {
           if (button) {
             button.click();
           }
-          debugger
+          
           this.resetForm();
           this.form = res.Data;
           this.GetAllForms();
@@ -751,7 +751,6 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
-
     this.Loader = true;   
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
@@ -931,7 +930,7 @@ export class FormsComponent implements OnInit {
     this.formServices.GetTableById(id).subscribe(observer);
   }
   updateTable() {
-    debugger
+    
     this.Loader = true;
     if (!(this.tableForm.value.Type == '5')) this.tableForm.value.period = 0
     if (this.tableForm.valid) {
@@ -949,7 +948,7 @@ export class FormsComponent implements OnInit {
         period: this.tableForm.value.period,
         tableParts: this.addTableParts
       };
-      debugger
+      
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');
@@ -1153,7 +1152,7 @@ export class FormsComponent implements OnInit {
     if (selectedItem) {
       this.code = selectedItem;
     }
-    debugger
+    
     this.GetSubCodesById(Number(selectedId))
   }
   GetSubCodesById(id: number) {
@@ -1269,7 +1268,7 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        debugger
+        
         if (res.Data.Type == 1)
           this.router.navigate(['/FormDetails', this.formId , 'null',0]);
         else if (res.Data.Type == 2)

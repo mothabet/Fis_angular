@@ -8,6 +8,9 @@ import { ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dt
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { NavigateTablesTypesService } from '../../services/navigate-tables-types.service';
 import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
+import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
+import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -35,9 +38,10 @@ export class NavigateTablesTypesComponent implements OnInit {
   @Input() table!: IGetTableDto;
   formContents: any[] = [];
   quarterCoverForm !: IQuarterCoverFormDataDto;
+  auditRules: IAuditRule[] = [];
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
-    private navigateTablesTypesService: NavigateTablesTypesService) { }
+    private navigateTablesTypesService: NavigateTablesTypesService, private auditRuleHomeService: AuditRuleHomeService) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
@@ -50,7 +54,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   TablesNavigation(id: number) {
     this.GetTableById(id);
-    debugger
+    
     if (this.tapType == 1)
       this.displayFormContents();
   }
@@ -129,7 +133,6 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.addTableToListInLocalStorage(this.table);
   }
   addTableToListInLocalStorage(table: any): void {
-    debugger
     let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto
     if (storedTables) {
@@ -153,97 +156,6 @@ export class NavigateTablesTypesComponent implements OnInit {
         localStorage.setItem(`tablesList${this.coverForm.id}`, JSON.stringify(tablesList));
       }
     }
-  }
-  SaveData(btnType: string, companyId: number) {
-    this.Loader = true;
-    if (this.tapType == 1)
-      this.displayFormContents();
-    const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
-    var coverForm!: ICoverFormDetailsDto
-
-    if (storedTables) {
-      coverForm = JSON.parse(storedTables);
-    }
-    var dataDtosList: IDataDto[] = [];
-    for (let index = 0; index < coverForm.tables.length; index++) {
-      for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
-        var codesList: number[] = [];
-        if (!(coverForm.tables[index].formContents[i].values == undefined)) {
-          for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
-            var codes = coverForm.tables[index].formContents[i].values[j];
-            codesList.push(codes);
-          }
-          var dataDtos: IDataDto = {
-            TableId: coverForm.tables[index].id,
-            TableArName: coverForm.tables[index].arName,
-            TableEnName: coverForm.tables[index].enName,
-            questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
-            codes: codesList,
-            level: 1,
-            codeId: coverForm.tables[index].formContents[i].code.Id,
-            codeType: coverForm.tables[index].formContents[i].code.TypeId,
-            valueCheck: coverForm.tables[index].formContents[i].valueCheck,
-            parentCodeId: 0,
-            connectedWithId: coverForm.tables[index].formContents[i].code.connectedWithId,
-            connectedWithLevel: coverForm.tables[index].formContents[i].code.connectedWithLevel,
-          };
-          dataDtosList.push(dataDtos);
-          for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
-            var codesListSub: number[] = [];
-            for (let x = 0; x < coverForm.tables[index].formContents[i].code.SubCodes[r].values.length; x++) {
-              var codes = coverForm.tables[index].formContents[i].code.SubCodes[r].values[x];
-              codesListSub.push(codes);
-            }
-            var dataDtosSub: IDataDto = {
-              TableId: coverForm.tables[index].id,
-              TableArName: coverForm.tables[index].arName,
-              TableEnName: coverForm.tables[index].enName,
-              questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
-              codes: codesListSub,
-              level: 2,
-              codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
-              codeType: 0,
-              valueCheck: true,
-              parentCodeId: coverForm.tables[index].formContents[i].code.Id,
-              connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
-              connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
-            };
-            dataDtosList.push(dataDtosSub);
-          }
-        }
-      }
-    }
-    let coverFormData = localStorage.getItem(`quarterCoverForm`);
-    let certification = localStorage.getItem(`certification`);
-    if (!coverFormData||coverFormData === undefined)
-      coverFormData = ''
-    if (!certification||certification === undefined)
-      certification = ''
-    var addFormDataDto: IAddFormDataDto = {
-      dataDtos: dataDtosList,
-      FormId: this.coverForm.id,
-      coverData: JSON.stringify(coverFormData),
-      certificationData: JSON.stringify(certification)
-    };
-    
-    const observer = {
-      next: (res: any) => {
-        this.GetFormById(this.formId)
-        this.Loader = false;
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType, companyId).subscribe(observer);
-
   }
   CompleteForm(): void {
     this.Loader = true;
@@ -313,4 +225,185 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formServices.GetFormById(+id, '', +this.companyId).subscribe(observer);
   }
+  SaveData(btnType: string, companyId: number) {
+    this.Loader = true;
+    forkJoin([
+      this.auditRuleHomeService.GetAllAuditRules(0),
+    ]).subscribe({
+      next: (auditRulesResponse: any) => {
+        if (auditRulesResponse[0].Data)
+          this.auditRules = auditRulesResponse[0].Data.getAuditRuleDtos;
+        this.displayFormContents();
+        const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
+        let coverForm!: ICoverFormDetailsDto;
+        if (storedTables) {
+          coverForm = JSON.parse(storedTables);
+        }
+        let dataDtosList: IDataDto[] = [];
+        for (let index = 0; index < coverForm.tables.length; index++) {
+          
+          for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
+            let codesList: number[] = [];
+            if (coverForm.tables[index].formContents[i].values !== undefined) {
+              // Extract rule code
+              if (btnType == "Approve") {
+                const ruleCode = this.auditRules.find(a => a.codeParent == coverForm.tables[index].formContents[i].code.QuestionCode);
+                if (ruleCode && ruleCode.Rule) {
+                  const ruleParts = ruleCode.Rule.split('=');
+                  if (ruleParts.length < 2) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: `تنسيق القاعدة غير صحيح: ${ruleCode.Rule}`,
+                      showConfirmButton: true,
+                      confirmButtonText: 'اغلاق'
+                    });
+                    continue;
+                  }
+
+                  const ruleExpression = ruleParts[1].trim();
+
+                  // Extract numbers and operators
+                  const numberPattern = /\d+/g; // Matches numeric values
+                  const operatorPattern = /[\+\-]/g; // Matches operators
+
+                  // Extract numbers and operators
+                  const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
+                  // Ensure correct length of operators and numbers
+                  if (numbers.length === 0) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
+                      showConfirmButton: true,
+                      confirmButtonText: 'اغلاق'
+                    });                    
+                    continue;
+                  }
+                  let valuesLength = coverForm.tables[index].formContents[i].values.length;
+
+
+                  // Iterate over formContents
+                  for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
+                    
+                    let formContent = coverForm.tables[index].formContents[i];
+                    let subCodes = formContent.code.SubCodes;
+
+                    // Reset sums for current formContent
+                    let indexSums = new Array(valuesLength).fill(0);
+
+                    // Accumulate values from SubCodes
+                    for (let j = 0; j < subCodes.length; j++) {
+                      let subCodeValues = subCodes[j].values;
+
+                      for (let k = 0; k < subCodeValues.length; k++) {
+                        if (k < indexSums.length) {
+                          indexSums[k] += subCodeValues[k];
+                        }
+                      }
+                    }
+                    let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+
+                    // Add the accumulated sums to the totalValues
+                    for (let l = 0; l < totalValues.length; l++) {
+                      if (l < indexSums.length) {
+                        totalValues[l] += indexSums[l];
+                        if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
+                          Swal.fire({
+                            icon: 'error',
+                            title: `في ${coverForm.tables[index].arName} فشل التحقق للسؤال ${coverForm.tables[index].formContents[i].code.QuestionCode}. القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
+                            showConfirmButton: true,
+                            confirmButtonText: 'اغلاق'
+                          });
+                          this.Loader = false;
+                          return;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
+                let codes = coverForm.tables[index].formContents[i].values[j];
+                codesList.push(codes);
+              }
+
+              let dataDtos: IDataDto = {
+                TableId: coverForm.tables[index].id,
+                TableArName: coverForm.tables[index].arName,
+                TableEnName: coverForm.tables[index].enName,
+                questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
+                codes: codesList,
+                level: 1,
+                codeId: coverForm.tables[index].formContents[i].code.Id,
+                codeType: coverForm.tables[index].formContents[i].code.TypeId,
+                valueCheck: coverForm.tables[index].formContents[i].valueCheck,
+                parentCodeId: 0,
+                connectedWithId: coverForm.tables[index].formContents[i].code.connectedWithId,
+                connectedWithLevel: coverForm.tables[index].formContents[i].code.connectedWithLevel,
+              };
+              dataDtosList.push(dataDtos);
+
+              for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
+                let codesListSub: number[] = [];
+                for (let x = 0; x < coverForm.tables[index].formContents[i].code.SubCodes[r].values.length; x++) {
+                  let codes = coverForm.tables[index].formContents[i].code.SubCodes[r].values[x];
+                  codesListSub.push(codes);
+                }
+
+                let dataDtosSub: IDataDto = {
+                  TableId: coverForm.tables[index].id,
+                  TableArName: coverForm.tables[index].arName,
+                  TableEnName: coverForm.tables[index].enName,
+                  questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
+                  codes: codesListSub,
+                  level: 2,
+                  codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
+                  codeType: 0,
+                  valueCheck: true,
+                  parentCodeId: coverForm.tables[index].formContents[i].code.Id,
+                  connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
+                  connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
+                };
+                dataDtosList.push(dataDtosSub);
+              }
+            }
+          }
+        }
+
+        let coverFormData = localStorage.getItem(`quarterCoverForm`) || '';
+        let certification = localStorage.getItem(`certification`) || '';
+
+        let addFormDataDto: IAddFormDataDto = {
+          dataDtos: dataDtosList,
+          FormId: this.coverForm.id,
+          coverData: JSON.stringify(coverFormData),
+          certificationData: JSON.stringify(certification),
+        };
+
+        const observer = {
+          next: (res: any) => {
+            this.GetFormById(this.formId);
+            this.Loader = false;
+            Swal.fire({
+              icon: 'success',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
+          },
+          error: (err: any) => {
+            this.sharedServices.handleError(err);
+            this.Loader = false;
+          },
+        };
+
+        this.navigateTablesTypesService.AddFormData(addFormDataDto, btnType, companyId).subscribe(observer);
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    });
+  }
+
 }

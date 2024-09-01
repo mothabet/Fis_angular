@@ -7,4 +7,5 @@ export interface IAuditRule{
     Rule:string,
     CreatedBy:string,
     CreatedOn:string,
+    codeParent:string
 }

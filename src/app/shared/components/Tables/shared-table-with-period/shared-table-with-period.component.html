@@ -43,7 +43,7 @@
                   </td>
                   <ng-container *ngIf="formContent.code.TypeId != 4">
                     <td class="text-center" *ngFor="let year of years; let i = index">
-                      <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[i+1]" [disabled]="formContent.code.SubCodes && formContent.code.SubCodes.length > 0" (input)="changeStatus(coverForm.status)"/>
+                      <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status)"/>
                     </td>
                   </ng-container>
 
@@ -106,7 +106,7 @@
                       </div>
                     </td>
                     <td class="text-center" *ngFor="let year of years; let i = index">
-                      <input type="number" [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(formContent,coverForm.status)"/>
+                      <input type="number" [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(coverForm.status)"/>
                     </td>
                     <td class="text-center">
                       <input disabled type="text" disabled value="{{subCode.QuestionCode}}" />

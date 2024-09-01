@@ -122,23 +122,7 @@ export class SharedTableWithoutTransComponent {
     }
     code.SubCodes.push(subCode);
   }
-  calculateTransaction(formContent: IGetQuestionDto) {
-    if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
-      // Initialize sums to zero
-      let sumValue1 = 0;
-      let sumValue0 = 0;
-
-      // Sum all subCode values[1] and values[0]
-      formContent.code.SubCodes.forEach((subCode: any) => {
-        sumValue1 += subCode.values[1] || 0;
-        sumValue0 += subCode.values[0] || 0;
-      });
-
-      // Update formContent values
-      formContent.values[1] = sumValue1;
-      formContent.values[0] = sumValue0;
-    }
-  }
+  
   GetActivites() {
     const observer = {
       next: (res: any) => {
