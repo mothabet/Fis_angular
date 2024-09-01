@@ -44,7 +44,6 @@ export class SharedFormCoverComponent implements OnInit {
         if (res.Data) {
           this.coverForm = res.Data;
           this.GetFormData();
-
         }
       },
       error: (err: any) => {
@@ -59,29 +58,28 @@ export class SharedFormCoverComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          if (res.Data) {
-            const coverFormData: ICoverFormData = {
-              officialUse: '',
-              activityCode: ''
-            };
-            let coverData = localStorage.getItem(`coverFormData`);
-            if (coverData)
-              this.coverForm.coverFormData = JSON.parse(coverData) as ICoverFormData;
-            else if (res.Data[0].coverData)
-              this.coverForm.coverFormData = JSON.parse(res.Data[0].coverData) as ICoverFormData
-            else
-              this.coverForm.coverFormData = coverFormData;
-            if (res.Data.tables.length > 0)
-              this.noTables = false;
-            this.Loader = false;
-          }
+          debugger
+          const coverFormData: ICoverFormData = {
+            officialUse: '',
+            activityCode: ''
+          };
+          this.coverForm.coverFormData = coverFormData as ICoverFormData
+          let coverData = localStorage.getItem(`coverFormData`);
+          if (coverData)
+            this.coverForm.coverFormData = JSON.parse(coverData) as ICoverFormData;
+          else if (res.Data[0].coverData)
+            this.coverForm.coverFormData = JSON.parse(res.Data[0].coverData) as ICoverFormData
+          else
+            this.coverForm.coverFormData = coverFormData;
+          if (res.Data.tables.length > 0)
+            this.noTables = false;
           this.Loader = false;
         }
+        this.Loader = false;
       },
       error: (err: any) => {
         debugger

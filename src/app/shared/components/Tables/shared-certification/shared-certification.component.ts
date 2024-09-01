@@ -30,11 +30,12 @@ export class SharedCertificationComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           const certificationData: ICertificationDto = {
-            companiesDetails: '',
-            completedBy: '',
-            telephoneNo: '',
-            dateOfCompletion: '',
+            companiesDetails: 'd',
+            completedBy: 'd',
+            telephoneNo: 'd',
+            dateOfCompletion: 'd',
           };
           this.coverForm = res.Data;
           this.coverForm.certification = certificationData
@@ -59,21 +60,13 @@ export class SharedCertificationComponent {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           if (res.Data) {
-            const certificationData: ICertificationDto = {
-              companiesDetails: '',
-              completedBy: '',
-              telephoneNo: '',
-              dateOfCompletion: '',
-            };
+            debugger
             let certification = localStorage.getItem(`certification`);
-            if (certification)
+            if (certification) {
               this.coverForm.certification = JSON.parse(certification) as ICertificationDto;
-            else if (res.Data[0].certificationData)
-              this.coverForm.certification = JSON.parse(res.Data[0].certificationData) as ICertificationDto
-            else
-              this.coverForm.certification = certificationData;
-            
-            this.Loader = false;
+            } else if (res.Data[0].certificationData) {
+              this.coverForm.certification = JSON.parse(res.Data[0].certificationData) as ICertificationDto;
+            }
           }
           this.Loader = false;
 
