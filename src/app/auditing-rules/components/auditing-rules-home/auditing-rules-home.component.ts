@@ -185,22 +185,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.codeHomeService.GetAllCodes(page).subscribe(observer);
   }
   GetAllSubCodes(page: number, questionCode: string) {
-    const observer = {
-      next: (res: any) => {
-        
-        if (res.Data) {
-          this.subCodes = res.Data.getSubCodeDtos;
-        } else {
-          this.subCodes = [];
-        }
-      },
-      error: (err: any) => {
-        
-        this.sharedService.handleError(err);
-        this.showLoader = false;
-      },
-    };
-    this.subCodeHomeService.GetAllSubCodes(page, '', questionCode).subscribe(observer);
+    
   }
   SaveAuditRule(): void {
     this.showLoader = true;
@@ -218,7 +203,6 @@ export class AuditingRulesHomeComponent implements OnInit {
       Rule: this.auditForm.value.Rule,
       codeParent: Number(this.codeParent),
     };
-    debugger
     const observer = {
       next: (res: any) => {
         this.GetAuditRules(1)
@@ -356,13 +340,19 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.showLoader = false;
         if (res.Data) {
           const rule = res.Data.Rule;
           this.codeParent = res.Data.codeParent;
           const codes = rule.split(/[=+]/).map((code: any) => code.trim()).filter((code: any) => code);
-          this.GetAllSubCodes(1, this.codeParent)
-          // Clear previous selects and usedOptions
+          const observer = {
+            next: (res: any) => {
+              
+              if (res.Data) {
+                this.subCodes = res.Data.getSubCodeDtos;
+              } else {
+                this.subCodes = [];
+              }
+              // Clear previous selects and usedOptions
           this.selects = [];
           this.usedOptions.clear();
 
@@ -402,6 +392,7 @@ export class AuditingRulesHomeComponent implements OnInit {
               }
             });
           }, 0); // Use setTimeout to ensure the DOM is updated
+          this.showLoader = false;
           this.add = false;
 
           const button = document.getElementById('addAuditRulesBtn');
@@ -409,6 +400,15 @@ export class AuditingRulesHomeComponent implements OnInit {
             button.click();
           }
           this.id = id;
+            },
+            error: (err: any) => {
+              
+              this.sharedService.handleError(err);
+              this.showLoader = false;
+            },
+          };
+          this.subCodeHomeService.GetAllSubCodes(0, '', this.codeParent).subscribe(observer);
+          
         }
       },
       error: (err: any) => {
