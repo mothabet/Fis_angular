@@ -20,3 +20,7 @@ export interface IDataDto{
     TableEnName:string|null,
 }
 
+export interface ICoverFormData {
+    officialUse:string,
+    activityCode:string
+}

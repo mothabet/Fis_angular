@@ -208,9 +208,9 @@ export class NavigateTablesTypesComponent implements OnInit {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
-          let quarterCoverData = localStorage.getItem(`quarterCoverForm`);
-          if (quarterCoverData)
-            this.coverForm.quarterCoverData = JSON.parse(quarterCoverData) as IQuarterCoverFormDataDto;
+          // let quarterCoverData = localStorage.getItem(`quarterCoverForm`);
+          // if (quarterCoverData)
+          //   this.coverForm.quarterCoverData = JSON.parse(quarterCoverData) as IQuarterCoverFormDataDto;
           const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (!storedTables) {
             localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
@@ -370,13 +370,12 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
         }
 
-        let coverFormData = localStorage.getItem(`quarterCoverForm`) || '';
+        let coverFormData = localStorage.getItem(`quarterCoverForm`) ||localStorage.getItem(`coverFormData`)|| '';
         let certification = localStorage.getItem(`certification`) || '';
-
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
-          coverData: JSON.stringify(coverFormData),
+          coverData: coverFormData,
           certificationData: JSON.stringify(certification),
         };
 

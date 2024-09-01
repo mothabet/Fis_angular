@@ -44,6 +44,15 @@ export class SharedQuarterFormCoverComponent implements OnInit {
         if (res.Data) {
           debugger
           this.coverForm = res.Data
+          const quarterCoverFormData: IQuarterCoverFormDataDto = {
+            establishmentName: "0",
+            postalAddress: "0",
+            telephoneNumber: "0",
+            faxNumber: "0",
+            emailAddress: "0",
+            geographicalDistribution: "0"
+          };
+          this.coverForm.quarterCoverData = quarterCoverFormData
           this.GetFormData();
         }
       },
@@ -58,14 +67,14 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           if (res.Data) {
             if (res.Data.length > 0) {
-              this.coverFormData = JSON.parse(res.Data[0].coverData) as IQuarterCoverFormDataDto;
+              if (res.Data[0].coverData || res.Data[0].coverData != '')
+                this.coverFormData = JSON.parse(res.Data[0].coverData) as IQuarterCoverFormDataDto;
               const quarterCoverFormData: IQuarterCoverFormDataDto = {
                 establishmentName: "0",
                 postalAddress: "0",
@@ -74,6 +83,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
                 emailAddress: "0",
                 geographicalDistribution: "0"
               };
+              debugger
               let storedTables = localStorage.getItem(`quarterCoverForm`);
               if (storedTables)
                 this.coverForm.quarterCoverData = JSON.parse(storedTables) as IQuarterCoverFormDataDto;
@@ -81,9 +91,8 @@ export class SharedQuarterFormCoverComponent implements OnInit {
                 this.coverForm.quarterCoverData = this.coverFormData
               else
                 this.coverForm.quarterCoverData = quarterCoverFormData;
-              
             }
-            
+
           }
           this.Loader = false;
 
@@ -96,13 +105,11 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     };
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  ngOnDestroy(){
-    debugger
+  ngOnDestroy() {
     let quarterCoverForm = localStorage.getItem(`quarterCoverForm`);
-      if (quarterCoverForm) {
-        localStorage.removeItem(`quarterCoverForm`);
-      }
-      localStorage.setItem(`quarterCoverForm`, JSON.stringify(this.coverForm.quarterCoverData));
-
+    if (quarterCoverForm) {
+      localStorage.removeItem(`quarterCoverForm`);
+    }
+    localStorage.setItem(`quarterCoverForm`, JSON.stringify(this.coverForm.quarterCoverData));
   }
 }

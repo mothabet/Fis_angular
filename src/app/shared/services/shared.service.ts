@@ -32,7 +32,6 @@ export class SharedService {
     return result;
   }
   handleError(err: any): void {
-    debugger
     if (err.status) {
       switch (err.status) {
         case 400:

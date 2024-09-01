@@ -114,7 +114,9 @@ export class LoginService {
       'TwoYearsWithParts', 
       'QuarterTable',
       'QuarterFormCover',
-      'Certification'
+      'Certification',
+      'FormDetails',
+      'WorkData'
     ];
     return companyRoutes.includes(url);
   }

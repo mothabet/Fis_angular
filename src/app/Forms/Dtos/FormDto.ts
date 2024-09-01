@@ -1,4 +1,6 @@
+import { ICoverFormData } from "src/app/shared/Dtos/FormDataDto"
 import { IGetTableDto } from "./TableDto"
+import { IGeneralDataDto } from "./WorkDataDto"
 
 export interface IAddForm {
     arName : string,
@@ -36,7 +38,9 @@ export interface ICoverFormDetailsDto{
     reviewYear : string,
     status:number,
     quarterCoverData : IQuarterCoverFormDataDto,
-    certification : ICertificationDto
+    coverFormData : ICoverFormData,
+    certification : ICertificationDto,
+    GeneralData : IGeneralDataDto
 }
 export interface IGetTablesDto {
     id:number,

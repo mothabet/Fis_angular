@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from 'src/app/auth/services/login.service';
 import { ICoverFormDetailsDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { ICoverFormData } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
   templateUrl: './shared-form-cover.component.html',
   styleUrls: ['./shared-form-cover.component.css']
 })
-export class SharedFormCoverComponent implements OnInit{
+export class SharedFormCoverComponent implements OnInit {
   Loader: boolean = false;
   noData: boolean = false;
   forms: IGetFormDto[] = [];
@@ -25,16 +27,14 @@ export class SharedFormCoverComponent implements OnInit{
   period: number = 0;
   formContent!: IGetQuestionDto[]
   isCoverActive = false;
-  sharedTableType!:number;
-  constructor(private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
-    
+  sharedTableType!: number;
+  coverFormData!: ICoverFormData
+  constructor(private authService: LoginService, private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+
   }
   ngOnInit(): void {
     this.isCoverActive = true
     this.GetFormById(+this.formId)
-  }
-  ngAfterViewInit(): void {
-    ; // Call method after view is initialized
   }
   GetFormById(id: number): void {
     this.Loader = true;
@@ -42,11 +42,9 @@ export class SharedFormCoverComponent implements OnInit{
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          
           this.coverForm = res.Data;
-          if (res.Data.tables.length > 0)
-            this.noTables = false;
-          this.Loader = false;
+          this.GetFormData();
+
         }
       },
       error: (err: any) => {
@@ -55,6 +53,52 @@ export class SharedFormCoverComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
+    this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
+  }
+  GetFormData() {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        const isLoggedIn = this.authService.getToken();
+        if (isLoggedIn != "") {
+          let res_ = this.authService.decodedToken(isLoggedIn);
+          var role = res_.roles;
+          if (res.Data) {
+            const coverFormData: ICoverFormData = {
+              officialUse: '',
+              activityCode: ''
+            };
+            let coverData = localStorage.getItem(`coverFormData`);
+            if (coverData)
+              this.coverForm.coverFormData = JSON.parse(coverData) as ICoverFormData;
+            else if (res.Data[0].coverData)
+              this.coverForm.coverFormData = JSON.parse(res.Data[0].coverData) as ICoverFormData
+            else
+              this.coverForm.coverFormData = coverFormData;
+            if (res.Data.tables.length > 0)
+              this.noTables = false;
+            this.Loader = false;
+          }
+          this.Loader = false;
+        }
+      },
+      error: (err: any) => {
+        debugger
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
+  }
+
+
+  ngOnDestroy() {
+    debugger
+    let coverFormData = localStorage.getItem(`coverFormData`);
+    if (coverFormData) {
+      localStorage.removeItem(`coverFormData`);
+    }
+    localStorage.setItem(`coverFormData`, JSON.stringify(this.coverForm.coverFormData));
   }
 }

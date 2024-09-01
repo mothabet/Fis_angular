@@ -73,7 +73,6 @@ export class SharedQuarterTableComponent {
               });
             }
           });
-          console.log(this.table.formContents)
           this.GetFormData();
         }
       },

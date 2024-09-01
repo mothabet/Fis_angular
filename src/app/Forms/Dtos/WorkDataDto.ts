@@ -8,3 +8,11 @@ export interface IWorkDataChkDto {
   enName: string;
   selected:boolean;
 }
+
+export interface IGeneralDataDto {
+    CompanyInfo : IWorkDataQuesDto[],
+    ChekInfo: IWorkDataChkDto[],
+    from:string,
+    to:string,
+    describeMainActivity: string
+}
