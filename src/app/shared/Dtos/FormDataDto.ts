@@ -3,7 +3,8 @@ export interface IAddFormDataDto {
     dataDtos:IDataDto[],
     FormId:number,
     coverData:string,
-    certificationData:string
+    certificationData:string,
+    GeneralData:string
 }
 export interface IDataDto{
     TableId:number,

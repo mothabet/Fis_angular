@@ -259,15 +259,14 @@ export class NavigateTablesTypesComponent implements OnInit {
                     });
                     continue;
                   }
-
                   const ruleExpression = ruleParts[1].trim();
-
                   // Extract numbers and operators
                   const numberPattern = /\d+/g; // Matches numeric values
                   const operatorPattern = /[\+\-]/g; // Matches operators
-
                   // Extract numbers and operators
                   const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
+                  const operators = ruleExpression.match(operatorPattern) || [];
+
                   // Ensure correct length of operators and numbers
                   if (numbers.length === 0) {
                     Swal.fire({
@@ -282,24 +281,35 @@ export class NavigateTablesTypesComponent implements OnInit {
 
 
                   // Iterate over formContents
-                  for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
+                  // for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
                     
                     let formContent = coverForm.tables[index].formContents[i];
                     let subCodes = formContent.code.SubCodes;
 
                     // Reset sums for current formContent
                     let indexSums = new Array(valuesLength).fill(0);
-
                     // Accumulate values from SubCodes
                     for (let j = 0; j < subCodes.length; j++) {
-                      let subCodeValues = subCodes[j].values;
+                      let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
+                      if (numbers.includes(subCodeQuestionCode)) {
+                          let subCodeValues = subCodes[j].values;
+                          
+                          // Find the operator before the current number
+                          let indexOfCode = numbers.indexOf(subCodeQuestionCode);
+                          let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
 
-                      for (let k = 0; k < subCodeValues.length; k++) {
-                        if (k < indexSums.length) {
-                          indexSums[k] += subCodeValues[k];
-                        }
+                          // Apply the correct operation based on the operator
+                          for (let k = 0; k < subCodeValues.length; k++) {
+                              if (k < indexSums.length) {
+                                  if (operator === '-' || !operator) {
+                                      indexSums[k] -= subCodeValues[k];
+                                  } else {
+                                      indexSums[k] += subCodeValues[k];
+                                  }
+                              }
+                          }
                       }
-                    }
+                  }
                     let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
 
                     // Add the accumulated sums to the totalValues
@@ -309,7 +319,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                         if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
                           Swal.fire({
                             icon: 'error',
-                            title: `في ${coverForm.tables[index].arName} فشل التحقق للسؤال ${coverForm.tables[index].formContents[i].code.QuestionCode}. القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
+                            title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
                             showConfirmButton: true,
                             confirmButtonText: 'اغلاق'
                           });
@@ -318,7 +328,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                         }
                       }
                     }
-                  }
+                  // }
                 }
               }
 
@@ -372,11 +382,13 @@ export class NavigateTablesTypesComponent implements OnInit {
 
         let coverFormData = localStorage.getItem(`quarterCoverForm`) ||localStorage.getItem(`coverFormData`)|| '';
         let certification = localStorage.getItem(`certification`) || '';
+        let generalData = localStorage.getItem(`generalData`) || '';
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
           coverData: coverFormData,
           certificationData: JSON.stringify(certification),
+          GeneralData: JSON.stringify(generalData),
         };
 
         const observer = {

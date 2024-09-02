@@ -34,21 +34,26 @@ export class AuditingRulesHomeComponent implements OnInit {
   id: number = 0;
   isEditing: boolean = false;
   add: boolean = true;
-  codeParent : string = "";
+  codeParent: string = "";
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private subCodeHomeService: SubCodeHomeService,
     private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService) { }
 
-  ngOnInit() {
-    this.auditForm = this.fb.group({
-      Rule: [''],
-    });
-    this.showLoader = true; // Show loader before starting requests
-    this.GetAllCodes(1),
-      this.GetAuditRules(1)
-
-  }
-
+    ngOnInit() {
+      this.auditForm = this.fb.group({
+        Rule: [''],
+      });
+    
+      this.showLoader = true; // Show loader before starting requests
+      this.GetAllCodes(1);
+      this.GetAuditRules(1);
+    
+      this.auditForm.get('Rule')?.valueChanges.subscribe(value => {
+        const isValid = this.isValidEquation(value);
+        this.auditForm.get('Rule')?.setErrors(isValid ? null : { invalidEquation: true });
+      });
+    }
+    
   onPageChange(page: number) {
     this.currentPage = page;
   }
@@ -81,45 +86,48 @@ export class AuditingRulesHomeComponent implements OnInit {
     }
   }
   removeSelect(index: number) {
-
-    const removedValue = (document.querySelectorAll('select')[index] as HTMLSelectElement).value;
-
+    const selectElement = document.querySelectorAll('select')[index] as HTMLSelectElement;
+    const removedValue = selectElement.value;
+  
     // Remove the select element
     this.selects.splice(index, 1);
-
+  
     // Remove the value from usedOptions
     this.usedOptions.delete(removedValue);
-    // Re-add the removed value to available options
+  
+    // Get current value of the Rule input
     let currentValue = this.auditForm.get('Rule')?.value || '';
+  
     if (this.selects.length > 0) {
-      this.selects[index - 1].options.push({
-        QuestionCode: removedValue,
-        // Add other properties of ICode if necessary
-      } as ISubCode);
-      if (this.selects[index - 1].options) {
-
+      // Re-add the removed value to the available options of the previous select
+      if (index > 0) {
+        this.selects[index - 1].options.push({
+          QuestionCode: removedValue,
+          // Add other properties of ICode if necessary
+        } as ISubCode);
       }
-      if (index != 1 || !(this.selects.length > 1)) {
-        console.log(`${removedValue}index not equal 1`);
-        const regex = new RegExp(`(^|\\+|\\=)${removedValue}(?=\\+|$)`, 'g');
-        currentValue = currentValue.replace(regex, (match: string, p1: string) => (p1 === '=' ? p1 : ''));
-      }
-      else {
-        console.log(`${removedValue}index equal 1`);
-        const regex = new RegExp(`${removedValue}(^|\\+|\\=)`, 'g');
-        currentValue = currentValue.replace(regex, (match: string, p1: string) => (p1 === '=' ? p1 : ''));
-      }
-
-      // Clean up any trailing '+' if necessary
-      currentValue = currentValue.replace(/\+$/, '');
-    }
-    else {
+  
+      // Regex to remove the removed value and the operator before it
+      const regex = new RegExp(`(\\+|\\-)?\\s*${removedValue}(\\+|\\-)?`, 'g');
+      currentValue = currentValue.replace(regex, (match:any, p1:any, p2:any) => {
+        if (p1 && p2) {
+          return p2; // If there's an operator before and after, just keep the latter
+        } else {
+          return ''; // Otherwise, remove the whole match
+        }
+      }).trim();
+  
+      // Clean up any extra operators or spaces
+      currentValue = currentValue.replace(/^\s*(\+|\-)/, ''); // Remove leading + or -
+      currentValue = currentValue.replace(/(\+|\-)\s*$/, ''); // Remove trailing + or -
+      currentValue = currentValue.replace(/\+\s*\+|\-\s*\-|\+\s*\-|\-\s*\+/g, (match:any) => match[0]); // Keep only one operator
+      currentValue = currentValue.replace(/\=\s*(\+|\-)/, '='); // Ensure the equation doesn't start with + or - after =
+  
+    } else {
       currentValue = '';
     }
+  
     // Update the rule in the form
-
-
-
     this.auditForm.patchValue({ Rule: currentValue });
   }
   getAvailableOptions(): ISubCode[] {
@@ -142,23 +150,98 @@ export class AuditingRulesHomeComponent implements OnInit {
       this.GetAllSubCodes(1, codeId[0].QuestionCode)
       this.codeParent = selectedValue;
     }
+
     this.usedOptions.add(selectedValue);
     let currentValue = this.auditForm.get('Rule')?.value || '';
     if (currentValue === '') {
       currentValue = `${selectedValue}=`;
     } else if (currentValue.endsWith('=')) {
       currentValue = `${currentValue}${selectedValue}`;
-    } else {
-      currentValue = `${currentValue}+${selectedValue}`;
+    }
+    else if (currentValue.endsWith('+') || currentValue.endsWith('-')) {
+      currentValue = `${currentValue}${selectedValue}`;
     }
     this.auditForm.patchValue({ Rule: currentValue });
     // Disable the select after choosing a value
     this.selects[index].disabled = true;
   }
-  isEquationValid(): boolean {
-    const rule = this.auditForm.get('Rule')?.value || '';
-    const parts = rule.split(/=|\+/).filter((part: any) => part.trim() !== '');
-    return parts.length >= 3;
+  addPlus(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedValue = selectElement.value;
+    this.usedOptions.add(selectedValue);
+    let currentValue = this.auditForm.get('Rule')?.value || '';
+    if (currentValue === '') {
+
+    } else if (currentValue.endsWith('=')) {
+
+    } else {
+      currentValue = `${currentValue}+`;
+    }
+    this.auditForm.patchValue({ Rule: currentValue });
+    // Disable the select after choosing a value
+  }
+  addNegative(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedValue = selectElement.value;
+    this.usedOptions.add(selectedValue);
+    let currentValue = this.auditForm.get('Rule')?.value || '';
+    if (currentValue === '') {
+
+    } else if (currentValue.endsWith('=')) {
+
+    } else {
+      currentValue = `${currentValue}-`;
+    }
+    this.auditForm.patchValue({ Rule: currentValue });
+    // Disable the select after choosing a value
+  }
+  isValidEquation(equation: string): boolean {
+    debugger
+    // تحقق من أن المعادلة تحتوي على '='
+    const equationParts = equation.split('=');
+    if (equationParts.length !== 2) {
+      return false;
+    }
+  
+    const leftSide = equationParts[0].trim();
+    const rightSide = equationParts[1].trim();
+  
+    // تحقق من أن الجانب الأيسر يحتوي على رقم واحد فقط
+    // if (/^\d+$/.test(rightSide)) {
+    //   return false;
+    // }
+  
+    // تحقق من أن الجانب الأيمن يحتوي على أرقام وعمليات حسابية صحيحة
+    // وتأكد من أن الجانب الأيمن يحتوي على أكثر من رقم واحد مفصول بعلامات العمليات
+    const rightSideMatches = rightSide.match(/\d+/g);
+    if (!rightSideMatches || rightSideMatches.length < 2) {
+      return false;
+    }
+  
+    return /^\d+([+-]\d+)*$/.test(rightSide);
+  }  
+  isSaveDisabled(): boolean {
+    const ruleValue = this.auditForm.get('Rule')?.value || '';
+  
+    // // تحقق من أن المعادلة تحتوي على رقم واحد فقط في الطرف الأيسر
+    // const leftSideMatch = ruleValue.match(/^(\d+)\s*=/);
+    // const hasSingleNumberOnLeftSide = leftSideMatch && leftSideMatch[1].trim().split(/\s*[+-]\s*/).length === 1;
+  
+    // تحقق من صحة المعادلة كاملة
+    const isValid = this.isValidEquation(ruleValue);
+  
+    // تمكين الأزرار إذا كانت المعادلة صحيحة وتحتوي على أكثر من رقم واحد في الجزء الأيمن
+    return !isValid ;
+  }  
+  isLastCharacterValid(): boolean {
+    const currentValue = this.auditForm.get('Rule')?.value || '';
+    
+    if (!currentValue.trim()) {
+      return true; // Allow adding if input is empty
+    }
+  
+    const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
+    return lastChar === '=' || lastChar === '+' || lastChar === '-';
   }
   resetAuditRules() {
     this.selects = []; // إزالة جميع الـ <select>ات
@@ -185,7 +268,23 @@ export class AuditingRulesHomeComponent implements OnInit {
     this.codeHomeService.GetAllCodes(page).subscribe(observer);
   }
   GetAllSubCodes(page: number, questionCode: string) {
-    
+    const observer = {
+      next: (res: any) => {
+
+        if (res.Data) {
+          this.subCodes = res.Data.getSubCodeDtos;
+        } else {
+          this.subCodes = [];
+        }
+      },
+      error: (err: any) => {
+
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.subCodeHomeService.GetAllSubCodes(page, '', questionCode).subscribe(observer);
+
   }
   SaveAuditRule(): void {
     this.showLoader = true;
@@ -221,7 +320,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -246,7 +345,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         this.showLoader = false;
       },
       error: (err: any) => {
-        
+
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -285,7 +384,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -346,69 +445,69 @@ export class AuditingRulesHomeComponent implements OnInit {
           const codes = rule.split(/[=+]/).map((code: any) => code.trim()).filter((code: any) => code);
           const observer = {
             next: (res: any) => {
-              
+
               if (res.Data) {
                 this.subCodes = res.Data.getSubCodeDtos;
               } else {
                 this.subCodes = [];
               }
               // Clear previous selects and usedOptions
-          this.selects = [];
-          this.usedOptions.clear();
+              this.selects = [];
+              this.usedOptions.clear();
 
-          // Populate selects with options
-          codes.forEach((code: string, index: number) => {
-            let availableOptions: ISubCode[] = []
-            if (this.selects.length > 0) {
-              availableOptions = this.getAvailableOptions();
-            }
-            else {
-              availableOptions = this.getAvailableOptionsCode();
-            }
-            // Get available options for the select
-
-            // Create a new select object
-            this.selects.push({
-              options: availableOptions,
-              disabled: true // Disable all selects except the last one
-            });
-
-            // Add code to usedOptions
-            this.usedOptions.add(code);
-          });
-
-          // Update form controls with the values
-          this.auditForm.patchValue({ Rule: rule });
-
-          // Set the value of each select element based on codes[i]
-          setTimeout(() => {
-            this.selects.forEach((select, i) => {
-              const code = codes[i];
-              if (code) {
-                const selectElement = document.querySelectorAll('select')[i] as HTMLSelectElement;
-                if (selectElement) {
-                  selectElement.value = code; // Set the value of the select
+              // Populate selects with options
+              codes.forEach((code: string, index: number) => {
+                let availableOptions: ISubCode[] = []
+                if (this.selects.length > 0) {
+                  availableOptions = this.getAvailableOptions();
                 }
-              }
-            });
-          }, 0); // Use setTimeout to ensure the DOM is updated
-          this.showLoader = false;
-          this.add = false;
+                else {
+                  availableOptions = this.getAvailableOptionsCode();
+                }
+                // Get available options for the select
 
-          const button = document.getElementById('addAuditRulesBtn');
-          if (button) {
-            button.click();
-          }
-          this.id = id;
+                // Create a new select object
+                this.selects.push({
+                  options: availableOptions,
+                  disabled: true // Disable all selects except the last one
+                });
+
+                // Add code to usedOptions
+                this.usedOptions.add(code);
+              });
+
+              // Update form controls with the values
+              this.auditForm.patchValue({ Rule: rule });
+
+              // Set the value of each select element based on codes[i]
+              setTimeout(() => {
+                this.selects.forEach((select, i) => {
+                  const code = codes[i];
+                  if (code) {
+                    const selectElement = document.querySelectorAll('select')[i] as HTMLSelectElement;
+                    if (selectElement) {
+                      selectElement.value = code; // Set the value of the select
+                    }
+                  }
+                });
+              }, 0); // Use setTimeout to ensure the DOM is updated
+              this.showLoader = false;
+              this.add = false;
+
+              const button = document.getElementById('addAuditRulesBtn');
+              if (button) {
+                button.click();
+              }
+              this.id = id;
             },
             error: (err: any) => {
-              
+
               this.sharedService.handleError(err);
               this.showLoader = false;
             },
           };
           this.subCodeHomeService.GetAllSubCodes(0, '', this.codeParent).subscribe(observer);
-          
+
         }
       },
       error: (err: any) => {
@@ -455,7 +554,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
