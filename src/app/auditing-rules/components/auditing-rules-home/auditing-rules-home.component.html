@@ -87,8 +87,8 @@
           <h5 class="modal-title" id="add" *ngIf="!add">تعديل قاعدة التدقيق</h5>
         </div>
         <div class="header-left">
-          <button (click)="addNegative($event)" class="btn btn-save ms-1">-</button>
-          <button (click)="addPlus($event)" class="btn btn-save ms-1">+</button>
+          <button (click)="addNegative($event)" class="btn btn-save ms-1" [disabled]="isLastCharacterValid()">-</button>
+          <button (click)="addPlus($event)" class="btn btn-save ms-1"[disabled]="isLastCharacterValid()">+</button>
           <button (click)="addSelect()" class="btn btn-save" [disabled]="!isLastCharacterValid()">اضافه</button>
         </div>
       </div>
