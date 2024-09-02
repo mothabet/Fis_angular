@@ -358,7 +358,9 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
       },
     };
-    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+    if (+this.companyId>0){
+      this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+    }
 
   }
 }

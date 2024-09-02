@@ -121,13 +121,11 @@ export class FormService {
      return resopnse;
    }
    CloseForm(formId: number , companyId : number){
-    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Form/CloseForm?formId=${formId}&companyId=${companyId}`, { headers });
      return resopnse;
    }
    BeginningForm(formId: number , companyId : number){
-    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Form/BeginningForm?formId=${formId}&companyId=${companyId}`, { headers });
      return resopnse;

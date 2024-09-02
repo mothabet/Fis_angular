@@ -23,15 +23,15 @@ export class SharedOneYearWithPartsComponent {
   table!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
   tablePartsCount = 0;
-  countries! : IGetCountriesDto[];
-  activities! : IGetActivitiesDto[];
-  companyId!:string;
+  countries!: IGetCountriesDto[];
+  activities!: IGetActivitiesDto[];
+  companyId!: string;
   formData!: IDataDto[];
   checkFormData: boolean = false;
-  constructor(private route: ActivatedRoute,private router: Router, private formServices: FormService, 
-    private sharedServices: SharedService, private activeRouter: ActivatedRoute, private authService:LoginService) {
-    
-    
+  constructor(private route: ActivatedRoute, private router: Router, private formServices: FormService,
+    private sharedServices: SharedService, private activeRouter: ActivatedRoute, private authService: LoginService) {
+
+
   }
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
@@ -60,33 +60,33 @@ export class SharedOneYearWithPartsComponent {
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
-        next: (res: any) => {
-            this.Loader = false;
-            if (res.Data) {
-                this.table = res.Data;
-                this.tablePartsCount = this.table.tableParts.length;
-                // Initialize the `values` array for each formContent based on `tablePartsCount`
-                this.table.formContents.forEach((formContent: IGetQuestionDto) => {
-                    // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-                    formContent.values = [0, ...Array(this.tablePartsCount).fill(0)];
-                    // Initialize the `values` array for each subCode
-                    if (formContent.code.SubCodes) {
-                        formContent.code.SubCodes.forEach((subCode: any) => {
-                            // Set the first value to 0, and the rest based on the number of parts
-                            subCode.values = [0, ...Array(this.tablePartsCount).fill(0)];
-                        });
-                    }
-                });
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.table = res.Data;
+          this.tablePartsCount = this.table.tableParts.length;
+          // Initialize the `values` array for each formContent based on `tablePartsCount`
+          this.table.formContents.forEach((formContent: IGetQuestionDto) => {
+            // Initialize the `values` array with zeroes, ensuring the first value is set to 0
+            formContent.values = [0, ...Array(this.tablePartsCount).fill(0)];
+            // Initialize the `values` array for each subCode
+            if (formContent.code.SubCodes) {
+              formContent.code.SubCodes.forEach((subCode: any) => {
+                // Set the first value to 0, and the rest based on the number of parts
+                subCode.values = [0, ...Array(this.tablePartsCount).fill(0)];
+              });
             }
-            this.GetFormData();
-        },
-        error: (err: any) => {
-            this.sharedServices.handleError(err);
-            this.Loader = false;
-        },
+          });
+        }
+        this.GetFormData();
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
     };
     this.formServices.GetTableById(id).subscribe(observer);
-}
+  }
 
   GetFormById(id: number): void {
     this.Loader = true;
@@ -95,7 +95,7 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          
+
           this.coverForm = res.Data;
         }
       },
@@ -104,19 +104,19 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'',+this.companyId).subscribe(observer);
+    this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  addSubCodeRow(code:ICode){
-    const subCode:ISubCodeForm={
-      arName:'',
-      codeId:0,
-      enName:'',
-      Id:0,
-      QuestionCode:'',
-      subCodes:[],
-      values: Array(this.tablePartsCount*2).fill(0),
-      connectedWithId:0,
-      connectedWithLevel:0
+  addSubCodeRow(code: ICode) {
+    const subCode: ISubCodeForm = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: [],
+      values: Array(this.tablePartsCount * 2).fill(0),
+      connectedWithId: 0,
+      connectedWithLevel: 0
     }
     code.SubCodes.push(subCode);
   }
@@ -131,7 +131,7 @@ export class SharedOneYearWithPartsComponent {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -155,18 +155,18 @@ export class SharedOneYearWithPartsComponent {
     };
     this.formServices.GetCountries().subscribe(observer);
   }
-  
+
   GetFormData() {
-    
+
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          
+
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -311,7 +311,7 @@ export class SharedOneYearWithPartsComponent {
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          
+
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -338,17 +338,17 @@ export class SharedOneYearWithPartsComponent {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status:number){
+  changeStatus(status: number) {
     debugger
-    if(status < 3)
+    if (status < 3)
       this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -356,7 +356,9 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
       },
     };
-    this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+    if (+this.companyId>0){
+      this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
+    }
 
   }
 }
