@@ -172,10 +172,13 @@ export class SharedWorkDataComponent implements OnInit {
             this.workData = this.coverForm.GeneralData.CompanyInfo;
             this.workDataChk = this.coverForm.GeneralData.ChekInfo;
           }
-          else if (res.Data[0].GeneralData) {
-
-            if (res.Data[0].generalData)
-              this.coverForm.GeneralData = JSON.parse(res.Data[0].generalData) as IGeneralDataDto
+          else if (res.Data[0]) {
+            if (res.Data[0].GeneralData){
+              const jsonString = res.Data[0].GeneralData;
+              const xx= JSON.parse(jsonString) ;
+              const yy= JSON.parse(xx) ;
+              this.coverForm.GeneralData = yy;
+            }
             else
               this.coverForm.GeneralData = this.generalDataDto;
 
