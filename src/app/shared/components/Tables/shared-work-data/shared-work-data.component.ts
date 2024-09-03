@@ -15,7 +15,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 })
 export class SharedWorkDataComponent implements OnInit {
   @Input() formId!: string;
-  @Input() coverForm!: ICoverFormDetailsDto;
+  coverForm!: ICoverFormDetailsDto;
   Loader: boolean = false;
   companyId!: string;
   isWorkDataActive: boolean = false;
@@ -172,17 +172,10 @@ export class SharedWorkDataComponent implements OnInit {
             this.workData = this.coverForm.GeneralData.CompanyInfo;
             this.workDataChk = this.coverForm.GeneralData.ChekInfo;
           }
-          else if (res.Data[0]) {
-            if (res.Data[0].GeneralData){
-              const jsonString = res.Data[0].GeneralData;
-              const xx= JSON.parse(jsonString) ;
-              const yy= JSON.parse(xx) ;
-              this.coverForm.GeneralData = yy;
-            }
-            else
-              this.coverForm.GeneralData = this.generalDataDto;
-
-            this.Loader = false;
+          else if (res.Data[0].GeneralData){
+            this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData) ;
+            this.workData = this.coverForm.GeneralData.CompanyInfo;
+            this.workDataChk = this.coverForm.GeneralData.ChekInfo; 
           }
           else if (+this.companyId != null || +this.companyId != 0) {
             this.GetCompanyById(+this.companyId);
@@ -199,6 +192,16 @@ export class SharedWorkDataComponent implements OnInit {
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   ngOnDestroy() {
+    debugger
+    let generalData = localStorage.getItem(`generalData`);
+    if (generalData) {
+      localStorage.removeItem(`generalData`);
+    }
+    this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
+    this.coverForm.GeneralData.ChekInfo = this.workDataChk as IWorkDataChkDto[];
+    localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
+  }
+  setDataLocalStorage() {
     debugger
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {

@@ -127,8 +127,8 @@
         <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
             <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>
         </div>
-        <div class="clipped-element-first arrow" [ngClass]="{'active': table.id === tableId}"
-            *ngFor="let table of coverForm.tables" (click)="TablesNavigation(table.id)"
+        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" [ngClass]="{'active': table.id == tableId}"
+             (click)="TablesNavigation(table.id)"
             style="cursor: pointer !important;">
             <a>{{table.arName}}</a>
         </div>

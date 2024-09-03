@@ -28,6 +28,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   @Output() workDataActivated: EventEmitter<void> = new EventEmitter();
   @Output() certificationActivated: EventEmitter<void> = new EventEmitter();
   @Output() sharedType: EventEmitter<void> = new EventEmitter();
+  @Output() setInLocalStorage = new EventEmitter<void>();
   Loader: boolean = false;
   tableType!: number;
   formId!: string;
@@ -52,11 +53,13 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = tableIdParam ? +tableIdParam : null;
     this.GetFormById(this.formId ?? "0")
   }
+  ngOnChanges() {
+    const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
+    this.tableId = tableIdParam ? +tableIdParam : null;
+  }
   TablesNavigation(id: number) {
     this.GetTableById(id);
-    
-    if (this.tapType == 1)
-      this.displayFormContents();
+    this.displayFormContents();
   }
   GetTableById(id: number): void {
     this.Loader = true;
@@ -227,6 +230,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   SaveData(btnType: string, companyId: number) {
     this.Loader = true;
+    this.setDataLocalStorage()
     forkJoin([
       this.auditRuleHomeService.GetAllAuditRules(0),
     ]).subscribe({
@@ -387,8 +391,8 @@ export class NavigateTablesTypesComponent implements OnInit {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
           coverData: coverFormData,
-          certificationData: JSON.stringify(certification),
-          GeneralData: JSON.stringify(generalData),
+          certificationData: certification,
+          GeneralData: generalData,
         };
 
         const observer = {
@@ -417,4 +421,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     });
   }
 
+  setDataLocalStorage() {
+    this.setInLocalStorage.emit();
+  }
 }
