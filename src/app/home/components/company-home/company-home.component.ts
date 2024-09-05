@@ -27,7 +27,7 @@ export class CompanyHomeComponent implements OnInit{
     this.GetCompany()
   }
   GetCompany(){
-    debugger
+    
     this.Loader = true
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
@@ -38,12 +38,12 @@ export class CompanyHomeComponent implements OnInit{
     }
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.companyId = res.Data;
         this.GetCompanyForms();
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

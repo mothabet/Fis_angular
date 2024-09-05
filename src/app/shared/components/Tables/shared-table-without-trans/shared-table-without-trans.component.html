@@ -99,7 +99,7 @@
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                         <div style="display: flex;justify-content: center;">
-                                            <input type="text" style="width: 300px !important;" />
+                                            <input type="text" style="width: 300px !important;" [(ngModel)]="subCode.arName"/>
                                             <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"
                                                 (click)="addSubCodeRow(formContent.code)">
@@ -152,7 +152,7 @@
 
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                         <div style="display: flex;justify-content: center;">
-                                            <input type="text" style="width: 300px !important;" />
+                                            <input type="text" style="width: 300px !important;" [(ngModel)]="subCode.enName"/>
 
                                             <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"

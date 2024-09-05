@@ -38,7 +38,6 @@ export class SharedTableWithPeriodComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -81,8 +80,8 @@ export class SharedTableWithPeriodComponent {
               });
             }
           });
-        }  
-        this.GetFormData();    
+        }
+        this.GetFormData();
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
@@ -100,6 +99,8 @@ export class SharedTableWithPeriodComponent {
           this.Loader = false;
           this.coverForm = res.Data;
           this.formYear = this.coverForm.reviewYear;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -123,9 +124,9 @@ export class SharedTableWithPeriodComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values:[0, ...Array(this.years.length).fill(0)],
-      connectedWithId:0,
-      connectedWithLevel:0
+      values: [0, ...Array(this.years.length).fill(0)],
+      connectedWithId: 0,
+      connectedWithLevel: 0
     }
     code.SubCodes.push(subCode);
   }
@@ -339,8 +340,8 @@ export class SharedTableWithPeriodComponent {
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  calculateTransaction(status:number) {
-    if(status < 3)
+  calculateTransaction(status: number) {
+    if (status < 3)
       this.BeginningForm();
   }
   getSumOfValues(index: number): number {
@@ -348,16 +349,16 @@ export class SharedTableWithPeriodComponent {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status:number){
-    if(status < 3)
+  changeStatus(status: number) {
+    if (status < 3)
       this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -365,7 +366,7 @@ export class SharedTableWithPeriodComponent {
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 

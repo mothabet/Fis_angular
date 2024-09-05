@@ -36,13 +36,12 @@ export class SharedQuarterTableComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
     });
   }
-  
+
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
@@ -93,9 +92,10 @@ export class SharedQuarterTableComponent {
           this.Loader = false;
           this.coverForm = res.Data;
           let storedTables = localStorage.getItem(`quarterCoverForm`);
-          debugger
           if (storedTables)
             this.coverForm.quarterCoverData = JSON.parse(storedTables) as IQuarterCoverFormDataDto;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -105,7 +105,7 @@ export class SharedQuarterTableComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  
+
   addSubCodeRow(code: ICode) {
     const subCode: ISubCode = {
       arName: '',
@@ -342,7 +342,7 @@ export class SharedQuarterTableComponent {
       // Add the value of formContent at the specified index
       debugger
       sum += formContent.values[index] || 0;
-  
+
       // Check if formContent has SubCodes and sum only those where subCode.codeId matches formContent.code.id
       if (formContent.code.TypeId === 1 && formContent.code.SubCodes) {
         sum += formContent.code.SubCodes.reduce((subSum, subCode) => {
@@ -350,20 +350,20 @@ export class SharedQuarterTableComponent {
           return subCode.codeId === formContent.code.Id ? subSum + (subCode.values[index] || 0) : subSum;
         }, 0);
       }
-  
+
       return sum;
     }, 0);
   }
-  changeStatus(status:number){
-    if(status < 3)
+  changeStatus(status: number) {
+    if (status < 3)
       this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -371,7 +371,7 @@ export class SharedQuarterTableComponent {
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 
@@ -381,7 +381,7 @@ export class SharedQuarterTableComponent {
       this.calculateTransaction(formContent);
     }, 0);
   }
-  
+
   calculateTransaction(formContent: IGetQuestionDto) {
     if (formContent.code.SubCodes && formContent.code.SubCodes.length > 0) {
       // Initialize sums to zero
@@ -390,7 +390,7 @@ export class SharedQuarterTableComponent {
       let sumValue2 = 0;
       let sumValue1 = 0;
       let sumValue0 = 0;
-  
+
       // Sum all subCode values[1] and values[0]
       formContent.code.SubCodes.forEach((subCode: any) => {
         sumValue4 += subCode.values[4] || 0;
@@ -399,7 +399,7 @@ export class SharedQuarterTableComponent {
         sumValue1 += subCode.values[1] || 0;
         sumValue0 += subCode.values[0] || 0;
       });
-  
+
       // Update formContent values
       formContent.values[4] = sumValue4;
       formContent.values[3] = sumValue3;
@@ -408,5 +408,5 @@ export class SharedQuarterTableComponent {
       formContent.values[0] = sumValue0;
     }
   }
-  
+
 }

@@ -38,7 +38,6 @@ export class SharedTwoYearsWithPartsComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -90,6 +89,8 @@ export class SharedTwoYearsWithPartsComponent {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -108,9 +109,9 @@ export class SharedTwoYearsWithPartsComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: Array(this.tablePartsCount*2).fill(0), // Initialize values array with 0s based on tablePartsCount,
-      connectedWithId:0,
-      connectedWithLevel:0
+      values: Array(this.tablePartsCount * 2).fill(0), // Initialize values array with 0s based on tablePartsCount,
+      connectedWithId: 0,
+      connectedWithLevel: 0
     }
     code.SubCodes.push(subCode);
   }
@@ -312,7 +313,7 @@ export class SharedTwoYearsWithPartsComponent {
                   }
                 });
               });
-debugger
+              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -343,26 +344,26 @@ debugger
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  calculateTransaction(status:number) {
-    
-      if(status < 3)
-        this.BeginningForm();
+  calculateTransaction(status: number) {
+
+    if (status < 3)
+      this.BeginningForm();
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status:number){
-    if(status < 3)
+  changeStatus(status: number) {
+    if (status < 3)
       this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -370,7 +371,7 @@ debugger
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 

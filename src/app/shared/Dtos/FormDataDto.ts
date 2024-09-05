@@ -19,6 +19,8 @@ export interface IDataDto{
     connectedWithLevel:number|null,
     TableArName:string|null,
     TableEnName:string|null,
+    arName:string|null,
+    enName:string|null,
 }
 
 export interface ICoverFormData {

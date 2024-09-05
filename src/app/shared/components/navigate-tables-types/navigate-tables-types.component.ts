@@ -354,6 +354,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                 parentCodeId: 0,
                 connectedWithId: coverForm.tables[index].formContents[i].code.connectedWithId,
                 connectedWithLevel: coverForm.tables[index].formContents[i].code.connectedWithLevel,
+                arName: coverForm.tables[index].formContents[i].code.arName,
+                enName: coverForm.tables[index].formContents[i].code.enName,
               };
               dataDtosList.push(dataDtos);
 
@@ -377,6 +379,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
                   connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
                   connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
+                  arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
+                enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
                 };
                 dataDtosList.push(dataDtosSub);
               }

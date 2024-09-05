@@ -38,7 +38,6 @@ export class SharedOneYearWithPartsComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -95,8 +94,9 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-
           this.coverForm = res.Data;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -356,7 +356,7 @@ export class SharedOneYearWithPartsComponent {
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 

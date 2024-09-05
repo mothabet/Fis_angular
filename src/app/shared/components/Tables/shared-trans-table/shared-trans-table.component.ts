@@ -38,7 +38,7 @@ export class SharedTransTableComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      this.GetTableById(+this.tableId);
+
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -92,6 +92,8 @@ export class SharedTransTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -101,27 +103,27 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  calculateTransaction(item: any,status:number) {
+  calculateTransaction(item: any, status: number) {
     item.values[2] = item.values[1] - item.values[0];
-    if(status < 3)
+    if (status < 3)
       this.BeginningForm();
   }
-  calculateTransactionFormContent(item: any,status:number) {
+  calculateTransactionFormContent(item: any, status: number) {
     item.values[2] = item.values[1] - item.values[0];
-    if(status < 3)
+    if (status < 3)
       this.BeginningForm();
   }
   addSubCodeRow(code: ICode) {
     const subCode: ISubCodeForm = {
       arName: '',
-      codeId: 0,
+      codeId: code.Id,
       enName: '',
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values:[0,0,0],
-      connectedWithId:0,
-      connectedWithLevel:0
+      values: [0, 0, 0],
+      connectedWithId: 0,
+      connectedWithLevel: 0
     }
     code.SubCodes.push(subCode);
   }
@@ -151,7 +153,7 @@ export class SharedTransTableComponent {
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          
+
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -175,7 +177,7 @@ export class SharedTransTableComponent {
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);
               }
-              
+
               tablesList.forEach((table: any) => {
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
@@ -263,6 +265,7 @@ export class SharedTransTableComponent {
                   }
                 }
                 table.items.forEach((item: any) => {
+                  debugger
                   if (item.codeType == 4) {
                     const level1ItemIndex_ = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                     this.coverForm.tables[tableIndex].formContents[level1ItemIndex_].valueCheck = item.valueCheck
@@ -287,7 +290,7 @@ export class SharedTransTableComponent {
                   }
                 });
               });
-              
+
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -296,7 +299,7 @@ export class SharedTransTableComponent {
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          
+
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -362,8 +365,8 @@ export class SharedTransTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -371,7 +374,7 @@ export class SharedTransTableComponent {
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 

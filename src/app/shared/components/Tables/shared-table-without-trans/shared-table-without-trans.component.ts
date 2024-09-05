@@ -36,7 +36,6 @@ export class SharedTableWithoutTransComponent {
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
       // Sequentially await each method to ensure proper execution order      
-      this.GetTableById(+this.tableId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
@@ -55,7 +54,7 @@ export class SharedTableWithoutTransComponent {
     }
   }
   GetTableById(id: number): void {
-    
+
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -81,10 +80,10 @@ export class SharedTableWithoutTransComponent {
           });
         }
         this.GetFormData();
-        
+
       },
       error: (err: any) => {
-        
+
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -99,6 +98,8 @@ export class SharedTableWithoutTransComponent {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.GetTableById(+this.tableId);
+
         }
       },
       error: (err: any) => {
@@ -111,18 +112,18 @@ export class SharedTableWithoutTransComponent {
   addSubCodeRow(code: ICode) {
     const subCode: ISubCodeForm = {
       arName: '',
-      codeId: 0,
+      codeId: code.Id,
       enName: '',
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values:[0,0],
-      connectedWithId:0,
-      connectedWithLevel:0
+      values: [0, 0],
+      connectedWithId: 0,
+      connectedWithLevel: 0
     }
     code.SubCodes.push(subCode);
   }
-  
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -159,16 +160,15 @@ export class SharedTableWithoutTransComponent {
     this.formServices.GetCountries().subscribe(observer);
   }
   GetFormData() {
-    
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          
+
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -295,16 +295,32 @@ export class SharedTableWithoutTransComponent {
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                     if (level1ItemIndex !== -1) {
                       // Now find the correct subCode within the level 1 item's SubCodes
-                      const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
-                      const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
-                      if (subCodeIndex !== -1) {
-                        subCodes[subCodeIndex].values = item.codes;
+                      if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 5) {
+                        const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
+                        const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
+                        if (subCodeIndex !== -1) {
+                          subCodes[subCodeIndex].values = item.codes;
+                        }
+                      }
+                      else{
+                        const subCode: ISubCodeForm = {
+                          arName: item.arName,
+                          codeId: item.parentCodeId,
+                          enName: item.enName,
+                          Id: 0,
+                          QuestionCode: '',
+                          subCodes: [],
+                          values: item.codes,
+                          connectedWithId: 0,
+                          connectedWithLevel: 0
+                        }
+                        this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
                       }
                     }
                   }
                 });
               });
-              
+
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
@@ -313,7 +329,7 @@ export class SharedTableWithoutTransComponent {
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          
+
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -340,17 +356,17 @@ export class SharedTableWithoutTransComponent {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status:number){
+  changeStatus(status: number) {
     debugger
-    if(status < 3)
+    if (status < 3)
       this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetFormById(+this.formId)       
-        this.Loader = false; 
+        this.GetFormById(+this.formId)
+        this.Loader = false;
       }
       ,
       error: (err: any) => {
@@ -358,7 +374,7 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
       },
     };
-    if (+this.companyId>0){
+    if (+this.companyId > 0) {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 

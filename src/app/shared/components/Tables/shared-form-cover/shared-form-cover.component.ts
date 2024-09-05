@@ -62,7 +62,7 @@ export class SharedFormCoverComponent implements OnInit {
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          debugger
+          
           const coverFormData: ICoverFormData = {
             officialUse: '',
             activityCode: ''
@@ -82,7 +82,7 @@ export class SharedFormCoverComponent implements OnInit {
         this.Loader = false;
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -92,7 +92,7 @@ export class SharedFormCoverComponent implements OnInit {
 
 
   ngOnDestroy() {
-    debugger
+    
     let coverFormData = localStorage.getItem(`coverFormData`);
     if (coverFormData) {
       localStorage.removeItem(`coverFormData`);
