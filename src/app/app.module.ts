@@ -14,14 +14,18 @@ import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompanyMessagesModule } from './company-messages/company-messages.module';
 import { LoginService } from './auth/services/login.service';
+import { ReportsComponent } from './Reports/Components/reports/reports.component';
+import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and-activities.module';
 @NgModule({
   declarations: [
     AppComponent,
+    ReportsComponent,
   ],
   imports: [
     SharedModule,
     HomeModule,
     CompaniesModule,
+    SectorsAndActivitiesModule,
     FromsModule,
     ResearcherModule,
     AuditingRulesModule,

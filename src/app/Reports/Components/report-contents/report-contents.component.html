@@ -1,0 +1,198 @@
+<div class="main-content p-4 main card reports-content" style="flex: 1;">
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center report-main-header">
+        <h4 class="title">
+            التقارير
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <span class="current-lang">عربى</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
+                </ul>
+            </div>
+            <i class="fa-solid fa-bell"></i>
+            <div class="user-img">
+                <img src="./images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+    <div class="header d-flex  justify-content-between align-items-center">
+        <h4 class="">
+            قائمة التقارير
+        </h4>
+        <div class="btns d-flex">
+
+            <div class="d-flex flex-grow-1 gap-1 btns-group">
+
+                <button type="button" class="btn btn-add add-report" data-bs-toggle="modal"
+                    data-bs-target="#addReportDetails">
+                    <i class="fa-solid fa-plus mx-1"></i>
+                    إنشاء تفاصيل التقرير
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <!-- start content -->
+    <div class="content companies report-table">
+        <div class="header d-flex ">
+            <h4 class="">
+                جدول 1
+            </h4>
+            <div class="btns d-flex">
+
+                <div class="d-flex flex-grow-1 gap-2 btns-group ">
+                    <button type="button" class="btn btn-send trash">
+                        <i class="fa-solid fa-trash"></i>
+                        حذف
+                    </button>
+
+                    <button type="button" class="btn btn-accept">
+                        <i class="fa-solid fa-pen"></i>
+                        تعديل
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="table-responsive company-table">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col">رقم </th>
+                            <th class="" scope="col">اسم التقرير
+                            </th>
+                            <th class="" scope="col">تفاصيل التقرير
+                            </th>
+                            <th class="" scope="col">تم إنشاءه
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="Name1" id="Name1" disabled>
+                                <label for="Name1">1 </label>
+
+                            </td>
+                            <td> تقرير X
+                            </td>
+                            <td>تفاصيل التقرير
+                            </td>
+                            <td>2024/04/20
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- end content -->
+    <!-- start chart  -->
+    <div class="content companies report-table">
+        <div class="header d-flex ">
+            <h4 class="">
+                الرسم البياني
+            </h4>
+            <div class="btns d-flex">
+
+                <div class="d-flex flex-grow-1 gap-2 btns-group ">
+                    <button type="button" class="btn btn-send trash">
+                        <i class="fa-solid fa-trash"></i>
+                        حذف
+                    </button>
+
+                    <button type="button" class="btn btn-accept">
+                        <i class="fa-solid fa-pen"></i>
+                        تعديل
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        <div class="card-chart p-2">
+            <canvas id="myChart1"></canvas>
+        </div>
+    </div>
+    <!-- End  chart  -->
+</div>
+<!--start add company modal -->
+<div class="modal company-modal fade " id="addReportDetails" tabindex="-1" aria-labelledby="add" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">إنشاء جزء التقرير 
+                </h5>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mb-3 label-with-icon">
+                            <input class="form-control input-modal" type="text" placeholder="اسم الجزء ">
+                        </div>      
+                        <div class="col-sm-12 input-floating-label mb-3">
+                            <div class="form-control c-border-black place-black radio-multichoice"  style="width: 100%;">
+                              <span  class="selected-radio">الطلبات</span>
+                              <i class="fa-solid fa-angle-down"></i>
+                                  <div class="choices">
+                                    <div class="form-check ps-0 d-flex radio-form">
+                                      <input class="form-check-input" type="radio" name="tableOrders" id="orders" checked>
+                                      <label class="form-check-label" for="orders">
+                                       الطلبات
+                                      </label>
+                                    </div>
+                                    <div class="form-check ps-0 d-flex radio-form">
+                                      <input class="form-check-input" type="radio" name="tableOrders" id="table2" >
+                                      <label class="form-check-label" for="table2">
+                                        جدول 2
+                                      </label>
+                                    </div>
+                                  </div>
+                            </div>
+                            <label for="user">الجدول</label>
+                          </div>              
+                        <div class="col-sm-12 mb-3">
+                            <select class=" form-select add-report-select " style="width: 100%;">
+                                <option selected value="0">اختر القالب  </option>
+                                <option value="1">قالب 1</option>
+                                <option value="2">قالب 2</option>
+                                <option value="3">قالب 3</option>
+                            </select>
+                        </div>
+                        <h4 class="mb-3">نوع التقرير</h4>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="form-check ps-0 d-flex radio-form">
+                            <input class="form-check-input" type="radio" name="chart" id="haveChart">
+                            <label class="form-check-label" for="haveChart">
+                              يشمل رسم بيانى
+                            </label>
+                          </div>
+                          <div class="form-check ps-0 d-flex radio-form">
+                            <input class="form-check-input" type="radio" name="chart" id="notHaveChart" checked>
+                            <label class="form-check-label" for="notHaveChart">
+                              لا يشمل رسم بيانى
+                            </label>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0" style="border-top: none;">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-save" id="next-report-part" data-bs-toggle="modal" data-bs-dismiss="modal"
+                    data-bs-target="#next-part">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end add company modal -->

@@ -26,9 +26,21 @@ import { CertificationComponent } from './Forms/Components/certification/certifi
 import { CompanyHomeComponent } from './home/components/company-home/company-home.component';
 import { PrevFormComponent } from './Forms/Components/prev-form/prev-form.component';
 import { SharedTwoYearsWithPartsComponent } from './shared/components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
+import { ReportsComponent } from './Reports/Components/reports/reports.component';
+import { ReportContentsComponent } from './Reports/Components/report-contents/report-contents.component';
+import { SectorsComponent } from './sectors-and-activities/Components/sectors/sectors.component';
+import { ActivitiesComponent } from './sectors-and-activities/Components/activities/activities.component';
+import { SubActivitiesComponent } from './sectors-and-activities/Components/sub-activities/sub-activities.component';
+import { CountriesComponent } from './sectors-and-activities/Components/countries/countries.component';
 
 const routes: Routes = [
+  { path: 'Sectors', component: SectorsComponent, canActivate: [LoginGuard] },
+  { path: 'Activities', component: ActivitiesComponent, canActivate: [LoginGuard] },
+  { path: 'SubActivities', component: SubActivitiesComponent, canActivate: [LoginGuard] },
+  { path: 'Countries', component: CountriesComponent, canActivate: [LoginGuard] },
   { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },
+  { path: 'Reports', component: ReportsComponent, canActivate: [LoginGuard] },
+  { path: 'ReportContents/:reportId', component: ReportContentsComponent, canActivate: [LoginGuard] },
   { path: 'WorkData/:formId/:companyId', component: WorkDataComponent, canActivate: [LoginGuard] },
   { path: 'QuarterTable/:formId/:tableId/:companyId', component: QuarterTableComponent, canActivate: [LoginGuard] },
   { path: 'QuarterFormCover/:formId/:type/:companyId', component: QuarterFormCoverComponent, canActivate: [LoginGuard] },
