@@ -76,6 +76,11 @@ export class FormService {
      var resopnse = this.http.put(environment.apiUrl+`Form/UpdateForm?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
+   CopyForm(formId:string){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Form/CopyForm?formId=${formId}&lang=2`,'', { headers });
+     return resopnse;
+   }
    DeleteTable(id:number){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.delete(environment.apiUrl+`Table/DeleteTable?id=${id}&lang=2`, { headers });

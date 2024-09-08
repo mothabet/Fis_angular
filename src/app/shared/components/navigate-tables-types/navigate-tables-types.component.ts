@@ -354,6 +354,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 parentCodeId: 0,
                 connectedWithId: coverForm.tables[index].formContents[i].code.connectedWithId,
                 connectedWithLevel: coverForm.tables[index].formContents[i].code.connectedWithLevel,
+                connectedWithType: coverForm.tables[index].formContents[i].code.connectedWithType,
                 arName: coverForm.tables[index].formContents[i].code.arName,
                 enName: coverForm.tables[index].formContents[i].code.enName,
               };
@@ -379,6 +380,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
                   connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
                   connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
+                connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                 enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
                 };

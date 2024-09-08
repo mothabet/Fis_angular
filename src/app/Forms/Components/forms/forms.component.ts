@@ -363,7 +363,16 @@ export class FormsComponent implements OnInit {
       'src',
       '.././../../../assets/images/file-document-outline.png'
     );
-
+    const copyIcon = this.renderer.createElement('img');
+    this.renderer.setAttribute(
+      copyIcon,
+      'src',
+      '.././../../../assets/images/text-box-multiple-outline.png'
+    );
+    copyIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.copyForm(form.id.toString()); // Pass form ID
+    });
     const editIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(
       editIcon,
@@ -415,7 +424,6 @@ export class FormsComponent implements OnInit {
       e.stopPropagation();
       this.openModal('createTable', +target.id, form.id, form.Type);
     });
-
     this.renderer.appendChild(subAnchor, img);
     this.renderer.appendChild(subAnchor, text);
     this.renderer.appendChild(subAnchor, divIcon);
@@ -425,11 +433,13 @@ export class FormsComponent implements OnInit {
     this.renderer.appendChild(divIcon, detailsIcon);
     this.renderer.appendChild(divIcon, delIcon);
     this.renderer.appendChild(divIcon, editIcon);
+    this.renderer.appendChild(divIcon, copyIcon);
     this.renderer.appendChild(formLi, subAnchor);
     this.renderer.setStyle(subAnchor, 'display', 'inline-block');
     this.renderer.setStyle(subAnchor, 'font-size', 'large');
     this.renderer.setStyle(subAnchor, 'place-items', 'center');
     this.renderer.setStyle(delIcon, 'padding', '5px');
+    this.renderer.setStyle(editIcon, 'padding', '5px');
     this.renderer.setStyle(crtbLabel, 'margin-left', '60px');
     this.renderer.setStyle(crtbLabel, 'position', 'static');
     this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
@@ -664,6 +674,26 @@ export class FormsComponent implements OnInit {
       },
     };
     this.formServices.DeleteForm(id).subscribe(observer);
+  }
+  copyForm(formId: string): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetAllForms();
+          this.Loader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.CopyForm(formId).subscribe(observer);
   }
   editForm(id: number, formId: string): void {
     this.formIdScreen = formId;

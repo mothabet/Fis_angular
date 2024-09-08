@@ -4,6 +4,7 @@ export interface IAddSubCode {
     arName: string,
     enName: string,
     id_Level: string,
+    connectedWithType:string
 }
 export interface ISubCode{
     Id:number,
@@ -23,4 +24,5 @@ export interface ISubCodeForm{
     values: number[];
     connectedWithId:number|null,
     connectedWithLevel:number|null,
+    connectedWithType:string
 }
