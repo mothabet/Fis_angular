@@ -17,6 +17,7 @@ export interface IDataDto{
     parentCodeId:number,
     connectedWithId:number|null,
     connectedWithLevel:number|null,
+    connectedWithType:string,
     TableArName:string|null,
     TableEnName:string|null,
     arName:string|null,

@@ -31,15 +31,15 @@ export class CodeHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  typeId : number = 1;
-  tableColumns = ['English Full Name', 'الاسم بالكامل', 'الرمز','الرقم'];
+  typeId: number = 1;
+  tableColumns = ['English Full Name', 'الاسم بالكامل', 'الرمز', 'الرقم'];
   searchText: string = '';
   isDropdownOpen = false;
   searchTerm: string = '';
   filteredSubCodes: ISubCode[] = [];
-  QuestionCode:string='';
-  enName:string='';
-  skipOld :number = 0
+  QuestionCode: string = '';
+  enName: string = '';
+  skipOld: number = 0
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
@@ -52,12 +52,13 @@ export class CodeHomeComponent {
       arName: [''],
       enName: ['', Validators.required],
       QuestionCode: [''],
-      TypeId: [1,Validators.required],
-      searchTerm:[''],
-      connectedWith:[''],
+      TypeId: [1, Validators.required],
+      searchTerm: [''],
+      connectedWith: [''],
+      connectedWithType: ['']
     });
 
-    this.GetAllCodes(this.currentPage,this.searchText);
+    this.GetAllCodes(this.currentPage, this.searchText);
     this.GetAllSubCodes();
     this.GetAllCodesAndSubCodesAndSubSubCodes();
   }
@@ -76,19 +77,20 @@ export class CodeHomeComponent {
     this.GetSubCodesById(code.Id);
     // Perform any additional logic, like setting a FormControl value
   }
-  addRow(){
+  addRow() {
     this.addSubCode.push({
       QuestionCode: '',
       arName: '',
       enName: '',
-      Id:0,
-      id_Level:''
+      Id: 0,
+      id_Level: '',
+      connectedWithType: ''
     });
   }
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
     const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
     const value = inputElement.value;
-    if (field === 'QuestionCode' || field === 'arName' || field === 'enName' || field === 'id_Level') {
+    if (field === 'QuestionCode' || field === 'arName' || field === 'enName' || field === 'id_Level' || field === 'connectedWithType') {
       this.addSubCode[index][field] = value;
     }
   }
@@ -99,23 +101,44 @@ export class CodeHomeComponent {
     return this.addSubCode.every(item => item.arName && item.enName);
   }
   onPageChange(page: number) {
-    
+
     this.currentPage = page;
-    this.GetAllCodes(page,this.searchText);
+    this.GetAllCodes(page, this.searchText);
   }
   saveCode(): void {
     this.showLoader = true;
     if (this.codeForm.valid && (this.searchTerm != "" && this.searchTerm != null)) {
+      if (this.codeForm.value.connectedWith != null && this.codeForm.value.connectedWithType == null) {
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب اختيار نوع الارتباط بين الرموز',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+      for (const subCode of this.addSubCode) {
+        if (subCode.connectedWithType && !subCode.id_Level) {
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب إدخال قيمة للارتباط في الرمز الفرعي إذا تم اختيار نوع الارتباط',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+      }
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
         arName: this.searchTerm,
         enName: this.codeForm.value.enName,
-        TypeId:Number(this.codeForm.value.TypeId),
-        addSubCodeDtos : this.addSubCode,
-        id_Level : this.codeForm.value.connectedWith
+        TypeId: Number(this.codeForm.value.TypeId),
+        addSubCodeDtos: this.addSubCode,
+        id_Level: this.codeForm.value.connectedWith,
+        connectedWithType: this.codeForm.value.connectedWithType
       };
-      debugger
-      console.log(this.addSubCode);
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -123,7 +146,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1,this.searchText);
+          this.GetAllCodes(1, this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -153,12 +176,12 @@ export class CodeHomeComponent {
       QuestionCode: '',
       arName: '',
       enName: '',
-      TypeId : null
+      TypeId: null
     });
     this.addSubCode = [];
     this.add = true;
   }
-  GetAllCodes(page: number, textSearch : string = ''): void {
+  GetAllCodes(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -181,9 +204,9 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodesWithSubCodesPerant(page,textSearch).subscribe(observer);
+    this.codeHomeService.GetAllCodesWithSubCodesPerant(page, textSearch).subscribe(observer);
   }
-  showAlert(id: number,Department:string|null): void {
+  showAlert(id: number, Department: string | null): void {
     debugger
     Swal.fire({
       title: 'هل انت متأكد؟',
@@ -196,16 +219,16 @@ export class CodeHomeComponent {
       cancelButtonText: 'لا'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.DeleteCode(id,Department);
+        this.DeleteCode(id, Department);
       }
     });
   }
-  DeleteCode(id: number,Department:string|null): void {
-    
+  DeleteCode(id: number, Department: string | null): void {
+
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllCodes(1,this.searchText);
+        this.GetAllCodes(1, this.searchText);
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -219,9 +242,9 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.DeleteCode(id,Department??"").subscribe(observer);
+    this.codeHomeService.DeleteCode(id, Department ?? "").subscribe(observer);
   }
-  editCode(id: number,Department:string|null): void {
+  editCode(id: number, Department: string | null): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -229,6 +252,7 @@ export class CodeHomeComponent {
           this.code = res.Data.codeDto;
           this.addSubCode = res.Data.getSubCodeDtos
           this.addSubCode = res.Data.getSubCodeDtos.map((subCode: any) => {
+            debugger
             return {
               ...subCode,
               id_Level: `${subCode.connectedWithId}_${subCode.connectedWithLevel}`
@@ -238,8 +262,8 @@ export class CodeHomeComponent {
             QuestionCode: this.code.QuestionCode,
             arName: this.code.arName,
             enName: this.code.enName,
-            TypeId:this.code.TypeId,
-            connectedWith:`${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`
+            TypeId: this.code.TypeId,
+            connectedWith: `${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`
           });
           this.searchTerm = this.code.arName;
           this.showLoader = false;
@@ -256,18 +280,43 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetCodeById(id,Department??"").subscribe(observer);
+    this.codeHomeService.GetCodeById(id, Department ?? "").subscribe(observer);
   }
   updateCode() {
     this.showLoader = true;
     if (this.codeForm.valid && this.searchTerm != "") {
+      if ((this.codeForm.value.connectedWith != null && this.codeForm.value.connectedWith != "") && this.codeForm.value.connectedWithType == null) {
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب اختيار نوع الارتباط بين الرموز',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+      debugger
+      for (const subCode of this.addSubCode) {
+        if (subCode.connectedWithType && !subCode.id_Level) {
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب إدخال قيمة للارتباط في الرمز الفرعي إذا تم اختيار نوع الارتباط',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+      }
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
         arName: this.searchTerm,
         enName: this.codeForm.value.enName,
-        TypeId:this.codeForm.value.TypeId,
+        TypeId: this.codeForm.value.TypeId,
         addSubCodeDtos: this.addSubCode,
-        id_Level : this.codeForm.value.connectedWith
+        id_Level: this.codeForm.value.connectedWith,
+        connectedWithType: this.codeForm.value.connectedWithType
+
       };
       const observer = {
         next: (res: any) => {
@@ -276,7 +325,7 @@ export class CodeHomeComponent {
             button.click();
           }
           this.resetForm();
-          this.GetAllCodes(1,this.searchText);
+          this.GetAllCodes(1, this.searchText);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -286,7 +335,7 @@ export class CodeHomeComponent {
           });
         },
         error: (err: any) => {
-          
+
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -309,7 +358,7 @@ export class CodeHomeComponent {
       QuestionCode: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      TypeId : [null, Validators.required]
+      TypeId: [null, Validators.required]
     });
   }
   onlyNumber(event: Event): void {
@@ -341,7 +390,7 @@ export class CodeHomeComponent {
         item.enName,
         item.arName,
         item.QuestionCode,
-        index +1,
+        index + 1,
       ]),
       styles: {
         font: 'Arabic',
@@ -358,13 +407,13 @@ export class CodeHomeComponent {
     // Save the PDF
     doc.save('Codes.pdf');
   }
-  codeSearch(){
-    this.GetAllCodes(1,this.searchText);
+  codeSearch() {
+    this.GetAllCodes(1, this.searchText);
   }
-  GetAllSubCodes(page: number=0, textSearch : string = ''): void {
+  GetAllSubCodes(page: number = 0, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
-      next: (res: any) => {        
+      next: (res: any) => {
         if (res.Data) {
           this.subCodes = res.Data.getSubCodeDtos;
           this.filteredSubCodes = this.subCodes;
@@ -379,9 +428,9 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.subCodeHomeService.GetAllSubCodes(page,textSearch).subscribe(observer);
+    this.subCodeHomeService.GetAllSubCodes(page, textSearch).subscribe(observer);
   }
-  GetSubCodesById(id:number): void {
+  GetSubCodesById(id: number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -401,7 +450,7 @@ export class CodeHomeComponent {
     };
     this.subCodeHomeService.GetSubCodesById(id).subscribe(observer);
   }
-  GetAllCodesAndSubCodesAndSubSubCodes(page: number=0, textSearch : string = ''): void {
+  GetAllCodesAndSubCodesAndSubSubCodes(page: number = 0, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -419,6 +468,6 @@ export class CodeHomeComponent {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodesAndSubCodesAndSubSubCodes(page,textSearch).subscribe(observer);
+    this.codeHomeService.GetAllCodesAndSubCodesAndSubSubCodes(page, textSearch).subscribe(observer);
   }
 }

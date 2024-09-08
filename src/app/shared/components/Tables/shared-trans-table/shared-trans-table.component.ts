@@ -123,7 +123,8 @@ export class SharedTransTableComponent {
       subCodes: [],
       values: [0, 0, 0],
       connectedWithId: 0,
-      connectedWithLevel: 0
+      connectedWithLevel: 0,
+      connectedWithType:''
     }
     code.SubCodes.push(subCode);
   }

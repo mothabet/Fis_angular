@@ -35,7 +35,7 @@
             <th class="text-center" scope="col">الرمز</th>
             <th class="text-center" scope="col">الاسم</th>
             <th class="text-center" scope="col">Name</th>
-            <th class="text-center" scope="col"></th>
+            <th class="text-center" scope="col" style="width: 200px;"></th>
           </tr>
         </thead>
 
@@ -48,7 +48,7 @@
             <td class="text-center">{{ item.QuestionCode }}</td>
             <td class="text-center">{{ item.arName }}</td>
             <td class="text-center">{{ item.enName }}</td>
-            <td class="text-center td-actions">
+            <td class="text-center">
               <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a> -->
@@ -130,7 +130,7 @@
                 (input)="onlyNumber($event)" [(ngModel)]="QuestionCode" />
               <label for="inputField">الرمز</label>
             </div>
-            <div class="form-group col-sm-3 mb-2">
+            <div class="form-group col-sm-6 mb-2">
               <select formControlName="TypeId" id="inputField" class="form-control" [(ngModel)]="typeId">
                 <option selected value="1">عادي</option>
                 <option value="2">انشطه</option>
@@ -140,13 +140,21 @@
               </select>
               <label for="inputField">نوع محتوي الاستماره</label>
             </div>
-            <div class="form-group col-sm-3 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
+            <div class="form-group col-sm-9 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
               <select formControlName="connectedWith" id="inputField" class="form-control">
                 <option selected value="">--اختر الرمز المرتبط به--</option>
                 <option *ngFor="let item of codesAndSub" [value]="item.id + '_' + item.Level">{{ item.arName
                   }}_{{item.Code}}</option>
               </select>
               <label for="inputField">الرمز المرتبط به</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
+              <select formControlName="connectedWithType" id="inputField" class="form-control">
+                <option value="=">=</option>
+                <option value=">"><</option>
+                <option value="<">></option>
+              </select>
+              <label for="inputField">نوع ارتباط الرموز</label>
             </div>
             <hr *ngIf="typeId == 1" />
             <div class="table-responsive company-table research-table table-border" *ngIf="typeId == 1">
@@ -186,7 +194,13 @@
                         </option>
                       </select>
                     </td>
-                    
+                    <td class="text-center" *ngIf="item.QuestionCode" >
+                      <select id="inputField" class="form-control" [value]="item.connectedWithType" (change)="updateSubCode(i, 'connectedWithType', $event)">
+                        <option value="=">=</option>
+                        <option value=">"><</option>
+                        <option value="<">></option>
+                      </select>
+                    </td>
                     <td class="text-center td-actions">
                       <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
                         <img src="../../../../assets/images/trash-can-outline.png" alt="" />

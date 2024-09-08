@@ -119,7 +119,9 @@ export class SharedTableWithoutTransComponent {
       subCodes: [],
       values: [0, 0],
       connectedWithId: 0,
-      connectedWithLevel: 0
+      connectedWithLevel: 0,
+      connectedWithType: ''
+
     }
     code.SubCodes.push(subCode);
   }
@@ -302,7 +304,7 @@ export class SharedTableWithoutTransComponent {
                           subCodes[subCodeIndex].values = item.codes;
                         }
                       }
-                      else{
+                      else {
                         const subCode: ISubCodeForm = {
                           arName: item.arName,
                           codeId: item.parentCodeId,
@@ -312,7 +314,9 @@ export class SharedTableWithoutTransComponent {
                           subCodes: [],
                           values: item.codes,
                           connectedWithId: 0,
-                          connectedWithLevel: 0
+                          connectedWithLevel: 0,
+                          connectedWithType: ''
+
                         }
                         this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
                       }

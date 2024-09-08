@@ -88,7 +88,7 @@
               <td class="text-center">{{ company.phoneNumber }}</td>
               <td class="text-center" *ngIf="company.status">نشط</td>
               <td class="text-center" *ngIf="!company.status">غير نشط</td>
-              <td class="text-center td-actions">
+              <td class="text-center">
                 <a routerLink="/Companies-Details/{{company.id}}" class="icon">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
@@ -297,7 +297,7 @@
               />
               <label for="inputField">الانتهاء من مدة المحاسبة</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
                 required
                 formControlName="phoneNumber"
@@ -307,7 +307,7 @@
               />
               <label for="inputField">رقم الهاتف</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
                 formControlName="telNumber"
                 class="form-control input-modal"
@@ -316,7 +316,7 @@
               />
               <label for="inputField">الهاتف الثابت</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
                 required
                 formControlName="fax"
@@ -325,6 +325,22 @@
                 (keypress)="validateInput($event)"
               />
               <label for="inputField">فاكس</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-3 mb-2">
+              <input
+                formControlName="mailBox"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">صندوق البريد</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-3 mb-2">
+              <input
+                formControlName="postalCode"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">الرمز البريدي</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
               <input
@@ -343,22 +359,7 @@
               />
               <label for="inputField">العنوان</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input
-                formControlName="mailBox"
-                class="form-control input-modal"
-                type="text"
-              />
-              <label for="inputField">صندوق البريد</label>
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input
-                formControlName="postalCode"
-                class="form-control input-modal"
-                type="text"
-              />
-              <label for="inputField">الرمز البريدي</label>
-            </div>
+            
             <div class="form-group col-sm-6 mb-2">
               <select
                 
@@ -367,7 +368,7 @@
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">اختيار رقم المنطقة</option>
+                <option selected value="0">اختيار المحافظه</option>
                 <option
                   *ngFor="let governorate of Governorates"
                   value="{{ governorate.id }}"
@@ -375,7 +376,7 @@
                   {{ governorate.arName }}
                 </option>
               </select>
-              <label for="inputField">اختيار رقم المنطقة</label>
+              <label for="inputField">اختيار المحافظه</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
               <select
@@ -384,7 +385,7 @@
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">اختيار رقم الولاية</option>
+                <option selected value="0">اختيار الولاية</option>
                 <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
                   {{ wilaya.arName }}
                 </option>
@@ -408,7 +409,7 @@
               />
               <label for="inputField">تاريخ مزاولة العمل</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-3 mb-2">
               <input
                 formControlName="institutionVlaue"
                 class="form-control input-modal"
@@ -417,7 +418,7 @@
               />
               <label for="inputField">قيمة المؤسسه</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-3 mb-2">
               <input
                 formControlName="legalType"
                 class="form-control input-modal"

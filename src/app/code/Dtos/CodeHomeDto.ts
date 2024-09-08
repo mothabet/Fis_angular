@@ -6,7 +6,8 @@ export interface IAddCode {
     enName: string,
     TypeId: number|null,
     addSubCodeDtos : IAddSubCode[],
-    id_Level :string
+    id_Level :string,
+    connectedWithType:string
 }
 export interface ICode{
     Id:number,
@@ -27,6 +28,7 @@ export interface ICodeForm{
     Department : string | null,
     connectedWithId:number|null,
     connectedWithLevel:number|null,
+    connectedWithType:string;
     SubCodes:ISubCodeForm[],
 
 }
