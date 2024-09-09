@@ -37,7 +37,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher" (click)="onReset(1)">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة تقرير
                     </button>
@@ -61,7 +61,7 @@
                         <td class="text-center">{{report.arName}}</td>
                         <td class="text-center active">{{report.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center" *ngIf="+report.status == 1">نشط</td>
-                        <td class="text-center" *ngIf="+report.status == 2">غير نشط</td>
+                        <td class="text-center" *ngIf="+report.status == 0">غير نشط</td>
                         <td class="text-center td-actions">
                             <a routerLink="/ReportContents/{{report.id}}" class="icon">
                                 <img src="../../../../assets/images/eye-outline.png" alt="">
@@ -69,7 +69,7 @@
                             <button class="icon">
                                 <img src="../../../../assets/images/trash-can-outline.png" (click)="DeleteReport(report.id)" alt="">
                             </button>
-                            <button class="icon">
+                            <button class="icon" (click)="openUpdatePopup(report.id)" data-bs-toggle="modal" data-bs-target="#addResearcher">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
                         </td>
@@ -82,13 +82,13 @@
 
 </div>
 <div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+        <div class="modal-content" style="width: 50%;">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة تقرير</h5>
+                <h5 class="modal-title" id="add">إضافة نشاط</h5>
             </div>
-            <form [formGroup]="reportForm" (ngSubmit)="onSave()">
-                <div class="row">
+            <form [formGroup]="reportForm">
+                <div class="row" style="padding: 10px;">
                     <!-- Arabic Report Name -->
                     <div class="col-sm-12 mb-2">
                         <input class="form-control input-modal" type="text" formControlName="arName"
@@ -113,7 +113,8 @@
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
                     <button type="button" class="btn btn-reset" (click)="onReset()">إعادة ملء</button>
-                    <button type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="isUpdate" (click) = "updateReport()" type="button" class="btn btn-save">تعديل</button>
                 </div>
             </form>
         </div>

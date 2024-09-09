@@ -21,4 +21,6 @@ export interface IGetSectorDto{
     enName:string;
     code:string;
     createdOn:string;
+    activityId:number;
+    sectorId:number;
 }

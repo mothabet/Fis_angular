@@ -257,7 +257,6 @@ export class ResearcherHomeComponent {
     this.researcherService.GetResearcherById(id).subscribe(observer);
   }
   updateResearcher() {
-    debugger
     this.showLoader = true;
     if (this.researcherForm.valid) {
       const Model: IAddResearcher = {

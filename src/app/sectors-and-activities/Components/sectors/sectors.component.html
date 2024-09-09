@@ -55,7 +55,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="onReset(1)">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة قطاع
                     </button>
@@ -80,11 +80,11 @@
                         <td class="text-center active">{{sector.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{sector.code}}</td>
                         <td class="text-center td-actions">
-                            <button class="icon">
+                            <button class="icon" (click)="DeleteSector(sector.id)">
                                 <img src="../../../../assets/images/trash-can-outline.png"
                                      alt="">
                             </button>
-                            <button class="icon">
+                            <button class="icon" (click)="openUpdatePopup(sector.id)" data-bs-toggle="modal" data-bs-target="#addSector">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
                         </td>
@@ -126,7 +126,8 @@
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
                     <button type="button" class="btn btn-reset">إعادة ملء</button>
-                    <button type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="isUpdate" (click) = "updateCountry()" type="button" class="btn btn-save">تعديل</button>
                 </div>
             </form>
         </div>

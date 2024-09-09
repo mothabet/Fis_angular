@@ -55,7 +55,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="onReset(1)">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة نشاط
                     </button>
@@ -80,12 +80,12 @@
                         <td class="text-center active">{{subActivity.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{subActivity.code}}</td>
                         <td class="text-center td-actions">
-                            <button class="icon">
+                            <button class="icon" (click)="DeleteSubActivity(subActivity.id)">
                                 <img src="../../../../assets/images/trash-can-outline.png"
                                      alt="">
                             </button>
                             <button class="icon">
-                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="" (click)="openUpdatePopup(subActivity.id)" data-bs-toggle="modal" data-bs-target="#addSector">
                             </button>
                         </td>
                     </tr>
@@ -131,8 +131,9 @@
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
                     <button type="button" class="btn btn-reset">إعادة ملء</button>
-                    <button type="submit" class="btn btn-save">حفظ</button>
-                </div>
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="isUpdate" (click) = "updateSubActivity()" type="button" class="btn btn-save">تعديل</button>
+                   </div>
             </form>
         </div>
     </div>

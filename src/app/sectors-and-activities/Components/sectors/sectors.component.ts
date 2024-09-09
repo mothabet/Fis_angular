@@ -17,6 +17,9 @@ export class SectorsComponent implements OnInit {
   sectorForm!: FormGroup;
   showLoader: boolean = false;
   sectors!:IGetSectorDto[];
+  sector!:IGetSectorDto;
+  isUpdate: boolean = false;
+  id:number=0;
   constructor(    private sharedService: SharedService,private fb: FormBuilder,
     private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
 
@@ -80,7 +83,99 @@ export class SectorsComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetSectors(page, textSearch).subscribe(observer);
   }
-  onReset(): void {
-    this.sectorForm.reset();
+  onReset(add: number = 0): void {
+    this.sectorForm = this.fb.group({
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+      code: ['', Validators.required]
+    });    
+    if (add == 1) {
+      this.isUpdate = false;
+    }
+  }
+  DeleteSector(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showLoader = true;
+        const observer = {
+          next: (res: any) => {
+            this.GetSectors(1,'');
+            this.showLoader = false;
+            
+          },
+          error: (err: any) => {
+            this.sharedService.handleError(err);
+            this.showLoader = false;
+          },
+        };
+        this.sectorsAndActivitiesServices.DeleteSector(id).subscribe(observer);
+      }
+    });
+  }
+  openUpdatePopup(id: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.sector = res.Data;
+          this.sectorForm.patchValue({
+            arName: this.sector.arName,
+            enName: this.sector.enName,
+            code: this.sector.code,
+          });
+          this.id = this.sector.id;
+        }
+        this.isUpdate = true;
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSector(id).subscribe(observer);
+  }
+  updateCountry() {
+    this.showLoader = true;
+    if (this.sectorForm.valid) {
+      const Model: IAddSectorDto = {
+        arName: this.sectorForm.value.arName,
+        enName: this.sectorForm.value.enName,
+        code: this.sectorForm.value.code,
+      };
+      const observer = {
+        next: (res: any) => {
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.GetSectors(1);
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.sectorsAndActivitiesServices.UpdateSector(this.id, Model).subscribe(observer);
+    } else {
+      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
+      this.showLoader = false;
+    }
   }
 }

@@ -9,21 +9,32 @@ import { IAddReportDto } from '../Dtos/ReportDto';
 })
 export class ReportService {
 
-  constructor(private sharedService:SharedService,private http:HttpClient) { }
+  constructor(private sharedService: SharedService, private http: HttpClient) { }
 
-  AddReport(Report: IAddReportDto){
+  AddReport(Report: IAddReportDto) {
+    debugger
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.post(environment.apiUrl + `Report/AddReport?lang=2`, Report, { headers });
+    return resopnse;
+  }
+  GetReports(pageNumber: number, textSearch: string = '') {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Report/GetReports?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+    return resopnse;
+  }
+  DeleteReport(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var response = this.http.delete(environment.apiUrl + `Report/DeleteReport?id=${id}`, { headers });
+    return response;
+  }
+  GetReport(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Report/GetReport?reportId=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateReport(id:number,reportDto: IAddReportDto){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.post(environment.apiUrl+`Report/AddReport?lang=2`, Report, { headers });
+     var resopnse = this.http.put(environment.apiUrl+`Report/UpdateReport?id=${id}&lang=2`, reportDto, { headers });
      return resopnse;
-   }
-   GetReports(pageNumber:number , textSearch : string =''){
-    var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Report/GetReports?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
-     return resopnse;
-   }
-   DeleteReport(id:number){
-    var headers= this.sharedService.getHeaders();
-     var response = this.http.delete(environment.apiUrl+`Report/DeleteReport?id=${id}`, { headers });
-     return response;
    }
 }
