@@ -74,6 +74,8 @@ export class ReportsComponent implements OnInit {
         if (res.Data) {
           this.reports = res.Data;
         }
+        else
+        this.reports=[]
         this.showLoader = false;
       },
       error: (err: any) => {
@@ -104,7 +106,6 @@ export class ReportsComponent implements OnInit {
       confirmButtonText: 'نعم اريد المسح!',
       cancelButtonText: 'لا'
     }).then((result) => {
-      debugger
       if (result.isConfirmed) {
         this.showLoader = true;
         const observer = {
@@ -115,6 +116,7 @@ export class ReportsComponent implements OnInit {
 
           },
           error: (err: any) => {
+            debugger
             this.sharedService.handleError(err);
             this.showLoader = false;
           },
