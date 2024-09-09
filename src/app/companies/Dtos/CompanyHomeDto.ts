@@ -60,6 +60,7 @@ export interface IAddCompany {
     subActivityId: number,
     governoratesId: number,
     wilayatId: number,
+    facilityType:string
     companyEmails: ICompanyEmail[];
 }
 export interface ICompanyEmail {

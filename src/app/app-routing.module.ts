@@ -25,7 +25,7 @@ import { WorkDataComponent } from './Forms/Components/work-data/work-data.compon
 import { CertificationComponent } from './Forms/Components/certification/certification.component';
 import { CompanyHomeComponent } from './home/components/company-home/company-home.component';
 import { PrevFormComponent } from './Forms/Components/prev-form/prev-form.component';
-import { SharedTwoYearsWithPartsComponent } from './shared/components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
+import { CopmanyGeneralInformationHomeComponent } from './copmany-general-information/components/copmany-general-information-home/copmany-general-information-home.component';
 
 const routes: Routes = [
   { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },
@@ -47,6 +47,7 @@ const routes: Routes = [
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
   { path: 'Messages', component: HomemessagesComponent, canActivate: [LoginGuard] },
   { path: 'CopmanyMessages/:companyId', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
+  { path: 'CopmanyGeneralInformation/:companyId', component: CopmanyGeneralInformationHomeComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: 'CompanyHome/:companyId', component: CompanyHomeComponent, canActivate: [LoginGuard] },

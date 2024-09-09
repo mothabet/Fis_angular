@@ -1,7 +1,7 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="p-4 main card" style="flex: 1">
 <!-- header -->
-<app-top-screen [title]="'عرض تفاصيل الشركه'"></app-top-screen>
+<app-top-screen [title]="'عرض مراسلات الشركه'"></app-top-screen>
 <!-- end-header -->
 
 <!-- start content -->
@@ -17,6 +17,9 @@
                 </li>
                 <li class="active">
                     <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
+                </li>
+                <li>
+                    <a routerLink="/CopmanyGeneralInformation/{{companyId}}">البيانات العامه</a>
                 </li>
             </ul>
             <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMail" id="addCompanyMessageBtn">

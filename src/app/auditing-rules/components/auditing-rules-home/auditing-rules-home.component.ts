@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
@@ -42,6 +42,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     ngOnInit() {
       this.auditForm = this.fb.group({
         Rule: [''],
+        Type: [1],
       });
     
       this.showLoader = true; // Show loader before starting requests

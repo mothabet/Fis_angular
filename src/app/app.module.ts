@@ -14,6 +14,7 @@ import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompanyMessagesModule } from './company-messages/company-messages.module';
 import { LoginService } from './auth/services/login.service';
+import { CopmanyGeneralInformationModule } from './copmany-general-information/copmany-general-information.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +30,7 @@ import { LoginService } from './auth/services/login.service';
     CodeModule,
     MessagesModule,
     CompanyMessagesModule,
+    CopmanyGeneralInformationModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({

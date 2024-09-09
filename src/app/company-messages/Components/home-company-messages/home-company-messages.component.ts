@@ -59,9 +59,7 @@ export class HomeCompanyMessagesComponent {
     this.GetAllMessages(0, '');
   }
   AddCompanyMessage(): void {
-    debugger
     this.showLoader = true;
-    debugger
     if (this.companyMessageForm.valid) {
       const Model: IAddCompanyMessage = {
         companyid: Number(this.companyId),
@@ -71,7 +69,7 @@ export class HomeCompanyMessagesComponent {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -122,7 +120,7 @@ export class HomeCompanyMessagesComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.companyMessages = res.Data.getCompanyMessagesDtos;
@@ -181,10 +179,8 @@ export class HomeCompanyMessagesComponent {
   }
   editMessage(id: number): void {
     this.showLoader = true;
-    debugger
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
           this.companyMessage = res.Data;
           const formattedDate = this.companyMessage.date
@@ -225,7 +221,7 @@ export class HomeCompanyMessagesComponent {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -241,7 +237,7 @@ export class HomeCompanyMessagesComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -317,7 +313,7 @@ export class HomeCompanyMessagesComponent {
     this.messageService.GetAllMessages(page, textSearch).subscribe(observer);
   }
   onSelectMessage(event: any): void {
-    debugger
+    
     const selectedMessageId = event.target.value;
     const foundMessage = this.messages.find(message => message.Id == selectedMessageId);
     if (foundMessage) {
@@ -339,7 +335,7 @@ export class HomeCompanyMessagesComponent {
 
   }
   onPageChange(page: number) {
-    debugger
+    
     this.currentPage = page;
     this.GetAllCompanyMessages(page);
   }
