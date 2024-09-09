@@ -201,6 +201,7 @@ export class ResearcherDetailsComponent implements OnInit {
       emailBody: this.selectedMessage.arDetails || ''
     };
     this.showLoader = true;
+    debugger
     const observer = {
       next: (res: any) => {
         this.showLoader = false;

@@ -13,9 +13,10 @@ import { CodeModule } from './code/code.module';
 import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompanyMessagesModule } from './company-messages/company-messages.module';
-import { LoginService } from './auth/services/login.service';
+import { CopmanyGeneralInformationModule } from './copmany-general-information/copmany-general-information.module';
 import { ReportsComponent } from './Reports/Components/reports/reports.component';
 import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and-activities.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +34,7 @@ import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and
     CodeModule,
     MessagesModule,
     CompanyMessagesModule,
+    CopmanyGeneralInformationModule,
     BrowserModule,
     AppRoutingModule,
     ToastrModule.forRoot({

@@ -52,6 +52,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
+      facilityType: [''],
       arName: [''],
       enName: [''],
       municipalityNumber: [''],
@@ -307,7 +308,8 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        companyEmails: this.companyForm.value.compEmails
+        companyEmails: this.companyForm.value.compEmails,
+        facilityType: this.companyForm.value.facilityType,
       }
       this.showLoader = true;
       const observer = {
@@ -367,6 +369,7 @@ export class CompaniesHomeComponent implements OnInit {
       compValue: '',
       compBuild: '',
       webSite: '',
+      facilityType:''
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();
@@ -403,6 +406,7 @@ export class CompaniesHomeComponent implements OnInit {
       compValue: '',
       compBuild: '',
       webSite: '',
+      facilityType:''
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();    // إضافة حقل واحد فارغ على الأقل
@@ -519,6 +523,7 @@ export class CompaniesHomeComponent implements OnInit {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
+              facilityType:this.company.facilityType
             });
             this.initializeForm();
 
@@ -632,7 +637,8 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        companyEmails: this.companyForm.value.compEmails
+        companyEmails: this.companyForm.value.compEmails,
+        facilityType: this.companyForm.value.facilityType
       }
       const observer = {
         next: (res: any) => {

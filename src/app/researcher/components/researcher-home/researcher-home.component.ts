@@ -72,7 +72,6 @@ export class ResearcherHomeComponent {
     this.GetCompanies('', 0);
   }
   onPageChange(page: number) {
-    debugger
     this.currentPage = page;
     this.GetAllReseachers(page);
   }

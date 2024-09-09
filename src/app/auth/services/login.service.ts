@@ -53,6 +53,7 @@ export class LoginService {
       'Codes', 
       'Messages', 
       'CopmanyMessages', 
+      'CopmanyGeneralInformation',
       'Certification', 
       'WorkData', 
       'QuarterTable', 

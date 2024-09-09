@@ -125,7 +125,7 @@
             <a *ngIf="coverForm.typeQuarter" [routerLink]="['/QuarterFormCover',formId, null,companyId]">الغلاف</a>
         </div>
         <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
-            <a [routerLink]="['/WorkData',formId,companyId]">معاملات عامة</a>
+            <a [routerLink]="['/WorkData',formId,companyId]">معلومات عامة</a>
         </div>
         <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" [ngClass]="{'active': table.id == tableId}"
              (click)="TablesNavigation(table.id)"
