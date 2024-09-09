@@ -1,0 +1,139 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card  " style="flex: 1;">
+    <div class="header-nav companies-details">
+        <div class="card-box mb-3">
+            <ul>
+                <li routerLinkActive="active">
+                    <a routerLink="/Sectors">القطاعات</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/Activities">الأنشطة الرئيسية</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/SubActivities">الأنشطة الفرعية</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/Countries">الدول</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            النشاطات
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <span class="current-lang">عربى</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="content companies researcher">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة النشاطات
+            </div>
+            <div class="btns d-flex">
+                <div class="search" id="research-search">
+                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
+                        <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
+                        اضافة نشاط
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">اسم النشاط</th>
+                        <th class="text-center" scope="col">تاريخ انشاءه</th>
+                        <th class="text-center" scope="col">الرمز</th>
+                        <th style="width: 150px;" class="text-center" scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let activity of activities">
+                        <td class="text-center">{{activity.arName}}</td>
+                        <td class="text-center active">{{activity.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{activity.code}}</td>
+                        <td class="text-center td-actions">
+                            <button class="icon">
+                                <img src="../../../../assets/images/trash-can-outline.png"
+                                     alt="">
+                            </button>
+                            <button class="icon">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- end content -->
+
+</div>
+<div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+        <div class="modal-content" style="width: 50%;">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">إضافة نشاط</h5>
+            </div>
+            <form [formGroup]="activityForm" (ngSubmit)="onSave()">
+                <div class="row" style="padding: 10px;">
+                    <!-- Arabic Report Name -->
+                    <div class="col-sm-12 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="arName"
+                               placeholder="اسم النشاط بالعربية">
+                    </div>
+
+                    <!-- English Report Name -->
+                    <div class="col-sm-12 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="enName"
+                               placeholder="Activity Name in English">
+                    </div>
+
+                    <!-- code -->
+                    <div class="col-sm-12 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="code"
+                               placeholder="رمز النشاط">
+                    </div>
+                    <div class="col-sm-12 mb-2">
+                        <select class="form-control input-modal" formControlName="sectorId">
+                            <option *ngFor="let sector of sectors" [value]="sector.id">{{sector.arName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
+                    <button type="button" class="btn btn-reset">إعادة ملء</button>
+                    <button type="submit" class="btn btn-save">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

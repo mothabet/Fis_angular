@@ -65,7 +65,13 @@ export class LoginService {
       'TwoYearsWithParts', 
       'FormDetails',
       'Companies-Details',
-      'Researcher-Details'
+      'Researcher-Details',
+      'Reports',
+      'ReportContents',
+      'SubActivities',
+      'Countries',
+      'Activities',
+      'Sectors'
     ];
     return adminRoutes.includes(url);
   }
