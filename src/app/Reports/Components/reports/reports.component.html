@@ -87,7 +87,7 @@
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="add">إضافة نشاط</h5>
             </div>
-            <form [formGroup]="reportForm">
+            <form [formGroup]="reportForm"  (ngSubmit)="onSave()">
                 <div class="row" style="padding: 10px;">
                     <!-- Arabic Report Name -->
                     <div class="col-sm-12 mb-2">
