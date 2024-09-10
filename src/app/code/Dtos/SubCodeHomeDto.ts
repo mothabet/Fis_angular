@@ -21,7 +21,7 @@ export interface ISubCodeForm{
     QuestionCode:string,
     codeId :number
     subCodes:ISubCode[]
-    values: number[];
+    values: any[];
     connectedWithId:number|null,
     connectedWithLevel:number|null,
     connectedWithType:string

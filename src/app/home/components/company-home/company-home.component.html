@@ -3,47 +3,43 @@
     <app-top-screen [title]="'الاستمارات الحالية للشركة'"></app-top-screen>
 
 </div>
-<div *ngIf="coverForm" class="row" style="margin: 0px 40px;
-    padding: 0px 10px 10px 10px;">
-    <div class="col-3" style="    cursor: pointer;
-    border: 1px solid;
-    border-radius: 10px;
-    padding: 18px;
-    text-align: center;
-    background-color: white;margin: 15px;" (click)="formNavigate(form.form.id);" *ngFor="let form of coverForm">
-        <div class="user-img" style="margin-bottom: 15px;">        
-            <img src=".././../../../assets/images//file-document-outline.png">
-        </div>
+<div *ngIf="coverForm" class="row" style="margin: 0px 40px; padding: 0px 10px 10px 10px;">
+  <div class="col-3" style="cursor: pointer; border: 1px solid; border-radius: 10px; padding: 18px; text-align: center; background-color: white; margin: 15px; position: relative;" (click)="formNavigate(form.form.id);" *ngFor="let form of coverForm">
+      <!-- Delete Icon -->
+      <i class="fa fa-close delete-icon" *ngIf="role=='Researchers'" (click)="showAlert(form.form.id, $event)"></i>
+      
+      <!-- Form Content -->
+      <div class="user-img" style="margin-bottom: 15px;">
+          <img src=".././../../../assets/images/file-document-outline.png">
+      </div>
       <h4>{{form.form.arName}}</h4>
-      <p *ngIf="form.form.Type == 1">
-        {{form.form.reviewYear}} - سنوية
-      </p>
-      <p *ngIf="form.form.Type == 2">
-        {{form.form.reviewYear}} - ربعية
-      </p>
+      <p *ngIf="form.form.Type == 1">{{form.form.reviewYear}} - سنوية</p>
+      <p *ngIf="form.form.Type == 2">{{form.form.reviewYear}} - ربعية</p>
+      <hr *ngIf="role=='Company'">
+      <p *ngIf="role=='Company'">{{form.researcherArName}}</p>
+      <!-- Background Animation -->
       <div class="shine"></div>
       <div class="background">
-        <div class="tiles">
-          <div class="tile tile-1"></div>
-          <div class="tile tile-2"></div>
-          <div class="tile tile-3"></div>
-          <div class="tile tile-4"></div>
-  
-          <div class="tile tile-5"></div>
-          <div class="tile tile-6"></div>
-          <div class="tile tile-7"></div>
-          <div class="tile tile-8"></div>
-  
-          <div class="tile tile-9"></div>
-          <div class="tile tile-10"></div>
-        </div>
-  
-        <div class="line line-1"></div>
-        <div class="line line-2"></div>
-        <div class="line line-3"></div>
+          <div class="tiles">
+              <div class="tile tile-1"></div>
+              <div class="tile tile-2"></div>
+              <div class="tile tile-3"></div>
+              <div class="tile tile-4"></div>
+              <div class="tile tile-5"></div>
+              <div class="tile tile-6"></div>
+              <div class="tile tile-7"></div>
+              <div class="tile tile-8"></div>
+              <div class="tile tile-9"></div>
+              <div class="tile tile-10"></div>
+          </div>
+          <div class="line line-1"></div>
+          <div class="line line-2"></div>
+          <div class="line line-3"></div>
       </div>
-    </div>
   </div>
+</div>
+
+
   <div *ngIf="!coverForm" class="no-data-container">
     <img src=".././../../../assets/images/nodata.png" class="img-fluid no-data-image">
     <h1 class="no-data-text">لا يوجد بيانات</h1>

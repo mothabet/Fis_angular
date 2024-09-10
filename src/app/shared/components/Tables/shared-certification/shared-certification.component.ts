@@ -37,6 +37,7 @@ export class SharedCertificationComponent {
             telephoneNo: 'd',
             dateOfCompletion: 'd',
           };
+          debugger
           this.coverForm = res.Data;
           this.coverForm.certification = certificationData
           this.GetFormData();
@@ -48,7 +49,7 @@ export class SharedCertificationComponent {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id).subscribe(observer);
+    this.formServices.GetFormData(id, +this.companyId, 0).subscribe(observer);
   }
 
   GetFormData() {

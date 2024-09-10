@@ -13,14 +13,15 @@
                     <form class="login-form needs-validation" [formGroup]="logInForm">
                         <div class=" input-floating-label">
                             <input class="form-control" type="text" id="user" name="user" placeholder="اسم المستخدم"
-                            formControlName="UserName" required>
+                                formControlName="UserName" required>
                             <label for="user">اسم المستخدم</label>
                         </div>
                         <div class="input-floating-label">
-                            <input class="form-control" type="password" id="pass" name="pass" formControlName="password"
-                                placeholder="كلمة المرور" required>
+                            <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="pass"
+                                name="pass" formControlName="password" placeholder="كلمة المرور" required>
                             <label for="pass">كلمة المرور</label>
-                            <span class="fa-regular fa-eye-slash icon" id="icon" onclick="toggleVisibility()">
+                            <span class="fa-regular icon" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                                (click)="togglePasswordVisibility()" id="icon">
                             </span>
                         </div>
                         <div class="login-footer pb-5 d-flex justify-content-between align-items-center">
@@ -32,8 +33,8 @@
                                 <a href="#" class="forget-password">هل نسيت كلمة المرور</a>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary login-btn w-100"
-                        (click)="Login()">تسجيل الدخول</button>
+                        <button type="submit" class="btn btn-primary login-btn w-100" (click)="Login()">تسجيل
+                            الدخول</button>
                     </form>
                     <!-- end form -->
 

@@ -1,65 +1,66 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
-import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-company-home',
   templateUrl: './company-home.component.html',
   styleUrls: ['./company-home.component.css']
 })
-export class CompanyHomeComponent implements OnInit{
-  role:string = "";
+export class CompanyHomeComponent implements OnInit {
+  role: string = "";
   Loader = false;
-  companyId!:number;
-  temp : string = ''
-  formId!:string;
+  companyId!: number;
+  temp: string = ''
+  formId!: string;
   coverForm!: any[];
-  
-  constructor(private activeRouter: ActivatedRoute,private router: Router,private formServices:FormService, private authService: LoginService , private sharedServices:SharedService,private companyServices : CompanyHomeService) {
-        
+
+  constructor(private activeRouter: ActivatedRoute, private router: Router, private formServices: FormService, private authService: LoginService, private sharedServices: SharedService, private companyServices: CompanyHomeService) {
+
   }
   ngOnInit(): void {
-    
+
     this.GetCompany()
   }
-  GetCompany(){
-    
+  GetCompany() {
+
     this.Loader = true
     const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
+    let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
-    
+
     if (this.activeRouter.snapshot.paramMap.get('companyId')) {
       this.companyId = +this.activeRouter.snapshot.paramMap.get('companyId')!;
     }
     const observer = {
       next: (res: any) => {
-        
+
         this.companyId = res.Data;
         this.GetCompanyForms();
       },
       error: (err: any) => {
-        
+
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
-    this.companyServices.GetCompanyByUserId(result.id , this.companyId).subscribe(observer);
-  
+    this.companyServices.GetCompanyByUserId(result.id, this.companyId).subscribe(observer);
+
   }
-  GetCompanyForms(){
+  GetCompanyForms() {
     let _id = 1;
     const isLoggedIn = this.authService.getToken();
-    let res = this.authService.decodedToken(isLoggedIn);  
+    let res = this.authService.decodedToken(isLoggedIn);
     this.role = res.roles;
-    if(this.role != "Company")
+    if (this.role != "Company")
       _id = 3;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         this.coverForm = res.Data
       },
@@ -68,7 +69,7 @@ export class CompanyHomeComponent implements OnInit{
         this.Loader = false;
       },
     };
-    this.formServices.GetCompanyForms(this.companyId,_id).subscribe(observer);
+    this.formServices.GetCompanyForms(this.companyId, _id).subscribe(observer);
   }
   formNavigate(id: number) {
     this.GetFormById(id)
@@ -80,15 +81,56 @@ export class CompanyHomeComponent implements OnInit{
       next: (res: any) => {
         this.formId = res.Data.id
         if (res.Data.Type == 1)
-          this.router.navigate(['/FormDetails', this.formId,'null',this.companyId]);
+          this.router.navigate(['/FormDetails', this.formId, 'null', this.companyId]);
         else if (res.Data.Type == 2)
-          this.router.navigate(['/QuarterFormCover', this.formId,'null',this.companyId]);
+          this.router.navigate(['/QuarterFormCover', this.formId, 'null', this.companyId]);
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id,'').subscribe(observer);
+    this.formServices.GetFormById(id, '').subscribe(observer);
+  }
+  showAlert(id: number, event: Event): void {
+    // منع تشغيل الحدث الأساسي (formNavigate)
+    event.stopPropagation();
+    
+    // SweetAlert منطق الحذف
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeleteReseacher(id, this.companyId);
+      }
+    });
+  }
+  
+  DeleteReseacher(formId:number,companyId:number): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetCompanyForms();
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.DeleteCompanyForm(formId,companyId).subscribe(observer);
   }
 }
