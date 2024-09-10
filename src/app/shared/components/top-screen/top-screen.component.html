@@ -31,7 +31,7 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownlang">
                 <li><a class="dropdown-item second-lang" href="#">الملف الشخصي </a></li>
-                <li><a class="dropdown-item second-lang" data-bs-toggle="modal" data-bs-target="#companyLink" *ngIf="role == 'Researchers' || role == 'Company'">تعديل كلمة المرور</a></li>
+                <li><a class="dropdown-item second-lang" data-bs-toggle="modal" data-bs-target="#companyLink1" *ngIf="role == 'Researchers' || role == 'Company'">تعديل كلمة المرور</a></li>
                 <li><a class="dropdown-item second-lang" (click)="LogOut()">تسجيل الخروج</a></li>
 
             </ul>
@@ -40,7 +40,7 @@
 
     </div>
 </div>
-<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+<div class="modal company-modal fade" id="companyLink1" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header pb-0">
