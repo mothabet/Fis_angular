@@ -40,7 +40,7 @@
       <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
-          <span>الباحثين</span>
+          <span>الباحثين او المشرف</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin'">
@@ -71,7 +71,7 @@
         <div class="has-dropdown">
           <a routerLink="Forms" href="./forms.html" class="sidebar-link" *ngIf="role === 'Admin'">
             <i class="fa-solid fa-file-lines icon"></i>
-            <span>الاستمارات</span>
+            <span>تصميم الاستمارات</span>
           </a>
           <span class="fa-solid fa-caret-down drop-dowm-icon collapsed" data-bs-toggle="collapse"
             data-bs-target="#forms" aria-expanded="false" aria-controls="forms"></span>

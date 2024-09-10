@@ -90,6 +90,7 @@ export class SharedTransTableComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
+          debugger
           this.Loader = false;
           this.coverForm = res.Data;
           this.GetTableById(+this.tableId);
@@ -366,6 +367,7 @@ export class SharedTransTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.GetFormById(+this.formId)
         this.Loader = false;
       }
