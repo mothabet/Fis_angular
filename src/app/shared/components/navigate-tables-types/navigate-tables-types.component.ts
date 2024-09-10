@@ -204,6 +204,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.formServices.CloseForm(+this.formId, +this.companyId).subscribe(observer);
   }
   GetFormById(id: string): void {
+    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -322,14 +323,19 @@ export class NavigateTablesTypesComponent implements OnInit {
                       if (l < indexSums.length) {
                         totalValues[l] += indexSums[l];
                         if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
-                          Swal.fire({
-                            icon: 'error',
-                            title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
-                            showConfirmButton: true,
-                            confirmButtonText: 'اغلاق'
-                          });
-                          this.Loader = false;
-                          return;
+                          debugger
+                          if(coverForm.tables[index].formContents[i].values[l].toString()!="" && totalValues[l].toString()!="00"){
+                            debugger
+                            Swal.fire({
+                              icon: 'error',
+                              title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
+                              showConfirmButton: true,
+                              confirmButtonText: 'اغلاق'
+                            });
+                            this.Loader = false;
+                            return;
+                          }
+                          
                         }
                       }
                     }

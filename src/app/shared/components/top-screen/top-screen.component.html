@@ -31,6 +31,7 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownlang">
                 <li><a class="dropdown-item second-lang" href="#">الملف الشخصي </a></li>
+                <li><a class="dropdown-item second-lang" data-bs-toggle="modal" data-bs-target="#companyLink1" *ngIf="role == 'Researchers' || role == 'Company'">تعديل كلمة المرور</a></li>
                 <li><a class="dropdown-item second-lang" (click)="LogOut()">تسجيل الخروج</a></li>
 
             </ul>
@@ -39,3 +40,68 @@
 
     </div>
 </div>
+<div class="modal company-modal fade" id="companyLink1" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header pb-0">
+            <h5 class="modal-title" id="add"></h5>
+          </div>
+          <form [formGroup]="passwordForm">
+            <div class="modal-body pb-1">
+              <div class="row">
+                <div class="form-group col-sm-6 mb-2" id="researcherPass">
+                  <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
+                    [(ngModel)]="passwordForm.value.password" formControlName="password" name="password" />
+                    <label for="inputField">كلمة المرور</label>
+                    <div
+                    *ngIf="
+                    passwordForm.controls['password'].invalid &&
+                      (passwordForm.controls['password'].dirty ||
+                      passwordForm.controls['password'].touched)
+                    "
+                  >
+                    <small
+                      *ngIf="passwordForm.controls['password'].errors?.['required']"
+                      class="text-danger"
+                    >
+                      يجب ادخال الرقم السري
+                    </small>
+                  </div>
+                  <button type="button" id="reload" (click)="generateRandomCredentials()">
+                    <img src="../../../../assets/images/refresh.png" alt="" />
+                  </button>
+                </div>
+                <div class="form-group col-sm-6 mb-2" id="researcherPass">
+                    <input class="form-control input-modal" type="text" placeholder="تأكيد كلمة المرور"
+                      [(ngModel)]="passwordForm.value.confirmPassword" formControlName="confirmPassword" name="password" />
+                      <label for="inputField">تأكيد كلمة المرور</label>
+                      <div
+                      *ngIf="
+                      passwordForm.controls['password'].invalid &&
+                        (passwordForm.controls['password'].dirty ||
+                        passwordForm.controls['password'].touched)
+                      "
+                    >
+                      <small
+                        *ngIf="passwordForm.controls['password'].errors?.['required']"
+                        class="text-danger"
+                      >
+                        يجب تأكيد الرقم السري
+                      </small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer pt-0">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
+                إلغاء
+              </button>
+              <button type="button" class="btn btn-save" (click)="updatePassword()"
+                [disabled]="!passwordForm.valid">
+                حفظ
+              </button>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>

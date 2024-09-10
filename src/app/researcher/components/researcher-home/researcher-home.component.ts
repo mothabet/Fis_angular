@@ -87,7 +87,6 @@ export class ResearcherHomeComponent {
 
   saveResearcher(): void {
     this.showLoader = true;
-    debugger
     if (this.researcherForm.valid) {
       const Model: IAddResearcher = {
         userName: this.researcherForm.value.userName,
@@ -121,7 +120,12 @@ export class ResearcherHomeComponent {
       };
       this.researcherService.addResearcher(Model).subscribe(observer);
     } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
+      Swal.fire({
+        icon: 'success',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
       this.showLoader = false;
     }
   }
