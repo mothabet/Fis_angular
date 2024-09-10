@@ -174,7 +174,10 @@ export class AuditingRulesHomeComponent implements OnInit {
     if (currentValue === '') {
 
     } else if (currentValue.endsWith('=')) {
-
+    } 
+    else if (currentValue.endsWith('+') || currentValue.endsWith('-')) {
+      currentValue = `${currentValue.slice(0, -1)}`
+      currentValue = `${currentValue}+`;
     } else {
       currentValue = `${currentValue}+`;
     }
@@ -190,7 +193,10 @@ export class AuditingRulesHomeComponent implements OnInit {
 
     } else if (currentValue.endsWith('=')) {
 
-    } else {
+    } else if (currentValue.endsWith('+') || currentValue.endsWith('-')) {
+      currentValue = `${currentValue.slice(0, -1)}`
+      currentValue = `${currentValue}-`;
+    }else {
       currentValue = `${currentValue}-`;
     }
     this.auditForm.patchValue({ Rule: currentValue });
@@ -243,6 +249,26 @@ export class AuditingRulesHomeComponent implements OnInit {
   
     const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
     return lastChar === '=' || lastChar === '+' || lastChar === '-';
+  }
+  isLastCharacterValidPlus(): boolean {
+    const currentValue = this.auditForm.get('Rule')?.value || '';
+    
+    if (!currentValue.trim()) {
+      return true; // Allow adding if input is empty
+    }
+  
+    const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
+    return lastChar === '=' || lastChar === '-';
+  }
+  isLastCharacterValidNegative(): boolean {
+    const currentValue = this.auditForm.get('Rule')?.value || '';
+    
+    if (!currentValue.trim()) {
+      return true; // Allow adding if input is empty
+    }
+  
+    const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
+    return lastChar === '=' || lastChar === '+';
   }
   resetAuditRules() {
     this.selects = []; // إزالة جميع الـ <select>ات
