@@ -562,3 +562,11 @@ body {
     color: #333; 
     text-align: center; 
 }
+.delete-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+}

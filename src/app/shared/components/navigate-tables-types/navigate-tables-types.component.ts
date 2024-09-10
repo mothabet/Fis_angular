@@ -210,6 +210,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
+          debugger
           this.coverForm = res.Data;
           // let quarterCoverData = localStorage.getItem(`quarterCoverForm`);
           // if (quarterCoverData)

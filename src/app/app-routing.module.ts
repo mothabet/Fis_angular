@@ -26,7 +26,6 @@ import { CertificationComponent } from './Forms/Components/certification/certifi
 import { CompanyHomeComponent } from './home/components/company-home/company-home.component';
 import { PrevFormComponent } from './Forms/Components/prev-form/prev-form.component';
 import { CopmanyGeneralInformationHomeComponent } from './copmany-general-information/components/copmany-general-information-home/copmany-general-information-home.component';
-import { SharedTwoYearsWithPartsComponent } from './shared/components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 import { ReportsComponent } from './Reports/Components/reports/reports.component';
 import { ReportContentsComponent } from './Reports/Components/report-contents/report-contents.component';
 import { SectorsComponent } from './sectors-and-activities/Components/sectors/sectors.component';

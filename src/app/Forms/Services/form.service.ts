@@ -135,4 +135,9 @@ export class FormService {
      var resopnse = this.http.put(environment.apiUrl+`Form/BeginningForm?formId=${formId}&companyId=${companyId}`, { headers });
      return resopnse;
    }
+   DeleteCompanyForm(formId:number,companyId:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.delete(environment.apiUrl+`Form/DeleteCompanyForm?formId=${formId}&companyId=${companyId}&lang=2`, { headers });
+     return resopnse;
+   }
 }

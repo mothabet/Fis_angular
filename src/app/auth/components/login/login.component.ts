@@ -15,6 +15,7 @@ import { jwtDecode } from 'jwt-decode';
 export class LoginComponent {
   logInForm!: FormGroup;
   showLoader: boolean = false;
+  showPassword: boolean = false; // متغير لتعقب حالة إظهار/إخفاء كلمة المرور
   constructor(private formBuilder: FormBuilder, private loginService: LoginService,
     private router: Router, private sidebarService: SidebarService, private sharedService: SharedService) {
 
@@ -62,5 +63,8 @@ export class LoginComponent {
         timer: 2000
       });
     }
+  }
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword; // تبديل حالة إظهار/إخفاء كلمة المرور
   }
 }
