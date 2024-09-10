@@ -1,0 +1,23 @@
+.card-body {
+    overflow: hidden; /* Hide overflow to control scrolling with field-container */
+}
+
+.field-container {
+    max-height: 300px; /* Set a fixed height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.field-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Space between items */
+}
+
+.field-input {
+    margin-left: 10px; /* Space between span and input */
+}
+
+.field-text {
+    font-size: 13px;
+}

@@ -32,6 +32,11 @@ export class ReportService {
     var resopnse = this.http.get(environment.apiUrl + `Report/GetReport?reportId=${id}&lang=2`, { headers });
     return resopnse;
   }
+  GetTableFields(tableType: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `ReportParts/GetTableFields?tableType=${tableType}&lang=2`, { headers });
+    return resopnse;
+  }
   UpdateReport(id:number,reportDto: IAddReportDto){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Report/UpdateReport?id=${id}&lang=2`, reportDto, { headers });

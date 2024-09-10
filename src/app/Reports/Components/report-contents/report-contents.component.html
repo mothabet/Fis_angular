@@ -18,7 +18,7 @@
             </div>
             <i class="fa-solid fa-bell"></i>
             <div class="user-img">
-                <img src="./images/avatar.PNG" class="img-fluid">
+                <img src="../../../../assets//images/avatar.PNG" class="img-fluid">
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@
     </div>
     <!-- end content -->
     <!-- start chart  -->
-    <div class="content companies report-table">
+    <!-- <div class="content companies report-table">
         <div class="header d-flex ">
             <h4 class="">
                 الرسم البياني
@@ -123,76 +123,186 @@
         <div class="card-chart p-2">
             <canvas id="myChart1"></canvas>
         </div>
-    </div>
+    </div> -->
     <!-- End  chart  -->
 </div>
 <!--start add company modal -->
-<div class="modal company-modal fade " id="addReportDetails" tabindex="-1" aria-labelledby="add" aria-hidden="true" >
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+<div class="modal company-modal fade" id="addReportDetails" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="min-width: 880px;">
         <div class="modal-content">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إنشاء جزء التقرير 
-                </h5>
+                <h5 class="modal-title" id="add">إنشاء محتوى التقرير</h5>
             </div>
             <form>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 mb-3 label-with-icon">
-                            <input class="form-control input-modal" type="text" placeholder="اسم الجزء ">
-                        </div>      
-                        <div class="col-sm-12 input-floating-label mb-3">
-                            <div class="form-control c-border-black place-black radio-multichoice"  style="width: 100%;">
-                              <span  class="selected-radio">الطلبات</span>
-                              <i class="fa-solid fa-angle-down"></i>
-                                  <div class="choices">
-                                    <div class="form-check ps-0 d-flex radio-form">
-                                      <input class="form-check-input" type="radio" name="tableOrders" id="orders" checked>
-                                      <label class="form-check-label" for="orders">
-                                       الطلبات
-                                      </label>
-                                    </div>
-                                    <div class="form-check ps-0 d-flex radio-form">
-                                      <input class="form-check-input" type="radio" name="tableOrders" id="table2" >
-                                      <label class="form-check-label" for="table2">
-                                        جدول 2
-                                      </label>
-                                    </div>
-                                  </div>
-                            </div>
-                            <label for="user">الجدول</label>
-                          </div>              
-                        <div class="col-sm-12 mb-3">
-                            <select class=" form-select add-report-select " style="width: 100%;">
-                                <option selected value="0">اختر القالب  </option>
-                                <option value="1">قالب 1</option>
-                                <option value="2">قالب 2</option>
-                                <option value="3">قالب 3</option>
+                        <!-- First three fields on the same row -->
+                        <div class="col-sm-4 mb-3 label-with-icon">
+                            <input class="form-control input-modal" type="text" placeholder="اسم محتوى التقرير">
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4 mb-3">
+                            <select (change)="GetTableFields($event)" [(ngModel)]="tableType" name="tableType"
+                                class="form-select add-report-select" style="width: 100%;">
+                                <option selected [ngValue]="0" disabled>اختر الجدول</option>
+                                <option [ngValue]="1">شركات</option>
+                                <option [ngValue]="2">استمارات</option>
+                                <option [ngValue]="3">باحثين</option>
                             </select>
                         </div>
-                        <h4 class="mb-3">نوع التقرير</h4>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div class="form-check ps-0 d-flex radio-form">
+                    </div>
+
+                    <!-- Scrollable Cards Section -->
+                    <div *ngIf="tableType == 1" class="d-flex overflow-auto"
+                        style="gap: 15px; white-space: nowrap; padding: 15px;">
+                        <!-- Card 1 -->
+                        <div class="card"
+                            style="min-width: 365px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InsertField($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let field of tableFields" [ngValue]="field">{{field.name}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let field of appendedTableFields" class="field-item">
+                                        <input type="text" class="field-input">
+                                        <span class="field-text">{{field.name}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="card"
+                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InsertResearcher($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let researcher of researchers" [ngValue]="researcher">{{researcher.arName}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let researcher of appendedResearchers" class="field-item">
+                                        <span class="field-text">{{researcher.arName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="card"
+                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InserSector($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let sector of sectors" [ngValue]="sector">{{sector.arName}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let sector of appendedSectors" class="field-item">
+                                        <span class="field-text">{{sector.arName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="card"
+                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InsertActivity($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let activity of activities" [ngValue]="activity">{{activity.arName}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let activity of appendedActivities" class="field-item">
+                                        <span class="field-text">{{activity.arName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 5 -->
+                        <div class="card"
+                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InsertWilaya($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let wilaya of wilayat" [ngValue]="wilaya">{{wilaya.arName}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let wilaya of appendedWilayat" class="field-item">
+                                        <span class="field-text">{{wilaya.arName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 6 -->
+                        <div class="card"
+                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="card-body">
+                                <select (change)="InsertWilaya($event)" class="form-select add-report-select"
+                                    style="width: 100%;">
+                                    <option selected value="0" disabled>اختر الحقل</option>
+                                    <option *ngFor="let wilaya of wilayat" [ngValue]="wilaya">{{wilaya.arName}}</option>
+                                </select>
+                                <div class="field-container"
+                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
+                                    <div *ngFor="let wilaya of appendedWilayat" class="field-item">
+                                        <span class="field-text">{{wilaya.arName}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="tableType == 3" class="d-flex overflow-auto"
+                        style="gap: 15px; white-space: nowrap;padding: 15px;">
+                        <!-- Card 1 -->
+                        <div class="card" style="min-width: 200px; border: 1px solid #ccc; padding: 15px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Card Title 1</h5>
+                                <p class="card-text">Content for card 1.</p>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="card" style="min-width: 200px; border: 1px solid #ccc; padding: 15px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Card Title 2</h5>
+                                <p class="card-text">Content for card 2.</p>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+
+                    </div>
+                    <!-- Continue with remaining fields -->
+                    <h4 class="mb-3">نوع التقرير</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-check ps-0 d-flex radio-form">
                             <input class="form-check-input" type="radio" name="chart" id="haveChart">
-                            <label class="form-check-label" for="haveChart">
-                              يشمل رسم بيانى
-                            </label>
-                          </div>
-                          <div class="form-check ps-0 d-flex radio-form">
+                            <label class="form-check-label" for="haveChart">يشمل رسم بيانى</label>
+                        </div>
+                        <div class="form-check ps-0 d-flex radio-form">
                             <input class="form-check-input" type="radio" name="chart" id="notHaveChart" checked>
-                            <label class="form-check-label" for="notHaveChart">
-                              لا يشمل رسم بيانى
-                            </label>
-                          </div>
+                            <label class="form-check-label" for="notHaveChart">لا يشمل رسم بيانى</label>
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-footer pt-0" style="border-top: none;">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn btn-save" id="next-report-part" data-bs-toggle="modal" data-bs-dismiss="modal"
-                    data-bs-target="#next-part">حفظ</button>
+                    <button type="button" class="btn btn-save" id="next-report-part" data-bs-toggle="modal"
+                        data-bs-dismiss="modal" data-bs-target="#next-part">حفظ</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
+
 <!--end add company modal -->

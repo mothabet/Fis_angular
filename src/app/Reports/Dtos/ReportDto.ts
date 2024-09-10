@@ -10,3 +10,12 @@ export interface IGetReportDto {
     status: boolean,
     createdOn: string,
 }
+export interface IGetTableFieldsDto {
+    dataType: string,
+    name: string,
+}
+
+export interface IReportFilterDto {
+    id: number,
+    arName: string,
+}

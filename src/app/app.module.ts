@@ -16,11 +16,11 @@ import { CompanyMessagesModule } from './company-messages/company-messages.modul
 import { CopmanyGeneralInformationModule } from './copmany-general-information/copmany-general-information.module';
 import { ReportsComponent } from './Reports/Components/reports/reports.component';
 import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and-activities.module';
+import { ReportsModule } from './Reports/reports.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReportsComponent,
   ],
   imports: [
     SharedModule,
@@ -32,6 +32,7 @@ import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and
     AuditingRulesModule,
     AuthModule,
     CodeModule,
+    ReportsModule,
     MessagesModule,
     CompanyMessagesModule,
     CopmanyGeneralInformationModule,

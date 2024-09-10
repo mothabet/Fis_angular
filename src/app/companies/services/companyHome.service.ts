@@ -35,7 +35,7 @@ export class CompanyHomeService {
     var response = this.http.get(environment.apiUrl + `Sector/GetSectors`, { headers });
     return response;
   }
-  GetWilayat(govId:number) {
+  GetWilayat(govId:number = 0) {
     var headers = this.sharedService.getHeaders();
     var response = this.http.get(environment.apiUrl + `Wilayat/GetWilayat?governorateId=${govId}`, { headers });
     return response;
