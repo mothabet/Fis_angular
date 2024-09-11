@@ -52,7 +52,7 @@ export class TopScreenComponent implements OnInit
     if (this.passwordForm.valid) {
       const observer = {
         next: (res: any) => {
-          const button = document.getElementById('btnCancel');
+          const button = document.getElementById('btnCancel1');
           if (button) {
             button.click();
           }

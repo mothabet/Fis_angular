@@ -42,6 +42,7 @@ export class ResearcherHomeComponent {
   tableColumns = ['رقم الهاتف', 'البريد الالكتروني', 'الاسم', 'الرقم'];
   companies: ICompany[] = [];
   selectedCompanyIds: Set<number> = new Set<number>();
+  selectedCompanyIdsIsResearcher: Set<number> = new Set<number>();
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -166,7 +167,7 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.researchers = res.Data.getResearcherDtos;
@@ -229,7 +230,7 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.researcher = res.Data;
           this.researcher.phone = this.researcher.phone.replace(this.phoneCode.toString(), '');
@@ -252,7 +253,7 @@ export class ResearcherHomeComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -273,7 +274,7 @@ export class ResearcherHomeComponent {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -289,7 +290,7 @@ export class ResearcherHomeComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -360,12 +361,12 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.showLoader = false;
 
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
-          debugger
+          
         }
         else {
           this.companies = [];
@@ -373,7 +374,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
       error: (err: any) => {
-        debugger
+        
         this.showLoader = false;
         this.sharedService.handleError(err);
       },
@@ -381,12 +382,14 @@ export class ResearcherHomeComponent {
     this.companyService.GetCompanies(textSearch, page).subscribe(observer);
   }
   onCheckboxChange(companyId: number, event: Event) {
-    debugger
+    
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.checked) {
       this.selectedCompanyIds.add(companyId);
+      this.selectedCompanyIdsIsResearcher.add(companyId);
     } else {
       this.selectedCompanyIds.delete(companyId);
+      this.selectedCompanyIdsIsResearcher.delete(companyId);
     }
   }
   OpenCompany(id: number): void {
@@ -395,13 +398,13 @@ export class ResearcherHomeComponent {
     this.selectedCompanyIds.clear();
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.showLoader = false;
 
         if (res.Data) {
-          debugger
+          
           for (let index = 0; index < res.Data.length; index++) {
-            debugger
+            
             this.selectedCompanyIds.add(res.Data[index].id);
           }
           // res.Data.getCompaniesDtos.forEach((element:any) => {
@@ -409,26 +412,50 @@ export class ResearcherHomeComponent {
           //   
           // });
         }
-        
-        this.showLoader = false;
+        this.GetCompaniesIsSelectedResearcher();
       },
       error: (err: any) => {
-        debugger
+        
         this.showLoader = false;
         this.sharedService.handleError(err);
       },
     };
     this.companyService.GetCompaniesByResearcherId(id).subscribe(observer);
   }
+  GetCompaniesIsSelectedResearcher(): void {
+    this.showLoader = true;
+    this.selectedCompanyIdsIsResearcher.clear();
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res.Data) {
+          for (let index = 0; index < res.Data.length; index++) {
+            this.selectedCompanyIdsIsResearcher.add(res.Data[index].id);
+          }
+          // res.Data.getCompaniesDtos.forEach((element:any) => {
+            
+          //   
+          // });
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        
+        this.showLoader = false;
+        this.sharedService.handleError(err);
+      },
+    };
+    this.companyService.GetCompaniesIsSelectedResearcher().subscribe(observer);
+  }
   saveSelectedCompanies() {
     const selectedCompanies = this.companies.filter(company => this.selectedCompanyIds.has(company.id));
-    debugger
+    
     this.showLoader = true;
     if (selectedCompanies.length > 0) {
 
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancelCompanyResearcher');
           if (button) {
             button.click();
@@ -443,7 +470,7 @@ export class ResearcherHomeComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },

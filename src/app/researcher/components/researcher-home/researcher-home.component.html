@@ -264,7 +264,9 @@
           <tbody>
             <tr *ngFor="let company of companies">
               <td>
-                <input type="checkbox" (change)="onCheckboxChange(company.id, $event)" [checked]="company.id == id || selectedCompanyIds.has(company.id)"/>
+                <input type="checkbox" (change)="onCheckboxChange(company.id, $event)" [checked]="company.id == id || selectedCompanyIds.has(company.id)" *ngIf="!(selectedCompanyIdsIsResearcher.has(company.id)) || !(selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id))"/>
+                <i class="fa fa-close delete-icon" *ngIf="selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id)"></i>
+
                 {{ company.arName }}
               </td>
               <td class="text-center">{{ company.compRegNumber }}</td>

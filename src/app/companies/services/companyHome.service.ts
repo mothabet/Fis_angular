@@ -95,6 +95,11 @@ export class CompanyHomeService {
      var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0`, { headers });
      return response;
    }
+   GetCompaniesIsSelectedResearcher(){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Company/GetCompaniesIsSelectedResearcher?textSearch=''&pageNumber=0`, { headers });
+     return response;
+   }
    GetCompanyPdfs(id:number){
     
     var headers= this.sharedService.getHeaders();
