@@ -1,5 +1,8 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
+    <!-- header -->
+  <app-top-screen [title]="'النشاطات'"></app-top-screen>
+  <!-- end-header -->
     <div class="header-nav companies-details">
         <div class="card-box mb-3">
             <ul>
@@ -18,31 +21,6 @@
             </ul>
         </div>
     </div>
-    <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            النشاطات
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
-    <!-- end-header -->
     <!-- start content -->
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
@@ -102,39 +80,48 @@
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="add"> إضافة نشاط فرعي</h5>
             </div>
-            <form [formGroup]="subActivityForm" (ngSubmit)="onSave()">
-                <div class="row" style="padding: 10px;">
-                    <!-- Arabic Report Name -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="arName"
-                               placeholder="اسم النشاط بالعربية">
+            <form [formGroup]="subActivityForm"  (ngSubmit)="onSave()">
+                <div class="modal-body pb-1">
+                  <div class="row">
+                    <div class="form-group col-sm-12 mb-2">
+                      <input class="form-control input-modal"  type="text"
+                         formControlName="arName" name="arName"/>
+                        <label for="inputField">اسم النشاط بالعربية</label>
                     </div>
-
-                    <!-- English Report Name -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="enName"
-                               placeholder="Activity Name in English">
-                    </div>
-
-                    <!-- code -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="code"
-                               placeholder="رمز النشاط">
-                    </div>
-                    <div class="col-sm-12 mb-2">
+                    <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="enName" name="enName"/>
+                          <label for="inputField">Activity Name in English</label>
+                      </div>
+                      <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="code" name="code"/>
+                          <label for="inputField">رمز النشاط</label>
+                      </div>
+                      <div class="form-group col-sm-12 mb-2">
                         <select class="form-control input-modal" formControlName="activityId">
                             <option *ngFor="let activity of activities" [value]="activity.id">{{activity.arName}}</option>
                         </select>
-                    </div>
+                          <label for="inputField">اسم النشاط</label>
+                      </div>
+                        
+                  </div>
                 </div>
-
                 <div class="modal-footer pt-0">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
-                    <button type="button" class="btn btn-reset">إعادة ملء</button>
-                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
-                    <button *ngIf="isUpdate" (click) = "updateSubActivity()" type="button" class="btn btn-save">تعديل</button>
-                   </div>
-            </form>
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
+                    إلغاء
+                  </button>
+                  <button type="button" class="btn btn-reset">
+                    إعادة ملء
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+                    حفظ
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="isUpdate" (click) = "updateSubActivity()" type="button" class="btn btn-save">
+                    تعديل
+                  </button>
+                </div>
+              </form>
         </div>
     </div>
 </div>
