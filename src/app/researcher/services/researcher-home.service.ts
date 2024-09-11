@@ -52,5 +52,18 @@ export class ResearcherHomeService {
      var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
-   
+   GetProfileResearcherByUserId(){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Researcher/GetProfileResearcherByUserId`, { headers });
+     return response;
+   }
+   UpdateProfileImg(formData: FormData,id:number) {
+    var headers= this.sharedService.getHeaders();
+    var resopnse = this.http.put(
+      environment.apiUrl + `Researcher/UpdateProfileImg?id=${id}`,
+      formData,
+      { headers }
+    );
+    return resopnse;
+  }
 }

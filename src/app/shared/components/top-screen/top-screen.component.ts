@@ -5,6 +5,8 @@ import { TopScreenService } from '../../services/top-screen.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from '../../services/shared.service';
 import Swal from 'sweetalert2';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
 
 @Component({
   selector: 'app-top-screen',
@@ -19,8 +21,10 @@ export class TopScreenComponent implements OnInit
   role: string = "";
   arName: string = "";
   Loader = false;
+  selectedImageUrl!: string
   constructor(private topScreenServices:TopScreenService,private loginService: LoginService, private router: Router,
-     private sharedService: SharedService, private authService: LoginService, private formBuilder: FormBuilder,
+     private sharedService: SharedService, private authService: LoginService, private formBuilder: FormBuilder
+     , private companyServices: CompanyHomeService,private researcherServices: ResearcherHomeService
     ) { }
   ngOnInit(): void {
     this.Loader = true
@@ -33,6 +37,10 @@ export class TopScreenComponent implements OnInit
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
     });
+    debugger
+    if (this.role == 'Company') {
+      this.GetCompanyByUserId();
+    }
   }
   LogOut() {
     debugger
@@ -59,7 +67,7 @@ export class TopScreenComponent implements OnInit
           const isLoggedIn = this.authService.getToken();
           let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
-    this.arName = result.arName;
+    this.arName = this.arName;
           this.Loader = false;
           Swal.fire({
             icon: 'success',
@@ -84,5 +92,39 @@ export class TopScreenComponent implements OnInit
       this.Loader = false;
     }
   }
-
+  GetCompanyByUserId() {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          debugger
+          this.selectedImageUrl = res.Data;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.companyServices.GetProfileCompanyByUserId().subscribe(observer);
+  }
+  GetProfileResearcherByUserId() {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          debugger
+          this.selectedImageUrl = res.Data;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.researcherServices.GetProfileResearcherByUserId().subscribe(observer);
+  }
+  
 }

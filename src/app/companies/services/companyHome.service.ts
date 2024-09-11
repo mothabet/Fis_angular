@@ -79,6 +79,12 @@ export class CompanyHomeService {
      var response = this.http.get(environment.apiUrl+`Company/GetCompanyByUserId?id=${id}&companyId=${compId}`, { headers });
      return response;
    }
+   GetProfileCompanyByUserId(){
+    
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Company/GetProfileCompanyByUserId`, { headers });
+     return response;
+   }
    UpdateCompany(id:number,Model: IAddCompany){
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });
@@ -111,4 +117,13 @@ export class CompanyHomeService {
      var response = this.http.delete(environment.apiUrl+`Pdf/DeletePdf?id=${id}`, { headers });
      return response;
    }
+   UpdateProfileImg(formData: FormData,id:number) {
+    var headers= this.sharedService.getHeaders();
+    var resopnse = this.http.put(
+      environment.apiUrl + `Company/UpdateProfileImg?id=${id}`,
+      formData,
+      { headers }
+    );
+    return resopnse;
+  }
 }

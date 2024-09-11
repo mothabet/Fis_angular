@@ -6,10 +6,19 @@
 
     <!-- start researcher header -->
     <div class="card-box d-flex align-items-center mb-3 company-card">
-        <div class="image-box" style="width:50px;">
-            <img class="researcher-image " src="../../../../assets/images/avatar.PNG" alt="">
-        </div>
-
+        <div class="image-box position-relative"  style="width:50px;">
+            <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
+            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="company">
+            
+            <!-- زر تغيير الصورة -->
+            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
+                <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
+                <span *ngIf="hovering">Change Image</span>
+            </button>
+            
+                <!-- Input لاختيار الصور فقط -->
+                <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
+            </div>
         <div class="researcher-info">
             <h6 class="user">{{researcher.arName}}</h6>
             <div class="details d-flex flex-wrap">
@@ -23,9 +32,9 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-grow-1 gap-1 left-align-button" >
-            <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal"
-                data-bs-target="#sendFormCompany" *ngIf="role == 'Researchers'">
+        <div class="d-flex flex-grow-1 gap-1 left-align-button">
+            <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal" data-bs-target="#sendFormCompany"
+                *ngIf="role == 'Researchers'">
                 <img src="../../../../assets/images/email-edit-outline.png" alt="" />
                 إرسال إستمارة
             </button>
@@ -36,7 +45,7 @@
 
     <!--start total -->
     <div class="row totals">
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" >
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="card company text-center">
                 <div class="header py-3">
                     <div class="total-num">
@@ -49,19 +58,19 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics">
-            <div class="card company text-center"  data-bs-toggle="modal"
-            data-bs-target="#formsStatics" style="cursor: pointer;"  (click)="GetFormsByStatus(static.id)">
-              <div class="header py-3">
-                <div class="total-num">
-                  {{static.count}}
+            <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics"
+                style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
+                <div class="header py-3">
+                    <div class="total-num">
+                        {{static.count}}
+                    </div>
+                    <div class="total-title">
+                        {{static.name}}
+                    </div>
                 </div>
-                <div class="total-title">
-                  {{static.name}}
-                </div>
-              </div>
             </div>
-          </div>
-        
+        </div>
+
     </div>
     <!--end total -->
 
@@ -73,7 +82,18 @@
                     <h4 class="title">
                         قائمة الشركات
                     </h4>
+                    <div class="d-flex justify-content-start">
+                        <button (click)="printPdf()" type="button" class="btn btn-download" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+                            تنزيل PDF
+                        </button>
+                    </div>
                 </div>
+                
                 <div class="table-responsive research-details-table">
                     <table class="table table-borderless">
                         <thead>
@@ -106,7 +126,7 @@
                                     style="color: red !important;">غير نشط</td>
                                 <td class="text-center">
                                     <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
-                                        <a >إستماره</a>
+                                        <a>إستماره</a>
                                     </button>
                                 </td>
                             </tr>
@@ -216,7 +236,8 @@
     </div>
 </div>
 
-<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_" aria-hidden="true">
+<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header pb-1 d-flex justify-content-between align-items-center">

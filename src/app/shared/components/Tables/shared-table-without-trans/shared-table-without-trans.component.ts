@@ -125,7 +125,13 @@ export class SharedTableWithoutTransComponent {
     }
     code.SubCodes.push(subCode);
   }
-
+  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
+  }
+  
   GetActivites() {
     const observer = {
       next: (res: any) => {

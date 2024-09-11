@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
@@ -19,7 +19,10 @@ export class CompaniesDetailsComponent implements OnInit {
   selectedFiles: File[] = [];
   pdf!: IPdfDto;
   companyPdfs!: IGetPdfDto[];
-  constructor(private http: HttpClient,private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
+  hovering: boolean = false;
+  selectedImage: File | null = null;
+  selectedImageUrl!: string
+  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
 
   }
   ngOnInit(): void {
@@ -28,7 +31,7 @@ export class CompaniesDetailsComponent implements OnInit {
     this.GetCompanyPdfs(+this.companyId);
   }
   ngAfterViewInit(): void {
-    
+
     this.showLoader = false;
   }
   GetCompanyById(id: number) {
@@ -37,6 +40,8 @@ export class CompaniesDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
+          debugger
+          this.selectedImageUrl = this.company.pathImgProfile;
         }
       },
       error: (err: any) => {
@@ -81,7 +86,7 @@ export class CompaniesDetailsComponent implements OnInit {
           this.showLoader = false;
         },
         error: (err: any) => {
-          
+
           this.sharedServices.handleError(err);
           this.showLoader = false;
         },
@@ -96,7 +101,7 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           this.companyPdfs = res.Data;
         }
       },
@@ -145,18 +150,61 @@ export class CompaniesDetailsComponent implements OnInit {
     this.companyServices.DeletePdf(id).subscribe(observer);
   }
   GetPdfPath(url: string): void {
-    
+
     this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
-      
+
       const fileName = url.substring(url.lastIndexOf('/') + 1);
       saveAs(blob, fileName);
     });
   }
-  downloadPdf(path : string): void {
+  downloadPdf(path: string): void {
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const pdfUrl = 'https://www.esu.edu/computing_communication_services/web-services/documents/23-24/fake.pdf';
     this.http.get(proxyUrl + pdfUrl, { responseType: 'blob' }).subscribe((blob: Blob) => {
       saveAs(blob, 'fake.pdf');
     });
+  }
+  @ViewChild('imageInput') imageInput!: ElementRef;
+
+  
+  // Method to trigger file input click
+  triggerImageUpload() {
+    if (this.imageInput) {
+      this.imageInput.nativeElement.click();
+    }
+  }
+
+  // Handle selected image
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file; // Store the selected file
+      this.UpdateProfileImg(); // Call the method to upload the image
+    }
+  }
+
+  // Method to update profile image
+  UpdateProfileImg(): void {
+    if (!this.selectedImage) {
+      return;
+    }
+
+    this.showLoader = true;
+    const formData = new FormData();
+    formData.append('imageDto', this.selectedImage, this.selectedImage.name);
+
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        debugger
+        this.selectedImage = res.Data
+      },
+      error: (err: any) => {
+        console.error('Error uploading image:', err);
+        this.showLoader = false;
+      },
+    };
+
+      this.companyServices.UpdateProfileImg(formData,+this.companyId).subscribe(observer);
   }
 }

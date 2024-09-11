@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ResearcherHomeService } from '../../services/researcher-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IResearcher } from '../../Dtos/ResearcherHomeDto';
@@ -11,6 +11,9 @@ import Swal from 'sweetalert2';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { TopScreenService } from 'src/app/shared/services/top-screen.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
 
 @Component({
   selector: 'app-researcher-details',
@@ -32,8 +35,12 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
-  formStatics!:any[]
-  formsStaticsStatus!:any[]
+  formStatics!:any[];
+  formsStaticsStatus!:any[];
+  tableColumns = ['عنوان الشركه', 'رقم الشركة', 'اسم الشركة'];
+  hovering: boolean = false;
+  selectedImage: File | null = null;
+  selectedImageUrl!: string
   constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
@@ -55,10 +62,10 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          debugger
+          
           this.researcher = res.Data;
           this.companies = res.Data.companies
-          debugger
+          
           console.log(this.companies)
           this.companiesCount = this.researcher.companies.length;
         }
@@ -123,7 +130,7 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-    debugger
+    
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))
@@ -134,7 +141,7 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.messages = [];
-          debugger
+          
           res.Data.getMessagesDtos.forEach((message: IMessage) => {
             switch (message.typeMessage) {
               case 2:
@@ -201,7 +208,7 @@ export class ResearcherDetailsComponent implements OnInit {
       emailBody: this.selectedMessage.arDetails || ''
     };
     this.showLoader = true;
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
@@ -237,5 +244,88 @@ export class ResearcherDetailsComponent implements OnInit {
     return this.selectedCompanyIds.includes(companyId);
   }
 
+  printPdf() {
+    this.generatePdf(this.companies, this.tableColumns);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
 
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('الشركات المرتبطه بالباحث', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        item.address,
+        item.id,
+        item.arName,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('Researcher Companies.pdf');
+  }
+  @ViewChild('imageInput') imageInput!: ElementRef;
+
+  
+  // Method to trigger file input click
+  triggerImageUpload() {
+    if (this.imageInput) {
+      this.imageInput.nativeElement.click();
+    }
+  }
+
+  // Handle selected image
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file; // Store the selected file
+      this.UpdateProfileImg(); // Call the method to upload the image
+    }
+  }
+
+  // Method to update profile image
+  UpdateProfileImg(): void {
+    if (!this.selectedImage) {
+      return;
+    }
+
+    this.showLoader = true;
+    const formData = new FormData();
+    formData.append('imageDto', this.selectedImage, this.selectedImage.name);
+
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        debugger
+        this.selectedImage = res.Data
+      },
+      error: (err: any) => {
+        console.error('Error uploading image:', err);
+        this.showLoader = false;
+      },
+    };
+
+      this.researcherServices.UpdateProfileImg(formData,+this.researcherId).subscribe(observer);
+  }
 }

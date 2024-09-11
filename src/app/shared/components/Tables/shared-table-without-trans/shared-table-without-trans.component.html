@@ -58,7 +58,9 @@
                                 <tr *ngFor="let subCode of formContent.code.SubCodes">
                                     <td *ngIf="formContent.code.TypeId == 1"
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
-                                        {{subCode.arName}}</td>
+                                        {{subCode.arName}}
+                                        
+                                    </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <select class="form-control" style="width: 100% !important; text-align:center">
                                             <option value="0">اختيار نشاط--</option>
@@ -95,6 +97,10 @@
                                                 <img src=".././../../../assets/images/trash-can-outline.png"
                                                     class="img-fluid">
                                             </button> -->
+                                            <button (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </div>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -106,6 +112,10 @@
                                                 <img src=".././../../../assets/images/trash-can-outline.png"
                                                     class="img-fluid">
                                             </button> -->
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </div>
 
                                     </td>
