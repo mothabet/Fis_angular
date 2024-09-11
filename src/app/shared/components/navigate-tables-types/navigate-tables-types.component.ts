@@ -203,6 +203,27 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formServices.CloseForm(+this.formId, +this.companyId).subscribe(observer);
   }
+  OpenForm(){
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        this.coverForm.status = 8;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+      }
+      ,
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.OpenForm(+this.formId, +this.companyId).subscribe(observer);
+  }
   GetFormById(id: string): void {
     debugger
     this.Loader = true;

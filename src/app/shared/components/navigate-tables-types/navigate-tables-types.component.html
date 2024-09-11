@@ -79,6 +79,10 @@
                     data-bs-target="#sendFormCompany">
                     حالة الإستمارة : تم اعتماد الاستمارة
                 </button>
+                <button *ngIf="coverForm.status == 8" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اعادة فتح الاستمارة
+                </button>
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
@@ -93,28 +97,32 @@
                     تنزيل xls
                 </button>
                 <button
-                    *ngIf="(role == 'Company' && coverForm.status <= 5 )"
+                    *ngIf="(role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8) )"
                     type="button" class="btn btn-save" (click)="SaveData('Save',0)">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
                 <button
-                    *ngIf="role == 'Researchers' && coverForm.status <= 6"
+                    *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)"
                     type="button" class="btn btn-save" (click)="SaveData('Save',+companyId)">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <button *ngIf="role == 'Company' && coverForm.status <= 5" type="button" class="btn btn-accept"
+                <button *ngIf="role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="SaveData('Approve',0)">
                     موافقة
                 </button>
-                <button *ngIf="role == 'Researchers' && coverForm.status < 7" type="button" class="btn btn-accept"
+                <button *ngIf="role == 'Researchers' && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="CompleteForm()">
                     إكتمال
                 </button>
-                <button *ngIf="role == 'Researchers' && coverForm.status <= 6" type="button" class="btn btn-exit"
+                <button *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
                     (click)="CloseForm()">
                     إغلاق
+                </button>
+                <button *ngIf="role == 'Researchers' && coverForm.status == 6" type="button" class="btn btn-exit"
+                    (click)="OpenForm()">
+                    اعادة فتح الاستماره
                 </button>
             </div>
         </div>
