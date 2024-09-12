@@ -128,20 +128,29 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
   }
   GetSubActivities(activityId: number) {
-    const observer = {
-      next: (res: any) => {
+    
+    if(activityId>0)
+    {
+      const observer = {
+        next: (res: any) => {
+          // Add a null or undefined check for res.Data
+          if (res && res.Data) {
+            this.SubActivities = res.Data;
+            console.log(this.SubActivities);
+          } else {
+            console.log('No data available');
+          }
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        },
+      };
+  
+      // Call the service and subscribe
+      this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
+    }
+}
 
-        if (res.Data) {
-          this.SubActivities = res.Data;
-          console.log(this.SubActivities)
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
-  }
   GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
     const observer = {
@@ -184,17 +193,19 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetSectors().subscribe(observer);
   }
   GetWilayat(govId: number) {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.Wilayat = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetWilayat(govId).subscribe(observer);
+    if(govId>0){
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            this.Wilayat = res.Data;
+          }
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        },
+      };
+      this.companyHomeServices.GetWilayat(govId).subscribe(observer);
+    }
   }
   GetGovernorates() {
     const observer = {
@@ -322,6 +333,12 @@ export class CompaniesHomeComponent implements OnInit {
           this.GetCompanies('', 1);
           this.resetForm();
           this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
         },
         error: (err: any) => {
           this.showLoader = false;
@@ -650,6 +667,7 @@ export class CompaniesHomeComponent implements OnInit {
           this.GetCompanies('', 1);
           this.showLoader = false;
           this.add = true;
+          
           Swal.fire({
             icon: 'success',
             title: res.Message,

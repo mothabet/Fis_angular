@@ -208,6 +208,7 @@ export class SharedTransTableComponent {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || ["", ""];
                       formContent.values[0] = formContent.values[0] || "";
+                      formContent.values[2] = ""; // Set transaction explicitly to ""
                       formContent.values[1] = formContent.values[1] || "";
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
@@ -216,6 +217,7 @@ export class SharedTransTableComponent {
                           subCode.values = subCode.values || ["", ""];
 
                           // Ensure the `values` array has the correct length and initial values
+                          subCode.values[2] = ""; // Set transaction explicitly to ""
                           subCode.values[0] = subCode.values[0] || ""; // lastYear
                           subCode.values[1] = subCode.values[1] || ""; // nextYear
                         });
@@ -277,6 +279,7 @@ export class SharedTransTableComponent {
                     // Store the itemIndex of level 1 item
                     if (level1ItemIndex !== -1) {
                       this.coverForm.tables[tableIndex].formContents[level1ItemIndex].values = item.codes;
+                      this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.arName = item.arName;
                     }
                   } else if (item.level == 2) {
                     // Find the corresponding level 1 item first
@@ -286,7 +289,9 @@ export class SharedTransTableComponent {
                       const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                       const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
                       if (subCodeIndex !== -1) {
+                        debugger
                         subCodes[subCodeIndex].values = item.codes;
+                        subCodes[subCodeIndex].arName = item.arName;
                       }
                     }
                   }

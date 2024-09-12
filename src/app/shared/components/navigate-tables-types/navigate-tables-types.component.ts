@@ -258,6 +258,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.auditRuleHomeService.GetAllAuditRules(0),
     ]).subscribe({
       next: (auditRulesResponse: any) => {
+        debugger
         if (auditRulesResponse[0].Data)
           this.auditRules = auditRulesResponse[0].Data.getAuditRuleDtos;
         this.displayFormContents();
@@ -366,6 +367,9 @@ export class NavigateTablesTypesComponent implements OnInit {
 
               for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
                 let codes = coverForm.tables[index].formContents[i].values[j];
+                if (codes.toString() === "") {
+                  codes = 0; // Replace empty string with 0
+                }
                 codesList.push(codes);
               }
 
@@ -392,6 +396,9 @@ export class NavigateTablesTypesComponent implements OnInit {
                 let codesListSub: number[] = [];
                 for (let x = 0; x < coverForm.tables[index].formContents[i].code.SubCodes[r].values.length; x++) {
                   let codes = coverForm.tables[index].formContents[i].code.SubCodes[r].values[x];
+                  if (codes.toString() === "") {
+                    codes = 0; // Replace empty string with 0
+                  }
                   codesListSub.push(codes);
                 }
 
@@ -421,6 +428,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         let coverFormData = localStorage.getItem(`quarterCoverForm`) ||localStorage.getItem(`coverFormData`)|| '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
+        debugger
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
