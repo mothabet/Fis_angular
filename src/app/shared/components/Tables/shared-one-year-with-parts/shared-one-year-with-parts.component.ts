@@ -362,4 +362,10 @@ export class SharedOneYearWithPartsComponent {
     }
 
   }
+  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
+  }
 }

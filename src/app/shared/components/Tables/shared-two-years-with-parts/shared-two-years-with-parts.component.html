@@ -86,12 +86,10 @@
                                                 <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                     {{activity.arName}}</option>
                                             </select>
-                                            <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                            style="background-color: white; border-radius: 5px;margin: 10px;"
-                                            (click)="addSubCodeRow(formContent.code)">
-                                            <img src=".././../../../assets/images/trash-can-outline.png"
-                                                class="img-fluid">
-                                        </button> -->
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                             <div style="display: flex;">
@@ -110,23 +108,19 @@
                                                         {{ country.arName }}
                                                     </option>
                                                 </select>
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                             </div>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 300px !important;" />
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                             </div>
 
                                         </td>
