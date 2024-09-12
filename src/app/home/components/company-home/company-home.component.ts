@@ -61,10 +61,12 @@ export class CompanyHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         debugger
+        
         this.Loader = false;
         this.coverForm = res.Data
       },
       error: (err: any) => {
+        debugger
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

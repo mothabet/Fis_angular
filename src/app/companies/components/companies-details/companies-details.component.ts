@@ -6,6 +6,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-companies-details',
@@ -41,7 +42,7 @@ export class CompaniesDetailsComponent implements OnInit {
         if (res.Data) {
           this.company = res.Data;
           debugger
-          this.selectedImageUrl = this.company.pathImgProfile;
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
       error: (err: any) => {
@@ -196,8 +197,8 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
-        debugger
-        this.selectedImage = res.Data
+        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+
       },
       error: (err: any) => {
         console.error('Error uploading image:', err);

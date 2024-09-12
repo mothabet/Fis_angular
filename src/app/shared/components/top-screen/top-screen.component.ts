@@ -7,14 +7,14 @@ import { SharedService } from '../../services/shared.service';
 import Swal from 'sweetalert2';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-top-screen',
   templateUrl: './top-screen.component.html',
   styleUrls: ['./top-screen.component.css']
 })
-export class TopScreenComponent implements OnInit
-{
+export class TopScreenComponent implements OnInit {
   passwordForm!: FormGroup;
   @Input() title = '';
   researcherId = '';
@@ -22,14 +22,14 @@ export class TopScreenComponent implements OnInit
   arName: string = "";
   Loader = false;
   selectedImageUrl!: string
-  constructor(private topScreenServices:TopScreenService,private loginService: LoginService, private router: Router,
-     private sharedService: SharedService, private authService: LoginService, private formBuilder: FormBuilder
-     , private companyServices: CompanyHomeService,private researcherServices: ResearcherHomeService
-    ) { }
+  constructor(private topScreenServices: TopScreenService, private loginService: LoginService, private router: Router,
+    private sharedService: SharedService, private authService: LoginService, private formBuilder: FormBuilder
+    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService
+  ) { }
   ngOnInit(): void {
     this.Loader = true
     const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
+    let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
     this.arName = result.arName;
     this.researcherId = this.topScreenServices.getResearcherId();
@@ -37,13 +37,16 @@ export class TopScreenComponent implements OnInit
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
     });
-    debugger
     if (this.role == 'Company') {
       this.GetCompanyByUserId();
     }
+    else if (this.role == 'Researchers') {
+      this.Loader = true;
+      this.GetProfileResearcherByUserId();
+    }
   }
   LogOut() {
-    debugger
+
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
   }
@@ -51,7 +54,7 @@ export class TopScreenComponent implements OnInit
     this.Loader = true;
     this.passwordForm.patchValue({
       password: this.sharedService.generateRandomString(12), // Generate a 12 character password
-      confirmPassword : this.passwordForm.value.password
+      confirmPassword: this.passwordForm.value.password
     });
     this.Loader = false;
   }
@@ -65,9 +68,9 @@ export class TopScreenComponent implements OnInit
             button.click();
           }
           const isLoggedIn = this.authService.getToken();
-          let result = this.authService.decodedToken(isLoggedIn);  
-    this.role = result.roles;
-    this.arName = this.arName;
+          let result = this.authService.decodedToken(isLoggedIn);
+          this.role = result.roles;
+          this.arName = this.arName;
           this.Loader = false;
           Swal.fire({
             icon: 'success',
@@ -96,10 +99,8 @@ export class TopScreenComponent implements OnInit
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
-          debugger
-          this.selectedImageUrl = res.Data;
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
         }
       },
       error: (err: any) => {
@@ -113,10 +114,8 @@ export class TopScreenComponent implements OnInit
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
-          debugger
-          this.selectedImageUrl = res.Data;
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
         }
       },
       error: (err: any) => {
@@ -126,5 +125,5 @@ export class TopScreenComponent implements OnInit
     };
     this.researcherServices.GetProfileResearcherByUserId().subscribe(observer);
   }
-  
+
 }

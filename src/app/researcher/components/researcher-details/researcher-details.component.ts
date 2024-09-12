@@ -14,6 +14,7 @@ import { TopScreenService } from 'src/app/shared/services/top-screen.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-researcher-details',
@@ -65,8 +66,8 @@ export class ResearcherDetailsComponent implements OnInit {
           
           this.researcher = res.Data;
           this.companies = res.Data.companies
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.pathImgProfile}`;
           
-          console.log(this.companies)
           this.companiesCount = this.researcher.companies.length;
         }
       },
@@ -316,9 +317,8 @@ export class ResearcherDetailsComponent implements OnInit {
 
     const observer = {
       next: (res: any) => {
+        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
         this.showLoader = false;
-        debugger
-        this.selectedImage = res.Data
       },
       error: (err: any) => {
         console.error('Error uploading image:', err);
