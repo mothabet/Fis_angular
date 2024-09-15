@@ -30,10 +30,16 @@
           <span class="">الرئيسية</span>
         </a>
       </li>
-      <li class="sidebar-item" [routerLink]="['/CompanyHome',0]" routerLinkActive="active" *ngIf="role === 'Company'">
+      <li class="sidebar-item" [routerLink]="['/Companies-Details',id]" routerLinkActive="active" *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
+        </a>
+      </li>
+      <li class="sidebar-item" [routerLink]="['/CompanyHome',0]" routerLinkActive="active" *ngIf="role === 'Company'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-house icon"></i>
+          <span class="">الاستمارات الحاليه</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin'">

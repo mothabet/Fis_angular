@@ -42,15 +42,20 @@ export class CompaniesDetailsComponent implements OnInit {
     this.showLoader = false;
   }
   GetCompanyById(id: number) {
+    debugger
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+    debugger
+
         if (res.Data) {
           this.company = res.Data;
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
       error: (err: any) => {
+    debugger
+
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
@@ -103,17 +108,25 @@ export class CompaniesDetailsComponent implements OnInit {
     }
   }
   GetCompanyPdfs(id: number) {
+    debugger
+
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+    debugger
+
         if (res.Data) {
           this.companyPdfs = res.Data;
         }
         else{
           this.companyPdfs = [];
         }
+    this.showLoader = false;
+
       },
       error: (err: any) => {
+    debugger
+
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },

@@ -129,7 +129,6 @@ export class CompanyHomeService {
   }
 
   saveFile(path: string) {
-    debugger
     this.downloadFile(path).subscribe(response => {
       if (response.body) {
         const blob = new Blob([response.body], { type: response.headers.get('Content-Type') || 'application/octet-stream' });
