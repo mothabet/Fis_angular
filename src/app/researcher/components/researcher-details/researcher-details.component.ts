@@ -42,7 +42,8 @@ export class ResearcherDetailsComponent implements OnInit {
   hovering: boolean = false;
   selectedImage: File | null = null;
   selectedImageUrl!: string
-  constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+  constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,
+    private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
   ngOnInit(): void {

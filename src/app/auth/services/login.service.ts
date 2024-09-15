@@ -108,7 +108,8 @@ export class LoginService {
       'TwoYearsWithParts', 
       'FormDetails',
       'Researcher-Details',
-      'SharedTwoYearsWithParts'
+      'SharedTwoYearsWithParts',
+      'Companies-Researcher'
     ];
     return researcherRoutes.includes(url);
   }

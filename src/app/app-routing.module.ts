@@ -32,6 +32,7 @@ import { SectorsComponent } from './sectors-and-activities/Components/sectors/se
 import { ActivitiesComponent } from './sectors-and-activities/Components/activities/activities.component';
 import { SubActivitiesComponent } from './sectors-and-activities/Components/sub-activities/sub-activities.component';
 import { CountriesComponent } from './sectors-and-activities/Components/countries/countries.component';
+import { CompanyResearcherHomeComponent } from './companies/components/company-researcher-home/company-researcher-home.component';
 
 const routes: Routes = [
   { path: 'Sectors', component: SectorsComponent, canActivate: [LoginGuard] },
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'FormDetails/:formId/:type/:companyId', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
   { path: 'Companies', component: CompaniesHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Companies-Researcher/:researcherId', component: CompanyResearcherHomeComponent, canActivate: [LoginGuard] },
   { path: 'Companies-Details/:companyId', component: CompaniesDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Researcher', component: ResearcherHomeComponent , canActivate: [LoginGuard]},
   { path: 'Researcher-Details/:researcherId', component: ResearcherDetailsComponent, canActivate: [LoginGuard] },

@@ -10,6 +10,8 @@ import { LoginService } from 'src/app/auth/services/login.service';
 export class SidebarComponent implements OnInit {
   role:string = "";
   id:number=0;
+  isSidebarExpanded = false;
+
   constructor(private router: Router, private authService: LoginService) { }
 
   ngOnInit(): void {
@@ -17,5 +19,8 @@ export class SidebarComponent implements OnInit {
     let res = this.authService.decodedToken(isLoggedIn);  
     this.role = res.roles;
     this.id = res.id;
+  }
+  toggleSidebar() {
+    this.isSidebarExpanded = !this.isSidebarExpanded;
   }
 }

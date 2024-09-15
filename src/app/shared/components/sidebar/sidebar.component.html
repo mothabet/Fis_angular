@@ -1,16 +1,15 @@
 <!-- menu -->
-<div class="home" *ngIf="role != 'Researchers'">
-  <aside id="sidebar" class="expand">
+<div class="home">
+  <aside id="sidebar" [ngClass]="{'expand': isSidebarExpanded}">
     <!-- logo -->
     <div class="px-2 mt-3 d-flex justify-content-between align-items-center">
       <div class="sidebar-logo" id="logo">
         <img src="../../../../assets/images/NationalCenterStatisticsLogoList.png" class="img-fluid" alt="" />
       </div>
-      <button class="toggle-btn d-flex p-1" type="button">
+      <button class="toggle-btn d-flex p-1" type="button" (click)="toggleSidebar()">
         <i class="fa-solid fa-bars align-self-center"></i>
       </button>
     </div>
-
     <!-- menu list -->
     <ul class="sidebar-nav">
       <li class="sidebar-item mb-3" id="searchList">
@@ -43,10 +42,22 @@
           <span>الباحثين او المشرف</span>
         </a>
       </li>
+      <li class="sidebar-item" [routerLink]="['/Researcher-Details',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
+          <span>الباحث او المشرف</span>
+        </a>
+      </li>
       <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link" routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
           <span>الشركات</span>
+        </a>
+      </li>
+      <li class="sidebar-item" [routerLink]="['/Companies-Researcher',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+        <a class="sidebar-link" [routerLink]="['/Companies-Researcher',id]">
+          <i class="fa-solid fa-building icon"></i>
+          <span>شركات الباحث</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin'">
