@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddCompany, ICompaniesPDF, ICompany, ICompanyEmail, } from '../../Dtos/CompanyHomeDto';
@@ -77,6 +77,7 @@ export class CompaniesHomeComponent implements OnInit {
       wilayatId: [0],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
+    
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
     console.log(this.compEmails.controls)

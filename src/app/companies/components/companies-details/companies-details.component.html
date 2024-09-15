@@ -6,8 +6,8 @@
 
 
     <!-- start content -->
-    <div class="companies-details">
-        <div class="header-nav">
+    <div class="companies-details" >
+        <div class="header-nav" *ngIf="role != 'Researchers'">
             <div class="card-box mb-3">
                 <ul>
                     <li class="active">
@@ -32,13 +32,13 @@
                 <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="company">
                 
                 <!-- زر تغيير الصورة -->
-                <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
+                <button class="change-image-btn" (click)="triggerImageUpload()" *ngIf="role != 'Researchers'" (mouseover)="hovering=true" (mouseleave)="hovering=false">
                     <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
                     <span *ngIf="hovering">Change Image</span>
                 </button>
                 
                     <!-- Input لاختيار الصور فقط -->
-                    <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
+                    <input type="file" *ngIf="role != 'Researchers'" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
                 </div>
                 <div class="detail">
                     <h4 class="title">{{company.arName}}</h4>
@@ -197,8 +197,8 @@
                 <div class="card-box file">
                     <div class="header">
                         <h4 class="title">المرفقات</h4>
-                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput">
-                        <button class="btn upload-btn" (click)="triggerFileInput()">
+                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput" *ngIf="role != 'Researchers'">
+                        <button class="btn upload-btn" (click)="triggerFileInput()" *ngIf="role != 'Researchers'">
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
                           </button>
                     </div>
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                         <div class="btns d-flex">
-                            <button class="btn btn-delete" (click)="showAlert(pdf.id)" ><span>حذف</span></button>
+                            <button class="btn btn-delete" (click)="showAlert(pdf.id)" *ngIf="role != 'Researchers'"><span>حذف</span></button>
                             <button class="btn btn-download" (click)="downloadPdf(pdf.path)">تحميل</button>
                         </div>
                     </div>

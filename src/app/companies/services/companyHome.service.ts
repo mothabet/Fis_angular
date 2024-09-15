@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment.development';
 import { IAddCompany, ICompany } from '../Dtos/CompanyHomeDto';
+import { Observable } from 'rxjs';
+import { saveAs } from 'file-saver'; // Install this package for saving files
 
 @Injectable({
   providedIn: 'root'
@@ -119,6 +121,26 @@ export class CompanyHomeService {
      var response = this.http.delete(environment.apiUrl+`Pdf/DeletePdf?id=${id}`, { headers });
      return response;
    }
+   downloadFile(path: string): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${path}`, {
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
+  saveFile(path: string) {
+    debugger
+    this.downloadFile(path).subscribe(response => {
+      if (response.body) {
+        const blob = new Blob([response.body], { type: response.headers.get('Content-Type') || 'application/octet-stream' });
+        saveAs(blob, path);
+      } else {
+        console.error('File download failed, response body is null');
+      }
+    }, error => {
+      console.error('File download error:', error);
+    });
+  }
    UpdateProfileImg(formData: FormData,id:number) {
     var headers= this.sharedService.getHeaders();
     var resopnse = this.http.put(

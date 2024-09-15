@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-companies-details',
@@ -23,13 +24,18 @@ export class CompaniesDetailsComponent implements OnInit {
   hovering: boolean = false;
   selectedImage: File | null = null;
   selectedImageUrl!: string
-  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
+  role:string = "";
+  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
+    , private sharedServices: SharedService, private authService: LoginService) {
 
   }
   ngOnInit(): void {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetCompanyById(+this.companyId);
     this.GetCompanyPdfs(+this.companyId);
+    const isLoggedIn = this.authService.getToken();
+    let res = this.authService.decodedToken(isLoggedIn);  
+    this.role = res.roles;
   }
   ngAfterViewInit(): void {
 
@@ -41,7 +47,6 @@ export class CompaniesDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
-          debugger
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
@@ -102,8 +107,10 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
           this.companyPdfs = res.Data;
+        }
+        else{
+          this.companyPdfs = [];
         }
       },
       error: (err: any) => {
@@ -134,7 +141,6 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.GetCompanyPdfs(+this.companyId);
-        this.GetCompanyPdfs(+this.companyId)
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -150,20 +156,10 @@ export class CompaniesDetailsComponent implements OnInit {
     };
     this.companyServices.DeletePdf(id).subscribe(observer);
   }
-  GetPdfPath(url: string): void {
-
-    this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
-
-      const fileName = url.substring(url.lastIndexOf('/') + 1);
-      saveAs(blob, fileName);
-    });
-  }
   downloadPdf(path: string): void {
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const pdfUrl = 'https://www.esu.edu/computing_communication_services/web-services/documents/23-24/fake.pdf';
-    this.http.get(proxyUrl + pdfUrl, { responseType: 'blob' }).subscribe((blob: Blob) => {
-      saveAs(blob, 'fake.pdf');
-    });
+    
+    path = `${environment.dirUrl}PdfFile/Company_${this.companyId}/${path}`;
+    this.companyServices.saveFile(path);
   }
   @ViewChild('imageInput') imageInput!: ElementRef;
 
