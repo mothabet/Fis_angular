@@ -233,6 +233,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.Loader = false;
+        debugger
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
@@ -277,7 +278,7 @@ export class NavigateTablesTypesComponent implements OnInit {
             if (coverForm.tables[index].formContents[i].values !== undefined) {
               // Extract rule code
               if (btnType == "Approve") {
-                const ruleCode = this.auditRules.find(a => a.codeParent == coverForm.tables[index].formContents[i].code.QuestionCode);
+                const ruleCode = this.auditRules.find(a => a.codeParent == coverForm.tables[index].formContents[i].code.QuestionCode && a.Type == coverForm.Type.toString());
                 if (ruleCode && ruleCode.Rule) {
                   const ruleParts = ruleCode.Rule.split('=');
                   if (ruleParts.length < 2) {
@@ -395,21 +396,12 @@ export class NavigateTablesTypesComponent implements OnInit {
               dataDtosList.push(dataDtos);
 
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
-                let codesListSub: number[] = [];
-                for (let x = 0; x < coverForm.tables[index].formContents[i].code.SubCodes[r].values.length; x++) {
-                  let codes = coverForm.tables[index].formContents[i].code.SubCodes[r].values[x];
-                  if (codes.toString() === "") {
-                    codes = 0; // Replace empty string with 0
-                  }
-                  codesListSub.push(codes);
-                }
-
                 let dataDtosSub: IDataDto = {
                   TableId: coverForm.tables[index].id,
                   TableArName: coverForm.tables[index].arName,
                   TableEnName: coverForm.tables[index].enName,
                   questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
-                  codes: codesListSub,
+                  codes: coverForm.tables[index].formContents[i].code.SubCodes[r].values,
                   level: 2,
                   codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
                   codeType: 0,

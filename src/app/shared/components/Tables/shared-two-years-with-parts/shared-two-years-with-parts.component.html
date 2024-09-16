@@ -63,7 +63,9 @@
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
                                         <td class="text-center"><input type="number"
                                                 [(ngModel)]="formContent.values[i + table.tableParts.length]"
-                                                class="tableInputParent" (input)="changeStatus(coverForm.status)"/>
+                                                class="tableInputParent" 
+                                                (focus)="clearIfZero(formContent.values, i+1)"
+                                        (blur)="restoreIfNotPositive(formContent.values, i+1)" (input)="changeStatus(coverForm.status)"/>
                                         </td>
                                     </ng-container>
                                 </ng-container>
@@ -125,7 +127,9 @@
 
                                         </td>
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                            <td class="text-center"><input type="number" [(ngModel)]="subCode.values[i]"
+                                            <td class="text-center"><input type="number" 
+                                                (focus)="clearIfZero(subCode.values, i+1)"
+                                        (blur)="restoreIfNotPositive(subCode.values, i+1)" [(ngModel)]="subCode.values[i]"
                                                     (ngModelChange)="calculateTransaction(coverForm.status)" /></td>
                                         </ng-container>
 

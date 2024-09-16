@@ -43,6 +43,7 @@ export interface ICoverFormDetailsDto{
     certification : ICertificationDto,
     codeActivity:string,
     GeneralData : IGeneralDataDto
+    Type : number,
 
 }
 export interface IGetTablesDto {
