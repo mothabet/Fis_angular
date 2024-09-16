@@ -225,14 +225,12 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.formServices.OpenForm(+this.formId, +this.companyId).subscribe(observer);
   }
   GetFormById(id: string): void {
-    debugger
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
-          debugger
           this.coverForm = res.Data;
           // let quarterCoverData = localStorage.getItem(`quarterCoverForm`);
           // if (quarterCoverData)

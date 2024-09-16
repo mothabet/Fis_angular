@@ -239,6 +239,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
+    debugger
     // Validate that at least one email is provided
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');

@@ -11,7 +11,8 @@ export interface IAddForm {
     IsTotal:boolean,
     Type : string,
     reviewYear:number,
-    typeQuarter:string
+    typeQuarter:string,
+    codeActivity:string
 }
 
 export interface IGetFormDto {
@@ -40,7 +41,9 @@ export interface ICoverFormDetailsDto{
     quarterCoverData : IQuarterCoverFormDataDto,
     coverFormData : ICoverFormData,
     certification : ICertificationDto,
+    codeActivity:string,
     GeneralData : IGeneralDataDto
+
 }
 export interface IGetTablesDto {
     id:number,

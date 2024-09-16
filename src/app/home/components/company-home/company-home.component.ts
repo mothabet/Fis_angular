@@ -92,7 +92,7 @@ export class CompanyHomeComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formServices.GetFormById(id, 'emp').subscribe(observer);
+    this.formServices.GetFormById(id, '').subscribe(observer);
   }
   showAlert(id: number, event: Event): void {
     // منع تشغيل الحدث الأساسي (formNavigate)

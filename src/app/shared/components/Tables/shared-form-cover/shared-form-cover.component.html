@@ -21,22 +21,10 @@
         </div>
         <div class="row details mb-3 mx-0">
             <div class="detail-ar col-md-4 col-6 order-1">
-                <h6>الإستعمال الرسمي</h6>
-            </div>
-            <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                <input style="text-align: center;"  [disabled]="coverForm.status > 4" [(ngModel)]="coverForm.coverFormData.officialUse"
-                type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
-            </div>
-            <div class="detail-en col-md-4 col-6 order-md-3 order-2">
-                <h6>OFFICIAL USE</h6>
-            </div>
-        </div>
-        <div class="row details mb-3 mx-0">
-            <div class="detail-ar col-md-4 col-6 order-1">
                 <h6>رمز النشاط</h6>
             </div>
             <div class=" col-md-4 col-sm-6 order-md-2 order-3">
-                <input style="text-align: center;" type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100" [(ngModel)]="coverForm.coverFormData.activityCode">
+                <input style="text-align: center;" type="text" class=" col-md-4 col-sm-6 order-md-2 order-3 w-100" [(ngModel)]="coverForm.codeActivity">
             </div>
             <div class="detail-en col-md-4 col-6 order-md-3 order-2">
                 <h6>ACTIVITY CODE</h6>

@@ -87,7 +87,8 @@ export class FormsComponent implements OnInit {
       IsActive: [true, Validators.required],
       type: ['', Validators.required],
       reviewYear: ['', Validators.required],
-      typeQuarter: ['']
+      typeQuarter: [''],
+      codeActivity:['']
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -526,7 +527,8 @@ export class FormsComponent implements OnInit {
         IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
-        typeQuarter: this.formForm.value.typeQuarter
+        typeQuarter: this.formForm.value.typeQuarter,
+        codeActivity: this.formForm.value.codeActivity,
       };
 
       this.Loader = true;
@@ -710,7 +712,8 @@ export class FormsComponent implements OnInit {
             IsActive: this.addForm.IsActive,
             type: this.addForm.Type,
             reviewYear: this.addForm.reviewYear,
-            typeQuarter: this.addForm.typeQuarter
+            typeQuarter: this.addForm.typeQuarter,
+            codeActivity:this.addForm.codeActivity
           });
           
           this.reviewYear = this.formForm.value.reviewYear;
@@ -744,7 +747,9 @@ export class FormsComponent implements OnInit {
         IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
-        typeQuarter: this.formForm.value.typeQuarter
+        typeQuarter: this.formForm.value.typeQuarter,
+        codeActivity: this.formForm.value.codeActivity,
+
       };
       const observer = {
         next: (res: any) => {

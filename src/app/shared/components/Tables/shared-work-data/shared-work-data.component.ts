@@ -65,6 +65,7 @@ export class SharedWorkDataComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        
         if (res.Data) {
           this.company = res.Data;
           this.workData.forEach((item) => {
@@ -139,6 +140,7 @@ export class SharedWorkDataComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          
           this.coverForm = res.Data;
           this.coverForm.GeneralData = this.generalDataDto;
           this.GetFormData();
@@ -166,16 +168,16 @@ export class SharedWorkDataComponent implements OnInit {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);
-          debugger
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             this.workData = this.coverForm.GeneralData.CompanyInfo;
             this.workDataChk = this.coverForm.GeneralData.ChekInfo;
           }
-          else if (res.Data[0].GeneralData){
+          else if (res.Data.length>0){
+            if (res.Data[0].GeneralData){
             this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData) ;
             this.workData = this.coverForm.GeneralData.CompanyInfo;
-            this.workDataChk = this.coverForm.GeneralData.ChekInfo; 
+            this.workDataChk = this.coverForm.GeneralData.ChekInfo; }
           }
           else if (+this.companyId != null || +this.companyId != 0) {
             this.GetCompanyById(+this.companyId);
@@ -192,7 +194,7 @@ export class SharedWorkDataComponent implements OnInit {
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   ngOnDestroy() {
-    debugger
+    
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {
       localStorage.removeItem(`generalData`);
@@ -202,7 +204,7 @@ export class SharedWorkDataComponent implements OnInit {
     localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
   }
   setDataLocalStorage() {
-    debugger
+    
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {
       localStorage.removeItem(`generalData`);
