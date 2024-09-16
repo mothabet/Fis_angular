@@ -11,6 +11,8 @@ import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
+import { IAddFormNotesDto } from '../../Dtos/NavigateDto';
+import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -40,9 +42,11 @@ export class NavigateTablesTypesComponent implements OnInit {
   formContents: any[] = [];
   quarterCoverForm !: IQuarterCoverFormDataDto;
   auditRules: IAuditRule[] = [];
+  addFormNotesDto: IAddFormNotesDto[] = [];
+  add: boolean = true;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
-    private navigateTablesTypesService: NavigateTablesTypesService, private auditRuleHomeService: AuditRuleHomeService) { }
+    private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService, private auditRuleHomeService: AuditRuleHomeService) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
@@ -203,7 +207,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formServices.CloseForm(+this.formId, +this.companyId).subscribe(observer);
   }
-  OpenForm(){
+  OpenForm() {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -267,7 +271,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         }
         let dataDtosList: IDataDto[] = [];
         for (let index = 0; index < coverForm.tables.length; index++) {
-          
+
           for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
             let codesList: number[] = [];
             if (coverForm.tables[index].formContents[i].values !== undefined) {
@@ -300,7 +304,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                       title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
                       showConfirmButton: true,
                       confirmButtonText: 'اغلاق'
-                    });                    
+                    });
                     continue;
                   }
                   let valuesLength = coverForm.tables[index].formContents[i].values.length;
@@ -308,57 +312,57 @@ export class NavigateTablesTypesComponent implements OnInit {
 
                   // Iterate over formContents
                   // for (let i = 0; i < coverForm.tables[index].formContents.length; i++) {
-                    
-                    let formContent = coverForm.tables[index].formContents[i];
-                    let subCodes = formContent.code.SubCodes;
 
-                    // Reset sums for current formContent
-                    let indexSums = new Array(valuesLength).fill(0);
-                    // Accumulate values from SubCodes
-                    for (let j = 0; j < subCodes.length; j++) {
-                      let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
-                      if (numbers.includes(subCodeQuestionCode)) {
-                          let subCodeValues = subCodes[j].values;
-                          
-                          // Find the operator before the current number
-                          let indexOfCode = numbers.indexOf(subCodeQuestionCode);
-                          let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
+                  let formContent = coverForm.tables[index].formContents[i];
+                  let subCodes = formContent.code.SubCodes;
 
-                          // Apply the correct operation based on the operator
-                          for (let k = 0; k < subCodeValues.length; k++) {
-                              if (k < indexSums.length) {
-                                  if (operator === '-' || !operator) {
-                                      indexSums[k] -= subCodeValues[k];
-                                  } else {
-                                      indexSums[k] += subCodeValues[k];
-                                  }
-                              }
+                  // Reset sums for current formContent
+                  let indexSums = new Array(valuesLength).fill(0);
+                  // Accumulate values from SubCodes
+                  for (let j = 0; j < subCodes.length; j++) {
+                    let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
+                    if (numbers.includes(subCodeQuestionCode)) {
+                      let subCodeValues = subCodes[j].values;
+
+                      // Find the operator before the current number
+                      let indexOfCode = numbers.indexOf(subCodeQuestionCode);
+                      let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
+
+                      // Apply the correct operation based on the operator
+                      for (let k = 0; k < subCodeValues.length; k++) {
+                        if (k < indexSums.length) {
+                          if (operator === '-' || !operator) {
+                            indexSums[k] -= subCodeValues[k];
+                          } else {
+                            indexSums[k] += subCodeValues[k];
                           }
-                      }
-                  }
-                    let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
-
-                    // Add the accumulated sums to the totalValues
-                    for (let l = 0; l < totalValues.length; l++) {
-                      if (l < indexSums.length) {
-                        totalValues[l] += indexSums[l];
-                        if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
-                          debugger
-                          if(coverForm.tables[index].formContents[i].values[l].toString()!="" && totalValues[l].toString()!="00"){
-                            debugger
-                            Swal.fire({
-                              icon: 'error',
-                              title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
-                              showConfirmButton: true,
-                              confirmButtonText: 'اغلاق'
-                            });
-                            this.Loader = false;
-                            return;
-                          }
-                          
                         }
                       }
                     }
+                  }
+                  let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+
+                  // Add the accumulated sums to the totalValues
+                  for (let l = 0; l < totalValues.length; l++) {
+                    if (l < indexSums.length) {
+                      totalValues[l] += indexSums[l];
+                      if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
+                        debugger
+                        if (coverForm.tables[index].formContents[i].values[l].toString() != "" && totalValues[l].toString() != "00") {
+                          debugger
+                          Swal.fire({
+                            icon: 'error',
+                            title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
+                            showConfirmButton: true,
+                            confirmButtonText: 'اغلاق'
+                          });
+                          this.Loader = false;
+                          return;
+                        }
+
+                      }
+                    }
+                  }
                   // }
                 }
               }
@@ -413,9 +417,9 @@ export class NavigateTablesTypesComponent implements OnInit {
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
                   connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
                   connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
-                connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
+                  connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
-                enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+                  enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
                 };
                 dataDtosList.push(dataDtosSub);
               }
@@ -423,7 +427,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
         }
 
-        let coverFormData = localStorage.getItem(`quarterCoverForm`) ||localStorage.getItem(`coverFormData`)|| '';
+        let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
         debugger
@@ -463,5 +467,119 @@ export class NavigateTablesTypesComponent implements OnInit {
 
   setDataLocalStorage() {
     this.setInLocalStorage.emit();
+  }
+  addRow() {
+    this.addFormNotesDto.push({
+      arName: '',
+      enName: '',
+      formId: this.formId,
+      companyId: this.companyId
+    });
+  }
+  areAllFieldsFilled(): boolean {
+    return this.addFormNotesDto.every(item => item.arName && item.enName);
+  }
+  updateFormNotes(index: number, field: keyof IAddFormNotesDto, event: Event): void {
+    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
+    const value = inputElement.value;
+    if (field === 'arName' || field === 'enName') {
+      this.addFormNotesDto[index][field] = value;
+    }
+  }
+  removeItem(index: number): void {
+    this.addFormNotesDto.splice(index, 1);
+  }
+  resetForm(): void {
+    this.addFormNotesDto = [];
+    this.add = true;
+  }
+  saveFormNotes() {
+    this.Loader = true;
+    if (!(this.addFormNotesDto.length > 0)) {
+      this.Loader = false;
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب إدخال ملاحظه واحده على الاقل',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+    for (const addFormDataDto_ of this.addFormNotesDto) {
+      if (addFormDataDto_.arName == '' || addFormDataDto_.enName == '') {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب إدخال الملاحظه بالعربي والانجليزي',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+    }
+    const observer = {
+      next: (res: any) => {
+        const button = document.getElementById('btnCancel');
+        if (button) {
+          button.click();
+        }
+        this.resetForm();
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formNotesService.AddFormNotes(this.addFormNotesDto).subscribe(observer);
+  }
+  GetAllFormNotesByRole(role: string): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          this.addFormNotesDto = res.Data.getFormNotesDtos
+          this.add = true;
+          if (role != '') {
+
+            const button = document.getElementById('ViewFormNotesBtn');
+            if (button) {
+              button.click();
+            }
+          }
+          else {
+
+            const button = document.getElementById('AddFormNotesBtn');
+            if (button) {
+              button.click();
+            }
+          }
+          this.Loader = false;
+
+        }
+        else{
+            Swal.fire({
+              icon: 'error',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
+          this.Loader = false;
+
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formNotesService.GetAllFormNotesByRole(role, this.formId, this.companyId, 0).subscribe(observer);
   }
 }

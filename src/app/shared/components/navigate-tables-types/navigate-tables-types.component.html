@@ -1,5 +1,12 @@
 <div class="header-nav" style="margin-bottom: 20px">
     <app-loader *ngIf="Loader"></app-loader>
+    <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewFormNotes" id="ViewFormNotesBtn" hidden >
+        <img src="./images/list-box-outline.png" alt="">
+    </button>
+    <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AddFormNotes" id="AddFormNotesBtn" hidden >
+        <img src="./images/list-box-outline.png" alt="">
+    </button>
+    
     <div class="header-nav" style="margin-bottom: -10px" *ngIf="role == 'Admin'">
         <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
             <ul class="links">
@@ -38,6 +45,10 @@
                         حالة الإستمارة : تم اعتماد الاستمارة
                     </button>
                 </div>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" >
+                    <img src="./images/list-box-outline.png" alt="">
+                    اضافة ملاحظه
+                </button>
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
@@ -83,6 +94,19 @@
                     data-bs-target="#sendFormCompany">
                     حالة الإستمارة : تم اعادة فتح الاستمارة
                 </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" *ngIf="role == 'Researchers'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    اضافة ملاحظه
+                </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Admin')" *ngIf="role == 'Researchers'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    عرض ملاحظات الاداره
+                </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Researchers')" *ngIf="role == 'Company'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    عرض ملاحظات
+                </button>
+                
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
@@ -145,3 +169,106 @@
             <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
         </div>
     </div>
+    <!--start linked company modal -->
+<div class="modal company-modal fade" id="AddFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+          <h5>الملاحظات</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-table research-table table-border">
+            <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
+              اضافة سطر
+            </button>
+            <table class="table table-borderless">
+              <thead>
+                <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الاسم بالكامل</th>
+                  <th class="text-center" scope="col">English Full Name</th>
+                  <th class="text-center" scope="col"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">
+                    <input type="text" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" />
+                  </td>
+                  <td class="text-center">
+                    <input type="text" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" />
+                  </td>
+                  <td class="text-center td-actions">
+                    <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
+                      <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer pt-0">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
+                إلغاء
+              </button>
+              <button type="button" class="btn btn-save" (click)="saveFormNotes()" *ngIf="add">
+                حفظ
+              </button>
+            <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
+              إعادة ملء
+            </button>
+            <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
+              تعديل
+            </button> -->
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--end linked company modal -->
+  <!--start linked company modal -->
+<div class="modal company-modal fade" id="ViewFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+          <h5>الملاحظات</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-table research-table table-border">
+            <table class="table table-borderless">
+              <thead>
+                <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الاسم بالكامل</th>
+                  <th class="text-center" scope="col">English Full Name</th>
+                  <th class="text-center" scope="col"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">
+                    <input type="text" [value]="item.arName" disabled />
+                  </td>
+                  <td class="text-center">
+                    <input type="text" [value]="item.enName" disabled />
+                  </td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--end linked company modal -->
