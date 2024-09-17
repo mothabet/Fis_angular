@@ -224,7 +224,7 @@
                   *ngFor="let activity of Activities"
                   value="{{ activity.id }}"
                 >
-                  {{ activity.arName }}
+                  {{ activity.arName }}_{{activity.code}}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الرئيسي</label>
@@ -243,7 +243,7 @@
                   *ngFor="let subActivity of SubActivities"
                   value="{{ subActivity.id }}"
                 >
-                  {{ subActivity.arName }}
+                  {{ subActivity.arName }}_{{subActivity.code}}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الثانوي</label>

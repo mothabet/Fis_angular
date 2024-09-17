@@ -28,7 +28,6 @@ export class CompanyHomeService {
     return response;
   }
   GetSubActivities(activityId : number) {
-    debugger
     var headers = this.sharedService.getHeaders();
     var response = this.http.get(environment.apiUrl + `SubActivity/GetSubActivities?activityId=${activityId}`, { headers });
     return response;

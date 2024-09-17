@@ -112,7 +112,20 @@
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <input formControlName="codeActivity" type="text" class="form-control" style="direction: ltr" />
+                  <select
+                  formControlName="codeActivity"
+                  class="form-control"
+                >
+                  <option selected value="0" disabled>
+                    اختيار رمز النشاط
+                  </option>
+                  <option
+                    *ngFor="let activity of Activities"
+                    value="{{ activity.id }}"
+                  >
+                    {{activity.code}}_{{ activity.arName }}
+                  </option>
+                </select>
                   <label>رمز النشاط</label>
                 </div>
               </div>
