@@ -10,7 +10,6 @@
 .field-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 10px; /* Space between items */
 }
 
@@ -21,3 +20,17 @@
 .field-text {
     font-size: 13px;
 }
+/* chart-selection.component.css */
+.radio-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-check-input {
+    margin-right: 5px;
+  }
+  
+  .form-check-label {
+    margin-right: 15px;
+  }
+  
