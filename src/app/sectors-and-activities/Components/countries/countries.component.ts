@@ -31,7 +31,26 @@ export class CountriesComponent implements OnInit {
   }
   onSave(): void {
     this.showLoader = true;
-    if (this.countryForm.valid) {
+    const allErrors: string[] = [];
+    if (this.countryForm.value.arName == "" || this.countryForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الدوله بالعربية');
+    }
+    if (this.countryForm.value.enName == "" || this.countryForm.value.enName == null) {
+      allErrors.push("Country Name in English is required.");
+    }
+    if (this.countryForm.value.code == "" || this.countryForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز الدولة');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const country : IAddSectorDto = {
         arName : this.countryForm.value.arName,
         enName : this.countryForm.value.enName,
@@ -43,7 +62,7 @@ export class CountriesComponent implements OnInit {
           if (button) {
             button.click();
           }
-          this.countryForm.reset();
+          this.onReset();
           this.GetCountries(1,'');
           this.showLoader = false;
           Swal.fire({
@@ -59,10 +78,7 @@ export class CountriesComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.AddCountry(country).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
-    }
+    } 
   }
   GetCountries(page: number, textSearch: string = ''): void {
     this.showLoader = true;
@@ -80,15 +96,12 @@ export class CountriesComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetCountries(page, textSearch).subscribe(observer);
   }
-  onReset(add: number = 0): void {
+  onReset(): void {
     this.countryForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      code: ['', Validators.required]
-    });    
-    if (add == 1) {
-      this.isUpdate = false;
-    }
+      code: [0, Validators.required]
+    });
   }
   DeleteCountry(id: number): void {
     Swal.fire({
@@ -107,7 +120,12 @@ export class CountriesComponent implements OnInit {
           next: (res: any) => {
             this.GetCountries(1,'');
             this.showLoader = false;
-            
+            Swal.fire({
+              icon: 'success',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
           },
           error: (err: any) => {
             this.sharedService.handleError(err);
@@ -143,7 +161,26 @@ export class CountriesComponent implements OnInit {
   }
   updateCountry() {
     this.showLoader = true;
-    if (this.countryForm.valid) {
+    const allErrors: string[] = [];
+    if (this.countryForm.value.arName == "" || this.countryForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الدوله بالعربية');
+    }
+    if (this.countryForm.value.enName == "" || this.countryForm.value.enName == null) {
+      allErrors.push("Country Name in English is required.");
+    }
+    if (this.countryForm.value.code == "" || this.countryForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز الدولة');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const Model: IAddSectorDto = {
         arName: this.countryForm.value.arName,
         enName: this.countryForm.value.enName,
@@ -155,6 +192,7 @@ export class CountriesComponent implements OnInit {
           if (button) {
             button.click();
           }
+          this.onReset();
           this.GetCountries(1);
           this.showLoader = false;
           Swal.fire({
@@ -170,9 +208,6 @@ export class CountriesComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.UpdateCountry(this.id, Model).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
     }
   }
 }

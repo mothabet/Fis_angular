@@ -34,7 +34,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="onReset(1)">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة نشاط
                     </button>
@@ -81,41 +81,39 @@
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="add">إضافة نشاط</h5>
             </div>
-            <form [formGroup]="activityForm"  (ngSubmit)="onSave()">
+            <form [formGroup]="activityForm">
                 <div class="modal-body pb-1">
                   <div class="row">
                     <div class="form-group col-sm-12 mb-2">
                       <input class="form-control input-modal"  type="text"
-                         formControlName="arName" name="arName"/>
+                         formControlName="arName"/>
                         <label for="inputField">اسم النشاط بالعربية</label>
                     </div>
                     <div class="form-group col-sm-12 mb-2">
                         <input class="form-control input-modal"  type="text"
-                           formControlName="enName" name="enName"/>
+                           formControlName="enName" />
                           <label for="inputField">Activity Name in English</label>
                       </div>
                       <div class="form-group col-sm-12 mb-2">
                         <input class="form-control input-modal"  type="text"
-                           formControlName="code" name="code"/>
+                           formControlName="code" />
                           <label for="inputField">رمز النشاط</label>
                       </div>
                       <div class="form-group col-sm-12 mb-2">
-                        <select class="form-control input-modal" formControlName="sectorId">
+                          <select class="form-control input-modal" formControlName="sectorId">
+                            <option value="0">--اختر رمز القطاع--</option>
                             <option *ngFor="let sector of sectors" [value]="sector.id">{{sector.arName}}</option>
                         </select>
-                          <label for="inputField">اسم النشاط</label>
+                          <label for="inputField">اسم القطاع</label>
                       </div>
                         
                   </div>
                 </div>
                 <div class="modal-footer pt-0">
-                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
                     إلغاء
                   </button>
-                  <button type="button" class="btn btn-reset">
-                    إعادة ملء
-                  </button>
-                  <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+                  <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="button" (click)="onSave()">
                     حفظ
                   </button>
                   <button type="button" class="btn btn-save" *ngIf="isUpdate" (click) = "updateActivity()" type="button" class="btn btn-save">

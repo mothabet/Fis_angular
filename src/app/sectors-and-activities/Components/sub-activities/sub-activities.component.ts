@@ -28,14 +28,36 @@ export class SubActivitiesComponent implements OnInit {
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code: ['', Validators.required],
-      activityId : ['', Validators.required],
+      activityId : [0, Validators.required],
     });
     this.GetSubActivities(1,'',)
     this.GetActivities(1,'',)
   }
   onSave(): void {
     this.showLoader = true;
-    if (this.subActivityForm.valid) {
+    const allErrors: string[] = [];
+    if (this.subActivityForm.value.arName == "" || this.subActivityForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    }
+    if (this.subActivityForm.value.enName == "" || this.subActivityForm.value.enName == null) {
+      allErrors.push("Activity Name in English is required.");
+    }
+    if (this.subActivityForm.value.code == "" || this.subActivityForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز النشاط');
+    }
+    if (!(this.subActivityForm.value.sectorId > 0)) {
+      allErrors.push('يجب اختيار اسم القطاع');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const subActivity : IAddSubActivityDto = {
         arName : this.subActivityForm.value.arName,
         enName : this.subActivityForm.value.enName,
@@ -64,10 +86,7 @@ export class SubActivitiesComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.AddSubActivity(subActivity).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
-    }
+    } 
   }
   GetSubActivities(page: number, textSearch: string = ''): void {
     this.showLoader = true;
@@ -85,16 +104,13 @@ export class SubActivitiesComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetSubActivities(page, textSearch).subscribe(observer);
   }
-  onReset(add: number = 0): void {
+  onReset(): void {
     this.subActivityForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code: ['', Validators.required],
-      activityId:this.activities[0].id
-    });    
-    if (add == 1) {
-      this.isUpdate = false;
-    }
+      activityId:[0, Validators.required],
+    }); 
   }
   GetActivities(page: number, textSearch: string = ''): void {
     this.showLoader = true;
@@ -130,7 +146,12 @@ export class SubActivitiesComponent implements OnInit {
           next: (res: any) => {
             this.GetSubActivities(1,'');
             this.showLoader = false;
-            
+            Swal.fire({
+              icon: 'success',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
           },
           error: (err: any) => {
             this.sharedService.handleError(err);
@@ -168,7 +189,29 @@ export class SubActivitiesComponent implements OnInit {
   }
   updateSubActivity() {
     this.showLoader = true;
-    if (this.subActivityForm.valid) {
+    const allErrors: string[] = [];
+    if (this.subActivityForm.value.arName == "" || this.subActivityForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    }
+    if (this.subActivityForm.value.enName == "" || this.subActivityForm.value.enName == null) {
+      allErrors.push("Activity Name in English is required.");
+    }
+    if (this.subActivityForm.value.code == "" || this.subActivityForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز النشاط');
+    }
+    if (!(this.subActivityForm.value.activityId > 0)) {
+      allErrors.push('يجب اختيار اسم القطاع');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const Model: IAddSubActivityDto = {
         arName: this.subActivityForm.value.arName,
         enName: this.subActivityForm.value.enName,
@@ -196,9 +239,6 @@ export class SubActivitiesComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.UpdateSubActivity(this.id, Model).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
-    }
+    } 
   }
 }

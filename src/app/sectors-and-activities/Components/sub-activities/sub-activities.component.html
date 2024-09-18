@@ -33,7 +33,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="onReset(1)">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة نشاط
                     </button>
@@ -100,6 +100,7 @@
                       </div>
                       <div class="form-group col-sm-12 mb-2">
                         <select class="form-control input-modal" formControlName="activityId">
+                            <option value="0">--اختر اسم النشاط--</option>
                             <option *ngFor="let activity of activities" [value]="activity.id">{{activity.arName}}</option>
                         </select>
                           <label for="inputField">اسم النشاط</label>
@@ -108,11 +109,8 @@
                   </div>
                 </div>
                 <div class="modal-footer pt-0">
-                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
                     إلغاء
-                  </button>
-                  <button type="button" class="btn btn-reset">
-                    إعادة ملء
                   </button>
                   <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
                     حفظ

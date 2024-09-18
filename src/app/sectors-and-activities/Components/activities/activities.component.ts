@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IAddActivityDto, IAddSectorDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddActivityDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,35 +12,59 @@ import Swal from 'sweetalert2';
   templateUrl: './activities.component.html',
   styleUrls: ['./activities.component.css']
 })
-export class ActivitiesComponent implements OnInit{
+export class ActivitiesComponent implements OnInit {
   activityForm!: FormGroup;
   showLoader: boolean = false;
-  activities!:IGetSectorDto[];
-  activity!:IGetSectorDto;
-  sectors!:IGetSectorDto[];
+  activities!: IGetSectorDto[];
+  activity!: IGetSectorDto;
+  sectors!: IGetSectorDto[];
   isUpdate: boolean = false;
-  id:number=0;
-  constructor(    private sharedService: SharedService,private fb: FormBuilder,
-    private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
+  id: number = 0;
+  constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
+
+    private toastr: ToastrService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
 
   ngOnInit(): void {
-    this.activityForm = this.fb.group({
+    this.activityForm = this.formBuilder.group({
+      code: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      code: ['', Validators.required],
-      sectorId : ['', Validators.required],
+      sectorId: [0, Validators.required],
     });
-    this.GetActivities(1,'',)
-    this.GetSectors(1,'',)
+    this.GetActivities(1, '',)
+    this.GetSectors(1, '',)
   }
-  onSave(): void {
+  onSave() {
+    debugger
     this.showLoader = true;
-    if (this.activityForm.valid) {
-      const activity : IAddActivityDto = {
-        arName : this.activityForm.value.arName,
-        enName : this.activityForm.value.enName,
-        code : this.activityForm.value.code,
-        sectorId : this.activityForm.value.sectorId,
+    const allErrors: string[] = [];
+    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    }
+    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
+      allErrors.push("Activity Name in English is required.");
+    }
+    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز النشاط');
+    }
+    if (!(this.activityForm.value.sectorId > 0)) {
+      allErrors.push('يجب اختيار اسم القطاع');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
+      const activity: IAddActivityDto = {
+        arName: this.activityForm.value.arName,
+        enName: this.activityForm.value.enName,
+        code: this.activityForm.value.code,
+        sectorId: this.activityForm.value.sectorId,
       }
       const observer = {
         next: (res: any) => {
@@ -48,14 +72,14 @@ export class ActivitiesComponent implements OnInit{
           if (button) {
             button.click();
           }
-          this.activityForm.reset();
-          this.GetActivities(1,'');
+          this.onReset();
+          this.GetActivities(1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
             title: res.Message,
-            showConfirmButton: false,
-            timer: 2000
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
         },
         error: (err: any) => {
@@ -64,9 +88,6 @@ export class ActivitiesComponent implements OnInit{
         },
       };
       this.sectorsAndActivitiesServices.AddActivity(activity).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
     }
   }
   GetActivities(page: number, textSearch: string = ''): void {
@@ -85,24 +106,12 @@ export class ActivitiesComponent implements OnInit{
     };
     this.sectorsAndActivitiesServices.GetActivities(page, textSearch).subscribe(observer);
   }
-  onReset(add: number = 0): void {
-    this.activityForm = this.fb.group({
-      arName: ['', Validators.required],
-      enName: ['', Validators.required],
-      code : ['', Validators.required],
-      sectorId : this.sectors[0].id,
-    });    
-    if (add == 1) {
-      this.isUpdate = false;
-    }
-  }
   GetSectors(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.sectors = res.Data;
-          this.activityForm.patchValue({ sectorId: this.sectors[0].id });
         }
         this.showLoader = false;
       },
@@ -129,9 +138,14 @@ export class ActivitiesComponent implements OnInit{
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetActivities(1,'');
+            this.GetActivities(1, '');
             this.showLoader = false;
-            
+            Swal.fire({
+              icon: 'success',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
           },
           error: (err: any) => {
             this.sharedService.handleError(err);
@@ -152,7 +166,7 @@ export class ActivitiesComponent implements OnInit{
             arName: this.activity.arName,
             enName: this.activity.enName,
             code: this.activity.code,
-            sectorId : this.activity.sectorId
+            sectorId: this.activity.sectorId
           });
           this.id = this.activity.id;
         }
@@ -168,12 +182,34 @@ export class ActivitiesComponent implements OnInit{
   }
   updateActivity() {
     this.showLoader = true;
-    if (this.activityForm.valid) {
+    const allErrors: string[] = [];
+    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    }
+    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
+      allErrors.push("Activity Name in English is required.");
+    }
+    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز النشاط');
+    }
+    if (!(this.activityForm.value.sectorId > 0)) {
+      allErrors.push('يجب اختيار اسم القطاع');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const Model: IAddActivityDto = {
         arName: this.activityForm.value.arName,
         enName: this.activityForm.value.enName,
         code: this.activityForm.value.code,
-        sectorId : this.activityForm.value.sectorId,
+        sectorId: this.activityForm.value.sectorId,
       };
       const observer = {
         next: (res: any) => {
@@ -181,13 +217,14 @@ export class ActivitiesComponent implements OnInit{
           if (button) {
             button.click();
           }
+          this.onReset();
           this.GetActivities(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
             title: res.Message,
-            showConfirmButton: false,
-            timer: 2000
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
           });
         },
         error: (err: any) => {
@@ -196,9 +233,33 @@ export class ActivitiesComponent implements OnInit{
         },
       };
       this.sectorsAndActivitiesServices.UpdateActivity(this.id, Model).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
+    } 
+  }
+  getControlErrors(controlName: string): string[] {
+    debugger
+    const control = this.activityForm.get(controlName);
+    const errors: string[] = [];
+    if (control && control.errors) {
+      if (controlName == 'arName') controlName = 'اسم النشاط بالعربية';
+      if (controlName == 'enName') controlName = 'Activity Name in English';
+      if (controlName == 'code') controlName = 'رمز النشاط';
+      if (controlName == 'sectorId') controlName = 'اسم القطاع';
+      if (controlName == 'اسم القطاع' && control.errors['required']) {
+        errors.push(`يجب اختيار ${controlName}`);
+      }
+      else if (control.errors['required']) {
+        errors.push(`يجب ادخال ${controlName}`);
+      }
     }
+    return errors;
+  }
+  onReset(): void {
+    this.activityForm = this.formBuilder.group({
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+      code : ['', Validators.required],
+      sectorId : 0,
+    });    
+      this.isUpdate = false;
   }
 }
