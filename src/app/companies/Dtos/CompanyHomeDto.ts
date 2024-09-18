@@ -64,6 +64,14 @@ export interface IAddCompany {
     facilityType:string
     companyEmails: ICompanyEmail[];
 }
+export interface IAddCompanyByExcel{
+    arName:string,
+    enName:string,
+    sectorCode:string,
+    subActivityCode:string,
+    governorate:string,
+    wilaya:string
+}
 export interface ICompanyEmail {
     Email: string,
 }

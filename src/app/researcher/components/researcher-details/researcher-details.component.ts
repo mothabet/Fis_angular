@@ -22,12 +22,12 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./researcher-details.component.css']
 })
 export class ResearcherDetailsComponent implements OnInit {
-  role:string = "";
+  role: string = "";
   showLoader: boolean = false;
   researcher!: IResearcher;
   researcherId!: string;
   companiesCount: number = 0;
-  companies! : ICompany[]
+  companies!: ICompany[]
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -36,13 +36,13 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
-  formStatics!:any[];
-  formsStaticsStatus!:any[];
+  formStatics!: any[];
+  formsStaticsStatus!: any[];
   tableColumns = ['عنوان الشركه', 'رقم الشركة', 'اسم الشركة'];
   hovering: boolean = false;
   selectedImage: File | null = null;
   selectedImageUrl!: string
-  constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,
+  constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
@@ -53,7 +53,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetAllMessages(0, '')
     this.GetAllForms();
     const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
+    let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
     this.GetFormsStatistics()
   }
@@ -64,11 +64,11 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          
+
           this.researcher = res.Data;
           this.companies = res.Data.companies
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.pathImgProfile}`;
-          
+
           this.companiesCount = this.researcher.companies.length;
         }
       },
@@ -97,7 +97,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.researcherServices.GetFormsStatistics(+this.researcherId).subscribe(observer);
   }
 
-  GetFormsByStatus(status:number) {
+  GetFormsByStatus(status: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -111,7 +111,7 @@ export class ResearcherDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.researcherServices.GetFormsByStatus(+this.researcherId,status).subscribe(observer);
+    this.researcherServices.GetFormsByStatus(+this.researcherId, status).subscribe(observer);
   }
 
   openModal() {
@@ -132,7 +132,7 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-    
+
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))
@@ -143,7 +143,7 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.messages = [];
-          
+
           res.Data.getMessagesDtos.forEach((message: IMessage) => {
             switch (message.typeMessage) {
               case 2:
@@ -210,7 +210,7 @@ export class ResearcherDetailsComponent implements OnInit {
       emailBody: this.selectedMessage.arDetails || ''
     };
     this.showLoader = true;
-    
+
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
@@ -289,7 +289,7 @@ export class ResearcherDetailsComponent implements OnInit {
   }
   @ViewChild('imageInput') imageInput!: ElementRef;
 
-  
+
   // Method to trigger file input click
   triggerImageUpload() {
     if (this.imageInput) {
@@ -327,6 +327,6 @@ export class ResearcherDetailsComponent implements OnInit {
       },
     };
 
-      this.researcherServices.UpdateProfileImg(formData,+this.researcherId).subscribe(observer);
+    this.researcherServices.UpdateProfileImg(formData, +this.researcherId).subscribe(observer);
   }
 }

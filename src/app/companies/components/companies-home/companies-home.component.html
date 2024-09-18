@@ -42,6 +42,9 @@
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
+          <div>
+            <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" />
+          </div>
         </div>
       </div>
     </div>

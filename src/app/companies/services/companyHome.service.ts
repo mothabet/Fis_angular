@@ -2,7 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment.development';
-import { IAddCompany, ICompany } from '../Dtos/CompanyHomeDto';
+import { IAddCompany, IAddCompanyByExcel, ICompany } from '../Dtos/CompanyHomeDto';
 import { Observable } from 'rxjs';
 import { saveAs } from 'file-saver'; // Install this package for saving files
 
@@ -56,6 +56,12 @@ export class CompanyHomeService {
     
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Company/AddCompany`, Model, { headers });
+    return response;
+  }
+  AddCompanyByExcel(Model: IAddCompanyByExcel[]) {
+    debugger
+    var headers = this.sharedService.getHeaders();
+    var response = this.http.post(environment.apiUrl + `Company/AddCompanyByExcel`, Model, { headers });
     return response;
   }
   DeleteCompany(id:number){

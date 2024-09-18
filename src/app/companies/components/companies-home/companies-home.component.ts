@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { IAddCompany, ICompaniesPDF, ICompany, ICompanyEmail, } from '../../Dtos/CompanyHomeDto';
+import { IAddCompany, IAddCompanyByExcel, ICompaniesPDF, ICompany, ICompanyEmail, } from '../../Dtos/CompanyHomeDto';
 import { IDropdownList } from '../../Dtos/SharedDto';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-companies-home',
@@ -21,6 +22,7 @@ export class CompaniesHomeComponent implements OnInit {
     'ص': 'ﺹ', 'ض': 'ﺽ', 'ط': 'ﻁ', 'ظ': 'ﻅ', 'ع': 'ﻉ', 'غ': 'ﻍ', 'ف': 'ﻑ', 'ق': 'ﻕ', 'ك': 'ﻙ', 'ل': 'ﻝ',
     'م': 'ﻡ', 'ن': 'ﻥ', 'ه': 'ﻩ', 'و': 'ﻭ', 'ي': 'ﻱ'
   };
+  addCompanyByExcel : IAddCompanyByExcel[]=[]
   companies: ICompany[] = []
   companiesPDF: ICompaniesPDF[] = []
   Activities: IDropdownList[] = []
@@ -46,6 +48,7 @@ export class CompaniesHomeComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 0;
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
+  data: any[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService) { }
   ngOnInit(): void {
@@ -77,10 +80,113 @@ export class CompaniesHomeComponent implements OnInit {
       wilayatId: [0],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
-    
+
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
     console.log(this.compEmails.controls)
+  }
+  onFileChange(event: any) {
+    const target: DataTransfer = <DataTransfer>(event.target);
+
+    if (target.files.length !== 1) {
+      alert('Cannot upload multiple files');
+      return;
+    }
+
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      // Read the uploaded file
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+      // Get the first sheet
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      // Convert sheet data to JSON
+      this.data = XLSX.utils.sheet_to_json(ws);
+      for (let index = 0; index < this.data.length; index++) {
+        const allErrors: string[] = [];
+        if (this.data[index].arName == undefined) {
+          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
+        }
+        else if (this.data[index].arName == "" || this.data[index].arName == null) {
+          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
+        }
+        if (this.data[index].enName == undefined) {
+          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
+        }
+        else if (this.data[index].enName == "" || this.data[index].enName == null) {
+          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
+        }
+        if (this.data[index].sectorCode == undefined) {
+          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
+        }
+        else if (!(this.data[index].sectorCode > 0)) {
+          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
+        }
+        if (this.data[index].subActivityCode == undefined) {
+          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
+        }
+        else if (!(this.data[index].subActivityCode > 0)) {
+          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
+        }
+        if (this.data[index].governorate == undefined) {
+          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
+        }
+        else if (!(this.data[index].governorate > 0)) {
+          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
+        }
+        if (this.data[index].wilaya == undefined) {
+          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
+        }
+        else if (!(this.data[index].wilaya > 0)) {
+          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
+        }
+        if (allErrors.length > 0) {
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'error',
+            title: allErrors.join('<br>'),
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+        const Model: IAddCompanyByExcel = {
+          arName : this.data[index].arName.toString(),
+          enName : this.data[index].enName.toString(),
+          governorate : this.data[index].governorate.toString(),
+          sectorCode : this.data[index].sectorCode.toString(),
+          subActivityCode : this.data[index].subActivityCode.toString(),
+          wilaya : this.data[index].wilaya.toString(),
+        }
+        this.addCompanyByExcel.push(Model);
+      }
+      debugger
+      const observer = {
+        next: (res: any) => {
+          this.GetCompanies('', 1);
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.showLoader = false;
+          this.sharedService.handleError(err);
+  
+        },
+      };
+      this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe(observer);
+    };
+
+    // Read the file as binary
+    reader.readAsBinaryString(target.files[0]);
   }
   // Getter for the form array
   get compEmails(): FormArray {
@@ -129,9 +235,8 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
   }
   GetSubActivities(activityId: number) {
-    
-    if(activityId>0)
-    {
+
+    if (activityId > 0) {
       const observer = {
         next: (res: any) => {
           // Add a null or undefined check for res.Data
@@ -146,11 +251,11 @@ export class CompaniesHomeComponent implements OnInit {
           this.sharedService.handleError(err);
         },
       };
-  
+
       // Call the service and subscribe
       this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
     }
-}
+  }
 
   GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
@@ -194,7 +299,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.companyHomeServices.GetSectors().subscribe(observer);
   }
   GetWilayat(govId: number) {
-    if(govId>0){
+    if (govId > 0) {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
@@ -239,7 +344,6 @@ export class CompaniesHomeComponent implements OnInit {
     this.password = this.sharedService.generateRandomString(12); // Generate a 12 character password
   }
   saveCompany(): void {
-    debugger
     // Validate that at least one email is provided
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
@@ -388,7 +492,7 @@ export class CompaniesHomeComponent implements OnInit {
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType:''
+      facilityType: ''
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();
@@ -425,7 +529,7 @@ export class CompaniesHomeComponent implements OnInit {
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType:''
+      facilityType: ''
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();    // إضافة حقل واحد فارغ على الأقل
@@ -542,7 +646,7 @@ export class CompaniesHomeComponent implements OnInit {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
-              facilityType:this.company.facilityType
+              facilityType: this.company.facilityType
             });
             this.initializeForm();
 
@@ -669,7 +773,7 @@ export class CompaniesHomeComponent implements OnInit {
           this.GetCompanies('', 1);
           this.showLoader = false;
           this.add = true;
-          
+
           Swal.fire({
             icon: 'success',
             title: res.Message,

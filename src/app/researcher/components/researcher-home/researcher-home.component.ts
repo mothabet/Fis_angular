@@ -43,6 +43,8 @@ export class ResearcherHomeComponent {
   companies: ICompany[] = [];
   selectedCompanyIds: Set<number> = new Set<number>();
   selectedCompanyIdsIsResearcher: Set<number> = new Set<number>();
+  formStatics!: any[];
+  formsStaticsStatus!: any[];
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -50,7 +52,6 @@ export class ResearcherHomeComponent {
     private sharedService: SharedService,
     private companyService: CompanyHomeService
   ) { }
-
   ngOnInit(): void {
     this.researcherForm = this.formBuilder.group({
       userName: ['', Validators.required],
@@ -71,12 +72,12 @@ export class ResearcherHomeComponent {
     this.generateRandomCredentials();
     this.GetAllReseachers(this.currentPage);
     this.GetCompanies('', 0);
+    this.GetFormsStatistics()
   }
   onPageChange(page: number) {
     this.currentPage = page;
     this.GetAllReseachers(page);
   }
-
   generateRandomCredentials(): void {
     this.showLoader = true;
     this.GetResearcherCode();
@@ -85,7 +86,6 @@ export class ResearcherHomeComponent {
     });
     this.showLoader = false;
   }
-
   saveResearcher(): void {
     this.showLoader = true;
     if (this.researcherForm.valid) {
@@ -130,7 +130,6 @@ export class ResearcherHomeComponent {
       this.showLoader = false;
     }
   }
-
   GetResearcherCode(): void {
     this.showLoader = true;
     const observer = {
@@ -149,7 +148,6 @@ export class ResearcherHomeComponent {
     };
     this.researcherService.GetResearcherCode().subscribe(observer);
   }
-
   resetForm(): void {
     this.researcherForm.reset({
       userName: '',
@@ -162,12 +160,11 @@ export class ResearcherHomeComponent {
     });
     this.generateRandomCredentials();
   }
-
   GetAllReseachers(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.researchers = res.Data.getResearcherDtos;
@@ -188,7 +185,6 @@ export class ResearcherHomeComponent {
     };
     this.researcherService.GetAllReseachers(page, textSearch).subscribe(observer);
   }
-
   showAlert(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
@@ -230,7 +226,7 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+
         if (res.Data) {
           this.researcher = res.Data;
           this.researcher.phone = this.researcher.phone.replace(this.phoneCode.toString(), '');
@@ -253,7 +249,7 @@ export class ResearcherHomeComponent {
         }
       },
       error: (err: any) => {
-        
+
         this.sharedService.handleError(err);
         this.showLoader = false;
       },
@@ -274,7 +270,7 @@ export class ResearcherHomeComponent {
       };
       const observer = {
         next: (res: any) => {
-          
+
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -290,7 +286,7 @@ export class ResearcherHomeComponent {
           });
         },
         error: (err: any) => {
-          
+
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -361,12 +357,12 @@ export class ResearcherHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+
         this.showLoader = false;
 
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
-          
+
         }
         else {
           this.companies = [];
@@ -374,7 +370,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
       error: (err: any) => {
-        
+
         this.showLoader = false;
         this.sharedService.handleError(err);
       },
@@ -382,7 +378,7 @@ export class ResearcherHomeComponent {
     this.companyService.GetCompanies(textSearch, page).subscribe(observer);
   }
   onCheckboxChange(companyId: number, event: Event) {
-    
+
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.checked) {
       this.selectedCompanyIds.add(companyId);
@@ -398,24 +394,24 @@ export class ResearcherHomeComponent {
     this.selectedCompanyIds.clear();
     const observer = {
       next: (res: any) => {
-        
+
         this.showLoader = false;
 
         if (res.Data) {
-          
+
           for (let index = 0; index < res.Data.length; index++) {
-            
+
             this.selectedCompanyIds.add(res.Data[index].id);
           }
           // res.Data.getCompaniesDtos.forEach((element:any) => {
-            
+
           //   
           // });
         }
         this.GetCompaniesIsSelectedResearcher();
       },
       error: (err: any) => {
-        
+
         this.showLoader = false;
         this.sharedService.handleError(err);
       },
@@ -433,14 +429,14 @@ export class ResearcherHomeComponent {
             this.selectedCompanyIdsIsResearcher.add(res.Data[index].id);
           }
           // res.Data.getCompaniesDtos.forEach((element:any) => {
-            
+
           //   
           // });
         }
         this.showLoader = false;
       },
       error: (err: any) => {
-        
+
         this.showLoader = false;
         this.sharedService.handleError(err);
       },
@@ -449,13 +445,13 @@ export class ResearcherHomeComponent {
   }
   saveSelectedCompanies() {
     const selectedCompanies = this.companies.filter(company => this.selectedCompanyIds.has(company.id));
-    
+
     this.showLoader = true;
     if (selectedCompanies.length > 0) {
 
       const observer = {
         next: (res: any) => {
-          
+
           const button = document.getElementById('btnCancelCompanyResearcher');
           if (button) {
             button.click();
@@ -470,7 +466,7 @@ export class ResearcherHomeComponent {
           });
         },
         error: (err: any) => {
-          
+
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -489,5 +485,37 @@ export class ResearcherHomeComponent {
   companiesSearch() {
     this.GetCompanies(this.searchText, 1);
   }
-  
+  GetFormsStatistics() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res.Data) {
+          this.formStatics = res.Data
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherService.GetFormsStatistics().subscribe(observer);
+  }
+  GetFormsByStatus(status: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res.Data) {
+          this.formsStaticsStatus = res.Data
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherService.GetFormsByStatus(0, status).subscribe(observer);
+  }
+
 }
