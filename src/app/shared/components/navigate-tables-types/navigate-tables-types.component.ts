@@ -11,7 +11,7 @@ import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
-import { IAddFormNotesDto } from '../../Dtos/NavigateDto';
+import { IAddFormNotesDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
 import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
 
 @Component({
@@ -464,8 +464,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.addFormNotesDto.push({
       arName: '',
       enName: '',
-      formId: this.formId,
-      companyId: this.companyId
     });
   }
   areAllFieldsFilled(): boolean {
@@ -487,16 +485,6 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   saveFormNotes() {
     this.Loader = true;
-    if (!(this.addFormNotesDto.length > 0)) {
-      this.Loader = false;
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب إدخال ملاحظه واحده على الاقل',
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
-      return;
-    }
     for (const addFormDataDto_ of this.addFormNotesDto) {
       if (addFormDataDto_.arName == '' || addFormDataDto_.enName == '') {
         this.Loader = false;
@@ -508,6 +496,11 @@ export class NavigateTablesTypesComponent implements OnInit {
         });
         return;
       }
+    }
+    const Model: IAddListFormNotesDto = {
+      addFormNotesDtos: this.addFormNotesDto,
+      companyId: this.companyId,
+      formId: this.formId
     }
     const observer = {
       next: (res: any) => {
@@ -529,7 +522,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formNotesService.AddFormNotes(this.addFormNotesDto).subscribe(observer);
+    this.formNotesService.AddFormNotes(Model).subscribe(observer);
   }
   GetAllFormNotesByRole(role: string): void {
     this.Loader = true;
@@ -555,13 +548,13 @@ export class NavigateTablesTypesComponent implements OnInit {
           this.Loader = false;
 
         }
-        else{
-            Swal.fire({
-              icon: 'error',
-              title: res.Message,
-              showConfirmButton: true,
-              confirmButtonText: 'اغلاق'
-            });
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
           this.Loader = false;
 
         }
