@@ -42,9 +42,17 @@
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
-          <div>
-            <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls" />
-          </div>
+          <button type="button" class="btn btn-download" (click)="triggerFileInput()">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            اضافة مجموعة شركات
+          </button>
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileChange($event)"
+            accept=".xlsx, .xls"
+            style="display: none;"
+          />
         </div>
       </div>
     </div>
@@ -208,7 +216,7 @@
               >
                 <option selected value="0" disabled>اختيار القطاع</option>
                 <option *ngFor="let sector of Sectors" value="{{ sector.id }}">
-                  {{ sector.arName }}
+                  {{sector.code}}-{{ sector.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار القطاع</label>
@@ -227,7 +235,7 @@
                   *ngFor="let activity of Activities"
                   value="{{ activity.id }}"
                 >
-                  {{ activity.arName }}_{{activity.code}}
+                {{activity.code}}-{{ activity.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الرئيسي</label>
@@ -246,7 +254,7 @@
                   *ngFor="let subActivity of SubActivities"
                   value="{{ subActivity.id }}"
                 >
-                  {{ subActivity.arName }}_{{subActivity.code}}
+                {{subActivity.code}}-{{ subActivity.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الثانوي</label>

@@ -42,6 +42,7 @@ export interface ICoverFormDetailsDto{
     coverFormData : ICoverFormData,
     certification : ICertificationDto,
     codeActivity:string,
+    codeActivityName:string,
     GeneralData : IGeneralDataDto
     Type : number,
 

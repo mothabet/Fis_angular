@@ -70,7 +70,8 @@ export interface IAddCompanyByExcel{
     sectorCode:string,
     subActivityCode:string,
     governorate:string,
-    wilaya:string
+    wilaya:string,
+    activityCode:string
 }
 export interface ICompanyEmail {
     Email: string,

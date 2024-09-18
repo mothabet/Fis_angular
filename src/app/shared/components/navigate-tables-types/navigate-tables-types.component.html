@@ -15,7 +15,7 @@
                 </li>
             </ul>
             <div class="btns d-flex">
-                <div class="btns d-flex">
+                <div class="btns d-flex mx-1">
                     <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
                         data-bs-target="#sendFormCompany">
                         حالة الإستمارة : تم الارسال للشركة
@@ -45,11 +45,11 @@
                         حالة الإستمارة : تم اعتماد الاستمارة
                     </button>
                 </div>
-                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" >
+                <button type="button" class="btn btn-send mx-1" (click)="GetAllFormNotesByRole('')" >
                     <img src="./images/list-box-outline.png" alt="">
                     اضافة ملاحظه
                 </button>
-                <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                <button type="button" class="btn btn-send mx-1" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
@@ -172,7 +172,7 @@
     <!--start linked company modal -->
 <div class="modal company-modal fade" id="AddFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
+      <div class="modal-content p-2">
         <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
           <h5>الملاحظات</h5>
           <!-- <div class="search">
@@ -182,14 +182,14 @@
         </div>
         <div class="table-responsive company-table research-table table-border">
             <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
-              اضافة سطر
+              اضافة ملاحظه
             </button>
             <table class="table table-borderless">
               <thead>
                 <tr class="t-header">
                   <th scope="col">رقم</th>
-                  <th class="text-center" scope="col">الاسم بالكامل</th>
-                  <th class="text-center" scope="col">English Full Name</th>
+                  <th class="text-center" scope="col">الملاحظه</th>
+                  <th class="text-center" scope="col">Comment</th>
                   <th class="text-center" scope="col"></th>
                 </tr>
               </thead>
@@ -198,10 +198,10 @@
                 <tr *ngFor="let item of addFormNotesDto; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td class="text-center">
-                    <input type="text" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" />
+                    <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" ></textarea>
                   </td>
                   <td class="text-center">
-                    <input type="text" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" />
+                    <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
                   </td>
                   <td class="text-center td-actions">
                     <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
@@ -235,14 +235,14 @@
 <div class="modal company-modal fade" id="ViewFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
-        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between">
           <h5>الملاحظات</h5>
           <!-- <div class="search">
             <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
             <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
           </div> -->
         </div>
-        <div class="table-responsive company-table research-table table-border">
+        <div class="table-responsive company-table research-table table-border  p-1">
             <table class="table table-borderless">
               <thead>
                 <tr class="t-header">

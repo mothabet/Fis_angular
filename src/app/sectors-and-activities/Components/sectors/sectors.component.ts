@@ -164,13 +164,13 @@ export class SectorsComponent implements OnInit {
     this.showLoader = true;
     const allErrors: string[] = [];
     if (this.sectorForm.value.arName == "" || this.sectorForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم الدوله بالعربية');
+      allErrors.push('يجب ادخال اسم القطاع بالعربية');
     }
     if (this.sectorForm.value.enName == "" || this.sectorForm.value.enName == null) {
-      allErrors.push("Country Name in English is required.");
+      allErrors.push("Sector Name in English is required.");
     }
     if (this.sectorForm.value.code == "" || this.sectorForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز الدولة');
+      allErrors.push('يجب ادخال رمز القطاع');
     }
     if (allErrors.length > 0) {
       Swal.fire({

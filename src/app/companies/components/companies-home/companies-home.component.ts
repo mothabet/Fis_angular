@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -85,109 +85,94 @@ export class CompaniesHomeComponent implements OnInit {
     this.username = this.companyForm.value.username;
     console.log(this.compEmails.controls)
   }
-  onFileChange(event: any) {
-    const target: DataTransfer = <DataTransfer>(event.target);
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
-    if (target.files.length !== 1) {
-      alert('Cannot upload multiple files');
+triggerFileInput(): void {
+  this.fileInput.nativeElement.click(); // Trigger the hidden file input
+}
+
+onFileChange(event: any) {
+  const target: DataTransfer = <DataTransfer>(event.target);
+
+  if (target.files.length !== 1) {
+    alert('Cannot upload multiple files');
+    return;
+  }
+
+  const reader: FileReader = new FileReader();
+
+  reader.onload = (e: any) => {
+    const bstr: string = e.target.result;
+    const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+    const wsname: string = wb.SheetNames[0];
+    const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+    this.data = XLSX.utils.sheet_to_json(ws);
+
+    const allErrors: string[] = [];
+    this.data.forEach((row: any, index: number) => {
+      if (!row.arName || row.arName === '') {
+        allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
+      }
+      if (!row.enName || row.enName === '') {
+        allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
+      }
+      if (!row.sectorCode || row.sectorCode === '') {
+        allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
+      }
+      if (!row.activityCode || row.activityCode === '') {
+        allErrors.push(`يجب ادخال activityCode للسطر رقم ${index + 1}`);
+      }
+      if (!row.subActivityCode || row.subActivityCode === '') {
+        allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
+      }
+      if (!row.governorate || row.governorate === '') {
+        allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
+      }
+      if (!row.wilaya || row.wilaya === '') {
+        allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
+      }
+    });
+
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
       return;
     }
 
-    const reader: FileReader = new FileReader();
+    this.addCompanyByExcel = this.data.map((row: any) => ({
+      arName: row.arName.toString(),
+      enName: row.enName.toString(),
+      governorate: row.governorate.toString(),
+      sectorCode: row.sectorCode.toString(),
+      subActivityCode: row.subActivityCode.toString(),
+      wilaya: row.wilaya.toString(),
+      activityCode: row.activityCode.toString(),
+    }));
 
-    reader.onload = (e: any) => {
-      // Read the uploaded file
-      const bstr: string = e.target.result;
-      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-      // Get the first sheet
-      const wsname: string = wb.SheetNames[0];
-      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-      // Convert sheet data to JSON
-      this.data = XLSX.utils.sheet_to_json(ws);
-      for (let index = 0; index < this.data.length; index++) {
-        const allErrors: string[] = [];
-        if (this.data[index].arName == undefined) {
-          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
-        }
-        else if (this.data[index].arName == "" || this.data[index].arName == null) {
-          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
-        }
-        if (this.data[index].enName == undefined) {
-          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
-        }
-        else if (this.data[index].enName == "" || this.data[index].enName == null) {
-          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
-        }
-        if (this.data[index].sectorCode == undefined) {
-          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
-        }
-        else if (!(this.data[index].sectorCode > 0)) {
-          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
-        }
-        if (this.data[index].subActivityCode == undefined) {
-          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
-        }
-        else if (!(this.data[index].subActivityCode > 0)) {
-          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
-        }
-        if (this.data[index].governorate == undefined) {
-          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
-        }
-        else if (!(this.data[index].governorate > 0)) {
-          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
-        }
-        if (this.data[index].wilaya == undefined) {
-          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
-        }
-        else if (!(this.data[index].wilaya > 0)) {
-          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
-        }
-        if (allErrors.length > 0) {
-          this.showLoader = false;
-          Swal.fire({
-            icon: 'error',
-            title: allErrors.join('<br>'),
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
-          });
-          return;
-        }
-        const Model: IAddCompanyByExcel = {
-          arName : this.data[index].arName.toString(),
-          enName : this.data[index].enName.toString(),
-          governorate : this.data[index].governorate.toString(),
-          sectorCode : this.data[index].sectorCode.toString(),
-          subActivityCode : this.data[index].subActivityCode.toString(),
-          wilaya : this.data[index].wilaya.toString(),
-        }
-        this.addCompanyByExcel.push(Model);
+    this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
+      next: (res: any) => {
+        this.GetCompanies('', 1);
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
       }
-      debugger
-      const observer = {
-        next: (res: any) => {
-          this.GetCompanies('', 1);
-          this.showLoader = false;
-          Swal.fire({
-            icon: 'success',
-            title: res.Message,
-            showConfirmButton: false,
-            timer: 2000
-          });
-        },
-        error: (err: any) => {
-          this.showLoader = false;
-          this.sharedService.handleError(err);
-  
-        },
-      };
-      this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe(observer);
-    };
+    });
+  };
 
-    // Read the file as binary
-    reader.readAsBinaryString(target.files[0]);
-  }
+  reader.readAsBinaryString(target.files[0]);
+}
   // Getter for the form array
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;

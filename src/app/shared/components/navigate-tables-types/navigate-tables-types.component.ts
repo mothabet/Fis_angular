@@ -537,17 +537,16 @@ export class NavigateTablesTypesComponent implements OnInit {
       next: (res: any) => {
         debugger
         if (res.Data) {
+          debugger
           this.addFormNotesDto = res.Data.getFormNotesDtos
           this.add = true;
           if (role != '') {
-
             const button = document.getElementById('ViewFormNotesBtn');
             if (button) {
               button.click();
             }
           }
           else {
-
             const button = document.getElementById('AddFormNotesBtn');
             if (button) {
               button.click();

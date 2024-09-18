@@ -42,6 +42,7 @@ export class SharedFormCoverComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
+          debugger
           this.coverForm = res.Data;
           this.GetFormData();
         }
