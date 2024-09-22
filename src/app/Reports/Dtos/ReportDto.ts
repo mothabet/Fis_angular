@@ -11,6 +11,7 @@ export interface IAddReportDto {
     status: boolean,
 }
 export interface ITableDto {
+    selectAllFields:boolean;
     arTableName: string;         // Name of the table
     enTableName: string;               // Name of the table
     fields: ITableFieldDto[];           // List of fields in the table
@@ -38,4 +39,15 @@ export interface IAddReportPartDto{
     withChart:boolean,
     chartType:number,
     reportId:number
+}
+export interface IGetReportPartsDto {
+    id: number,
+    part: string,
+    withChart: boolean,
+    chartType: number,
+    fields :IFieldsDetailsDto[]
+}
+export interface IFieldsDetailsDto {
+    key: number,
+    value: string
 }

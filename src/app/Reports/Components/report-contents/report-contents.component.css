@@ -33,4 +33,42 @@
   .form-check-label {
     margin-right: 15px;
   }
-  
+  /* Limit the height of the table to make the tbody scrollable */
+.company-table {
+    position: relative;
+    max-height: 300px; /* Adjust this as necessary */
+    overflow-y: auto;
+}
+/* Ensure the table remains scrollable and the header stays fixed */
+.scrollable-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table thead {
+    display: table-header-group;
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensures the header stays above the scrollable body */
+    background-color: white; /* Keeps the header visible on scroll */
+}
+
+/* Make tbody scrollable */
+.company-table {
+    max-height: 300px; /* Adjust to your required scroll height */
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Style adjustments for the table */
+.scrollable-table th, .scrollable-table td {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Keep the columns aligned properly */
+.scrollable-table thead th, .scrollable-table tbody td {
+    width: auto;
+}
+

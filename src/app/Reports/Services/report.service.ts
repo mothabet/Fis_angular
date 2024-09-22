@@ -22,6 +22,7 @@ export class ReportService {
     var resopnse = this.http.get(environment.apiUrl + `Report/GetReports?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
     return resopnse;
   }
+  
   DeleteReport(id: number) {
     var headers = this.sharedService.getHeaders();
     var response = this.http.delete(environment.apiUrl + `Report/DeleteReport?id=${id}`, { headers });
@@ -47,5 +48,16 @@ export class ReportService {
     var headers = this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl + `ReportParts/AddReportPart?lang=2`, Report, { headers });
     return resopnse;
+  }
+  GetReportParts(pageNumber: number, textSearch: string = '',reportId: number) {
+    
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `ReportParts/GetReports?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch},&reportId=${reportId}`, { headers });
+    return resopnse;
+  }
+  DeleteReportContent(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var response = this.http.delete(environment.apiUrl + `ReportParts/DeleteReportContent?id=${id}`, { headers });
+    return response;
   }
 }

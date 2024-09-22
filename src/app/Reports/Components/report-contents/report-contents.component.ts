@@ -6,9 +6,11 @@ import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
-import { IAddReportPartDto, IFieldDto, IReportFilterDto, ITableDto, ITableFieldDto } from '../../Dtos/ReportDto';
+import { IAddReportPartDto, IFieldDto, IGetReportDto, IGetReportPartsDto, IReportFilterDto, ITableDto, ITableFieldDto } from '../../Dtos/ReportDto';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import * as saveAs from 'file-saver';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-report-contents',
@@ -32,9 +34,9 @@ export class ReportContentsComponent implements OnInit {
     withChart: false,  // default to false
     chartType: 0,      // default chart type
     reportId: 0        // default ID
-};
+  };
   tables: ITableDto[] = [];
-  reportId!:string
+  reportId!: string
   selectedTable: IReportFilterDto | null = null;
   stringFilterItems: IReportFilterDto[] = [
     { id: 1, arName: 'يساوي', enName: '=' },
@@ -55,12 +57,66 @@ export class ReportContentsComponent implements OnInit {
     { id: 7, arName: 'المحافظات', enName: 'Governorates' },
     { id: 8, arName: 'الولايات', enName: 'Wilayats' }
   ];
+  researcherTables: IReportFilterDto[] = [
+    { id: 1, arName: 'الشركات', enName: 'Companies' },
+  ];
+  reports!: any[]
   constructor(private renderer: Renderer2, private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private reportServices: ReportService,
     private companyHomeServices: CompanyHomeService, private formServices: FormService,
-    private researcherService: ResearcherHomeService,private activeRouter: ActivatedRoute) { }
+    private researcherService: ResearcherHomeService, private activeRouter: ActivatedRoute) { }
   ngOnInit(): void {
     this.reportId = this.activeRouter.snapshot.paramMap.get('reportId')!;
+
+    this.GetReports();
+  }
+  GetReports(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.reports = res.Data;
+        }
+        else {
+          res.Data = []
+          this.reports = res.Data;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.reportServices.GetReportParts(0, '', +this.reportId).subscribe(observer);
+  }
+  DeleteReportContent(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showLoader = true;
+        const observer = {
+          next: (res: any) => {
+            this.GetReports();
+            this.showLoader = false;
+          },
+          error: (err: any) => {
+            debugger
+            this.sharedService.handleError(err);
+            this.showLoader = false;
+          },
+        };
+        this.reportServices.DeleteReportContent(id).subscribe(observer);
+      }
+    });
   }
   GetTableFields(tableType: number): void {
     if (this.tableType != 0) {
@@ -94,9 +150,12 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   onTableSelect(): void {
+    this.tables = [];
+
     if (this.tableType === 1) {
       // Add the 'Companies' table to tableDto
       const tableDto: ITableDto = {
+        selectAllFields: false,
         enTableName: 'Companies',
         arTableName: 'الشركات',
         fields: []  // Initial empty fields array
@@ -105,9 +164,20 @@ export class ReportContentsComponent implements OnInit {
       // Fetch table fields for the selected type (1 for Companies)
       this.GetTableFields(1);
     }
+    else if (this.tableType === 3) {
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'Researcher',
+        arTableName: 'الباحثين',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTableFields(3);
+    }
   }
   onFieldSelect(event: Event, table: ITableDto): void {
-    debugger
+
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
     if (table.enTableName == 'Companies') {
@@ -212,34 +282,77 @@ export class ReportContentsComponent implements OnInit {
   openModal() {
     const modal = document.getElementById('chooseTable');
     if (modal) {
-      modal.classList.add('show');  // Add 'show' class to make it visible
-      modal.style.display = 'block'; // Set display to 'block' to show the modal
-      modal.setAttribute('aria-hidden', 'false'); // Set aria-hidden to false
-      document.body.classList.add('modal-open'); // Add class to prevent background scrolling
-      const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade show'; // Create the backdrop
-      document.body.appendChild(backdrop); // Append the backdrop to the body
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+
+      // Check for an existing backdrop before creating a new one
+      let backdrop = document.querySelector('.modal-backdrop');
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        document.body.appendChild(backdrop);
+      }
+    } else {
+      console.error('Modal element with id "chooseTable" not found.');
     }
   }
+
   closeModal() {
     const modal = document.getElementById('chooseTable');
     if (modal) {
-      modal.classList.remove('show'); // Remove 'show' class to hide it
-      modal.style.display = 'none'; // Set display to 'none' to hide it
-      modal.setAttribute('aria-hidden', 'true'); // Set aria-hidden to true
-      document.body.classList.remove('modal-open'); // Remove class from body
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+
       const backdrop = document.querySelector('.modal-backdrop');
       if (backdrop) {
         backdrop.remove(); // Remove the backdrop from the DOM
+      } else {
+        console.error('Backdrop not found.');
       }
+    } else {
+      console.error('Modal element with id "chooseTable" not found.');
     }
   }
+
   saveReport() {
+
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
+    if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال عنوان الجدول',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+    if (this.report.query == '' || this.report.query == 'SELECT    ;' || this.report.query == null || this.report.query == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب تحديد جداول للتقرير',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
+        this.tables = [];
+        this.report = {
+          part: '',
+          query: '',
+          withChart: false,  // default to false
+          chartType: 0,      // default chart type
+          reportId: 0        // default ID
+        };
+        this.GetReports();
         Swal.fire({
           icon: 'success',
           title: res.Message,
@@ -256,14 +369,18 @@ export class ReportContentsComponent implements OnInit {
   }
   appendTable(): void {
     if (this.selectedTable) {
+
       const tableDto: ITableDto = {
+        selectAllFields: false,
         enTableName: this.selectedTable.enName,
         arTableName: this.selectedTable.arName,
         fields: []  // Initial empty fields array
       };
       this.tables.push(tableDto);
-      debugger
-      if (this.selectedTable.enName == 'Researcher')
+
+      if (this.selectedTable.enName == 'Companies')
+        this.GetTableFields(1);
+      else if (this.selectedTable.enName == 'Researcher')
         this.GetTableFields(3);
       else if (this.selectedTable.enName == 'Sectors')
         this.GetTableFields(4);
@@ -284,53 +401,64 @@ export class ReportContentsComponent implements OnInit {
     let fromTable = '';
     let fields = '';
     let whereClause = '';
-  
+
     tables.forEach((table, tableIndex) => {
       const tableAlias = `t${tableIndex + 1}`;
-  
-      // If no specific fields are defined for the table, select all fields (*)
-      if (table.fields.length === 0) {
+      debugger
+      // Determine if all fields should be selected
+      if (table.selectAllFields || table.fields.length === 0) {
         fields += `${tableAlias}.*`;
       } else {
         // Select the fields for each table if fields are defined
         table.fields.forEach((field, fieldIndex) => {
           fields += `${tableAlias}.${field.name} AS ${table.enTableName}_${field.name}`;
-  
+
           // Add a comma if not the last field of the last table
           if (fieldIndex !== table.fields.length - 1 || tableIndex !== tables.length - 1) {
             fields += ', ';
           }
-          debugger
-          // Build WHERE condition if value and filter are present
-          if (field.value !== null && field.filter !== null) {
-            let filterItem;
-  
-            // Use appropriate filter for string or number data type
-            if (field.dataType === 'String') {
-              filterItem = stringFilterItems.find(f => f.id === field.filter);
-            } else {
-              filterItem = numberFilterItems.find(f => f.id === field.filter);
-            }
-  
-            if (filterItem) {
-              const condition = `${tableAlias}.${field.name} ${filterItem.enName} ${field.value}`;
-              whereClause += whereClause ? ` AND ${condition}` : ` WHERE ${condition}`;
-            }
-          }
+          // Only build WHERE condition if both value and filter are present
+
         });
       }
-  
+      table.fields.forEach((field, fieldIndex) => {
+        if (field.value !== null && field.filter !== null) {
+          let filterItem;
+
+          // Use appropriate filter for string or number data type
+          if (field.dataType === 'String') {
+            filterItem = stringFilterItems.find(f => f.id === field.filter);
+          } else {
+            filterItem = numberFilterItems.find(f => f.id === field.filter);
+          }
+          debugger
+          if (filterItem) {
+            let conditionValue = field.value;
+            debugger
+            // Add single quotes and N prefix for non-int32 fields (e.g., strings)
+            if (field.dataType !== 'Int32') {
+              conditionValue = `N'${field.value}'`;
+            }
+
+            const condition = `${tableAlias}.${field.name} ${filterItem.enName} ${conditionValue}`;
+            whereClause += whereClause ? ` AND ${condition}` : ` WHERE ${condition}`;
+          }
+        }
+      });
       // Ensure a comma between * and other fields, but only if it's not the last table
-      if (tableIndex !== tables.length - 1 && table.fields.length === 0) {
+      if (tableIndex !== tables.length - 1 && (table.selectAllFields || table.fields.length === 0)) {
         fields += ', ';
       }
-  
+
       // Construct the FROM and JOIN part of the query
       if (tableIndex === 0) {
         fromTable = `FROM ${table.enTableName} ${tableAlias}`;
       } else {
         switch (table.enTableName) {
-          case 'Researchers':
+          case 'Companies':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.researcherId`;
+            break;
+          case 'Researcher':
             joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.researcherId = ${tableAlias}.id `;
             break;
           case 'Sectors':
@@ -353,10 +481,80 @@ export class ReportContentsComponent implements OnInit {
         }
       }
     });
-  
+
     // Final query with SELECT, FROM, JOIN, and WHERE
     query = `SELECT ${fields} ${fromTable} ${joins} ${whereClause};`;
-  
+
     return query;
+  }
+
+  onSelectAllFieldsChange(table: ITableDto) {
+    // Toggle all fields based on the checkbox state
+    table.fields.forEach(field => {
+      field.value = table.selectAllFields ? 'selected' : '';
+    });
+  }
+
+  printExcel() {
+    // Prepare workbook and worksheet array
+    const workbook: XLSX.WorkBook = { Sheets: {}, SheetNames: [] };
+
+    // Loop through each report
+    this.reports.forEach((report, index) => {
+      const reportData = this.formatReportData(report);
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(reportData);
+
+      // Apply styles to specific header cells like A1, B1, C1, etc.
+      const headers = Object.keys(reportData[0]); // Assuming reportData[0] contains headers
+
+      headers.forEach((header, colIndex) => {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex }); // Encode address like A1, B1, C1, etc.
+
+        if (!worksheet[cellAddress]) {
+          worksheet[cellAddress] = { t: 's', v: header }; // Ensure the cell exists with a string type
+        }
+
+        // Apply styles (e.g., bold and font size 14)
+        worksheet[cellAddress].s = {
+          font: {
+            bold: true,
+            sz: 14 // Font size
+          },
+          alignment: {
+            horizontal: "center" // Optional: Center align the header text
+          }
+        };
+      });
+
+      // Add the worksheet to the workbook
+      const sheetName = `Report ${index + 1}`;
+      workbook.SheetNames.push(sheetName);
+      workbook.Sheets[sheetName] = worksheet;
+    });
+
+    // Generate and download the Excel file
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, 'report_export');
+  }
+
+  formatReportData(report: any): any[] {
+    const rowData: any[] = [];
+
+    report.fields.forEach((fieldGroup: any[]) => {
+      const row: { [key: string]: any } = {};
+      fieldGroup.forEach((field: { key: string, value: any }) => {
+        row[field.key] = field.value || ""; // Add the field value or an empty string
+      });
+      rowData.push(row);
+    });
+
+    return rowData;
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    saveAs(data, `${fileName}_export_${new Date().getTime()}.xlsx`);
   }
 }
