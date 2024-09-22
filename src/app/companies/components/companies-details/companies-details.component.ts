@@ -3,11 +3,11 @@ import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { LoginService } from 'src/app/auth/services/login.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-companies-details',
@@ -25,8 +25,10 @@ export class CompaniesDetailsComponent implements OnInit {
   selectedImage: File | null = null;
   selectedImageUrl!: string
   role:string = "";
+  sanitizedEmbededContent: SafeHtml = '';
+
   constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
-    , private sharedServices: SharedService, private authService: LoginService) {
+    , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
 
   }
   ngOnInit(): void {
@@ -41,21 +43,21 @@ export class CompaniesDetailsComponent implements OnInit {
 
     this.showLoader = false;
   }
+  sanitizeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
   GetCompanyById(id: number) {
     debugger
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-    debugger
-
         if (res.Data) {
           this.company = res.Data;
+          this.sanitizedEmbededContent = this.sanitizeHtml(this.company.embeded);
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
       error: (err: any) => {
-    debugger
-
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
@@ -170,7 +172,6 @@ export class CompaniesDetailsComponent implements OnInit {
     this.companyServices.DeletePdf(id).subscribe(observer);
   }
   downloadPdf(path: string): void {
-    
     path = `${environment.dirUrl}PdfFile/Company_${this.companyId}/${path}`;
     this.companyServices.saveFile(path);
   }

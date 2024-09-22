@@ -6,19 +6,21 @@
 
     <!-- start researcher header -->
     <div class="card-box d-flex align-items-center mb-3 company-card">
-        <div class="image-box position-relative"  style="width:50px;">
+        <div class="image-box position-relative" style="width:50px;">
             <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
-            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="company">
-            
+            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid"
+                alt="company">
+
             <!-- زر تغيير الصورة -->
-            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
+            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true"
+                (mouseleave)="hovering=false">
                 <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
                 <span *ngIf="hovering">Change Image</span>
             </button>
-            
-                <!-- Input لاختيار الصور فقط -->
-                <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
-            </div>
+
+            <!-- Input لاختيار الصور فقط -->
+            <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
+        </div>
         <div class="researcher-info">
             <h6 class="user">{{researcher.arName}}</h6>
             <div class="details d-flex flex-wrap">
@@ -33,6 +35,20 @@
             </div>
         </div>
         <div class="d-flex flex-grow-1 gap-1 left-align-button">
+            <button type="button" *ngIf="role=='Researchers' && companies.length > 0" class="btn btn-add"
+                (click)="GetResearcherMandateByResearcherId()" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+                تفويض باحثين
+            </button>
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#addResearcher"
+                id="addResearcherBtn" hidden>
+                <img src="./images/list-box-outline.png" alt="">
+            </button>
+
             <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal" data-bs-target="#sendFormCompany"
                 *ngIf="role == 'Researchers'">
                 <img src="../../../../assets/images/email-edit-outline.png" alt="" />
@@ -93,7 +109,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="table-responsive research-details-table">
                     <table class="table table-borderless">
                         <thead>
@@ -104,7 +120,7 @@
                                 <th class="text-center" scope="col">رمز النشاط</th>
                                 <th class="text-center" scope="col">النشاط</th>
                                 <th class="text-center" scope="col">عنوان الشركة</th>
-                                <th class="text-center" scope="col">ملاحظات</th>
+                                <th class="text-center" scope="col">نوع الشركه</th>
                                 <th class="text-center" scope="col">الحالة</th>
                                 <th class="text-center" scope="col">الأستمارات</th>
                             </tr>
@@ -118,8 +134,28 @@
                                 <td class="text-center">الترفيه</td>
                                 <td class="text-center">{{company.address}}</td>
                                 <td class="text-center notes">
-                                    ملاحظات
-                                    <img src="../../../../assets/images/information-slab-cir.png" alt="">
+                                    
+                                </td>
+                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
+                                <td *ngIf="!company.status" class="text-center status-active"
+                                    style="color: red !important;">غير نشط</td>
+                                <td class="text-center">
+                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
+                                        <a>إستماره</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr *ngFor="let company of companiesMandate">
+                                <td>{{company.arName}}</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">{{company.id}}</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">{{company.address}}</td>
+                                <td class="text-center notes">
+                                    شركه مفوضه
                                 </td>
                                 <td *ngIf="company.status" class="text-center status-active">نشط</td>
                                 <td *ngIf="!company.status" class="text-center status-active"
@@ -266,6 +302,80 @@
                     إلغاء
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-2">
+            <form [formGroup]="researcherMandateForm">
+                <div class="modal-body pb-1">
+                    <div class="row">
+                        <div class="form-group col-sm-6 mb-2">
+                            <select class="form-control" formControlName="researcherMandateId">
+                                <option value="">--اختر الباحث المفوض له--</option>
+                                <option value="{{item_.id}}" *ngFor="let item_ of researchers; let i = index">{{item_.arName}}
+                                </option>
+                            </select>
+                            <label for="inputField">الباحث المفوض له</label>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input type="date" class="form-control" formControlName="fromDate">
+                            <label for="inputField">من تاريخ</label>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input type="date" class="form-control" formControlName="toDate">
+                            <label for="inputField">من تاريخ</label>
+                        </div>
+                        <div class="orm-group col-sm-3 mb-2" *ngIf="researcherMandateForm.value.researcherMandateId>0">
+                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                              <label class="form-check-label" for="active" style="position: relative;transform: translateY(0px);">الغاء التفويض</label>
+                              <input formControlName="IsCancelled" class="form-check-input" type="checkbox" id="active" checked />
+                            </div>
+                          </div>
+                        <!-- Use [(ngModel)] for two-way binding instead of value -->
+                        <!-- Same for toDate -->
+                    </div>
+                </div>
+            <!-- <div class="table-responsive company-table research-table table-border">
+                
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col">رقم</th>
+                            <th class="text-center" scope="col">الباحث المفوض له</th>
+                            <th class="text-center" scope="col">من تاريخ</th>
+                            <th class="text-center" scope="col">الي تاريخ</th>
+                            <th class="text-center" scope="col"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of getResearcherMandateDto; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td class="text-center">{{item.arName}}</td>
+                            <td class="text-center">{{item.fromDate}}</td>
+                            <td class="text-center">{{item.toDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
+                    (click)="resetForm()">
+                    إلغاء
+                </button>
+                <button type="button" class="btn btn-save" (click)="AddResearcherMandate()">
+                    حفظ
+                </button>
+                <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
+              إعادة ملء
+            </button>
+            <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
+              تعديل
+            </button> -->
+            </div>
+            </form>
         </div>
     </div>
 </div>

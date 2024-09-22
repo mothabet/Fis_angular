@@ -221,12 +221,7 @@
                     <div class="header">
                         <h4 class="title">الخريطة</h4>
                     </div>
-                    <div class="map">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1890934.1212524762!2d58.778783661013925!3d22.23132378947907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e8f65975e59368b%3A0x8afa281d3b4e749f!2z2YXYrdin2YHYuNipINin2YTYr9in2K7ZhNmK2KnYjCDYudmF2KfZhg!5e0!3m2!1sar!2seg!4v1715825145305!5m2!1sar!2seg"
-                            height="250" style="border:0; border-radius: 15px; width: 100%;" allowfullscreen=""
-                            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
+                    <div style="text-align: center;" [innerHTML]="sanitizedEmbededContent"></div>
                 </div>
             </div>
         </div>

@@ -362,6 +362,10 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        const storedTables = localStorage.getItem(`coverForm${+this.formId}`);
+        if (storedTables) {
+          localStorage.removeItem(`coverForm${+this.formId}`);
+        }
         this.GetFormById(+this.formId)
         this.Loader = false;
       }
@@ -408,5 +412,15 @@ export class SharedQuarterTableComponent {
       formContent.values[0] = sumValue0;
     }
   }
+  clearIfZero(values: any[], index: number): void {
+    if (values[index] === 0) {
+        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+    }
+}
 
+restoreIfNotPositive(values: number[], index: number): void {
+    if (values[index] === null || values[index] <= 0) {
+        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+    }
+}
 }

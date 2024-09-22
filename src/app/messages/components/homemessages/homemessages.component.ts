@@ -26,7 +26,8 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  buttonText: string = 'إنشاء رسالة';
+  buttonText: string = 'رسالة';
+  buttonTextEn: string = 'Message';
   typeMessage: number = 1;
   searchText: string = '';
   editor!: Editor;
@@ -293,8 +294,9 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
 
     return errors;
   }
-  setButtonText(text: string, typeMessage: number): void {
+  setButtonText(text: string,textEn:string, typeMessage: number): void {
     this.buttonText = text;
+    this.buttonTextEn = textEn;
     this.typeMessage = typeMessage;
     
   }
