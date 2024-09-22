@@ -11,7 +11,7 @@ import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
-import { IAddFormNotesDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
+import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
 import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
 
 @Component({
@@ -43,6 +43,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   quarterCoverForm !: IQuarterCoverFormDataDto;
   auditRules: IAuditRule[] = [];
   addFormNotesDto: IAddFormNotesDto[] = [];
+  addInstructions: IAddInstructionsDto[] = [];
   add: boolean = true;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
@@ -528,9 +529,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
-          debugger
           this.addFormNotesDto = res.Data.getFormNotesDtos
           this.add = true;
           if (role != '') {
@@ -541,6 +540,46 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
           else {
             const button = document.getElementById('AddFormNotesBtn');
+            if (button) {
+              button.click();
+            }
+          }
+          this.Loader = false;
+
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          this.Loader = false;
+
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formNotesService.GetAllFormNotesByRole(role, this.formId, this.companyId, 0).subscribe(observer);
+  }
+  GetAllInstructions(role: string): void {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.addInstructions = res.Data.getInstructionsDtos
+          this.add = true;
+          if (role != '') {
+            const button = document.getElementById('ViewInstructionsBtn');
+            if (button) {
+              button.click();
+            }
+          }
+          else {
+            const button = document.getElementById('AddInstructionsBtn');
             if (button) {
               button.click();
             }

@@ -8,3 +8,12 @@ export interface IAddListFormNotesDto {
     formId:string,
     companyId:string,
 }
+export interface IAddInstructionsDto {
+    arName:string,
+    enName:string,
+}
+export interface IAddListInstructionsDto {
+    addInstructionsDtos : IAddInstructionsDto[],
+    formId:string,
+    companyId:string,
+}

@@ -15,6 +15,9 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import { environment } from 'src/environments/environment.development';
+import { IAddListResearcherMandateDto, IAddResearcherMandateDto, IGetResearcherMandateDto } from '../../Dtos/ResearcherDetailsDto';
+import { ResearcherMandateService } from 'src/app/researcher-mandate/services/researcher-mandate.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-researcher-details',
@@ -23,6 +26,7 @@ import { environment } from 'src/environments/environment.development';
 })
 export class ResearcherDetailsComponent implements OnInit {
   role: string = "";
+  researcherMandateForm!: FormGroup
   showLoader: boolean = false;
   researcher!: IResearcher;
   researcherId!: string;
@@ -41,9 +45,14 @@ export class ResearcherDetailsComponent implements OnInit {
   tableColumns = ['عنوان الشركه', 'رقم الشركة', 'اسم الشركة'];
   hovering: boolean = false;
   selectedImage: File | null = null;
-  selectedImageUrl!: string
+  selectedImageUrl!: string;
+  getResearcherMandateDto: IGetResearcherMandateDto[] = [];
+  addResearcherMandateDto!: IAddResearcherMandateDto;
+  researchers: IResearcher[] = [];
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
-    private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+    private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
+    private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService 
+    , private researcherMandateService: ResearcherMandateService) {
 
   }
   ngOnInit(): void {
@@ -56,6 +65,13 @@ export class ResearcherDetailsComponent implements OnInit {
     let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
     this.GetFormsStatistics()
+    this.GetAllReseachers();
+    this.researcherMandateForm = this.formBuilder.group({
+      researcherMandateId: ['',Validators.required],
+      fromDate: ['', Validators.required],
+      toDate: ['', Validators.required],
+      IsCancelled: [false, Validators.required],
+    });
   }
 
   GetResearcherById(id: number) {
@@ -328,5 +344,102 @@ export class ResearcherDetailsComponent implements OnInit {
     };
 
     this.researcherServices.UpdateProfileImg(formData, +this.researcherId).subscribe(observer);
+  }
+  GetAllReseachers(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.researchers = res.Data.getResearcherDtos;
+        }
+        else {
+          this.researchers = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherServices.GetAllReseachers(0, '').subscribe(observer);
+  }
+
+  resetForm(): void {
+    // this.addResearcherMandateDto = [];
+  }
+  AddResearcherMandate() {
+    this.showLoader = true;
+    debugger
+    if (this.researcherMandateForm.valid) {
+      const Model: IAddResearcherMandateDto = {
+        fromDate: this.researcherMandateForm.value.fromDate,
+        researcherId: this.researcherId,
+        researcherMandateId: this.researcherMandateForm.value.researcherMandateId,
+        toDate: this.researcherMandateForm.value.toDate,
+        IsCancelled:this.researcherMandateForm.value.IsCancelled
+      }
+      const observer = {
+        next: (res: any) => {
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.researcherMandateService.AddResearcherMandate(Model).subscribe(observer);
+    }
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+    }
+  }
+  GetAllResearcherMandate(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          this.addResearcherMandateDto = res.Data.getResearcherMandateDtos;
+          const button = document.getElementById('addResearcherBtn');
+          if (button) {
+            button.click();
+          }
+          this.showLoader = false;
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          this.showLoader = false;
+
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherMandateService.GetAllResearcherMandate(this.researcherId, 0).subscribe(observer);
   }
 }
