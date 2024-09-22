@@ -37,23 +37,23 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="messages-tab" data-bs-toggle="tab" href="#messages"
                                 role="tab" aria-controls="messages" aria-selected="true"
-                                (click)="setButtonText('إنشاء رسالة',1)">الرسائل</a>
+                                (click)="setButtonText('رسالة','Message',1)">الرسائل</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="emails-tab" data-bs-toggle="tab" href="#emails" role="tab"
                                 aria-controls="emails" aria-selected="false"
-                                (click)="setButtonText('إنشاء ايميل',2)">الإيميلات</a>
+                                (click)="setButtonText('ايميل','Email',2)">الإيميلات</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="notifications-tab" data-bs-toggle="tab" href="#notifications"
                                 role="tab" aria-controls="notifications" aria-selected="false"
-                                (click)="setButtonText('إنشاء اشعار',3)">الإشعارات</a>
+                                (click)="setButtonText('اشعار','Notifications',3)">الإشعارات</a>
                         </li>
                     </ul>
                     <button class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMessage"
                         id="addMessageBtn">
                         <img src="../../../../assets/images/email-outline-white.png" alt="">
-                        <span>{{ buttonText }}</span>
+                        <span>انشاء {{buttonText}}</span>
                     </button>
                 </div>
                 <div class="tab-content">
@@ -98,7 +98,7 @@
                                             </td>
                                             <td class="text-center">{{message.arDetails}}</td>
                                             <td class="text-center">{{message.arSubject}}</td>
-                                            <td class="text-center td-actions">
+                                            <td class="text-center">
                                                 <!-- <a href="#" class="icon">
                             <img src="../../../../assets/images/paperclip.png" alt="">
                         </a> -->
@@ -160,7 +160,7 @@
                                             </td>
                                             <!-- <td class="text-center" style="max-width: 10px;"> <p  [innerHTML]="message.arDetails"></p> </td> -->
                                             <td class="text-center">{{message.arSubject}}</td>
-                                            <td class="text-center td-actions">
+                                            <td class="text-center">
                                                 <!-- <a href="#" class="icon">
                             <img src="../../../../assets/images/paperclip.png" alt="">
                         </a> -->
@@ -222,7 +222,7 @@
                                             </td>
                                             <td class="text-center">{{message.arDetails}}</td>
                                             <td class="text-center">{{message.arSubject}}</td>
-                                            <td class="text-center td-actions">
+                                            <td class="text-center">
                                                 <!-- <a href="#" class="icon">
                         <img src="../../../../assets/images/paperclip.png" alt="">
                     </a> -->
@@ -258,8 +258,8 @@
     <div class="modal-dialog modal-dialog-centered modal-md ">
         <div class="modal-content">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء رسالة</h5>
-                <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل رسالة</h5>
+                <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء {{buttonText}}</h5>
+                <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل {{buttonText}}</h5>
             </div>
             <form [formGroup]="messageForm">
                 <div class="modal-body pb-1">
@@ -275,7 +275,7 @@
                     </div> -->
                         <div class="form-group col-sm-6 mb-2">
                             <input class="form-control input-modal" type="text" formControlName="arName" />
-                            <label for="inputField">اسم الرسالة</label>
+                            <label for="inputField">اسم {{buttonText}}</label>
 
                             <div *ngIf="
                         messageForm.controls['arName'].invalid &&
@@ -283,13 +283,13 @@
                             messageForm.controls['arName'].touched)
                           ">
                                 <small *ngIf="messageForm.controls['arName'].errors?.['required']" class="text-danger">
-                                    يجب ادخال اسم الرساله.
+                                    يجب ادخال اسم {{buttonText}}.
                                 </small>
                             </div>
                         </div>
                         <div class="form-group col-sm-6 mb-2">
                             <input class="form-control input-modal" type="text" formControlName="enName" />
-                            <label for="inputField" dir="ltr">English Message Name</label>
+                            <label for="inputField" dir="ltr">English {{buttonTextEn}} Name</label>
 
                             <div *ngIf="
                         messageForm.controls['enName'].invalid &&
@@ -297,7 +297,7 @@
                             messageForm.controls['enName'].touched)
                           ">
                                 <small *ngIf="messageForm.controls['enName'].errors?.['required']" class="text-danger">
-                                    English Message name is required.
+                                    English {{buttonTextEn}} name is required.
                                 </small>
                             </div>
                         </div>
@@ -309,7 +309,7 @@
                                 <ngx-editor [editor]="editor" [ngModel]="emailAr" [disabled]="false"
                                     [placeholder]="'Type here...'" formControlName="arDetails"  ></ngx-editor>
                             </div>
-                            <label for="inputField">تفاصيل الرسالة</label>
+                            <label for="inputField">تفاصيل {{buttonText}}</label>
 
                             <div *ngIf="
                         messageForm.controls['arDetails'].invalid &&
@@ -318,7 +318,7 @@
                           ">
                                 <small *ngIf="messageForm.controls['arDetails'].errors?.['required']"
                                     class="text-danger">
-                                    يجب ادخال تفاصيل الرساله.
+                                    يجب ادخال تفاصيل {{buttonText}}.
                                 </small>
                             </div>
                         </div>
@@ -330,7 +330,7 @@
                                     <ngx-editor [editor]="editoren" [ngModel]="emailEn" [disabled]="false"
                                         [placeholder]="'Type here...'" formControlName="enDetails"  ></ngx-editor>
                                 </div>
-                            <label for="inputField">Message details</label>
+                            <label for="inputField">{{buttonTextEn}} details</label>
 
                             <div *ngIf="
                         messageForm.controls['enDetails'].invalid &&
@@ -339,13 +339,13 @@
                           ">
                                 <small *ngIf="messageForm.controls['enDetails'].errors?.['required']"
                                     class="text-danger">
-                                    Message details is required.
+                                    {{buttonTextEn}} details is required.
                                 </small>
                             </div>
                         </div>
                         <div class="form-group col-sm-6 mb-2">
                             <input class="form-control input-modal" type="text" formControlName="arSubject" />
-                            <label for="inputField">عنوان الرسالة</label>
+                            <label for="inputField">عنوان {{buttonText}}</label>
 
                             <div *ngIf="
                         messageForm.controls['arSubject'].invalid &&
@@ -354,7 +354,7 @@
                           ">
                                 <small *ngIf="messageForm.controls['arSubject'].errors?.['required']"
                                     class="text-danger">
-                                    يجب ادخال عنوان الرساله.
+                                    يجب ادخال عنوان {{buttonText}}.
                                 </small>
                             </div>
                         </div>
@@ -369,7 +369,7 @@
                           ">
                                 <small *ngIf="messageForm.controls['enSubject'].errors?.['required']"
                                     class="text-danger">
-                                    Message subject is required.
+                                    {{buttonText}} subject is required.
                                 </small>
                             </div>
                         </div>
