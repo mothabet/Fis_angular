@@ -32,6 +32,7 @@ export class ResearcherDetailsComponent implements OnInit {
   researcherId!: string;
   companiesCount: number = 0;
   companies!: ICompany[]
+  companiesMandate!: ICompany[]
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -82,7 +83,8 @@ export class ResearcherDetailsComponent implements OnInit {
         if (res.Data) {
 
           this.researcher = res.Data;
-          this.companies = res.Data.companies
+          this.companies = res.Data.companies;
+          this.companiesMandate = res.Data.companiesMandate;
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.pathImgProfile}`;
 
           this.companiesCount = this.researcher.companies.length;
@@ -367,10 +369,15 @@ export class ResearcherDetailsComponent implements OnInit {
 
   resetForm(): void {
     // this.addResearcherMandateDto = [];
+    this.researcherMandateForm.reset({
+      fromDate: '',
+      toDate: '',
+      researcherMandateId: '',
+      IsCancelled: false
+    });
   }
   AddResearcherMandate() {
     this.showLoader = true;
-    debugger
     if (this.researcherMandateForm.valid) {
       const Model: IAddResearcherMandateDto = {
         fromDate: this.researcherMandateForm.value.fromDate,
@@ -441,5 +448,34 @@ export class ResearcherDetailsComponent implements OnInit {
       },
     };
     this.researcherMandateService.GetAllResearcherMandate(this.researcherId, 0).subscribe(observer);
+  }
+  GetResearcherMandateByResearcherId(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+          this.addResearcherMandateDto = res.Data;
+          if(this.addResearcherMandateDto != null){
+            this.researcherMandateForm.patchValue({
+              fromDate: this.getDateOnly(this.addResearcherMandateDto.fromDate),
+              toDate: this.getDateOnly(this.addResearcherMandateDto.toDate),
+              researcherMandateId: this.addResearcherMandateDto.researcherMandateId,
+            });
+          }
+          const button = document.getElementById('addResearcherBtn');
+          if (button) {
+            button.click();
+          }
+          this.showLoader = false;        
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherMandateService.GetResearcherMandateByResearcherId(this.researcherId, 0).subscribe(observer);
+  }
+  getDateOnly(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toISOString().split('T')[0];
   }
 }

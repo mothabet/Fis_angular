@@ -36,7 +36,7 @@
         </div>
         <div class="d-flex flex-grow-1 gap-1 left-align-button">
             <button type="button" *ngIf="role=='Researchers' && companies.length > 0" class="btn btn-add"
-                (click)="GetAllResearcherMandate()" style="border-radius: 8px;
+                (click)="GetResearcherMandateByResearcherId()" style="border-radius: 8px;
                             color: white;
                             font-size: 12px;
                             background-color: #133C8B;
@@ -120,7 +120,7 @@
                                 <th class="text-center" scope="col">رمز النشاط</th>
                                 <th class="text-center" scope="col">النشاط</th>
                                 <th class="text-center" scope="col">عنوان الشركة</th>
-                                <th class="text-center" scope="col">ملاحظات</th>
+                                <th class="text-center" scope="col">نوع الشركه</th>
                                 <th class="text-center" scope="col">الحالة</th>
                                 <th class="text-center" scope="col">الأستمارات</th>
                             </tr>
@@ -134,8 +134,28 @@
                                 <td class="text-center">الترفيه</td>
                                 <td class="text-center">{{company.address}}</td>
                                 <td class="text-center notes">
-                                    ملاحظات
-                                    <img src="../../../../assets/images/information-slab-cir.png" alt="">
+                                    
+                                </td>
+                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
+                                <td *ngIf="!company.status" class="text-center status-active"
+                                    style="color: red !important;">غير نشط</td>
+                                <td class="text-center">
+                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
+                                        <a>إستماره</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr *ngFor="let company of companiesMandate">
+                                <td>{{company.arName}}</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">{{company.id}}</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">{{company.address}}</td>
+                                <td class="text-center notes">
+                                    شركه مفوضه
                                 </td>
                                 <td *ngIf="company.status" class="text-center status-active">نشط</td>
                                 <td *ngIf="!company.status" class="text-center status-active"
@@ -317,7 +337,7 @@
                         <!-- Same for toDate -->
                     </div>
                 </div>
-            <div class="table-responsive company-table research-table table-border">
+            <!-- <div class="table-responsive company-table research-table table-border">
                 
                 <table class="table table-borderless">
                     <thead>
@@ -339,7 +359,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
             <div class="modal-footer pt-0">
                 <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
                     (click)="resetForm()">

@@ -281,6 +281,7 @@ export class NavigateTablesTypesComponent implements OnInit {
             if (coverForm.tables[index].formContents[i].values !== undefined) {
               // Extract rule code
               if (btnType == "Approve") {
+                debugger
                 const ruleCode = this.auditRules.find(a => a.codeParent == coverForm.tables[index].formContents[i].code.QuestionCode && a.Type == coverForm.Type.toString());
                 if (ruleCode && ruleCode.Rule) {
                   const ruleParts = ruleCode.Rule.split('=');

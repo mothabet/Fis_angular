@@ -292,7 +292,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(page).subscribe(observer);
+    this.codeHomeService.GetAllCodes(0,'',false).subscribe(observer);
   }
   GetAllSubCodes(page: number, questionCode: string) {
     const observer = {
@@ -310,7 +310,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.subCodeHomeService.GetAllSubCodes(page, '', questionCode).subscribe(observer);
+    this.subCodeHomeService.GetAllSubCodes(0, '', questionCode).subscribe(observer);
 
   }
   SaveAuditRule(): void {
