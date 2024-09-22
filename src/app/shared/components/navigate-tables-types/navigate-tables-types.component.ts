@@ -11,8 +11,9 @@ import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
-import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
+import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto, IAddListInstructionsDto } from '../../Dtos/NavigateDto';
 import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
+import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -47,7 +48,8 @@ export class NavigateTablesTypesComponent implements OnInit {
   add: boolean = true;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
-    private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService, private auditRuleHomeService: AuditRuleHomeService) { }
+    private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService, 
+    private auditRuleHomeService: AuditRuleHomeService, private instructionsService : InstructionsService) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
@@ -480,9 +482,31 @@ export class NavigateTablesTypesComponent implements OnInit {
   removeItem(index: number): void {
     this.addFormNotesDto.splice(index, 1);
   }
+  addRowInstructions() {
+    this.addInstructions.push({
+      arName: '',
+      enName: '',
+    });
+  }
+  areAllFieldsFilledInstructions(): boolean {
+    return this.addInstructions.every(item => item.arName && item.enName);
+  }
+  updateInstructions(index: number, field: keyof IAddFormNotesDto, event: Event): void {
+    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
+    const value = inputElement.value;
+    if (field === 'arName' || field === 'enName') {
+      this.addInstructions[index][field] = value;
+    }
+  }
+  removeItemInstructions(index: number): void {
+    this.addInstructions.splice(index, 1);
+  }
   resetForm(): void {
     this.addFormNotesDto = [];
     this.add = true;
+  }
+  resetFormInstructions(): void {
+    this.addInstructions = [];
   }
   saveFormNotes() {
     this.Loader = true;
@@ -525,6 +549,48 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formNotesService.AddFormNotes(Model).subscribe(observer);
   }
+  saveInstructions() {
+    this.Loader = true;
+    for (const addInstructions_ of this.addInstructions) {
+      if (addInstructions_.arName == '' || addInstructions_.enName == '') {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب إدخال الارشادات بالعربي والانجليزي',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+    }
+    const Model: IAddListInstructionsDto = {
+      addInstructionsDtos: this.addInstructions,
+      companyId: this.companyId,
+      formId: this.formId
+    }
+    const observer = {
+      next: (res: any) => {
+        const button = document.getElementById('btnCancelInstructions');
+        if (button) {
+          button.click();
+        }
+        this.resetForm();
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.instructionsService.AddInstructions(Model).subscribe(observer);
+  }
+  
   GetAllFormNotesByRole(role: string): void {
     this.Loader = true;
     const observer = {
@@ -603,6 +669,6 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formNotesService.GetAllFormNotesByRole(role, this.formId, this.companyId, 0).subscribe(observer);
+    this.instructionsService.GetAllInstructions(role,this.formId, this.companyId, 0).subscribe(observer);
   }
 }

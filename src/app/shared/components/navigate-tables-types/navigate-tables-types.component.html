@@ -57,7 +57,7 @@
                 </button>
                 <button type="button" class="btn btn-send mx-1" data-bs-toggle="modal" data-bs-target="#sendFormCompany" (click)="GetAllInstructions('')">
                     <img src="./images/list-box-outline.png" alt="">
-                    الإرشادات
+                    اضافة الارشادات
                 </button>
             </div>
         </div>
@@ -113,7 +113,7 @@
                     عرض ملاحظات
                 </button>
                 
-                <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#sendFormCompany">
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
@@ -253,9 +253,8 @@
               <thead>
                 <tr class="t-header">
                   <th scope="col">رقم</th>
-                  <th class="text-center" scope="col">الاسم بالكامل</th>
-                  <th class="text-center" scope="col">English Full Name</th>
-                  <th class="text-center" scope="col"></th>
+                  <th class="text-center" scope="col">الملاحظه</th>
+                  <th class="text-center" scope="col">Comment</th>
                 </tr>
               </thead>
 
@@ -278,7 +277,7 @@
   </div>
   
   <!--end linked company modal -->
-  <div class="modal company-modal fade" id="AddFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true"></div>
+  <div class="modal company-modal fade" id="AddInstructions" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content p-2">
         <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
@@ -289,7 +288,7 @@
           </div> -->
         </div>
         <div class="table-responsive company-table research-table table-border">
-            <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
+            <button (click)="addRowInstructions()" class="btn btn-save" [disabled]="!areAllFieldsFilledInstructions()">
               اضافة الارشادات
             </button>
             <table class="table table-borderless">
@@ -306,13 +305,13 @@
                 <tr *ngFor="let item of addInstructions; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td class="text-center">
-                    <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" ></textarea>
+                    <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateInstructions(i, 'arName', $event)" ></textarea>
                   </td>
                   <td class="text-center">
-                    <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
+                    <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateInstructions(i, 'enName', $event)" ></textarea>
                   </td>
                   <td class="text-center td-actions">
-                    <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
+                    <button class="icon" (click)="removeItemInstructions(i)" style="border: none; background-color: transparent">
                       <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                     </button>
                   </td>
@@ -321,10 +320,10 @@
             </table>
           </div>
           <div class="modal-footer pt-0">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelInstructions" (click)="resetFormInstructions()">
                 إلغاء
               </button>
-              <button type="button" class="btn btn-save" (click)="saveFormNotes()" *ngIf="add">
+              <button type="button" class="btn btn-save" (click)="saveInstructions()">
                 حفظ
               </button>
             <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
@@ -340,11 +339,11 @@
   
   <!--end linked company modal -->
   <!--start linked company modal -->
-<div class="modal company-modal fade" id="ViewFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+<div class="modal company-modal fade" id="ViewInstructions" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-title pt-3 modal-header d-flex justify-content-between">
-          <h5>الملاحظات</h5>
+          <h5>الارشادات</h5>
           <!-- <div class="search">
             <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
             <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
@@ -355,14 +354,13 @@
               <thead>
                 <tr class="t-header">
                   <th scope="col">رقم</th>
-                  <th class="text-center" scope="col">الاسم بالكامل</th>
-                  <th class="text-center" scope="col">English Full Name</th>
-                  <th class="text-center" scope="col"></th>
+                  <th class="text-center" scope="col">الارشادات</th>
+                  <th class="text-center" scope="col">Instructions</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                <tr *ngFor="let item of addInstructions; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td class="text-center">
                     {{item.arName}}
