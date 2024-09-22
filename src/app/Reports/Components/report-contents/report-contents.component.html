@@ -1,3 +1,5 @@
+<app-loader *ngIf="showLoader"></app-loader>
+
 <div class="main-content p-4 main card reports-content" style="flex: 1;">
     <!-- header -->
     <div class="header d-flex flex-wrap justify-content-between align-items-center report-main-header">
@@ -36,97 +38,53 @@
                     <i class="fa-solid fa-plus mx-1"></i>
                     إنشاء تفاصيل التقرير
                 </button>
-
+                <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download" (click)="printExcel()">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="" />
+                    استخراج تقرير
+                </button>
             </div>
         </div>
     </div>
     <!-- start content -->
-    <div class="content companies report-table">
+    <div class="content companies report-table" style="margin-bottom: 15px;max-width: 74rem;"
+        *ngFor="let report of reports">
         <div class="header d-flex ">
             <h4 class="">
-                جدول 1
+                {{report.part}}
             </h4>
             <div class="btns d-flex">
-
                 <div class="d-flex flex-grow-1 gap-2 btns-group ">
-                    <button type="button" class="btn btn-send trash">
+                    <button type="button" class="btn btn-send" (click)="DeleteReportContent(report.id)">
                         <i class="fa-solid fa-trash"></i>
                         حذف
                     </button>
-
-                    <button type="button" class="btn btn-accept">
-                        <i class="fa-solid fa-pen"></i>
-                        تعديل
-                    </button>
-
                 </div>
             </div>
         </div>
         <div>
-            <div class="table-responsive company-table">
-                <table class="table table-borderless">
+            <div class="table-responsive company-table" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-borderless scrollable-table">
                     <thead>
                         <tr class="t-header">
-                            <th scope="col">رقم </th>
-                            <th class="" scope="col">اسم التقرير
-                            </th>
-                            <th class="" scope="col">تفاصيل التقرير
-                            </th>
-                            <th class="" scope="col">تم إنشاءه
-                            </th>
-
+                            <th style="text-align: center;" scope="col">#</th>
+                            <th style="text-align: center;" *ngFor="let field of report.fields[0]" scope="col">
+                                {{field.key}}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="Name1" id="Name1" disabled>
-                                <label for="Name1">1 </label>
-
-                            </td>
-                            <td> تقرير X
-                            </td>
-                            <td>تفاصيل التقرير
-                            </td>
-                            <td>2024/04/20
-                            </td>
-
+                        <tr *ngFor="let row of report.fields;let i = index ">
+                            <td style="text-align: center;" scope="col">{{i+1}}</td>
+                            <td style="text-align: center;" *ngFor="let field of row" scope="col">{{field.value}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
-    <!-- end content -->
-    <!-- start chart  -->
-    <!-- <div class="content companies report-table">
-        <div class="header d-flex ">
-            <h4 class="">
-                الرسم البياني
-            </h4>
-            <div class="btns d-flex">
 
-                <div class="d-flex flex-grow-1 gap-2 btns-group ">
-                    <button type="button" class="btn btn-send trash">
-                        <i class="fa-solid fa-trash"></i>
-                        حذف
-                    </button>
-
-                    <button type="button" class="btn btn-accept">
-                        <i class="fa-solid fa-pen"></i>
-                        تعديل
-                    </button>
-
-                </div>
-            </div>
-        </div>
-        <div class="card-chart p-2">
-            <canvas id="myChart1"></canvas>
-        </div>
-    </div> -->
-    <!-- End  chart  -->
 </div>
-<!--start add company modal -->
+<!--start add report modal -->
 <div class="modal company-modal fade" id="addReportDetails" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" style="min-width: 880px;">
         <div class="modal-content">
@@ -138,11 +96,14 @@
                     <div class="row">
                         <!-- First three fields on the same row -->
                         <div class="col-sm-4 mb-3 label-with-icon">
-                            <input class="form-control input-modal" type="text" placeholder="اسم محتوى التقرير">
+                            <input style="width: 30rem;" class="form-control input-modal" [(ngModel)]="report.part"
+                                type="text" placeholder="اسم محتوى التقرير" name="reportPart" required
+                                #reportPartInput="ngModel">
                         </div>
+
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4 mb-3">
-                            <select (change)="GetTableFields($event)" [(ngModel)]="tableType" name="tableType"
+                            <select [(ngModel)]="tableType" name="tableType" (change)="onTableSelect()"
                                 class="form-select add-report-select" style="width: 100%;">
                                 <option selected [ngValue]="0" disabled>اختر الجدول</option>
                                 <option [ngValue]="1">شركات</option>
@@ -153,156 +114,143 @@
                     </div>
 
                     <!-- Scrollable Cards Section -->
-                    <div *ngIf="tableType == 1" class="d-flex overflow-auto"
+                    <div class="d-flex overflow-auto" *ngIf="tables && tables.length > 0"
                         style="gap: 15px; white-space: nowrap; padding: 15px;">
                         <!-- Card 1 -->
-                        <div class="card"
-                            style="min-width: 365px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
-                            <div class="card-body">
-                                <select (change)="InsertField($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let field of tableFields" [ngValue]="field">{{field.name}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let field of appendedTableFields" class="field-item">
-                                        <input type="text" class="field-input">
-                                        <span class="field-text">{{field.name}}</span>
-                                    </div>
-                                </div>
+                        <div class="card" *ngFor="let table of tables"
+                            style="min-width: 490px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            <div class="modal-header pb-0">
+                                <label class="modal-title" id="add">{{table.arTableName}}</label>
                             </div>
-                        </div>
-                        <!-- Card 2 -->
-                        <div class="card"
-                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
                             <div class="card-body">
-                                <select (change)="InsertResearcher($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let researcher of researchers" [ngValue]="researcher">{{researcher.arName}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let researcher of appendedResearchers" class="field-item">
-                                        <span class="field-text">{{researcher.arName}}</span>
+                                <div class="d-flex align-items-center">
+                                    <!-- Checkbox aligned on the left -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <!-- Checkbox with bottom margin -->
+                                        <input type="checkbox" class="form-check-input me-2"
+                                            id="selectAllFieldsCheckbox" style="margin-bottom: 15px;"
+                                            [(ngModel)]="table.selectAllFields" name="selectAllFields"
+                                            (change)="onSelectAllFieldsChange(table)" />
+                                        <!-- Label linked to the checkbox, with top margin for alignment -->
+                                        <label for="selectAllFieldsCheckbox"
+                                            style="margin-top: 5px; position: static;">اختر جميع الحقول</label>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card 3 -->
-                        <div class="card"
-                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
-                            <div class="card-body">
-                                <select (change)="InserSector($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let sector of sectors" [ngValue]="sector">{{sector.arName}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let sector of appendedSectors" class="field-item">
-                                        <span class="field-text">{{sector.arName}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card 4 -->
-                        <div class="card"
-                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
-                            <div class="card-body">
-                                <select (change)="InsertActivity($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let activity of activities" [ngValue]="activity">{{activity.arName}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let activity of appendedActivities" class="field-item">
-                                        <span class="field-text">{{activity.arName}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card 5 -->
-                        <div class="card"
-                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
-                            <div class="card-body">
-                                <select (change)="InsertWilaya($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let wilaya of wilayat" [ngValue]="wilaya">{{wilaya.arName}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let wilaya of appendedWilayat" class="field-item">
-                                        <span class="field-text">{{wilaya.arName}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card 6 -->
-                        <div class="card"
-                            style="min-width: 200px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
-                            <div class="card-body">
-                                <select (change)="InsertWilaya($event)" class="form-select add-report-select"
-                                    style="width: 100%;">
-                                    <option selected value="0" disabled>اختر الحقل</option>
-                                    <option *ngFor="let wilaya of wilayat" [ngValue]="wilaya">{{wilaya.arName}}</option>
-                                </select>
-                                <div class="field-container"
-                                    style="padding-left: 5px;padding-top: 5px;max-height: 142px;">
-                                    <div *ngFor="let wilaya of appendedWilayat" class="field-item">
-                                        <span class="field-text">{{wilaya.arName}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div *ngIf="tableType == 3" class="d-flex overflow-auto"
-                        style="gap: 15px; white-space: nowrap;padding: 15px;">
-                        <!-- Card 1 -->
-                        <div class="card" style="min-width: 200px; border: 1px solid #ccc; padding: 15px;">
-                            <div class="card-body">
-                                <h5 class="card-title">Card Title 1</h5>
-                                <p class="card-text">Content for card 1.</p>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <!-- Select input aligned next to the checkbox with more space -->
+                                    <select class="form-select add-report-select"
+                                        (change)="onFieldSelect($event, table)" style="width: 40%;">
+                                        <option selected value="0" disabled>اختر الحقل</option>
+                                        <ng-container *ngIf="table.enTableName == 'Companies'">
+                                            <option *ngFor="let field of companyFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Researcher'">
+                                            <option *ngFor="let field of researcherFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Sectors'">
+                                            <option *ngFor="let field of sectorFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Activities'">
+                                            <option *ngFor="let field of activitiesFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'SubActivities'">
+                                            <option *ngFor="let field of subActivitiesFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Governorates'">
+                                            <option *ngFor="let field of governoratesFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Wilayats'">
+                                            <option *ngFor="let field of wilayatFields">{{field.name}}</option>
+                                        </ng-container>
+                                    </select>
+                                    <h5 style="margin-right: 10px;">اختر الفلتر</h5>
+                                </div>
+                                <div class="field-container"
+                                    style="padding-left: 5px; padding-top: 5px; max-height: 120px;">
+                                    <div class="field-item" *ngFor="let field of table.fields; let i = index">
+                                        <!-- Bind field properties to the input element -->
+                                        <input type="text" class="field-input" [(ngModel)]="field.value"
+                                            name="field-{{ i }}">
+                                        <select style="width: 120px;" class="form-select add-report-select"
+                                            [(ngModel)]="field.filter" [ngModelOptions]="{standalone: true}">
+                                            <option value="" disabled>اختر الفلتر</option>
+                                            <ng-container *ngIf="field.dataType !== 'String'">
+                                                <option *ngFor="let filter of numberFilterItems" [ngValue]="filter.id">
+                                                    {{filter.arName}}
+                                                </option>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.dataType === 'String'">
+                                                <option *ngFor="let filter of stringFilterItems" [ngValue]="filter.id">
+                                                    {{filter.arName}}
+                                                </option>
+                                            </ng-container>
+                                        </select>
+                                        <span style="text-align: left;" class="field-text col-2">{{field.name}}</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Card 2 -->
-                        <div class="card" style="min-width: 200px; border: 1px solid #ccc; padding: 15px;">
-                            <div class="card-body">
-                                <h5 class="card-title">Card Title 2</h5>
-                                <p class="card-text">Content for card 2.</p>
-                            </div>
-                        </div>
-                        <!-- Card 3 -->
 
+                        </div>
+                        <!-- Add Button -->
+                        <button (click)="openModal()"
+                            style="background-color: #00af9d; border-radius: 5px; float: left; height: 30px;">
+                            <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <!-- Continue with remaining fields -->
                     <h4 class="mb-3">نوع التقرير</h4>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="form-check ps-0 d-flex radio-form">
-                            <input class="form-check-input" type="radio" name="chart" id="haveChart">
-                            <label class="form-check-label" for="haveChart">يشمل رسم بيانى</label>
-                        </div>
-                        <div class="form-check ps-0 d-flex radio-form">
-                            <input class="form-check-input" type="radio" name="chart" id="notHaveChart" checked>
-                            <label class="form-check-label" for="notHaveChart">لا يشمل رسم بيانى</label>
-                        </div>
+                    <div class="form-check ps-0 d-flex radio-form me-2 col-6">
+                        <input class="form-check-input" checked type="radio" id="haveChart" name="chartOptions"
+                            [value]="true" [(ngModel)]="report.withChart">
+                        <label style="width: 17rem;margin-top: 22px;font-size: 17px !important;"
+                            class="form-check-label" for="haveChart">يشمل رسم بيانى</label>
+
+                        <input class="form-check-input" type="radio" id="notHaveChart" name="chartOptions"
+                            [value]="false" [(ngModel)]="report.withChart">
+                        <label style="width: 35rem;margin-top: 24px;font-size: 17px !important;"
+                            class="form-check-label" for="notHaveChart">لا يشمل رسم بيانى</label>
                     </div>
+
                 </div>
 
                 <div class="modal-footer pt-0" style="border-top: none;">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
                     <button type="button" class="btn btn-save" id="next-report-part" data-bs-toggle="modal"
-                        data-bs-dismiss="modal" data-bs-target="#next-part">حفظ</button>
+                        data-bs-dismiss="modal" data-bs-target="#next-part" (click)="saveReport()">حفظ</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<!--end add report modal -->
 
+<!--start add company modal -->
+<div class="modal company-modal fade" id="chooseTable" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="min-width: 880px;">
+        <div class="modal-content" style="width: 370px; margin: 0 auto;">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">اختيار من جدول فرعي</h5>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <select class="form-select add-report-select" style="width: 100%;" [(ngModel)]="selectedTable"
+                        [ngModelOptions]="{standalone: true}">
+                        <option value="" disabled>اختر الجدول الفرعي</option>
+                        <ng-container *ngIf="tableType==1">
+                            <option *ngFor="let table of companyTables" [ngValue]="table">{{table.arName}}</option>
+                        </ng-container>
+                        <ng-container *ngIf="tableType==3">
+                            <option *ngFor="let table of researcherTables" [ngValue]="table">{{table.arName}}</option>
+                        </ng-container>
+                    </select>
 
-
-<!--end add company modal -->
+                </div>
+                <div class="modal-footer pt-0" style="border-top: none;">
+                    <button type="button" class="btn btn-cancel" (click)="closeModal()">إلغاء</button>
+                    <button type="button" class="btn btn-save" (click)="appendTable()">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

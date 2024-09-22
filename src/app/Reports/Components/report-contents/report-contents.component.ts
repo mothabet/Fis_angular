@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { IGetTableFieldsDto, IReportFilterDto } from '../../Dtos/ReportDto';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder } from '@angular/forms';
 import { ReportService } from '../../Services/report.service';
@@ -7,6 +6,11 @@ import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
+import { IAddReportPartDto, IFieldDto, IGetReportDto, IGetReportPartsDto, IReportFilterDto, ITableDto, ITableFieldDto } from '../../Dtos/ReportDto';
+import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
+import * as saveAs from 'file-saver';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-report-contents',
@@ -14,39 +18,126 @@ import { ResearcherHomeService } from 'src/app/researcher/services/researcher-ho
   styleUrls: ['./report-contents.component.css']
 })
 export class ReportContentsComponent implements OnInit {
+  @ViewChild('chooseTable') chooseTableModal!: ElementRef;
   tableType: number = 0;
-  tableFields: IGetTableFieldsDto[] = [];
-  appendedTableFields: IGetTableFieldsDto[] = [];
-  researchers: IReportFilterDto[] = [];
-  appendedResearchers: IReportFilterDto[] = [];
-  wilayat: IReportFilterDto[] = [];
-  appendedWilayat: IReportFilterDto[] = [];
-  governorates: IReportFilterDto[] = [];
-  appendedGovernorates: IReportFilterDto[] = [];
-  subActivities: IReportFilterDto[] = [];
-  appendedSubActivities: IReportFilterDto[] = [];
-  activities: IReportFilterDto[] = [];
-  appendedActivities: IReportFilterDto[] = [];
-  sectors: IReportFilterDto[] = [];
-  appendedSectors: IReportFilterDto[] = [];
   showLoader: boolean = false;
-  constructor(private sharedService: SharedService, private fb: FormBuilder,
+  companyFields: IFieldDto[] = [];
+  researcherFields: IFieldDto[] = [];
+  sectorFields: IFieldDto[] = [];
+  activitiesFields: IFieldDto[] = [];
+  subActivitiesFields: IFieldDto[] = [];
+  governoratesFields: IFieldDto[] = [];
+  wilayatFields: IFieldDto[] = [];
+  report: IAddReportPartDto = {
+    part: '',
+    query: '',
+    withChart: false,  // default to false
+    chartType: 0,      // default chart type
+    reportId: 0        // default ID
+  };
+  tables: ITableDto[] = [];
+  reportId!: string
+  selectedTable: IReportFilterDto | null = null;
+  stringFilterItems: IReportFilterDto[] = [
+    { id: 1, arName: 'يساوي', enName: '=' },
+    { id: 2, arName: 'لا يساوي', enName: '<>' },
+  ];
+  numberFilterItems: IReportFilterDto[] = [
+    { id: 1, arName: 'اكبر من', enName: '>' },
+    { id: 2, arName: 'اقل من', enName: '<' },
+    { id: 3, arName: 'اقل من او يساوي', enName: '<=' },
+    { id: 4, arName: 'اكبر من او يساوي', enName: '>=' },
+    { id: 5, arName: 'يساوي', enName: '=' },
+  ];
+  companyTables: IReportFilterDto[] = [
+    { id: 3, arName: 'الباحثين', enName: 'Researcher' },
+    { id: 4, arName: 'القطاعات', enName: 'Sectors' },
+    { id: 5, arName: 'الأنشطة الرئيسية', enName: 'Activities' },
+    { id: 7, arName: 'الأنشطة الفرعية', enName: 'SubActivities' },
+    { id: 7, arName: 'المحافظات', enName: 'Governorates' },
+    { id: 8, arName: 'الولايات', enName: 'Wilayats' }
+  ];
+  researcherTables: IReportFilterDto[] = [
+    { id: 1, arName: 'الشركات', enName: 'Companies' },
+  ];
+  reports!: any[]
+  constructor(private renderer: Renderer2, private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private reportServices: ReportService,
     private companyHomeServices: CompanyHomeService, private formServices: FormService,
-    private researcherService: ResearcherHomeService) {}
+    private researcherService: ResearcherHomeService, private activeRouter: ActivatedRoute) { }
   ngOnInit(): void {
-    this.GetWilayat();
-    this.GetSectors();
-    this.GetActivities();
-    this.GetResearchers();
+    this.reportId = this.activeRouter.snapshot.paramMap.get('reportId')!;
+
+    this.GetReports();
   }
-  GetTableFields(event: any): void {
+  GetReports(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.reports = res.Data;
+        }
+        else {
+          res.Data = []
+          this.reports = res.Data;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.reportServices.GetReportParts(0, '', +this.reportId).subscribe(observer);
+  }
+  DeleteReportContent(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showLoader = true;
+        const observer = {
+          next: (res: any) => {
+            this.GetReports();
+            this.showLoader = false;
+          },
+          error: (err: any) => {
+            debugger
+            this.sharedService.handleError(err);
+            this.showLoader = false;
+          },
+        };
+        this.reportServices.DeleteReportContent(id).subscribe(observer);
+      }
+    });
+  }
+  GetTableFields(tableType: number): void {
     if (this.tableType != 0) {
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
           if (res.Data) {
-            this.tableFields = res.Data;
+            if (tableType == 1)
+              this.companyFields = res.Data
+            else if (tableType == 3)
+              this.researcherFields = res.Data
+            else if (tableType == 4)
+              this.sectorFields = res.Data
+            else if (tableType == 5)
+              this.activitiesFields = res.Data
+            else if (tableType == 6)
+              this.subActivitiesFields = res.Data
+            else if (tableType == 7)
+              this.governoratesFields = res.Data
+            else if (tableType == 8)
+              this.wilayatFields = res.Data
           }
           this.showLoader = false;
         },
@@ -55,191 +146,415 @@ export class ReportContentsComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.reportServices.GetTableFields(this.tableType).subscribe(observer);
+      this.reportServices.GetTableFields(tableType).subscribe(observer);
     }
   }
-  InsertField(event: any) {
+  onTableSelect(): void {
+    this.tables = [];
 
-    const selectedFieldName = event.target.value; // Get the selected field name
+    if (this.tableType === 1) {
+      // Add the 'Companies' table to tableDto
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'Companies',
+        arTableName: 'الشركات',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTableFields(1);
+    }
+    else if (this.tableType === 3) {
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'Researcher',
+        arTableName: 'الباحثين',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTableFields(3);
+    }
+  }
+  onFieldSelect(event: Event, table: ITableDto): void {
 
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedTableFields.some(field => field.name === selectedFieldName);
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedValue = selectElement.value;
+    if (table.enTableName == 'Companies') {
+      const selectedField = this.companyFields.find(field => field.name === selectedValue);
 
-    if (!fieldExists) {
-      const selectedField = this.tableFields.find(field => field.name === selectedFieldName);
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
 
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedTableFields.push(selectedField);
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'Researcher') {
+      const selectedField = this.researcherFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'Sectors') {
+      const selectedField = this.sectorFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'Activities') {
+      const selectedField = this.activitiesFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'SubActivities') {
+      const selectedField = this.subActivitiesFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'Governorates') {
+      const selectedField = this.governoratesFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    else if (table.enTableName == 'Wilayats') {
+      const selectedField = this.wilayatFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.name,
+          dataType: selectedField.dataType,
+          filter: null, // Initialize as null or a valid default value
+          value: '' // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
       }
     }
   }
-  GetWilayat() {
+  openModal() {
+    const modal = document.getElementById('chooseTable');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'block';
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+
+      // Check for an existing backdrop before creating a new one
+      let backdrop = document.querySelector('.modal-backdrop');
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade show';
+        document.body.appendChild(backdrop);
+      }
+    } else {
+      console.error('Modal element with id "chooseTable" not found.');
+    }
+  }
+
+  closeModal() {
+    const modal = document.getElementById('chooseTable');
+    if (modal) {
+      modal.classList.remove('show');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Remove the backdrop from the DOM
+      } else {
+        console.error('Backdrop not found.');
+      }
+    } else {
+      console.error('Modal element with id "chooseTable" not found.');
+    }
+  }
+
+  saveReport() {
+
+    this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
+    this.report.reportId = +this.reportId;
+    if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال عنوان الجدول',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+    if (this.report.query == '' || this.report.query == 'SELECT    ;' || this.report.query == null || this.report.query == undefined) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب تحديد جداول للتقرير',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+
     const observer = {
       next: (res: any) => {
-        if (res.Data) {
-          this.wilayat = res.Data;
-        }
+        this.showLoader = false;
+        this.tables = [];
+        this.report = {
+          part: '',
+          query: '',
+          withChart: false,  // default to false
+          chartType: 0,      // default chart type
+          reportId: 0        // default ID
+        };
+        this.GetReports();
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
+        this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetWilayat().subscribe(observer);
+    this.reportServices.AddReportContent(this.report).subscribe(observer);
   }
-  InsertWilaya(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
+  appendTable(): void {
+    if (this.selectedTable) {
 
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedWilayat.some(field => field.arName === selectedFieldName);
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: this.selectedTable.enName,
+        arTableName: this.selectedTable.arName,
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
 
-    if (!fieldExists) {
-      const selectedField = this.wilayat.find(field => field.arName === selectedFieldName);
-
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedWilayat.push(selectedField);
-      }
+      if (this.selectedTable.enName == 'Companies')
+        this.GetTableFields(1);
+      else if (this.selectedTable.enName == 'Researcher')
+        this.GetTableFields(3);
+      else if (this.selectedTable.enName == 'Sectors')
+        this.GetTableFields(4);
+      else if (this.selectedTable.enName == 'Activities')
+        this.GetTableFields(5);
+      else if (this.selectedTable.enName == 'SubActivities')
+        this.GetTableFields(6);
+      else if (this.selectedTable.enName == 'Governorates')
+        this.GetTableFields(7);
+      else if (this.selectedTable.enName == 'Wilayats')
+        this.GetTableFields(8);
+      this.closeModal();
     }
   }
-  GetResearchers() {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.researchers = res.Data.getResearcherDtos;
+  fbuildJoinQuery(tables: ITableDto[], stringFilterItems: IReportFilterDto[], numberFilterItems: IReportFilterDto[]): string {
+    let query = 'SELECT ';
+    let joins = '';
+    let fromTable = '';
+    let fields = '';
+    let whereClause = '';
+
+    tables.forEach((table, tableIndex) => {
+      const tableAlias = `t${tableIndex + 1}`;
+      debugger
+      // Determine if all fields should be selected
+      if (table.selectAllFields || table.fields.length === 0) {
+        fields += `${tableAlias}.*`;
+      } else {
+        // Select the fields for each table if fields are defined
+        table.fields.forEach((field, fieldIndex) => {
+          fields += `${tableAlias}.${field.name} AS ${table.enTableName}_${field.name}`;
+
+          // Add a comma if not the last field of the last table
+          if (fieldIndex !== table.fields.length - 1 || tableIndex !== tables.length - 1) {
+            fields += ', ';
+          }
+          // Only build WHERE condition if both value and filter are present
+
+        });
+      }
+      table.fields.forEach((field, fieldIndex) => {
+        if (field.value !== null && field.filter !== null) {
+          let filterItem;
+
+          // Use appropriate filter for string or number data type
+          if (field.dataType === 'String') {
+            filterItem = stringFilterItems.find(f => f.id === field.filter);
+          } else {
+            filterItem = numberFilterItems.find(f => f.id === field.filter);
+          }
+          debugger
+          if (filterItem) {
+            let conditionValue = field.value;
+            debugger
+            // Add single quotes and N prefix for non-int32 fields (e.g., strings)
+            if (field.dataType !== 'Int32') {
+              conditionValue = `N'${field.value}'`;
+            }
+
+            const condition = `${tableAlias}.${field.name} ${filterItem.enName} ${conditionValue}`;
+            whereClause += whereClause ? ` AND ${condition}` : ` WHERE ${condition}`;
+          }
         }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.researcherService.GetAllReseachers(0).subscribe(observer);
-  }
-  InsertResearcher(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
-
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedResearchers.some(field => field.arName === selectedFieldName);
-
-    if (!fieldExists) {
-      const selectedField = this.researchers.find(field => field.arName === selectedFieldName);
-
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedResearchers.push(selectedField);
+      });
+      // Ensure a comma between * and other fields, but only if it's not the last table
+      if (tableIndex !== tables.length - 1 && (table.selectAllFields || table.fields.length === 0)) {
+        fields += ', ';
       }
-    }
-  }
-  GetGovernorates() {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.wilayat = res.Data;
+
+      // Construct the FROM and JOIN part of the query
+      if (tableIndex === 0) {
+        fromTable = `FROM ${table.enTableName} ${tableAlias}`;
+      } else {
+        switch (table.enTableName) {
+          case 'Companies':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.researcherId`;
+            break;
+          case 'Researcher':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.researcherId = ${tableAlias}.id `;
+            break;
+          case 'Sectors':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.sectorId = ${tableAlias}.id `;
+            break;
+          case 'Activities':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.activityId = ${tableAlias}.id `;
+            break;
+          case 'SubActivities':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.subActivityId = ${tableAlias}.id `;
+            break;
+          case 'Governorates':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.governoratesId = ${tableAlias}.id `;
+            break;
+          case 'Wilayats':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.wilayatId = ${tableAlias}.id `;
+            break;
+          default:
+            throw new Error(`Unknown table: ${table.enTableName}`);
         }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetWilayat().subscribe(observer);
-  }
-  InsertGovernorate(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
-
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedWilayat.some(field => field.arName === selectedFieldName);
-
-    if (!fieldExists) {
-      const selectedField = this.wilayat.find(field => field.arName === selectedFieldName);
-
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedWilayat.push(selectedField);
       }
-    }
+    });
+
+    // Final query with SELECT, FROM, JOIN, and WHERE
+    query = `SELECT ${fields} ${fromTable} ${joins} ${whereClause};`;
+
+    return query;
   }
-  GetSubActivities() {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.wilayat = res.Data;
+
+  onSelectAllFieldsChange(table: ITableDto) {
+    // Toggle all fields based on the checkbox state
+    table.fields.forEach(field => {
+      field.value = table.selectAllFields ? 'selected' : '';
+    });
+  }
+
+  printExcel() {
+    // Prepare workbook and worksheet array
+    const workbook: XLSX.WorkBook = { Sheets: {}, SheetNames: [] };
+
+    // Loop through each report
+    this.reports.forEach((report, index) => {
+      const reportData = this.formatReportData(report);
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(reportData);
+
+      // Apply styles to specific header cells like A1, B1, C1, etc.
+      const headers = Object.keys(reportData[0]); // Assuming reportData[0] contains headers
+
+      headers.forEach((header, colIndex) => {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex }); // Encode address like A1, B1, C1, etc.
+
+        if (!worksheet[cellAddress]) {
+          worksheet[cellAddress] = { t: 's', v: header }; // Ensure the cell exists with a string type
         }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetWilayat().subscribe(observer);
+
+        // Apply styles (e.g., bold and font size 14)
+        worksheet[cellAddress].s = {
+          font: {
+            bold: true,
+            sz: 14 // Font size
+          },
+          alignment: {
+            horizontal: "center" // Optional: Center align the header text
+          }
+        };
+      });
+
+      // Add the worksheet to the workbook
+      const sheetName = `Report ${index + 1}`;
+      workbook.SheetNames.push(sheetName);
+      workbook.Sheets[sheetName] = worksheet;
+    });
+
+    // Generate and download the Excel file
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, 'report_export');
   }
-  InsertSubActivity(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
 
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedWilayat.some(field => field.arName === selectedFieldName);
+  formatReportData(report: any): any[] {
+    const rowData: any[] = [];
 
-    if (!fieldExists) {
-      const selectedField = this.wilayat.find(field => field.arName === selectedFieldName);
+    report.fields.forEach((fieldGroup: any[]) => {
+      const row: { [key: string]: any } = {};
+      fieldGroup.forEach((field: { key: string, value: any }) => {
+        row[field.key] = field.value || ""; // Add the field value or an empty string
+      });
+      rowData.push(row);
+    });
 
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedWilayat.push(selectedField);
-      }
-    }
+    return rowData;
   }
-  GetActivities() {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.activities = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.formServices.GetActivities().subscribe(observer);
-  }
-  InsertActivity(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
 
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedActivities.some(field => field.arName === selectedFieldName);
-
-    if (!fieldExists) {
-      const selectedField = this.activities.find(field => field.arName === selectedFieldName);
-
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedActivities.push(selectedField);
-      }
-    }
-  }
-  GetSectors() {
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.sectors = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetSectors().subscribe(observer);
-  }
-  InserSector(event: any) {
-    const selectedFieldName = event.target.value; // Get the selected field name
-
-    // Check if the field is already added to prevent duplicates
-    const fieldExists = this.appendedSectors.some(field => field.arName === selectedFieldName);
-
-    if (!fieldExists) {
-      const selectedField = this.sectors.find(field => field.arName === selectedFieldName);
-
-      // Ensure selectedField is not undefined before adding to the array
-      if (selectedField) {
-        this.appendedSectors.push(selectedField);
-      }
-    }
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    saveAs(data, `${fileName}_export_${new Date().getTime()}.xlsx`);
   }
 }

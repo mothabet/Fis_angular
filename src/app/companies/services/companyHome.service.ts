@@ -27,7 +27,7 @@ export class CompanyHomeService {
     const response = this.http.get(`${environment.apiUrl}Activity/GetActivities?sectorId=${sectorId}`, { headers });
     return response;
   }
-  GetSubActivities(activityId : number) {
+  GetSubActivities(activityId : number = 0) {
     var headers = this.sharedService.getHeaders();
     var response = this.http.get(environment.apiUrl + `SubActivity/GetSubActivities?activityId=${activityId}`, { headers });
     return response;
