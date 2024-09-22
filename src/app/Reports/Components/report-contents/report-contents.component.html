@@ -130,7 +130,7 @@
                                         <input type="checkbox" class="form-check-input me-2"
                                             id="selectAllFieldsCheckbox" style="margin-bottom: 15px;"
                                             [(ngModel)]="table.selectAllFields" name="selectAllFields"
-                                            (change)="onSelectAllFieldsChange(table)" />
+                                             />
                                         <!-- Label linked to the checkbox, with top margin for alignment -->
                                         <label for="selectAllFieldsCheckbox"
                                             style="margin-top: 5px; position: static;">اختر جميع الحقول</label>
@@ -144,6 +144,9 @@
                                         <option selected value="0" disabled>اختر الحقل</option>
                                         <ng-container *ngIf="table.enTableName == 'Companies'">
                                             <option *ngFor="let field of companyFields">{{field.name}}</option>
+                                        </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Forms'">
+                                            <option *ngFor="let field of formFields">{{field.name}}</option>
                                         </ng-container>
                                         <ng-container *ngIf="table.enTableName == 'Researcher'">
                                             <option *ngFor="let field of researcherFields">{{field.name}}</option>
@@ -163,11 +166,14 @@
                                         <ng-container *ngIf="table.enTableName == 'Wilayats'">
                                             <option *ngFor="let field of wilayatFields">{{field.name}}</option>
                                         </ng-container>
+                                        <ng-container *ngIf="table.enTableName == 'Tables'">
+                                            <option *ngFor="let field of tableFields">{{field.name}}</option>
+                                        </ng-container>
                                     </select>
                                     <h5 style="margin-right: 10px;">اختر الفلتر</h5>
                                 </div>
                                 <div class="field-container"
-                                    style="padding-left: 5px; padding-top: 5px; max-height: 120px;">
+                                    style="padding-left: 5px; padding-top: 5px; max-height: 75px;">
                                     <div class="field-item" *ngFor="let field of table.fields; let i = index">
                                         <!-- Bind field properties to the input element -->
                                         <input type="text" class="field-input" [(ngModel)]="field.value"
@@ -239,6 +245,9 @@
                         <option value="" disabled>اختر الجدول الفرعي</option>
                         <ng-container *ngIf="tableType==1">
                             <option *ngFor="let table of companyTables" [ngValue]="table">{{table.arName}}</option>
+                        </ng-container>
+                        <ng-container *ngIf="tableType==2">
+                            <option *ngFor="let table of formTables" [ngValue]="table">{{table.arName}}</option>
                         </ng-container>
                         <ng-container *ngIf="tableType==3">
                             <option *ngFor="let table of researcherTables" [ngValue]="table">{{table.arName}}</option>

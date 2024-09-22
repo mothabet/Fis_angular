@@ -23,6 +23,8 @@ export class ReportContentsComponent implements OnInit {
   showLoader: boolean = false;
   companyFields: IFieldDto[] = [];
   researcherFields: IFieldDto[] = [];
+  formFields: IFieldDto[] = [];
+  tableFields: IFieldDto[] = [];
   sectorFields: IFieldDto[] = [];
   activitiesFields: IFieldDto[] = [];
   subActivitiesFields: IFieldDto[] = [];
@@ -59,6 +61,9 @@ export class ReportContentsComponent implements OnInit {
   ];
   researcherTables: IReportFilterDto[] = [
     { id: 1, arName: 'الشركات', enName: 'Companies' },
+  ];
+  formTables: IReportFilterDto[] = [
+    { id: 1, arName: 'الجداول', enName: 'Tables' },
   ];
   reports!: any[]
   constructor(private renderer: Renderer2, private sharedService: SharedService, private fb: FormBuilder,
@@ -126,6 +131,8 @@ export class ReportContentsComponent implements OnInit {
           if (res.Data) {
             if (tableType == 1)
               this.companyFields = res.Data
+            else if (tableType == 2)
+              this.formFields = res.Data
             else if (tableType == 3)
               this.researcherFields = res.Data
             else if (tableType == 4)
@@ -138,6 +145,8 @@ export class ReportContentsComponent implements OnInit {
               this.governoratesFields = res.Data
             else if (tableType == 8)
               this.wilayatFields = res.Data
+            else if (tableType == 9)
+              this.tableFields = res.Data
           }
           this.showLoader = false;
         },
@@ -175,6 +184,17 @@ export class ReportContentsComponent implements OnInit {
       // Fetch table fields for the selected type (1 for Companies)
       this.GetTableFields(3);
     }
+    else if (this.tableType === 2) {
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'Forms',
+        arTableName: 'الاستمارات',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTableFields(2);
+    }
   }
   onFieldSelect(event: Event, table: ITableDto): void {
 
@@ -184,98 +204,171 @@ export class ReportContentsComponent implements OnInit {
       const selectedField = this.companyFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'Researcher') {
       const selectedField = this.researcherFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'Sectors') {
       const selectedField = this.sectorFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'Activities') {
       const selectedField = this.activitiesFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'SubActivities') {
       const selectedField = this.subActivitiesFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'Governorates') {
       const selectedField = this.governoratesFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
     else if (table.enTableName == 'Wilayats') {
       const selectedField = this.wilayatFields.find(field => field.name === selectedValue);
 
       if (selectedField && table) {
-        const tableField: ITableFieldDto = {
-          name: selectedField.name,
-          dataType: selectedField.dataType,
-          filter: null, // Initialize as null or a valid default value
-          value: '' // Initialize value as needed
-        };
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
 
-        table.fields.push(tableField);
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
+      }
+    }
+    else if (table.enTableName == 'Tables') {
+      const selectedField = this.tableFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
+      }
+    }
+    else if (table.enTableName == 'Forms') {
+      const selectedField = this.formFields.find(field => field.name === selectedValue);
+
+      if (selectedField && table) {
+        // Check if the field already exists in the table's fields array
+        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+
+        if (!fieldExists) {
+          const tableField: ITableFieldDto = {
+            name: selectedField.name,
+            dataType: selectedField.dataType,
+            filter: null, // Initialize as null or a valid default value
+            value: '' // Initialize value as needed
+          };
+
+          table.fields.push(tableField);
+        }
       }
     }
   }
@@ -322,6 +415,7 @@ export class ReportContentsComponent implements OnInit {
 
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
+    debugger
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
       Swal.fire({
         icon: 'error',
@@ -392,6 +486,8 @@ export class ReportContentsComponent implements OnInit {
         this.GetTableFields(7);
       else if (this.selectedTable.enName == 'Wilayats')
         this.GetTableFields(8);
+      else if (this.selectedTable.enName == 'Tables')
+        this.GetTableFields(9);
       this.closeModal();
     }
   }
@@ -476,6 +572,9 @@ export class ReportContentsComponent implements OnInit {
           case 'Wilayats':
             joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.wilayatId = ${tableAlias}.id `;
             break;
+          case 'Tables':
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.id `;
+            break;
           default:
             throw new Error(`Unknown table: ${table.enTableName}`);
         }
@@ -527,7 +626,7 @@ export class ReportContentsComponent implements OnInit {
       });
 
       // Add the worksheet to the workbook
-      const sheetName = `Report ${index + 1}`;
+      const sheetName = `${report.part}`;
       workbook.SheetNames.push(sheetName);
       workbook.Sheets[sheetName] = worksheet;
     });
