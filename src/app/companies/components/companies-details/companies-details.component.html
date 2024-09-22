@@ -6,8 +6,8 @@
 
 
     <!-- start content -->
-    <div class="companies-details">
-        <div class="header-nav">
+    <div class="companies-details" >
+        <div class="header-nav" *ngIf="role == 'Admin'">
             <div class="card-box mb-3">
                 <ul>
                     <li class="active">
@@ -27,8 +27,18 @@
         </div>
         <div class="row w-100 m-0 mb-2">
             <div class="col-sm-12 card-box company-card mb-2 d-flex align-items-center flex-wrap">
-                <div class="image-box">
-                    <img src="../../../../assets/images/companyLogo.png" class="img-fluid" alt="company">
+              <div class="image-box position-relative">
+                <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
+                <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="company">
+                
+                <!-- زر تغيير الصورة -->
+                <button class="change-image-btn" (click)="triggerImageUpload()"  (mouseover)="hovering=true" (mouseleave)="hovering=false">
+                    <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
+                    <span *ngIf="hovering">Change Image</span>
+                </button>
+                
+                    <!-- Input لاختيار الصور فقط -->
+                    <input type="file"  (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
                 </div>
                 <div class="detail">
                     <h4 class="title">{{company.arName}}</h4>
@@ -56,7 +66,6 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
-                                <img src="../../../../assets/images/map-marker-radius-ou.png" alt="">
                                 <p class="m-0 mx-2 name">عنوان :</p>
                                 <p class="data text-nowrap m-0">{{company.address}}</p>
                             </div>
@@ -188,8 +197,8 @@
                 <div class="card-box file">
                     <div class="header">
                         <h4 class="title">المرفقات</h4>
-                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput">
-                        <button class="btn upload-btn" (click)="triggerFileInput()">
+                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput" >
+                        <button class="btn upload-btn" (click)="triggerFileInput()" >
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
                           </button>
                     </div>

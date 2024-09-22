@@ -252,7 +252,6 @@ export class CodeHomeComponent {
           this.code = res.Data.codeDto;
           this.addSubCode = res.Data.getSubCodeDtos
           this.addSubCode = res.Data.getSubCodeDtos.map((subCode: any) => {
-            debugger
             return {
               ...subCode,
               id_Level: `${subCode.connectedWithId}_${subCode.connectedWithLevel}`

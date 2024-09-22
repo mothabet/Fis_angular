@@ -42,7 +42,9 @@
                             <ng-container *ngIf="formContent.code.TypeId != 4">
                                 <ng-container *ngFor="let part of table.tableParts; let i = index">
                                     <td class="text-center">
-                                        <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[i+1]"  (input)="changeStatus(coverForm.status)"/>
+                                        <input type="number" class="tableInputParent" (focus)="clearIfZero(formContent.values, i+1)"
+                                        (blur)="restoreIfNotPositive(formContent.values, i+1)"
+                                        [(ngModel)]="formContent.values[i+1]"  (input)="changeStatus(coverForm.status)"/>
                                     </td>
                                 </ng-container>
                             </ng-container>
@@ -63,12 +65,10 @@
                                             <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                 {{activity.arName}}</option>
                                         </select>
-                                        <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                            style="background-color: white; border-radius: 5px;margin: 10px;"
-                                            (click)="addSubCodeRow(formContent.code)">
-                                            <img src=".././../../../assets/images/trash-can-outline.png"
-                                                class="img-fluid">
-                                        </button> -->
+                                        <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                         <div style="display: flex;">
@@ -87,12 +87,10 @@
                                                     {{ country.arName }}
                                                 </option>
                                             </select>
-                                            <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </div>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -108,7 +106,9 @@
 
                                 </td>
                                 <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                    <td class="text-center"><input type="number"  (input)="changeStatus(coverForm.status)" [(ngModel)]="subCode.values[i+1]"/></td>
+                                    <td class="text-center"><input type="number" (focus)="clearIfZero(subCode.values, i+1)"
+                                        (blur)="restoreIfNotPositive(subCode.values, i+1)"  
+                                        (input)="changeStatus(coverForm.status)" [(ngModel)]="subCode.values[i+1]"/></td>
                                   </ng-container>
                                 <td class="text-center"><input disabled type="text"
                                         value="{{subCode.QuestionCode}}" />

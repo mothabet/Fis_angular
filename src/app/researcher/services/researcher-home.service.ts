@@ -35,13 +35,14 @@ export class ResearcherHomeService {
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
-   GetFormsStatistics(id:number){
+   GetFormsStatistics(id:number=0){
+    debugger
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Form/FormsStatistics?researcherId=${id}&lang=2`, { headers });
      return resopnse;
    }
 
-   GetFormsByStatus(researcherId:number,status:number){
+   GetFormsByStatus(researcherId:number=0,status:number){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Form/GetFormsByStatus?researcherId=${researcherId}&status=${status}&lang=2`, { headers });
      return resopnse;
@@ -52,5 +53,18 @@ export class ResearcherHomeService {
      var resopnse = this.http.put(environment.apiUrl+`Researcher/UpdateResearcher?id=${id}&lang=2`, Model, { headers });
      return resopnse;
    }
-   
+   GetProfileResearcherByUserId(){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.get(environment.apiUrl+`Researcher/GetProfileResearcherByUserId`, { headers });
+     return response;
+   }
+   UpdateProfileImg(formData: FormData,id:number) {
+    var headers= this.sharedService.getHeaders();
+    var resopnse = this.http.put(
+      environment.apiUrl + `Researcher/UpdateProfileImg?id=${id}`,
+      formData,
+      { headers }
+    );
+    return resopnse;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
@@ -6,6 +6,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
+import { LoginService } from 'src/app/auth/services/login.service';
 
 @Component({
   selector: 'app-companies-details',
@@ -19,27 +21,41 @@ export class CompaniesDetailsComponent implements OnInit {
   selectedFiles: File[] = [];
   pdf!: IPdfDto;
   companyPdfs!: IGetPdfDto[];
-  constructor(private http: HttpClient,private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService, private sharedServices: SharedService) {
+  hovering: boolean = false;
+  selectedImage: File | null = null;
+  selectedImageUrl!: string
+  role:string = "";
+  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
+    , private sharedServices: SharedService, private authService: LoginService) {
 
   }
   ngOnInit(): void {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetCompanyById(+this.companyId);
     this.GetCompanyPdfs(+this.companyId);
+    const isLoggedIn = this.authService.getToken();
+    let res = this.authService.decodedToken(isLoggedIn);  
+    this.role = res.roles;
   }
   ngAfterViewInit(): void {
-    
+
     this.showLoader = false;
   }
   GetCompanyById(id: number) {
+    debugger
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+    debugger
+
         if (res.Data) {
           this.company = res.Data;
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
       error: (err: any) => {
+    debugger
+
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
@@ -81,7 +97,7 @@ export class CompaniesDetailsComponent implements OnInit {
           this.showLoader = false;
         },
         error: (err: any) => {
-          
+
           this.sharedServices.handleError(err);
           this.showLoader = false;
         },
@@ -92,15 +108,25 @@ export class CompaniesDetailsComponent implements OnInit {
     }
   }
   GetCompanyPdfs(id: number) {
+    debugger
+
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+    debugger
+
         if (res.Data) {
-          
           this.companyPdfs = res.Data;
         }
+        else{
+          this.companyPdfs = [];
+        }
+    this.showLoader = false;
+
       },
       error: (err: any) => {
+    debugger
+
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
@@ -128,7 +154,6 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.GetCompanyPdfs(+this.companyId);
-        this.GetCompanyPdfs(+this.companyId)
         this.showLoader = false;
         Swal.fire({
           icon: 'success',
@@ -144,19 +169,52 @@ export class CompaniesDetailsComponent implements OnInit {
     };
     this.companyServices.DeletePdf(id).subscribe(observer);
   }
-  GetPdfPath(url: string): void {
+  downloadPdf(path: string): void {
     
-    this.http.get(url, { responseType: 'blob' }).subscribe((blob: Blob) => {
-      
-      const fileName = url.substring(url.lastIndexOf('/') + 1);
-      saveAs(blob, fileName);
-    });
+    path = `${environment.dirUrl}PdfFile/Company_${this.companyId}/${path}`;
+    this.companyServices.saveFile(path);
   }
-  downloadPdf(path : string): void {
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const pdfUrl = 'https://www.esu.edu/computing_communication_services/web-services/documents/23-24/fake.pdf';
-    this.http.get(proxyUrl + pdfUrl, { responseType: 'blob' }).subscribe((blob: Blob) => {
-      saveAs(blob, 'fake.pdf');
-    });
+  @ViewChild('imageInput') imageInput!: ElementRef;
+
+  
+  // Method to trigger file input click
+  triggerImageUpload() {
+    if (this.imageInput) {
+      this.imageInput.nativeElement.click();
+    }
+  }
+
+  // Handle selected image
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file; // Store the selected file
+      this.UpdateProfileImg(); // Call the method to upload the image
+    }
+  }
+
+  // Method to update profile image
+  UpdateProfileImg(): void {
+    if (!this.selectedImage) {
+      return;
+    }
+
+    this.showLoader = true;
+    const formData = new FormData();
+    formData.append('imageDto', this.selectedImage, this.selectedImage.name);
+
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+
+      },
+      error: (err: any) => {
+        console.error('Error uploading image:', err);
+        this.showLoader = false;
+      },
+    };
+
+      this.companyServices.UpdateProfileImg(formData,+this.companyId).subscribe(observer);
   }
 }

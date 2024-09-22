@@ -1,5 +1,8 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
+    <!-- header -->
+  <app-top-screen [title]="'القطاعات'"></app-top-screen>
+  <!-- end-header -->
     <div class="header-nav companies-details">
         <div class="card-box mb-3">
             <ul>
@@ -18,31 +21,6 @@
             </ul>
         </div>
     </div>
-    <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            القطاعات
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
-    <!-- end-header -->
     <!-- start content -->
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
@@ -55,7 +33,7 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="onReset(1)">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة قطاع
                     </button>
@@ -102,34 +80,38 @@
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="add">إضافة قطاع</h5>
             </div>
-            <form [formGroup]="sectorForm" (ngSubmit)="onSave()">
-                <div class="row" style="padding: 10px;">
-                    <!-- Arabic Report Name -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="arName"
-                               placeholder="اسم القطاع بالعربية">
+            <form [formGroup]="sectorForm"  (ngSubmit)="onSave()">
+                <div class="modal-body pb-1">
+                  <div class="row">
+                    <div class="form-group col-sm-12 mb-2">
+                      <input class="form-control input-modal"  type="text"
+                         formControlName="arName" name="arName"/>
+                        <label for="inputField">اسم القطاع بالعربية</label>
                     </div>
-
-                    <!-- English Report Name -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="enName"
-                               placeholder="Sector Name in English">
-                    </div>
-
-                    <!-- code -->
-                    <div class="col-sm-12 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="code"
-                               placeholder="رمز القطاع">
-                    </div>
+                    <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="enName" name="enName"/>
+                          <label for="inputField">Sector Name in English</label>
+                      </div>
+                      <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="code" name="code"/>
+                          <label for="inputField">رمز القطاع</label>
+                      </div>
+                  </div>
                 </div>
-
                 <div class="modal-footer pt-0">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
-                    <button type="button" class="btn btn-reset">إعادة ملء</button>
-                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
-                    <button *ngIf="isUpdate" (click) = "updateCountry()" type="button" class="btn btn-save">تعديل</button>
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
+                    إلغاء
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+                    حفظ
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="isUpdate" (click) = "updateCountry()" type="button" class="btn btn-save">
+                    تعديل
+                  </button>
                 </div>
-            </form>
+              </form>
         </div>
     </div>
 </div>

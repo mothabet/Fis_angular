@@ -63,7 +63,9 @@
                                     <ng-container *ngFor="let part of table.tableParts; let i = index">
                                         <td class="text-center"><input type="number"
                                                 [(ngModel)]="formContent.values[i + table.tableParts.length]"
-                                                class="tableInputParent" (input)="changeStatus(coverForm.status)"/>
+                                                class="tableInputParent" 
+                                                (focus)="clearIfZero(formContent.values, i+1)"
+                                        (blur)="restoreIfNotPositive(formContent.values, i+1)" (input)="changeStatus(coverForm.status)"/>
                                         </td>
                                     </ng-container>
                                 </ng-container>
@@ -86,12 +88,10 @@
                                                 <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                     {{activity.arName}}</option>
                                             </select>
-                                            <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                            style="background-color: white; border-radius: 5px;margin: 10px;"
-                                            (click)="addSubCodeRow(formContent.code)">
-                                            <img src=".././../../../assets/images/trash-can-outline.png"
-                                                class="img-fluid">
-                                        </button> -->
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                             <div style="display: flex;">
@@ -110,28 +110,26 @@
                                                         {{ country.arName }}
                                                     </option>
                                                 </select>
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                             </div>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 5">
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 300px !important;" />
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                             </div>
 
                                         </td>
                                         <ng-container *ngFor="let part of table.tableParts; let i = index">
-                                            <td class="text-center"><input type="number" [(ngModel)]="subCode.values[i]"
+                                            <td class="text-center"><input type="number" 
+                                                (focus)="clearIfZero(subCode.values, i+1)"
+                                        (blur)="restoreIfNotPositive(subCode.values, i+1)" [(ngModel)]="subCode.values[i]"
                                                     (ngModelChange)="calculateTransaction(coverForm.status)" /></td>
                                         </ng-container>
 

@@ -1,11 +1,11 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'الشركة'"></app-top-screen>
+  <app-top-screen [title]="'شركات الباحث'"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة الشركات</div>
+      <div class="title">قائمة شركات الباحث</div>
       <div class="btns d-flex">
         <div class="search">
           <input
@@ -30,6 +30,7 @@
             data-bs-toggle="modal"
             (click)="popAddCompany()"
             data-bs-target="#addCompany"
+            hidden
           >
             <img
               id="addCompanyBtn"
@@ -42,17 +43,6 @@
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
-          <button type="button" class="btn btn-download" (click)="triggerFileInput()">
-            <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            اضافة مجموعة شركات
-          </button>
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileChange($event)"
-            accept=".xlsx, .xls"
-            style="display: none;"
-          />
         </div>
       </div>
     </div>
@@ -61,6 +51,7 @@
         <table class="table table-borderless">
           <thead>
             <tr class="t-header">
+              <th>#</th>
               <th class="text-center" scope="col">اسم الشركة</th>
               <th class="text-center" scope="col">رقم السجل التجاري</th>
               <th class="text-center" scope="col">رقم الشركة</th>
@@ -75,8 +66,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let company of companies">
-              <td>
+            <tr *ngFor="let company of companies;let i = index">
+              <th>{{i+1}}</th>
+              <td class="text-center">
                 {{ company.arName }}
               </td>
               <td class="text-center">{{ company.compRegNumber }}</td>
@@ -91,12 +83,6 @@
                 <a routerLink="/Companies-Details/{{company.id}}" class="icon">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
-                <button class="icon" (click)="showAlert(company.id)">
-                  <img
-                    src="../../../../assets/images/trash-can-outline.png"
-                    alt=""
-                  />
-                </button>
                 <button
                   class="icon"
                   (click)="editCompany(company.id)"
@@ -126,12 +112,12 @@
     </div>
   </div>
   <!-- end content -->
-  <app-pagination
+  <!-- <app-pagination
     [pageNumber]="currentPage"
     [lastPage]="isLastPage"
     [pagesCount]="totalPages"
     (pageChange)="onPageChange($event)"
-  ></app-pagination>
+  ></app-pagination> -->
 </div>
 <!--start add company modal -->
 <div
@@ -216,7 +202,7 @@
               >
                 <option selected value="0" disabled>اختيار القطاع</option>
                 <option *ngFor="let sector of Sectors" value="{{ sector.id }}">
-                  {{sector.code}}-{{ sector.arName }}
+                  {{ sector.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار القطاع</label>
@@ -235,7 +221,7 @@
                   *ngFor="let activity of Activities"
                   value="{{ activity.id }}"
                 >
-                {{activity.code}}-{{ activity.arName }}
+                  {{ activity.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الرئيسي</label>
@@ -254,7 +240,7 @@
                   *ngFor="let subActivity of SubActivities"
                   value="{{ subActivity.id }}"
                 >
-                {{subActivity.code}}-{{ subActivity.arName }}
+                  {{ subActivity.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الثانوي</label>

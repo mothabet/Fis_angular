@@ -70,13 +70,13 @@ export class SharedTableWithPeriodComponent {
           this.generateYearsList(this.table.period);
           this.table.formContents.forEach((formContent: IGetQuestionDto) => {
             // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-            formContent.values = ["", ...Array(this.table.period).fill("")];
+            formContent.values = [0, ...Array(this.table.period).fill(0)];
 
             // Initialize the `values` array for each subCode
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Set the first value to 0, and the rest based on the number of parts
-                subCode.values = ["", ...Array(this.years.length).fill("")];
+                subCode.values = [0, ...Array(this.years.length).fill(0)];
               });
             }
           });
@@ -124,7 +124,7 @@ export class SharedTableWithPeriodComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: ["", ...Array(this.years.length).fill("")],
+      values: [0, ...Array(this.years.length).fill(0)],
       connectedWithId: 0,
       connectedWithLevel: 0,
       connectedWithType:''
@@ -166,16 +166,16 @@ export class SharedTableWithPeriodComponent {
     this.formServices.GetCountries().subscribe(observer);
   }
   GetFormData() {
-    debugger
+    
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          debugger
+          
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -205,30 +205,30 @@ export class SharedTableWithPeriodComponent {
                 if (tableIndex !== -1) {
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
-                      formContent.values = formContent.values || ["","",""];
-                      formContent.values[1] = formContent.values[1] || "";
-                      formContent.values[2] = ""; // Set transaction explicitly to 0 since it's derived
-                      formContent.values[0] = formContent.values[2] || "";
+                      formContent.values = formContent.values || [0,0,0];
+                      formContent.values[1] = formContent.values[1] || 0;
+                      formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
+                      formContent.values[0] = formContent.values[2] || 0;
 
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Initialize subCode `values` array if it doesn't exist
-                          subCode.values = subCode.values || ["","",""];
+                          subCode.values = subCode.values || [0,0,0];
 
                           // Ensure the `values` array has the correct length and initial values
-                          subCode.values[0] = subCode.values[0] || ""; // lastYear
-                          subCode.values[2] = ""; // Set transaction explicitly to 0
-                          subCode.values[1] = subCode.values[1] || ""; // nextYear
+                          subCode.values[0] = subCode.values[0] || 0; // lastYear
+                          subCode.values[2] = 0; // Set transaction explicitly to 0
+                          subCode.values[1] = subCode.values[1] || 0; // nextYear
                         });
                       }
                     });
                   }
                   else if (this.coverForm.tables[tableIndex].Type == "2") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
-                      formContent.values = formContent.values || ["",""];
-                      formContent.values[0] = formContent.values[""] || "";
-                      formContent.values[1] = formContent.values[1] || "";
+                      formContent.values = formContent.values || [0,0];
+                      formContent.values[0] = formContent.values[0] || 0;
+                      formContent.values[1] = formContent.values[1] || 0;
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
@@ -245,12 +245,12 @@ export class SharedTableWithPeriodComponent {
                   else if (this.coverForm.tables[tableIndex].Type == "3") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                       // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-                      formContent.values = ["", ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill("")];
+                      formContent.values = [0, ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill(0)];
                       // Initialize the `values` array for each subCode
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Set the first value to 0, and the rest based on the number of parts
-                          subCode.values = ["", ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill("")];
+                          subCode.values = [0, ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill(0)];
                         });
                       }
                     });
@@ -261,12 +261,12 @@ export class SharedTableWithPeriodComponent {
                       const totalPartsCount = this.coverForm.tables[tableIndex].tableParts.length * 2;
 
                       // Initialize the `values` array for the main content
-                      formContent.values = Array(totalPartsCount).fill("");
+                      formContent.values = Array(totalPartsCount).fill(0);
 
                       // Initialize the `values` array for each subcode
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
-                          subCode.values = Array(totalPartsCount).fill("");
+                          subCode.values = Array(totalPartsCount).fill(0);
                         });
                       }
                     });
@@ -274,13 +274,13 @@ export class SharedTableWithPeriodComponent {
                   else if (this.coverForm.tables[tableIndex].Type == "5") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                       // Initialize the `values` array with zeroes, ensuring the first value is set to 0
-                      formContent.values = ["", ...Array(this.coverForm.tables[tableIndex].period).fill("")];
+                      formContent.values = [0, ...Array(this.coverForm.tables[tableIndex].period).fill(0)];
 
                       // Initialize the `values` array for each subCode
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Set the first value to 0, and the rest based on the number of parts
-                          subCode.values = ["", ...Array(this.coverForm.tables[tableIndex].period).fill("")];
+                          subCode.values = [0, ...Array(this.coverForm.tables[tableIndex].period).fill(0)];
                         });
                       }
                     });
@@ -319,7 +319,7 @@ export class SharedTableWithPeriodComponent {
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             return;
           }
-          debugger
+          
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -358,6 +358,10 @@ export class SharedTableWithPeriodComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        const storedTables = localStorage.getItem(`coverForm${+this.formId}`);
+        if (storedTables) {
+          localStorage.removeItem(`coverForm${+this.formId}`);
+        }
         this.GetFormById(+this.formId)
         this.Loader = false;
       }
@@ -371,5 +375,23 @@ export class SharedTableWithPeriodComponent {
       this.formServices.BeginningForm(+this.formId, +this.companyId).subscribe(observer);
     }
 
+  }
+  
+  clearIfZero(values: any[], index: number): void {
+    if (values[index] === 0) {
+        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+    }
+}
+
+restoreIfNotPositive(values: number[], index: number): void {
+    if (values[index] === null || values[index] <= 0) {
+        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+    }
+}
+  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
   }
 }

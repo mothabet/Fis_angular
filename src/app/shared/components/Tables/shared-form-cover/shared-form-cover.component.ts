@@ -42,12 +42,12 @@ export class SharedFormCoverComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
+          debugger
           this.coverForm = res.Data;
           this.GetFormData();
         }
       },
       error: (err: any) => {
-
         this.sharedServices.handleError(err);
         this.Loader = false;
       },
@@ -58,11 +58,11 @@ export class SharedFormCoverComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-          
           const coverFormData: ICoverFormData = {
             officialUse: '',
             activityCode: ''

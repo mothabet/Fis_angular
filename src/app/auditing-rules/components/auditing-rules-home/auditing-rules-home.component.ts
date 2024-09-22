@@ -327,6 +327,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     }
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
+      Type: this.auditForm.value.Type,
       codeParent: Number(this.codeParent),
     };
     const observer = {
@@ -558,6 +559,7 @@ export class AuditingRulesHomeComponent implements OnInit {
 
     const Model: IAddAuditRule = {
       Rule: this.auditForm.value.Rule,
+      Type: this.auditForm.value.Type,
       codeParent: Number(this.codeParent),
     };
 

@@ -12,6 +12,8 @@ import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 
 @Component({
   selector: 'app-forms',
@@ -59,7 +61,7 @@ export class FormsComponent implements OnInit {
     QuestionCode: '',
     SubCodes: [],
     TypeId: 0,
-    Department:''
+    Department: ''
   }
   Type: number = 0;
   formType: number = 0;
@@ -68,6 +70,7 @@ export class FormsComponent implements OnInit {
   reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
   showSubCode: string = '';
+  Activities: IDropdownList[] = []
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -77,6 +80,7 @@ export class FormsComponent implements OnInit {
     private sharedServices: SharedService,
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
+    private companyHomeServices: CompanyHomeService
   ) { }
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -87,7 +91,8 @@ export class FormsComponent implements OnInit {
       IsActive: [true, Validators.required],
       type: ['', Validators.required],
       reviewYear: ['', Validators.required],
-      typeQuarter: ['']
+      typeQuarter: [''],
+      codeActivity: ['']
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -97,7 +102,7 @@ export class FormsComponent implements OnInit {
       arNotes: ['', Validators.required],
       enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
-      IsTotal:[true,Validators.required],
+      IsTotal: [true, Validators.required],
       Type: [0, Validators.required],
       formId: [''],
       period: [''],
@@ -108,7 +113,7 @@ export class FormsComponent implements OnInit {
     });
     this.GetAllForms();
     this.years = this.sharedServices.generateYears(2000, 2050);
-
+    this.GetSectorActvities(0);
   }
   resetForm() {
     this.add = true;
@@ -141,7 +146,6 @@ export class FormsComponent implements OnInit {
       this.addCollapseButton(quesUl); // Add collapse button to new ul
     }
   }
-
   AppenHtmlTable(getTableDto: IGetTableDto) {
     this.tablesCount = getTableDto.id;
     const tableUl = document.getElementById('tableUl' + getTableDto.formId);
@@ -160,7 +164,6 @@ export class FormsComponent implements OnInit {
       this.addCollapseButton(tableUl); // Add collapse button to new ul
     }
   }
-
   AppenHtmlForm(form: IGetFormDto) {
     this.formCount = form.id;
     const newMenuItem = this.createHtmlForm(form);
@@ -170,7 +173,6 @@ export class FormsComponent implements OnInit {
     formUl.id = 'formUl' + form.id;
     this.renderer.appendChild(newMenuItem, formUl);
   }
-
   addCollapseButton(ulElement: HTMLElement) {
     const button = this.renderer.createElement('button');
     const icon = this.renderer.createElement('img');
@@ -181,7 +183,6 @@ export class FormsComponent implements OnInit {
     });
     this.renderer.insertBefore(ulElement.parentNode, button, ulElement); // Insert button before ul
   }
-
   toggleCollapse(ulElement: HTMLElement, icon: HTMLElement) {
     const isCollapsed = ulElement.classList.contains('collapsed');
     if (isCollapsed) {
@@ -192,7 +193,6 @@ export class FormsComponent implements OnInit {
       this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomin.png');
     }
   }
-
   createHtmlQues(getQuestionDto: IGetQuestionDto): HTMLLIElement {
     const quesLi = this.renderer.createElement('li');
     quesLi.id = 'quesLi' + this.quesCount;
@@ -250,7 +250,6 @@ export class FormsComponent implements OnInit {
 
     return quesLi;
   }
-
   createHtmlTable(getTableDto: IGetTableDto): HTMLLIElement {
     const tableLi = this.renderer.createElement('li');
     tableLi.id = this.tablesCount;
@@ -345,7 +344,6 @@ export class FormsComponent implements OnInit {
 
     return tableLi;
   }
-
   createHtmlForm(form: IGetFormDto): HTMLLIElement {
     const formLi = this.renderer.createElement('li');
     formLi.id = this.formCount;
@@ -461,7 +459,6 @@ export class FormsComponent implements OnInit {
 
     return formLi;
   }
-
   openModal(name: string, id: number = 0, formId: number = 0, formType: number = 0) {
     if (name === 'createTable') {
       this.formId = formId;
@@ -479,7 +476,7 @@ export class FormsComponent implements OnInit {
       document.getElementById(name)
     );
     modal.show();
-    
+
   }
   GetAllCodes(page: number = 0, textSearch: string = ''): void {
     this.Loader = true;
@@ -502,7 +499,7 @@ export class FormsComponent implements OnInit {
   }
   saveForm() {
     const allErrors: string[] = [];
-    
+
     if (this.formForm.value.type == '2' && this.formForm.value.typeQuarter == '' && (this.formForm.value.reviewYear != '0' || this.formForm.value.reviewYear != '')) {
       allErrors.push('يجب ادخال ربع مسح الاستماره');
       if (this.formForm.valid) {
@@ -526,13 +523,14 @@ export class FormsComponent implements OnInit {
         IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
-        typeQuarter: this.formForm.value.typeQuarter
+        typeQuarter: this.formForm.value.typeQuarter,
+        codeActivity: this.formForm.value.codeActivity,
       };
 
       this.Loader = true;
       const observer = {
         next: (res: any) => {
-          
+
           if (res.Status == 400) {
             Swal.fire({
               icon: 'error',
@@ -579,13 +577,26 @@ export class FormsComponent implements OnInit {
       this.Loader = false;
     }
   }
+  GetSectorActvities(sectorId: number) {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.Activities = res.Data;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
+  }
   GetAllForms(): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         this.forms = res.Data;
-        
+
         if (res.Data) {
 
           this.resetForm();
@@ -680,13 +691,13 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.GetAllForms();
-          this.Loader = false;
-          Swal.fire({
-            icon: 'success',
-            title: res.Message,
-            showConfirmButton: false,
-            timer: 2000,
-          });
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000,
+        });
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
@@ -710,9 +721,10 @@ export class FormsComponent implements OnInit {
             IsActive: this.addForm.IsActive,
             type: this.addForm.Type,
             reviewYear: this.addForm.reviewYear,
-            typeQuarter: this.addForm.typeQuarter
+            typeQuarter: this.addForm.typeQuarter,
+            codeActivity: this.addForm.codeActivity
           });
-          
+
           this.reviewYear = this.formForm.value.reviewYear;
           this.Loader = false;
           this.add = false;
@@ -744,7 +756,9 @@ export class FormsComponent implements OnInit {
         IsTotal: this.formForm.value.IsTotal,
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
-        typeQuarter: this.formForm.value.typeQuarter
+        typeQuarter: this.formForm.value.typeQuarter,
+        codeActivity: this.formForm.value.codeActivity,
+
       };
       const observer = {
         next: (res: any) => {
@@ -752,7 +766,7 @@ export class FormsComponent implements OnInit {
           if (button) {
             button.click();
           }
-          
+
           this.resetForm();
           this.form = res.Data;
           this.GetAllForms();
@@ -781,7 +795,7 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
-    this.Loader = true;   
+    this.Loader = true;
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
       const Model: IAddTableDto = {
@@ -928,7 +942,7 @@ export class FormsComponent implements OnInit {
             Type: this.addTable.Type,
             fromId: this.addTable.formId,
             IsActive: this.addTable.IsActive,
-            IsTotal:this.addTable.IsTotal,
+            IsTotal: this.addTable.IsTotal,
             period: this.tableForm.value.period,
           });
           this.addTableParts = res.Data.tableParts;
@@ -960,7 +974,7 @@ export class FormsComponent implements OnInit {
     this.formServices.GetTableById(id).subscribe(observer);
   }
   updateTable() {
-    
+
     this.Loader = true;
     if (!(this.tableForm.value.Type == '5')) this.tableForm.value.period = 0
     if (this.tableForm.valid) {
@@ -974,11 +988,11 @@ export class FormsComponent implements OnInit {
         Type: this.tableForm.value.Type,
         formId: this.idFormTables,
         IsActive: this.tableForm.value.IsActive,
-        IsTotal : this.tableForm.value.IsTotal,
+        IsTotal: this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
         tableParts: this.addTableParts
       };
-      
+
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');
@@ -1182,7 +1196,7 @@ export class FormsComponent implements OnInit {
     if (selectedItem) {
       this.code = selectedItem;
     }
-    
+
     this.GetSubCodesById(Number(selectedId))
   }
   GetSubCodesById(id: number) {
@@ -1222,7 +1236,7 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.codeService.GetCodeById(Number(id),"").subscribe(observer);
+    this.codeService.GetCodeById(Number(id), "").subscribe(observer);
   }
   getControlErrors(controlName: string): string[] {
     const control = this.formForm.get(controlName);
@@ -1298,11 +1312,11 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         this.formId = res.Data.id
-        
+
         if (res.Data.Type == 1)
-          this.router.navigate(['/FormDetails', this.formId , 'null',0]);
+          this.router.navigate(['/FormDetails', this.formId, 'null', 0]);
         else if (res.Data.Type == 2)
-          this.router.navigate(['/QuarterFormCover', this.formId , 'null' , 0]);
+          this.router.navigate(['/QuarterFormCover', this.formId, 'null', 0]);
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);

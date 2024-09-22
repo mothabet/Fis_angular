@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ResearcherHomeService } from '../../services/researcher-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IResearcher } from '../../Dtos/ResearcherHomeDto';
@@ -11,6 +11,10 @@ import Swal from 'sweetalert2';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { TopScreenService } from 'src/app/shared/services/top-screen.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { arabicFont } from 'src/app/shared/services/arabic-font';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-researcher-details',
@@ -18,12 +22,12 @@ import { TopScreenService } from 'src/app/shared/services/top-screen.service';
   styleUrls: ['./researcher-details.component.css']
 })
 export class ResearcherDetailsComponent implements OnInit {
-  role:string = "";
+  role: string = "";
   showLoader: boolean = false;
   researcher!: IResearcher;
   researcherId!: string;
   companiesCount: number = 0;
-  companies! : ICompany[]
+  companies!: ICompany[]
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -32,9 +36,14 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedFormId!: number; // To store selected form id
   selectedMessageId!: number;
   selectMessage: any; // Store the selected message details // To store selected message id
-  formStatics!:any[]
-  formsStaticsStatus!:any[]
-  constructor(private renderer: Renderer2,private topScreenServices:TopScreenService,private authService: LoginService,private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
+  formStatics!: any[];
+  formsStaticsStatus!: any[];
+  tableColumns = ['عنوان الشركه', 'رقم الشركة', 'اسم الشركة'];
+  hovering: boolean = false;
+  selectedImage: File | null = null;
+  selectedImageUrl!: string
+  constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
+    private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService, private sharedServices: SharedService, private messageService: HomemessagesService) {
 
   }
   ngOnInit(): void {
@@ -44,7 +53,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetAllMessages(0, '')
     this.GetAllForms();
     const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);  
+    let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
     this.GetFormsStatistics()
   }
@@ -55,11 +64,11 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          debugger
+
           this.researcher = res.Data;
           this.companies = res.Data.companies
-          debugger
-          console.log(this.companies)
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.pathImgProfile}`;
+
           this.companiesCount = this.researcher.companies.length;
         }
       },
@@ -88,7 +97,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.researcherServices.GetFormsStatistics(+this.researcherId).subscribe(observer);
   }
 
-  GetFormsByStatus(status:number) {
+  GetFormsByStatus(status: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -102,7 +111,7 @@ export class ResearcherDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.researcherServices.GetFormsByStatus(+this.researcherId,status).subscribe(observer);
+    this.researcherServices.GetFormsByStatus(+this.researcherId, status).subscribe(observer);
   }
 
   openModal() {
@@ -123,7 +132,7 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-    debugger
+
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))
@@ -134,7 +143,7 @@ export class ResearcherDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.messages = [];
-          debugger
+
           res.Data.getMessagesDtos.forEach((message: IMessage) => {
             switch (message.typeMessage) {
               case 2:
@@ -201,7 +210,7 @@ export class ResearcherDetailsComponent implements OnInit {
       emailBody: this.selectedMessage.arDetails || ''
     };
     this.showLoader = true;
-    debugger
+
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
@@ -237,5 +246,87 @@ export class ResearcherDetailsComponent implements OnInit {
     return this.selectedCompanyIds.includes(companyId);
   }
 
+  printPdf() {
+    this.generatePdf(this.companies, this.tableColumns);
+  }
+  generatePdf(data: any[], columns: string[]) {
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4'
+    });
 
+    // Add the Arabic font to jsPDF
+    doc.addFileToVFS('Arabic-Regular.ttf', arabicFont);
+    doc.addFont('Arabic-Regular.ttf', 'Arabic', 'normal');
+    doc.setFont('Arabic');
+
+    // Add a title
+    doc.text('الشركات المرتبطه بالباحث', 10, 10);
+
+    // Generate the table
+    autoTable(doc, {
+      head: [columns],
+      body: data.map((item, index) => [
+        item.address,
+        item.id,
+        item.arName,
+      ]),
+      styles: {
+        font: 'Arabic',
+        halign: 'right' // Horizontal alignment
+      },
+      bodyStyles: {
+        halign: 'right'
+      },
+      headStyles: {
+        halign: 'right'
+      }
+    });
+
+    // Save the PDF
+    doc.save('Researcher Companies.pdf');
+  }
+  @ViewChild('imageInput') imageInput!: ElementRef;
+
+
+  // Method to trigger file input click
+  triggerImageUpload() {
+    if (this.imageInput) {
+      this.imageInput.nativeElement.click();
+    }
+  }
+
+  // Handle selected image
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file; // Store the selected file
+      this.UpdateProfileImg(); // Call the method to upload the image
+    }
+  }
+
+  // Method to update profile image
+  UpdateProfileImg(): void {
+    if (!this.selectedImage) {
+      return;
+    }
+
+    this.showLoader = true;
+    const formData = new FormData();
+    formData.append('imageDto', this.selectedImage, this.selectedImage.name);
+
+    const observer = {
+      next: (res: any) => {
+        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        console.error('Error uploading image:', err);
+        this.showLoader = false;
+      },
+    };
+
+    this.researcherServices.UpdateProfileImg(formData, +this.researcherId).subscribe(observer);
+  }
 }

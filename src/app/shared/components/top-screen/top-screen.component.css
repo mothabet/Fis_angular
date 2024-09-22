@@ -1,0 +1,32 @@
+.user-img {
+  position: relative;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.change-image-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none; /* Hide the button by default */
+}
+
+.image-wrapper:hover .change-image-btn {
+  display: block; /* Show the button on hover */
+}
+
+.change-image-btn img {
+  vertical-align: middle; /* Align icon vertically */
+}
+
+.change-image-btn span {
+  margin-left: 5px;
+}

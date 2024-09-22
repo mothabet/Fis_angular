@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { IGetReportDto } from 'src/app/Reports/Dtos/ReportDto';
-import { ReportService } from 'src/app/Reports/Services/report.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddSectorDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
@@ -33,7 +31,26 @@ export class SectorsComponent implements OnInit {
   }
   onSave(): void {
     this.showLoader = true;
-    if (this.sectorForm.valid) {
+    const allErrors: string[] = [];
+    if (this.sectorForm.value.arName == "" || this.sectorForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الدوله بالعربية');
+    }
+    if (this.sectorForm.value.enName == "" || this.sectorForm.value.enName == null) {
+      allErrors.push("Country Name in English is required.");
+    }
+    if (this.sectorForm.value.code == "" || this.sectorForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز الدولة');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const sector : IAddSectorDto = {
         arName : this.sectorForm.value.arName,
         enName : this.sectorForm.value.enName,
@@ -61,9 +78,6 @@ export class SectorsComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.AddSector(sector).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
     }
   }
   GetSectors(page: number, textSearch: string = ''): void {
@@ -83,15 +97,12 @@ export class SectorsComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetSectors(page, textSearch).subscribe(observer);
   }
-  onReset(add: number = 0): void {
+  onReset(): void {
     this.sectorForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code: ['', Validators.required]
-    });    
-    if (add == 1) {
-      this.isUpdate = false;
-    }
+    });
   }
   DeleteSector(id: number): void {
     Swal.fire({
@@ -110,7 +121,12 @@ export class SectorsComponent implements OnInit {
           next: (res: any) => {
             this.GetSectors(1,'');
             this.showLoader = false;
-            
+            Swal.fire({
+              icon: 'success',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
           },
           error: (err: any) => {
             this.sharedService.handleError(err);
@@ -146,7 +162,26 @@ export class SectorsComponent implements OnInit {
   }
   updateCountry() {
     this.showLoader = true;
-    if (this.sectorForm.valid) {
+    const allErrors: string[] = [];
+    if (this.sectorForm.value.arName == "" || this.sectorForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم القطاع بالعربية');
+    }
+    if (this.sectorForm.value.enName == "" || this.sectorForm.value.enName == null) {
+      allErrors.push("Sector Name in English is required.");
+    }
+    if (this.sectorForm.value.code == "" || this.sectorForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز القطاع');
+    }
+    if (allErrors.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: allErrors.join('<br>'),
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+    }
+    else {
       const Model: IAddSectorDto = {
         arName: this.sectorForm.value.arName,
         enName: this.sectorForm.value.enName,
@@ -158,6 +193,7 @@ export class SectorsComponent implements OnInit {
           if (button) {
             button.click();
           }
+          this.onReset();
           this.GetSectors(1);
           this.showLoader = false;
           Swal.fire({
@@ -173,9 +209,6 @@ export class SectorsComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.UpdateSector(this.id, Model).subscribe(observer);
-    } else {
-      this.toastr.error('يجب ادخال البيانات بشكل صحيح');
-      this.showLoader = false;
     }
   }
 }

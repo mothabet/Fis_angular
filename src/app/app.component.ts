@@ -26,8 +26,6 @@ export class AppComponent {
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
-    if(this.role == 'Researchers')
-      this.showSidebar = false
   }
   ngOnDestroy(): void {
     this.subcription.unsubscribe();

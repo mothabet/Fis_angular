@@ -25,6 +25,7 @@ export interface ICompany {
     researcherId:string
     accountingPeriod: number,
     legalType: string,
+    pathImgProfile:string
 }
 export interface ICompaniesPDF {
     activityId: number,
@@ -62,6 +63,15 @@ export interface IAddCompany {
     wilayatId: number,
     facilityType:string
     companyEmails: ICompanyEmail[];
+}
+export interface IAddCompanyByExcel{
+    arName:string,
+    enName:string,
+    sectorCode:string,
+    subActivityCode:string,
+    governorate:string,
+    wilaya:string,
+    activityCode:string
 }
 export interface ICompanyEmail {
     Email: string,

@@ -43,7 +43,8 @@
                   </td>
                   <ng-container *ngIf="formContent.code.TypeId != 4">
                     <td class="text-center" *ngFor="let year of years; let i = index">
-                      <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status)"/>
+                      <input type="number" (focus)="clearIfZero(formContent.values, i+1)"
+                      (blur)="restoreIfNotPositive(formContent.values, i+1)" class="tableInputParent" [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status)"/>
                     </td>
                   </ng-container>
 
@@ -63,12 +64,10 @@
                         <option *ngFor="let activity of activities" value="{{activity.id}}">
                           {{activity.arName}}</option>
                       </select>
-                      <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                      <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                     </td>
                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                       <div style="display: flex;">
@@ -86,12 +85,10 @@
                             {{ country.arName }}
                           </option>
                         </select>
-                        <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                    style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                    (click)="addSubCodeRow(formContent.code)">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png"
-                                                        class="img-fluid">
-                                                </button> -->
+                        <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                       </div>
                     </td>
                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -106,7 +103,9 @@
                       </div>
                     </td>
                     <td class="text-center" *ngFor="let year of years; let i = index">
-                      <input type="number" [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(coverForm.status)"/>
+                      <input type="number" 
+                      (focus)="clearIfZero(subCode.values, i+1)"
+                      (blur)="restoreIfNotPositive(subCode.values, i+1)" [(ngModel)]="subCode.values[i+1]" (ngModelChange)="calculateTransaction(coverForm.status)"/>
                     </td>
                     <td class="text-center">
                       <input disabled type="text" disabled value="{{subCode.QuestionCode}}" />

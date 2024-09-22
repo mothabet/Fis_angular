@@ -32,7 +32,6 @@ export class LoginService {
   }
 
   deleteToken() {
-    console.log('Deleting token...');
     this.cookieService.delete('ATKFIS', '/'); // Ensure correct path
   }
 
@@ -108,7 +107,9 @@ export class LoginService {
       'TwoYearsWithParts', 
       'FormDetails',
       'Researcher-Details',
-      'SharedTwoYearsWithParts'
+      'SharedTwoYearsWithParts',
+      'Companies-Details',
+      'Companies-Researcher'
     ];
     return researcherRoutes.includes(url);
   }

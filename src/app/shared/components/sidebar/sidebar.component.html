@@ -1,5 +1,5 @@
 <!-- menu -->
-<div class="home" *ngIf="role != 'Researchers'">
+<div class="home">
   <aside id="sidebar" class="expand">
     <!-- logo -->
     <div class="px-2 mt-3 d-flex justify-content-between align-items-center">
@@ -31,10 +31,16 @@
           <span class="">الرئيسية</span>
         </a>
       </li>
-      <li class="sidebar-item" [routerLink]="['/CompanyHome',0]" routerLinkActive="active" *ngIf="role === 'Company'">
+      <li class="sidebar-item" [routerLink]="['/Companies-Details',id]" routerLinkActive="active" *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
+        </a>
+      </li>
+      <li class="sidebar-item" [routerLink]="['/CompanyHome',0]" routerLinkActive="active" *ngIf="role === 'Company'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-file-lines icon"></i>
+          <span class="">الاستمارات الحاليه</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin'">
@@ -43,10 +49,22 @@
           <span>الباحثين او المشرف</span>
         </a>
       </li>
+      <li class="sidebar-item" [routerLink]="['/Researcher-Details',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+        <a class="sidebar-link">
+          <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
+          <span>الباحث او المشرف</span>
+        </a>
+      </li>
       <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link" routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
           <span>الشركات</span>
+        </a>
+      </li>
+      <li class="sidebar-item" [routerLink]="['/Companies-Researcher',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+        <a class="sidebar-link" [routerLink]="['/Companies-Researcher',id]">
+          <i class="fa-solid fa-building icon"></i>
+          <span>شركات الباحث</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin'">

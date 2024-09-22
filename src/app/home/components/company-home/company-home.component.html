@@ -15,8 +15,8 @@
       <h4>{{form.form.arName}}</h4>
       <p *ngIf="form.form.Type == 1">{{form.form.reviewYear}} - سنوية</p>
       <p *ngIf="form.form.Type == 2">{{form.form.reviewYear}} - ربعية</p>
-      <hr *ngIf="role=='Company'">
-      <p *ngIf="role=='Company'">{{form.researcherArName}}</p>
+      <hr *ngIf="role=='Admin'">
+      <p *ngIf="role=='Admin'">الباحث : {{form.researcherArName}}</p>
       <!-- Background Animation -->
       <div class="shine"></div>
       <div class="background">

@@ -47,7 +47,9 @@
                                 <ng-container *ngIf="formContent.code.TypeId != 4">
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[1]"
-                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" type="number"
+                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
+                                            (focus)="clearIfZero(formContent.values, 1)"
+        (blur)="restoreIfNotPositive(formContent.values, 1)"type="number"
                                             class="tableInputParent"/>
                                     </td>
                                     <td class="text-center">
@@ -55,6 +57,8 @@
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="formContent.values[0]"
+                                        (focus)="clearIfZero(formContent.values, 0)"
+        (blur)="restoreIfNotPositive(formContent.values, 0)"
                                             (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" type="number" class="tableInputParent" />
                                     </td>
                                 </ng-container>
@@ -74,12 +78,10 @@
                                             <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                 {{activity.arName}}</option>
                                         </select>
-                                        <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                            style="background-color: white; border-radius: 5px;margin: 10px;"
-                                            (click)="addSubCodeRow(formContent.code)">
-                                            <img src=".././../../../assets/images/trash-can-outline.png"
-                                                class="img-fluid">
-                                        </button> -->
+                                        <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                         <div style="display: flex;">
@@ -98,12 +100,10 @@
                                                     {{ country.arName }}
                                                 </option>
                                             </select>
-                                            <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                (click)="addSubCodeRow(formContent.code)">
-                                                <img src=".././../../../assets/images/trash-can-outline.png"
-                                                    class="img-fluid">
-                                            </button> -->
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
                                         </div>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -120,6 +120,8 @@
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="subCode.values[1]"
+                                        (focus)="clearIfZero(subCode.values, 1)"
+        (blur)="restoreIfNotPositive(subCode.values, 1)"
                                             (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
                                     </td>
                                     <td class="text-center">
@@ -127,6 +129,8 @@
                                     </td>
                                     <td class="text-center">
                                         <input [(ngModel)]="subCode.values[0]"
+                                        (focus)="clearIfZero(subCode.values, 0)"
+        (blur)="restoreIfNotPositive(subCode.values, 0)"
                                             (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
                                     </td>
                                     <td class="text-center">
