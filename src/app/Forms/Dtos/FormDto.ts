@@ -75,6 +75,9 @@ export interface SendCompanyFormsDto {
     messageId: number;
     emailTitle: string;
     emailBody: string;
+    adminName: string;
+    adminEmail: string;
+    adminPhone: string;
   }
   export interface IQuarterCoverFormDataDto {
     establishmentName: string;

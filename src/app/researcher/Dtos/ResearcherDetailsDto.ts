@@ -18,3 +18,8 @@ export interface IAddListResearcherMandateDto {
     addResearcherMandateDtos : IAddResearcherMandateDto[],
     researcherId:string,
 }
+export interface IAdminDataDto {
+    adminName : string,
+    adminEmail:string,
+    adminPhone:string,
+}
