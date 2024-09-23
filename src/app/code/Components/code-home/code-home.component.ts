@@ -84,15 +84,21 @@ export class CodeHomeComponent {
       enName: '',
       Id: 0,
       id_Level: '',
-      connectedWithType: ''
+      connectedWithType: '',
+      IsTrueAndFalse:false
     });
   }
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
-    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
-    const value = inputElement.value;
-    if (field === 'QuestionCode' || field === 'arName' || field === 'enName' || field === 'id_Level' || field === 'connectedWithType') {
-      this.addSubCode[index][field] = value;
+    const inputElement = event.target as HTMLInputElement | HTMLSelectElement | HTMLInputElement;
+    let value: string | boolean;
+    // Handle boolean for the IsTrueAndFalse field
+    if (field === 'IsTrueAndFalse') {
+      value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
+    } else {
+      value = inputElement.value; // String for other input/select fields
     }
+    // Assign the value to the specific field in the object
+    this.addSubCode[index][field] = value as never;  // Cast to never to satisfy TypeScript, as all fields in `IAddSubCode` accept string | boolean
   }
   removeItem(index: number): void {
     this.addSubCode.splice(index, 1);
@@ -129,6 +135,17 @@ export class CodeHomeComponent {
           });
           return;
         }
+        if (subCode.IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب اختيار جميع الرموز الفرعيه من نفس النوع حيث انه تم اختيار رمز فرعي من نوع نعم او لا',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+        
       }
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,
@@ -207,7 +224,7 @@ export class CodeHomeComponent {
     this.codeHomeService.GetAllCodesWithSubCodesPerant(page, textSearch).subscribe(observer);
   }
   showAlert(id: number, Department: string | null): void {
-    debugger
+    
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -249,6 +266,7 @@ export class CodeHomeComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          
           this.code = res.Data.codeDto;
           this.addSubCode = res.Data.getSubCodeDtos
           this.addSubCode = res.Data.getSubCodeDtos.map((subCode: any) => {
@@ -257,13 +275,22 @@ export class CodeHomeComponent {
               id_Level: `${subCode.connectedWithId}_${subCode.connectedWithLevel}`
             };
           });
+          if(res.Data.codeDto.connectedWithId!=null && res.Data.codeDto.connectedWithLevel){
           this.codeForm.patchValue({
             QuestionCode: this.code.QuestionCode,
             arName: this.code.arName,
             enName: this.code.enName,
             TypeId: this.code.TypeId,
             connectedWith: `${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`
-          });
+          });}
+          else{
+            this.codeForm.patchValue({
+              QuestionCode: this.code.QuestionCode,
+              arName: this.code.arName,
+              enName: this.code.enName,
+              TypeId: this.code.TypeId,
+              connectedWith: res.Data.codeDto.connectedWithId,
+            });}
           this.searchTerm = this.code.arName;
           this.showLoader = false;
           this.add = false;
@@ -283,6 +310,7 @@ export class CodeHomeComponent {
   }
   updateCode() {
     this.showLoader = true;
+    
     if (this.codeForm.valid && this.searchTerm != "") {
       if ((this.codeForm.value.connectedWith != null && this.codeForm.value.connectedWith != "") && this.codeForm.value.connectedWithType == null) {
         this.showLoader = false;
@@ -294,13 +322,24 @@ export class CodeHomeComponent {
         });
         return;
       }
-      debugger
+      
       for (const subCode of this.addSubCode) {
         if (subCode.connectedWithType && !subCode.id_Level) {
           this.showLoader = false;
           Swal.fire({
             icon: 'error',
             title: 'يجب إدخال قيمة للارتباط في الرمز الفرعي إذا تم اختيار نوع الارتباط',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+        debugger
+        if (subCode.IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب اختيار جميع الرموز الفرعيه من نفس النوع حيث انه تم اختيار رمز فرعي من نوع نعم او لا',
             showConfirmButton: true,
             confirmButtonText: 'اغلاق'
           });
@@ -434,7 +473,7 @@ export class CodeHomeComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.subCode = res.Data;
           console.log(this.subCode);
           this.enName = this.subCode.enName;
@@ -454,7 +493,7 @@ export class CodeHomeComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.codesAndSub = res.Data;
         }
         else {

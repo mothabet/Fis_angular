@@ -5,6 +5,6 @@
     <app-top-screen [title]="'الشهادة'"></app-top-screen>
     <!-- end-header -->
     <!-- start content -->
-    <app-shared-certification [formId]="formId" style="min-width: 92rem;max-width: 92rem;" *ngIf="role == 'Researchers'"></app-shared-certification>
+    <app-shared-certification [formId]="formId" style="min-width: 75rem;max-width: 75rem;" *ngIf="role == 'Researchers'"></app-shared-certification>
     <app-shared-certification [formId]="formId" style="max-width: 74rem;" *ngIf="role != 'Researchers'"></app-shared-certification>
 </div>

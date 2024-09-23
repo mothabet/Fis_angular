@@ -117,7 +117,9 @@ export class SharedOneYearWithPartsComponent {
       values: Array(this.tablePartsCount * 2).fill(0),
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:''
+      connectedWithType:'',
+      IsTrueAndFalse :false,
+      valueCheck:false
     }
     code.SubCodes.push(subCode);
   }

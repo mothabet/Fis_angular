@@ -398,7 +398,6 @@ export class NavigateTablesTypesComponent implements OnInit {
                 enName: coverForm.tables[index].formContents[i].code.enName,
               };
               dataDtosList.push(dataDtos);
-
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
                 let dataDtosSub: IDataDto = {
                   TableId: coverForm.tables[index].id,
@@ -409,13 +408,14 @@ export class NavigateTablesTypesComponent implements OnInit {
                   level: 2,
                   codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
                   codeType: 0,
-                  valueCheck: true,
+                  valueCheck: coverForm.tables[index].formContents[i].code.SubCodes[r].valueCheck,
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
                   connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
                   connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
                   connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+
                 };
                 dataDtosList.push(dataDtosSub);
               }

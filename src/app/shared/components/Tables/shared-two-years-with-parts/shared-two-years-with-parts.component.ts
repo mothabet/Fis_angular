@@ -112,7 +112,9 @@ export class SharedTwoYearsWithPartsComponent {
       values: Array(this.tablePartsCount * 2).fill(0), // Initialize values array with 0s based on tablePartsCount,
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:''
+      connectedWithType:'',
+      IsTrueAndFalse : false,
+      valueCheck:false
 
     }
     code.SubCodes.push(subCode);

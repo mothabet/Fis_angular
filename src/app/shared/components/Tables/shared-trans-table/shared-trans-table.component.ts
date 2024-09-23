@@ -125,7 +125,9 @@ export class SharedTransTableComponent {
       values: [0, 0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:''
+      connectedWithType:'',
+      IsTrueAndFalse :false,
+      valueCheck:false
     }
     code.SubCodes.push(subCode);
   }
