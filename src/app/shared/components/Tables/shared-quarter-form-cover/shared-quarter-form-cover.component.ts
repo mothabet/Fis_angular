@@ -45,12 +45,12 @@ export class SharedQuarterFormCoverComponent implements OnInit {
           debugger
           this.coverForm = res.Data
           const quarterCoverFormData: IQuarterCoverFormDataDto = {
-            establishmentName: "0",
-            postalAddress: "0",
-            telephoneNumber: "0",
-            faxNumber: "0",
-            emailAddress: "0",
-            geographicalDistribution: "0"
+            establishmentName: "",
+            postalAddress: "",
+            telephoneNumber: "",
+            faxNumber: "",
+            emailAddress: "",
+            geographicalDistribution: ""
           };
           this.coverForm.quarterCoverData = quarterCoverFormData
           this.GetFormData();
