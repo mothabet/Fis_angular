@@ -15,7 +15,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import { environment } from 'src/environments/environment.development';
-import { IAddListResearcherMandateDto, IAddResearcherMandateDto, IGetResearcherMandateDto } from '../../Dtos/ResearcherDetailsDto';
+import { IAddListResearcherMandateDto, IAddResearcherMandateDto, IAdminDataDto, IGetResearcherMandateDto } from '../../Dtos/ResearcherDetailsDto';
 import { ResearcherMandateService } from 'src/app/researcher-mandate/services/researcher-mandate.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -50,9 +50,14 @@ export class ResearcherDetailsComponent implements OnInit {
   getResearcherMandateDto: IGetResearcherMandateDto[] = [];
   addResearcherMandateDto!: IAddResearcherMandateDto;
   researchers: IResearcher[] = [];
+  adminData: IAdminDataDto = {
+    adminEmail: '',
+    adminPhone: '',
+    adminName: ''
+  };
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
-    private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService 
+    private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
     , private researcherMandateService: ResearcherMandateService) {
 
   }
@@ -68,7 +73,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetFormsStatistics()
     this.GetAllReseachers();
     this.researcherMandateForm = this.formBuilder.group({
-      researcherMandateId: ['',Validators.required],
+      researcherMandateId: ['', Validators.required],
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
       IsCancelled: [false, Validators.required],
@@ -225,7 +230,10 @@ export class ResearcherDetailsComponent implements OnInit {
       formId: this.selectedFormId,
       messageId: this.selectedMessageId,
       emailTitle: this.selectedMessage.arName || '',
-      emailBody: this.selectedMessage.arDetails || ''
+      emailBody: this.selectedMessage.arDetails || '',
+      adminEmail: this.adminData.adminEmail,
+      adminName: this.adminData.adminName,
+      adminPhone: this.adminData.adminPhone
     };
     this.showLoader = true;
 
@@ -384,7 +392,7 @@ export class ResearcherDetailsComponent implements OnInit {
         researcherId: this.researcherId,
         researcherMandateId: this.researcherMandateForm.value.researcherMandateId,
         toDate: this.researcherMandateForm.value.toDate,
-        IsCancelled:this.researcherMandateForm.value.IsCancelled
+        IsCancelled: this.researcherMandateForm.value.IsCancelled
       }
       const observer = {
         next: (res: any) => {
@@ -453,19 +461,19 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-          this.addResearcherMandateDto = res.Data;
-          if(this.addResearcherMandateDto != null){
-            this.researcherMandateForm.patchValue({
-              fromDate: this.getDateOnly(this.addResearcherMandateDto.fromDate),
-              toDate: this.getDateOnly(this.addResearcherMandateDto.toDate),
-              researcherMandateId: this.addResearcherMandateDto.researcherMandateId,
-            });
-          }
-          const button = document.getElementById('addResearcherBtn');
-          if (button) {
-            button.click();
-          }
-          this.showLoader = false;        
+        this.addResearcherMandateDto = res.Data;
+        if (this.addResearcherMandateDto != null) {
+          this.researcherMandateForm.patchValue({
+            fromDate: this.getDateOnly(this.addResearcherMandateDto.fromDate),
+            toDate: this.getDateOnly(this.addResearcherMandateDto.toDate),
+            researcherMandateId: this.addResearcherMandateDto.researcherMandateId,
+          });
+        }
+        const button = document.getElementById('addResearcherBtn');
+        if (button) {
+          button.click();
+        }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
