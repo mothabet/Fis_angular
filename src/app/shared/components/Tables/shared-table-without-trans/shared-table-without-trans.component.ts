@@ -308,12 +308,8 @@ export class SharedTableWithoutTransComponent {
                         const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                         const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
                         if (subCodeIndex !== -1) {
-                          if (item.valueCheck == true) {
                             subCodes[subCodeIndex].valueCheck = item.valueCheck
-                          }
-                          else {
                             subCodes[subCodeIndex].values = item.codes;
-                          }
                         }
                       }
                       else {

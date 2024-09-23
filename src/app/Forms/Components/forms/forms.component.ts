@@ -14,6 +14,8 @@ import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
 import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { InstructionsService } from 'src/app/instructions/services/instructions.service';
+import { IAddInstructionsDto, IAddListInstructionsDto } from 'src/app/shared/Dtos/NavigateDto';
 
 @Component({
   selector: 'app-forms',
@@ -70,7 +72,8 @@ export class FormsComponent implements OnInit {
   reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
   showSubCode: string = '';
-  Activities: IDropdownList[] = []
+  Activities: IDropdownList[] = [];
+  addInstructions: IAddInstructionsDto[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -80,7 +83,8 @@ export class FormsComponent implements OnInit {
     private sharedServices: SharedService,
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
-    private companyHomeServices: CompanyHomeService
+    private companyHomeServices: CompanyHomeService, 
+    private instructionsService : InstructionsService
   ) { }
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -371,6 +375,16 @@ export class FormsComponent implements OnInit {
       e.stopPropagation();
       this.copyForm(form.id.toString()); // Pass form ID
     });
+    const instructionsIcon = this.renderer.createElement('img');
+    this.renderer.setAttribute(
+      instructionsIcon,
+      'src',
+      '.././../../../assets/images/information-slab-cir.png'
+    );
+    instructionsIcon.addEventListener('click', (e: Event) => {
+      e.stopPropagation();
+      this.GetAllInstructions(form.id.toString()); // Pass form ID
+    });
     const editIcon = this.renderer.createElement('img');
     this.renderer.setAttribute(
       editIcon,
@@ -432,12 +446,15 @@ export class FormsComponent implements OnInit {
     this.renderer.appendChild(divIcon, delIcon);
     this.renderer.appendChild(divIcon, editIcon);
     this.renderer.appendChild(divIcon, copyIcon);
+    this.renderer.appendChild(divIcon, instructionsIcon);
     this.renderer.appendChild(formLi, subAnchor);
     this.renderer.setStyle(subAnchor, 'display', 'inline-block');
     this.renderer.setStyle(subAnchor, 'font-size', 'large');
     this.renderer.setStyle(subAnchor, 'place-items', 'center');
     this.renderer.setStyle(delIcon, 'padding', '5px');
     this.renderer.setStyle(editIcon, 'padding', '5px');
+    this.renderer.setStyle(copyIcon, 'padding', '5px');
+    this.renderer.setStyle(instructionsIcon, 'padding', '5px');
     this.renderer.setStyle(crtbLabel, 'margin-left', '60px');
     this.renderer.setStyle(crtbLabel, 'position', 'static');
     this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
@@ -1324,5 +1341,103 @@ export class FormsComponent implements OnInit {
       },
     };
     this.formServices.GetFormById(id).subscribe(observer);
+  }
+  GetAllInstructions(formId:string): void {
+    this.formId = Number(formId);
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.addInstructions = res.Data.getInstructionsDtos
+          this.add = true;
+            const button = document.getElementById('AddInstructionsBtn');
+            if (button) {
+              button.click();
+            }
+          this.Loader = false;
+
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          this.Loader = false;
+
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.instructionsService.GetAllInstructions('',formId, 0).subscribe(observer);
+  }
+  
+  saveInstructions() {
+    this.Loader = true;
+    for (const addInstructions_ of this.addInstructions) {
+      if (addInstructions_.arName == '' || addInstructions_.enName == '') {
+        this.Loader = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب إدخال الارشادات بالعربي والانجليزي',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+    }
+    const Model: IAddListInstructionsDto = {
+      addInstructionsDtos: this.addInstructions,
+      formId: this.formId.toString()
+    }
+    const observer = {
+      next: (res: any) => {
+        const button = document.getElementById('btnCancelInstructions');
+        if (button) {
+          button.click();
+        }
+        this.resetForm();
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.instructionsService.AddInstructions(Model).subscribe(observer);
+  }
+  
+  areAllFieldsFilledInstructions(): boolean {
+    return this.addInstructions.every(item => item.arName && item.enName);
+  }
+  updateInstructions(index: number, field: keyof IAddInstructionsDto, event: Event): void {
+    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
+    const value = inputElement.value;
+    if (field === 'arName' || field === 'enName') {
+      this.addInstructions[index][field] = value;
+    }
+  }
+  removeItemInstructions(index: number): void {
+    this.addInstructions.splice(index, 1);
+  }
+  resetFormInstructions(): void {
+    this.addInstructions = [];
+  }
+  
+  addRowInstructions() {
+    this.addInstructions.push({
+      arName: '',
+      enName: '',
+    });
   }
 }

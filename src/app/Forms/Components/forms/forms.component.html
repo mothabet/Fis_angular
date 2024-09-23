@@ -385,3 +385,67 @@
   </div>
   <!--end create question modal -->
 
+<!--end linked company modal -->
+<div class="modal company-modal fade" id="AddInstructions" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-2">
+      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+        <h5>الارشادات</h5>
+        <!-- <div class="search">
+          <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div> -->
+      </div>
+      <div class="table-responsive company-table research-table table-border">
+          <button (click)="addRowInstructions()" class="btn btn-save" [disabled]="!areAllFieldsFilledInstructions()">
+            اضافة الارشادات
+          </button>
+          <table class="table table-borderless">
+            <thead>
+              <tr class="t-header">
+                <th scope="col">رقم</th>
+                <th class="text-center" scope="col">الارشادات</th>
+                <th class="text-center" scope="col">Instructions</th>
+                <th class="text-center" scope="col"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let item of addInstructions; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td class="text-center">
+                  <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateInstructions(i, 'arName', $event)" ></textarea>
+                </td>
+                <td class="text-center">
+                  <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateInstructions(i, 'enName', $event)" ></textarea>
+                </td>
+                <td class="text-center td-actions">
+                  <button class="icon" (click)="removeItemInstructions(i)" style="border: none; background-color: transparent">
+                    <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer pt-0">
+            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelInstructions" (click)="resetFormInstructions()">
+              إلغاء
+            </button>
+            <button type="button" class="btn btn-save" (click)="saveInstructions()">
+              حفظ
+            </button>
+          <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
+            تعديل
+          </button> -->
+        </div>
+    </div>
+  </div>
+</div>
+<button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AddInstructions" id="AddInstructionsBtn" hidden >
+  <img src="./images/list-box-outline.png" alt="">
+</button>
+<!--end linked company modal -->

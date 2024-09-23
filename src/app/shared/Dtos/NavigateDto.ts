@@ -15,5 +15,4 @@ export interface IAddInstructionsDto {
 export interface IAddListInstructionsDto {
     addInstructionsDtos : IAddInstructionsDto[],
     formId:string,
-    companyId:string,
 }
