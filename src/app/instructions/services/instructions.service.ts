@@ -15,9 +15,9 @@ export class InstructionsService {
      var resopnse = this.http.post(environment.apiUrl+`Instructions/AddInstructions?lang=2`, Model, { headers });
      return resopnse;
    }
-   GetAllInstructions(role:string,formId:string,companyId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){
+   GetAllInstructions(role:string,formId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Instructions/GetAllInstructions?role=${role}&formId=${formId}&companyId=${companyId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Instructions/GetAllInstructions?role=${role}&formId=${formId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
      return resopnse;
    }
 }

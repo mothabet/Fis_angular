@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ActivatedRoute } from '@angular/router';
+import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
@@ -60,17 +60,18 @@ export class SharedTableWithoutTransComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
+          
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
-            formContent.values = formContent.values || [0,0];
+            formContent.values = formContent.values || [0, 0];
             formContent.values[0] = formContent.values[0] || 0;
             formContent.values[1] = formContent.values[1] || 0;
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Initialize subCode `values` array if it doesn't exist
-                subCode.values = subCode.values || [0,0];
+                subCode.values = subCode.values || [0, 0];
 
                 // Ensure the `values` array has the correct length and initial values
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
@@ -119,8 +120,9 @@ export class SharedTableWithoutTransComponent {
       values: [0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType: ''
-
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      valueCheck: false
     }
     code.SubCodes.push(subCode);
   }
@@ -130,7 +132,7 @@ export class SharedTableWithoutTransComponent {
       code.SubCodes.splice(index, 1); // Remove the subCode from the array
     }
   }
-  
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -170,12 +172,11 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -205,7 +206,7 @@ export class SharedTableWithoutTransComponent {
                 if (tableIndex !== -1) {
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
-                      formContent.values = formContent.values || [0,0,0];
+                      formContent.values = formContent.values || [0, 0, 0];
                       formContent.values[1] = formContent.values[1] || 0;
                       formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
                       formContent.values[0] = formContent.values[2] || 0;
@@ -214,7 +215,7 @@ export class SharedTableWithoutTransComponent {
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Initialize subCode `values` array if it doesn't exist
-                          subCode.values = subCode.values || [0,0,0];
+                          subCode.values = subCode.values || [0, 0, 0];
 
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
@@ -303,10 +304,12 @@ export class SharedTableWithoutTransComponent {
                     if (level1ItemIndex !== -1) {
                       // Now find the correct subCode within the level 1 item's SubCodes
                       if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 5) {
+
                         const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                         const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
                         if (subCodeIndex !== -1) {
-                          subCodes[subCodeIndex].values = item.codes;
+                            subCodes[subCodeIndex].valueCheck = item.valueCheck
+                            subCodes[subCodeIndex].values = item.codes;
                         }
                       }
                       else {
@@ -320,7 +323,9 @@ export class SharedTableWithoutTransComponent {
                           values: item.codes,
                           connectedWithId: 0,
                           connectedWithLevel: 0,
-                          connectedWithType: ''
+                          connectedWithType: '',
+                          IsTrueAndFalse: false,
+                          valueCheck: false
 
                         }
                         this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
@@ -393,13 +398,13 @@ export class SharedTableWithoutTransComponent {
   }
   clearIfZero(values: any[], index: number): void {
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
+  }
 
-restoreIfNotPositive(values: number[], index: number): void {
+  restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null || values[index] <= 0) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
-}
+  }
 }

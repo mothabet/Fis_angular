@@ -334,6 +334,7 @@ export class ResearcherDetailsComponent implements OnInit {
 
   // Method to update profile image
   UpdateProfileImg(): void {
+    debugger
     if (!this.selectedImage) {
       return;
     }

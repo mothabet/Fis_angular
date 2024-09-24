@@ -398,7 +398,6 @@ export class NavigateTablesTypesComponent implements OnInit {
                 enName: coverForm.tables[index].formContents[i].code.enName,
               };
               dataDtosList.push(dataDtos);
-
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
                 let dataDtosSub: IDataDto = {
                   TableId: coverForm.tables[index].id,
@@ -409,13 +408,14 @@ export class NavigateTablesTypesComponent implements OnInit {
                   level: 2,
                   codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
                   codeType: 0,
-                  valueCheck: true,
+                  valueCheck: coverForm.tables[index].formContents[i].code.SubCodes[r].valueCheck,
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
                   connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithId,
                   connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithLevel,
                   connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+
                 };
                 dataDtosList.push(dataDtosSub);
               }
@@ -483,31 +483,9 @@ export class NavigateTablesTypesComponent implements OnInit {
   removeItem(index: number): void {
     this.addFormNotesDto.splice(index, 1);
   }
-  addRowInstructions() {
-    this.addInstructions.push({
-      arName: '',
-      enName: '',
-    });
-  }
-  areAllFieldsFilledInstructions(): boolean {
-    return this.addInstructions.every(item => item.arName && item.enName);
-  }
-  updateInstructions(index: number, field: keyof IAddFormNotesDto, event: Event): void {
-    const inputElement = event.target as HTMLSelectElement | HTMLInputElement;
-    const value = inputElement.value;
-    if (field === 'arName' || field === 'enName') {
-      this.addInstructions[index][field] = value;
-    }
-  }
-  removeItemInstructions(index: number): void {
-    this.addInstructions.splice(index, 1);
-  }
   resetForm(): void {
     this.addFormNotesDto = [];
     this.add = true;
-  }
-  resetFormInstructions(): void {
-    this.addInstructions = [];
   }
   saveFormNotes() {
     this.Loader = true;
@@ -550,48 +528,6 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formNotesService.AddFormNotes(Model).subscribe(observer);
   }
-  saveInstructions() {
-    this.Loader = true;
-    for (const addInstructions_ of this.addInstructions) {
-      if (addInstructions_.arName == '' || addInstructions_.enName == '') {
-        this.Loader = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'يجب إدخال الارشادات بالعربي والانجليزي',
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-        return;
-      }
-    }
-    const Model: IAddListInstructionsDto = {
-      addInstructionsDtos: this.addInstructions,
-      companyId: this.companyId,
-      formId: this.formId
-    }
-    const observer = {
-      next: (res: any) => {
-        const button = document.getElementById('btnCancelInstructions');
-        if (button) {
-          button.click();
-        }
-        this.resetForm();
-        this.Loader = false;
-        Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 2000
-        });
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.instructionsService.AddInstructions(Model).subscribe(observer);
-  }
-  
   GetAllFormNotesByRole(role: string): void {
     this.Loader = true;
     const observer = {
@@ -670,6 +606,6 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.instructionsService.GetAllInstructions(role,this.formId, this.companyId, 0).subscribe(observer);
+    this.instructionsService.GetAllInstructions(role,this.formId, 0).subscribe(observer);
   }
 }

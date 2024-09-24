@@ -127,7 +127,9 @@ export class SharedTableWithPeriodComponent {
       values: [0, ...Array(this.years.length).fill(0)],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:''
+      connectedWithType:'',
+      IsTrueAndFalse :false,
+      valueCheck:false
     }
     code.SubCodes.push(subCode);
   }
@@ -305,6 +307,7 @@ export class SharedTableWithPeriodComponent {
                       const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                       const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
                       if (subCodeIndex !== -1) {
+                        subCodes[subCodeIndex].valueCheck = item.valueCheck
                         subCodes[subCodeIndex].values = item.codes;
                       }
                     }

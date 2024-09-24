@@ -32,10 +32,10 @@ export class SharedCertificationComponent {
         if (res.Data) {
           debugger
           const certificationData: ICertificationDto = {
-            companiesDetails: 'd',
-            completedBy: 'd',
-            telephoneNo: 'd',
-            dateOfCompletion: 'd',
+            companiesDetails: '',
+            completedBy: '',
+            telephoneNo: '',
+            dateOfCompletion: '',
           };
           debugger
           this.coverForm = res.Data;
