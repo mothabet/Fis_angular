@@ -106,8 +106,9 @@ export class FormsComponent implements OnInit {
       arNotes: ['', Validators.required],
       enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
-      IsTotal: [true, Validators.required],
+      IsTotal: [false],
       Type: [0, Validators.required],
+      Order: [0, Validators.required],
       formId: [''],
       period: [''],
     });
@@ -823,6 +824,7 @@ export class FormsComponent implements OnInit {
         arNotes: this.tableForm.value.arNotes,
         enNotes: this.tableForm.value.enNotes,
         Type: this.tableForm.value.Type,
+        Order: this.tableForm.value.Order,
         formId: this.tableForm.value.fromId,
         IsActive: this.tableForm.value.IsActive,
         IsTotal: this.tableForm.value.IsTotal,
@@ -853,6 +855,11 @@ export class FormsComponent implements OnInit {
       };
       this.formServices.AddTable(Model).subscribe(observer);
     } else {
+      Object.keys(this.tableForm.controls).forEach(controlName => {
+        const control = this.tableForm.get(controlName);
+        console.log(`${controlName} Valid:`, control!.valid);
+        console.log(`${controlName} Errors:`, control!.errors);
+      });
       Swal.fire({
         icon: 'error',
         title: 'يجب ادخال البيانات بشكل صحيح',
@@ -957,6 +964,7 @@ export class FormsComponent implements OnInit {
             arNotes: this.addTable.arNotes,
             enNotes: this.addTable.enNotes,
             Type: this.addTable.Type,
+            Order: this.addTable.Order,
             fromId: this.addTable.formId,
             IsActive: this.addTable.IsActive,
             IsTotal: this.addTable.IsTotal,
@@ -1003,6 +1011,7 @@ export class FormsComponent implements OnInit {
         arNotes: this.tableForm.value.arNotes,
         enNotes: this.tableForm.value.enNotes,
         Type: this.tableForm.value.Type,
+        Order: this.tableForm.value.Order,
         formId: this.idFormTables,
         IsActive: this.tableForm.value.IsActive,
         IsTotal: this.tableForm.value.IsTotal,
