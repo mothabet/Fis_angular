@@ -48,8 +48,8 @@ export class NavigateTablesTypesComponent implements OnInit {
   add: boolean = true;
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
-    private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService, 
-    private auditRuleHomeService: AuditRuleHomeService, private instructionsService : InstructionsService) { }
+    private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService,
+    private auditRuleHomeService: AuditRuleHomeService, private instructionsService: InstructionsService) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
@@ -91,6 +91,9 @@ export class NavigateTablesTypesComponent implements OnInit {
             break;
           case 5:
             navigationPromise = this.router.navigate(['/PeriodTable', this.formId, id, this.companyId]);
+            break;
+          case 6:
+            navigationPromise = this.router.navigate(['/TablePercentageWithoutTrans', this.formId, id, this.companyId]);
             break;
           case 0:
             navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id, this.companyId]);
@@ -134,6 +137,8 @@ export class NavigateTablesTypesComponent implements OnInit {
     else if (this.table.Type == "1")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "2")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "6")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "3")
       this.addTableToListInLocalStorage(this.table);
@@ -264,7 +269,6 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.auditRuleHomeService.GetAllAuditRules(0),
     ]).subscribe({
       next: (auditRulesResponse: any) => {
-        debugger
         if (auditRulesResponse[0].Data)
           this.auditRules = auditRulesResponse[0].Data.getAuditRuleDtos;
         this.displayFormContents();
@@ -373,13 +377,14 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
 
               for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
+                debugger
                 let codes = coverForm.tables[index].formContents[i].values[j];
                 if (codes.toString() === "") {
                   codes = 0; // Replace empty string with 0
                 }
                 codesList.push(codes);
               }
-
+debugger
               let dataDtos: IDataDto = {
                 TableId: coverForm.tables[index].id,
                 TableArName: coverForm.tables[index].arName,
@@ -606,6 +611,6 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.instructionsService.GetAllInstructions(role,this.formId, 0).subscribe(observer);
+    this.instructionsService.GetAllInstructions(role, this.formId, 0).subscribe(observer);
   }
 }

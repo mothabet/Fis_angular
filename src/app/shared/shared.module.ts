@@ -20,6 +20,7 @@ import { SharedFormCoverComponent } from './components/Tables/shared-form-cover/
 import { SharedTwoYearsWithPartsComponent } from './components/Tables/shared-two-years-with-parts/shared-two-years-with-parts.component';
 import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quarter-form-cover/shared-quarter-form-cover.component';
 import { SharedCertificationComponent } from './components/Tables/shared-certification/shared-certification.component';
+import { SharedTablePercentageWithoutTransComponent } from './components/Tables/shared-table-percentage-without-trans/shared-table-percentage-without-trans.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { SharedCertificationComponent } from './components/Tables/shared-certifi
     SharedFormCoverComponent,
     SharedQuarterFormCoverComponent,
     SharedCertificationComponent,
+    SharedTablePercentageWithoutTransComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { SharedCertificationComponent } from './components/Tables/shared-certifi
     SharedFormCoverComponent,
     SharedTransTableComponent,
     SharedTableWithoutTransComponent,
+    SharedTablePercentageWithoutTransComponent,
     SharedTableWithPeriodComponent,
     SharedQuarterTableComponent,
     SharedWorkDataComponent,

@@ -1,35 +1,33 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
+import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
+
 @Component({
-  selector: 'app-shared-trans-table',
-  templateUrl: './shared-trans-table.component.html',
-  styleUrls: ['./shared-trans-table.component.css']
+  selector: 'app-shared-table-percentage-without-trans',
+  templateUrl: './shared-table-percentage-without-trans.component.html',
+  styleUrls: ['./shared-table-percentage-without-trans.component.css']
 })
-export class SharedTransTableComponent {
+export class SharedTablePercentageWithoutTransComponent {
   Loader: boolean = false;
   @Input() formId!: string;
   @Input() tableId!: string;
   isChecked!: boolean;
   table!: IGetTableDto;
+  table2!: IGetTableDto;
   coverForm!: ICoverFormDetailsDto;
-  lastYear = 0;
-  nextYear = 0;
-  transaction = 0;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
-  checkFormData: boolean = false;
-  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, private sharedServices: SharedService) {
 
 
   }
@@ -38,43 +36,55 @@ export class SharedTransTableComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-
+      // Sequentially await each method to ensure proper execution order      
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
     });
   }
+  onArCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
+    if (selectedCountry) {
+      subCode.enCountry = selectedCountry.enName;
+    }
+  }
+  onEnCountryChange(subCode: any) {
+    const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
+    if (selectedCountry) {
+      subCode.arCountry = selectedCountry.arName;
+    }
+  }
   GetTableById(id: number): void {
+
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-
         this.Loader = false;
         if (res.Data) {
+          
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
-            formContent.values = formContent.values || [0,0,0];
+            formContent.values = formContent.values || [0, 0,0];
+            formContent.values[0] = formContent.values[0] || 0;
             formContent.values[1] = formContent.values[1] || 0;
-            formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
-            formContent.values[0] = formContent.values[2] || 0;
-
+            formContent.values[2] = formContent.values[2] || 0;
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Initialize subCode `values` array if it doesn't exist
-                subCode.values = subCode.values || [0,0,0];
+                subCode.values = subCode.values || [0, 0,0];
 
                 // Ensure the `values` array has the correct length and initial values
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
-                subCode.values[2] = 0; // Set transaction explicitly to 0
                 subCode.values[1] = subCode.values[1] || 0; // nextYear
+                subCode.values[2] = subCode.values[2] || 0; // lastYear
               });
             }
           });
-          this.GetFormData();
-
         }
+        this.GetFormData();
+
       },
       error: (err: any) => {
 
@@ -90,11 +100,9 @@ export class SharedTransTableComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          
           this.Loader = false;
           this.coverForm = res.Data;
           this.GetTableById(+this.tableId);
-
         }
       },
       error: (err: any) => {
@@ -104,16 +112,6 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  calculateTransaction(item: any, status: number) {
-    item.values[2] = item.values[1] - item.values[0];
-    if (status < 3)
-      this.BeginningForm();
-  }
-  calculateTransactionFormContent(item: any, status: number) {
-    item.values[2] = item.values[1] - item.values[0];
-    if (status < 3)
-      this.BeginningForm();
-  }
   addSubCodeRow(code: ICode) {
     const subCode: ISubCodeForm = {
       arName: '',
@@ -122,15 +120,22 @@ export class SharedTransTableComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: [0, 0, 0],
+      values: [0, 0,0],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:'',
-      IsTrueAndFalse :false,
-      valueCheck:false
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      valueCheck: false
     }
     code.SubCodes.push(subCode);
   }
+  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
+  }
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -149,15 +154,32 @@ export class SharedTransTableComponent {
     };
     this.formServices.GetActivities().subscribe(observer);
   }
+  GetCountrites() {
+    const observer = {
+      next: (res: any) => {
+        this.Loader = false;
+        if (res.Data) {
+          this.Loader = false;
+          this.countries = res.Data;
+          console.log(this.countries)
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formServices.GetCountries().subscribe(observer);
+  }
   GetFormData() {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -181,7 +203,6 @@ export class SharedTransTableComponent {
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);
               }
-
               tablesList.forEach((table: any) => {
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
@@ -189,8 +210,8 @@ export class SharedTransTableComponent {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];
                       formContent.values[1] = formContent.values[1] || 0;
-                      formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
-                      formContent.values[0] = formContent.values[2] || 0;
+                      formContent.values[2] = formContent.values[2] || 0;
+                      formContent.values[0] = formContent.values[0] || 0;
 
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
@@ -200,7 +221,7 @@ export class SharedTransTableComponent {
 
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
-                          subCode.values[2] = 0; // Set transaction explicitly to 0
+                          subCode.values[2] = subCode.values[2] || 0; // lastYear
                           subCode.values[1] = subCode.values[1] || 0; // nextYear
                         });
                       }
@@ -290,7 +311,6 @@ export class SharedTransTableComponent {
                   }
                 }
                 table.items.forEach((item: any) => {
-                  
                   if (item.codeType == 4) {
                     const level1ItemIndex_ = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                     this.coverForm.tables[tableIndex].formContents[level1ItemIndex_].valueCheck = item.valueCheck
@@ -300,19 +320,38 @@ export class SharedTransTableComponent {
                     // Store the itemIndex of level 1 item
                     if (level1ItemIndex !== -1) {
                       this.coverForm.tables[tableIndex].formContents[level1ItemIndex].values = item.codes;
-                      this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.arName = item.arName;
                     }
                   } else if (item.level == 2) {
                     // Find the corresponding level 1 item first
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                     if (level1ItemIndex !== -1) {
                       // Now find the correct subCode within the level 1 item's SubCodes
-                      const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
-                      const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
-                      if (subCodeIndex !== -1) {
-                          subCodes[subCodeIndex].valueCheck = item.valueCheck
-                          subCodes[subCodeIndex].values = item.codes;
-                          subCodes[subCodeIndex].arName = item.arName;
+                      if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 5) {
+
+                        const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
+                        const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
+                        if (subCodeIndex !== -1) {
+                            subCodes[subCodeIndex].valueCheck = item.valueCheck
+                            subCodes[subCodeIndex].values = item.codes;
+                        }
+                      }
+                      else {
+                        const subCode: ISubCodeForm = {
+                          arName: item.arName,
+                          codeId: item.parentCodeId,
+                          enName: item.enName,
+                          Id: 0,
+                          QuestionCode: '',
+                          subCodes: [],
+                          values: item.codes,
+                          connectedWithId: 0,
+                          connectedWithLevel: 0,
+                          connectedWithType: '',
+                          IsTrueAndFalse: false,
+                          valueCheck: false
+
+                        }
+                        this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
                       }
                     }
                   }
@@ -349,45 +388,14 @@ export class SharedTransTableComponent {
 
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
-  GetCountrites() {
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.countries = res.Data;
-          console.log(this.countries)
-        }
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetCountries().subscribe(observer);
-  }
-  onArCountryChange(subCode: any) {
-    const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
-    if (selectedCountry) {
-      subCode.enCountry = selectedCountry.enName;
-    }
-  }
-
-  onEnCountryChange(subCode: any) {
-    const selectedCountry = this.countries.find(country => country.enName === subCode.enCountry);
-    if (selectedCountry) {
-      subCode.arCountry = selectedCountry.arName;
-    }
-  }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  getDifferenceBetweenSums(index1: number, index2: number): number {
-    const sum1 = this.getSumOfValues(index1);
-    const sum2 = this.getSumOfValues(index2);
-    return sum1 - sum2;
+  changeStatus(status: number) {
+    if (status < 3)
+      this.BeginningForm();
   }
   BeginningForm(): void {
     this.Loader = true;
@@ -411,21 +419,15 @@ export class SharedTransTableComponent {
     }
 
   }
-  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
-    const index = code.SubCodes.indexOf(subCode);
-    if (index !== -1) {
-      code.SubCodes.splice(index, 1); // Remove the subCode from the array
-    }
-  }
   clearIfZero(values: any[], index: number): void {
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
+  }
 
-restoreIfNotPositive(values: number[], index: number): void {
+  restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null || values[index] <= 0) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
-}
+  }
 }
