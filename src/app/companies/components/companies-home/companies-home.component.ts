@@ -22,7 +22,7 @@ export class CompaniesHomeComponent implements OnInit {
     'ص': 'ﺹ', 'ض': 'ﺽ', 'ط': 'ﻁ', 'ظ': 'ﻅ', 'ع': 'ﻉ', 'غ': 'ﻍ', 'ف': 'ﻑ', 'ق': 'ﻕ', 'ك': 'ﻙ', 'ل': 'ﻝ',
     'م': 'ﻡ', 'ن': 'ﻥ', 'ه': 'ﻩ', 'و': 'ﻭ', 'ي': 'ﻱ'
   };
-  addCompanyByExcel : IAddCompanyByExcel[]=[]
+  addCompanyByExcel: IAddCompanyByExcel[] = []
   companies: ICompany[] = []
   companiesPDF: ICompaniesPDF[] = []
   Activities: IDropdownList[] = []
@@ -87,92 +87,92 @@ export class CompaniesHomeComponent implements OnInit {
   }
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-triggerFileInput(): void {
-  this.fileInput.nativeElement.click(); // Trigger the hidden file input
-}
-
-onFileChange(event: any) {
-  const target: DataTransfer = <DataTransfer>(event.target);
-
-  if (target.files.length !== 1) {
-    alert('Cannot upload multiple files');
-    return;
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click(); // Trigger the hidden file input
   }
 
-  const reader: FileReader = new FileReader();
+  onFileChange(event: any) {
+    const target: DataTransfer = <DataTransfer>(event.target);
 
-  reader.onload = (e: any) => {
-    const bstr: string = e.target.result;
-    const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-    const wsname: string = wb.SheetNames[0];
-    const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-    this.data = XLSX.utils.sheet_to_json(ws);
-
-    const allErrors: string[] = [];
-    this.data.forEach((row: any, index: number) => {
-      if (!row.arName || row.arName === '') {
-        allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
-      }
-      if (!row.enName || row.enName === '') {
-        allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
-      }
-      if (!row.sectorCode || row.sectorCode === '') {
-        allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
-      }
-      if (!row.activityCode || row.activityCode === '') {
-        allErrors.push(`يجب ادخال activityCode للسطر رقم ${index + 1}`);
-      }
-      if (!row.subActivityCode || row.subActivityCode === '') {
-        allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
-      }
-      if (!row.governorate || row.governorate === '') {
-        allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
-      }
-      if (!row.wilaya || row.wilaya === '') {
-        allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
-      }
-    });
-
-    if (allErrors.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: allErrors.join('<br>'),
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
+    if (target.files.length !== 1) {
+      alert('Cannot upload multiple files');
       return;
     }
 
-    this.addCompanyByExcel = this.data.map((row: any) => ({
-      arName: row.arName.toString(),
-      enName: row.enName.toString(),
-      governorate: row.governorate.toString(),
-      sectorCode: row.sectorCode.toString(),
-      subActivityCode: row.subActivityCode.toString(),
-      wilaya: row.wilaya.toString(),
-      activityCode: row.activityCode.toString(),
-    }));
+    const reader: FileReader = new FileReader();
 
-    this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
-      next: (res: any) => {
-        this.GetCompanies('', 1);
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      this.data = XLSX.utils.sheet_to_json(ws);
+
+      const allErrors: string[] = [];
+      this.data.forEach((row: any, index: number) => {
+        if (!row.arName || row.arName === '') {
+          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
+        }
+        if (!row.enName || row.enName === '') {
+          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
+        }
+        if (!row.sectorCode || row.sectorCode === '') {
+          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
+        }
+        if (!row.activityCode || row.activityCode === '') {
+          allErrors.push(`يجب ادخال activityCode للسطر رقم ${index + 1}`);
+        }
+        if (!row.subActivityCode || row.subActivityCode === '') {
+          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
+        }
+        if (!row.governorate || row.governorate === '') {
+          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
+        }
+        if (!row.wilaya || row.wilaya === '') {
+          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
+        }
+      });
+
+      if (allErrors.length > 0) {
         Swal.fire({
-          icon: 'success',
-          title: res.Message,
-          showConfirmButton: false,
-          timer: 2000
+          icon: 'error',
+          title: allErrors.join('<br>'),
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
         });
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
+        return;
       }
-    });
-  };
 
-  reader.readAsBinaryString(target.files[0]);
-}
+      this.addCompanyByExcel = this.data.map((row: any) => ({
+        arName: row.arName.toString(),
+        enName: row.enName.toString(),
+        governorate: row.governorate.toString(),
+        sectorCode: row.sectorCode.toString(),
+        subActivityCode: row.subActivityCode.toString(),
+        wilaya: row.wilaya.toString(),
+        activityCode: row.activityCode.toString(),
+      }));
+
+      this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
+        next: (res: any) => {
+          this.GetCompanies('', 1);
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        }
+      });
+    };
+
+    reader.readAsBinaryString(target.files[0]);
+  }
   // Getter for the form array
   get compEmails(): FormArray {
     return this.companyForm.get('compEmails') as FormArray;
@@ -330,10 +330,32 @@ onFileChange(event: any) {
   }
   saveCompany(): void {
     // Validate that at least one email is provided
+    debugger
+    const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    // Access the array of email objects
     const emailArray = this.companyForm.value.compEmails;
+
+    // Filter out invalid emails
+    const invalidEmails = emailArray.filter((item: any) => {
+      // Ensure item is an object and has an Email property
+      if (item && typeof item === 'object' && 'Email' in item) {
+        const email = item.Email.trim(); // Get and trim the email string
+        return !regexp.test(email); // Test the trimmed email against the regex
+      }
+      return true; // Consider non-objects or missing Email as invalid
+    });
+    if (invalidEmails.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: `${invalidEmails[0].Email} الايميل غير صالح`, // Use backticks for template literals
+        showConfirmButton: false,
+        timer: 2000
+      });
+      return;
+    }
+
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-
-
     if (this.companyForm.value.subActivityId == 0) {
       Swal.fire({
         icon: 'error',
