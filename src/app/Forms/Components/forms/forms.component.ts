@@ -141,6 +141,7 @@ export class FormsComponent implements OnInit {
       this.renderer.appendChild(quesUl, newMenuItem);
     } else {
       const quesUl = this.renderer.createElement('ul');
+      this.renderer.addClass(quesUl, 'collapsed');
       quesUl.id = 'quesUl' + getQuestionDto.tableId;
       const newMenuItem = this.createHtmlQues(getQuestionDto);
       const tableLi = this.el.nativeElement.getElementsByClassName(
@@ -159,6 +160,7 @@ export class FormsComponent implements OnInit {
       this.renderer.appendChild(tableUl, newMenuItem);
     } else {
       const tableUl = this.renderer.createElement('ul');
+      this.renderer.addClass(tableUl, 'collapsed');
       tableUl.id = 'tableUl' + getTableDto.formId;
       const newMenuItem = this.createHtmlTable(getTableDto);
       const formLi = this.el.nativeElement.getElementsByClassName(
@@ -181,7 +183,7 @@ export class FormsComponent implements OnInit {
   addCollapseButton(ulElement: HTMLElement) {
     const button = this.renderer.createElement('button');
     const icon = this.renderer.createElement('img');
-    this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomout.png');
+    this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomin.png');
     this.renderer.appendChild(button, icon);
     this.renderer.listen(button, 'click', () => {
       this.toggleCollapse(ulElement, icon);
@@ -192,10 +194,10 @@ export class FormsComponent implements OnInit {
     const isCollapsed = ulElement.classList.contains('collapsed');
     if (isCollapsed) {
       this.renderer.removeClass(ulElement, 'collapsed');
-      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomout.png');
+      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomin.png');
     } else {
       this.renderer.addClass(ulElement, 'collapsed');
-      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomin.png');
+      this.renderer.setAttribute(icon, 'src', '.././../../../assets/images/zoomout.png');
     }
   }
   createHtmlQues(getQuestionDto: IGetQuestionDto): HTMLLIElement {
@@ -610,6 +612,7 @@ export class FormsComponent implements OnInit {
   }
   GetAllForms(): void {
     this.Loader = true;
+    
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
