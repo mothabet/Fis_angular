@@ -111,48 +111,16 @@ export class CompaniesHomeComponent implements OnInit {
       this.data = XLSX.utils.sheet_to_json(ws);
 
       const allErrors: string[] = [];
-      this.data.forEach((row: any, index: number) => {
-        if (!row.arName || row.arName === '') {
-          allErrors.push(`يجب ادخال arName للسطر رقم ${index + 1}`);
-        }
-        if (!row.enName || row.enName === '') {
-          allErrors.push(`يجب ادخال enName للسطر رقم ${index + 1}`);
-        }
-        if (!row.sectorCode || row.sectorCode === '') {
-          allErrors.push(`يجب ادخال sectorCode للسطر رقم ${index + 1}`);
-        }
-        if (!row.activityCode || row.activityCode === '') {
-          allErrors.push(`يجب ادخال activityCode للسطر رقم ${index + 1}`);
-        }
-        if (!row.subActivityCode || row.subActivityCode === '') {
-          allErrors.push(`يجب ادخال subActivityCode للسطر رقم ${index + 1}`);
-        }
-        if (!row.governorate || row.governorate === '') {
-          allErrors.push(`يجب ادخال governorate للسطر رقم ${index + 1}`);
-        }
-        if (!row.wilaya || row.wilaya === '') {
-          allErrors.push(`يجب ادخال wilaya للسطر رقم ${index + 1}`);
-        }
-      });
-
-      if (allErrors.length > 0) {
-        Swal.fire({
-          icon: 'error',
-          title: allErrors.join('<br>'),
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-        return;
-      }
-
+      debugger
       this.addCompanyByExcel = this.data.map((row: any) => ({
-        arName: row.arName.toString(),
-        enName: row.enName.toString(),
-        governorate: row.governorate.toString(),
-        sectorCode: row.sectorCode.toString(),
-        subActivityCode: row.subActivityCode.toString(),
-        wilaya: row.wilaya.toString(),
-        activityCode: row.activityCode.toString(),
+        email: row['E- mail']?.toString() ?? '',        // Use the header 'E- mail'
+        arName: row['اسم المنشآه']?.toString() ?? '',   // Use the header 'اسم المنشآه'
+        enName: row['اسم المنشآه انجليزية']?.toString() ?? '', // Use the header 'اسم المنشآه انجليزية'
+        compRegNumber: row['السجل التجاري ']?.toString() ?? '',  // Use the header 'السجل التجاري '
+        governorate: row['المحافظة ']?.toString() ?? '',  // Use the header 'المحافظة '
+        activity: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
+        wilaya: row['الولاية']?.toString() ?? '',        // Use the header 'الولاية'
+        phoneNumber: row['هاتف']?.toString() ?? '',            // Use the header 'هاتف'
       }));
 
       this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
