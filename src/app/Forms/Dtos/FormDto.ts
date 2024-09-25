@@ -62,12 +62,14 @@ export interface IGetCountriesDto {
     id:number,
     arName : string,
     enName : string,
+    code:string
 }
 
 export interface IGetActivitiesDto {
     id:number,
     arName : string,
     enName : string,
+    code:string
 }
 export interface SendCompanyFormsDto {
     companiesIds: number[];
