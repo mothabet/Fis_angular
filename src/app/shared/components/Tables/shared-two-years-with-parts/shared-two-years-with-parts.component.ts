@@ -388,10 +388,20 @@ export class SharedTwoYearsWithPartsComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        const storedTables = localStorage.getItem(`coverForm${+this.formId}`);
+        debugger
+        let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
+        var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
-          localStorage.removeItem(`coverForm${+this.formId}`);
+          coverForm = JSON.parse(storedTables);
+          const tableIndex = coverForm.tables.findIndex(t => t.id === this.table.id);
+          coverForm.status = 3;
+          if (tableIndex !== -1) {
+            coverForm.tables[tableIndex] = this.table;
+          }
+          localStorage.removeItem(`coverForm${this.coverForm.id}`);
         }
+
+        localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(coverForm));
         this.GetFormById(+this.formId)
         this.Loader = false;
       }
