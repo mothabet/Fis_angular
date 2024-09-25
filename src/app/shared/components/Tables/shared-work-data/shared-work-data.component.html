@@ -76,6 +76,48 @@
                             </td>
                             <td style="text-wrap: balance;" class="text-start"></td>
                         </tr>
+                        <tr>
+                            <td style="text-wrap: balance;">مصدر اليانات</td>
+                            <td class="text-center">
+                            </td>
+                            <td style="text-wrap: balance;" class="text-start">Source of data</td>
+                            <tr>
+                                <td style="text-wrap: balance;">سحلات محاسبية</td>
+                                <td class="text-center">
+                                    <input 
+                                        type="checkbox" 
+                                        style="width: 100%;"
+                                        [checked]="coverForm.GeneralData.dataSource === 1" 
+                                        (change)="onDataSourceCheckboxChange(1)"
+                                    />
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">Statements</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;">تقديرات</td>
+                                <td class="text-center">
+                                    <input 
+                                        type="checkbox" 
+                                        style="width: 100%;"
+                                        [checked]="coverForm.GeneralData.dataSource === 2" 
+                                        (change)="onDataSourceCheckboxChange(2)"
+                                    />
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">Estimates</td>
+                            </tr>
+                            <tr>
+                                <td style="text-wrap: balance;">سحلات محاسبية و تقديرات معا</td>
+                                <td class="text-center">
+                                    <input 
+                                        type="checkbox" 
+                                        style="width: 100%;"
+                                        [checked]="coverForm.GeneralData.dataSource === 3" 
+                                        (change)="onDataSourceCheckboxChange(3)"
+                                    />
+                                </td>
+                                <td style="text-wrap: balance;" class="text-start">Statements and Estimates</td>
+                            </tr>
+                            
                     </tbody>
                 </table>
             </div>

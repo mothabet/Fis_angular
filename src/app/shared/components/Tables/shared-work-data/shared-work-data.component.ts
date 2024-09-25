@@ -51,7 +51,8 @@ export class SharedWorkDataComponent implements OnInit {
     CompanyInfo: this.workData,
     from: '',
     to: '',
-    describeMainActivity: ''
+    describeMainActivity: '',
+    dataSource : 0
   };
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
@@ -60,6 +61,9 @@ export class SharedWorkDataComponent implements OnInit {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetFormById(+this.formId)
     this.isWorkDataActive = true;
+  }
+  onDataSourceCheckboxChange(value: number) {
+    this.coverForm.GeneralData.dataSource = value; // Set the selected value
   }
   GetCompanyById(id: number) {
     this.Loader = true;

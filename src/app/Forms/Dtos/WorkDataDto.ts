@@ -1,18 +1,19 @@
 export interface IWorkDataQuesDto {
   arName: string;
   enName: string;
-  inputValue:string;
+  inputValue: string;
 }
 export interface IWorkDataChkDto {
   arName: string;
   enName: string;
-  selected:boolean;
+  selected: boolean;
 }
 
 export interface IGeneralDataDto {
-    CompanyInfo : IWorkDataQuesDto[],
-    ChekInfo: IWorkDataChkDto[],
-    from:string,
-    to:string,
-    describeMainActivity: string
+  CompanyInfo: IWorkDataQuesDto[],
+  ChekInfo: IWorkDataChkDto[],
+  dataSource: number,
+  from: string,
+  to: string,
+  describeMainActivity: string
 }
