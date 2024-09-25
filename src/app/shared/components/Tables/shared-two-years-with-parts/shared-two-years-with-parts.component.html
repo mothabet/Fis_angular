@@ -99,51 +99,70 @@
                                         <td *ngIf="formContent.code.TypeId == 1"
                                             style="text-wrap: balance; text-align: right !important;color: #133c8b; padding-right: 25px !important;">
                                             - {{subCode.arName}}</td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                            <select class="form-control"
-                                                style="width: 100% !important; text-align:center">
-                                                <option value="0">اختيار نشاط--</option>
-                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                    {{activity.arName}}</option>
-                                            </select>
-                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                    style="background-color: white; border:none;">
-                                                <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                            </button>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                            <div style="display: flex;">
-                                                <select class="form-control" [(ngModel)]="subCode.arName"
-                                                    (ngModelChange)="onArCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center;margin: 5px;">
-                                                    <option value="">اختيار مصدر المال--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.arName">
-                                                        {{country.arName}}</option>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                                <div style="display: flex;">
+                                                <select class="form-control" style="text-align:center; width: 95% !important;">
+                                                    <option value="0">اختيار نشاط--</option>
+                                                    <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                        {{activity.code}}-{{activity.arName}}</option>
                                                 </select>
-                                                <select class="form-control" [(ngModel)]="subCode.enName"
-                                                    (ngModelChange)="onEnCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center">
-                                                    <option value="">اختيار جنسية المستثمر--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.enName">
-                                                        {{ country.arName }}
-                                                    </option>
-                                                </select>
+                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                    style="background-color: white; border-radius: 5px;margin: 10px;"
+                                                    (click)="addSubCodeRow(formContent.code)">
+                                                    <img src=".././../../../assets/images/trash-can-outline.png"
+                                                        class="img-fluid">
+                                                </button> -->
                                                 <button  (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                        style="background-color: white; border:none;">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 5">
-                                            <div style="display: flex;justify-content: center;">
-                                                <input type="text" style="width: 300px !important;" />
-                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                        style="background-color: white; border:none;">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                                </button>
-                                            </div>
-
-                                        </td>
+                                                            style="background-color: white; border:none;">
+                                                        <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                                <div style="display: flex;">
+                                                    <select class="form-control" [(ngModel)]="subCode.arName"
+                                                        (ngModelChange)="onArCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center;margin: 5px;">
+                                                        <option value="">اختيار مصدر المال--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.arName">
+                                                            {{country.code}}-{{country.arName}}</option>
+                                                    </select>
+                                                    <select class="form-control" [(ngModel)]="subCode.enName"
+                                                        (ngModelChange)="onEnCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center">
+                                                        <option value="">اختيار جنسية المستثمر--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.enName">
+                                                            {{country.code}}-{{ country.arName }}
+                                                        </option>
+                                                    </select>
+                                                    <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                        style="background-color: white; border-radius: 5px;margin: 10px;"
+                                                        (click)="addSubCodeRow(formContent.code)">
+                                                        <img src=".././../../../assets/images/trash-can-outline.png"
+                                                            class="img-fluid">
+                                                    </button> -->
+                                                    <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                            style="background-color: white; border:none;">
+                                                        <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 5">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <input type="text" style="width: 220px !important;" [(ngModel)]="subCode.arName"/>
+                                                    <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                        style="background-color: white; border-radius: 5px;margin: 10px;"
+                                                        (click)="addSubCodeRow(formContent.code)">
+                                                        <img src=".././../../../assets/images/trash-can-outline.png"
+                                                            class="img-fluid">
+                                                    </button> -->
+                                                    <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                            style="background-color: white; border:none;">
+                                                        <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+                                                    </button>
+                                                </div>
+        
+                                            </td>
                                         <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length">
                                             <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked
                                                 > نعم
