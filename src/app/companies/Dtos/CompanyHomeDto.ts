@@ -68,11 +68,12 @@ export interface IAddCompany {
 export interface IAddCompanyByExcel{
     arName:string,
     enName:string,
-    sectorCode:string,
-    subActivityCode:string,
+    compRegNumber:string,
     governorate:string,
     wilaya:string,
-    activityCode:string
+    activity:string,
+    email:string,
+    phoneNumber:string
 }
 export interface ICompanyEmail {
     Email: string,
