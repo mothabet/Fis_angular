@@ -47,35 +47,38 @@
                                 <ng-container *ngIf="formContent.code.TypeId != 4">
                                     <td class="text-center">
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                            <input [(ngModel)]="formContent.values[1]" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
+                                            <input [(ngModel)]="formContent.values[1]"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
                                                 (focus)="clearIfZero(formContent.values, 1)"
-                                                (blur)="restoreIfNotPositive(formContent.values, 1)"type="number"
-                                                class="tableInputParent"/>
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
+                                                class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                            <input [(ngModel)]="formContent.values[1]" 
-                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
-                                            (focus)="clearIfZero(formContent.values, 1)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 1)"type="number"
-                                            class="tableInputParent"/>
+                                            <input [(ngModel)]="formContent.values[1]"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
+                                                (focus)="clearIfZero(formContent.values, 1)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
+                                                class="tableInputParent" />
                                         </ng-container>
                                     </td>
                                     <td class="text-center">
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                            <input [(ngModel)]="formContent.values[2]" type="number" disabled *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"/>
+                                            <input [(ngModel)]="formContent.values[2]" type="number" disabled
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                             <input [(ngModel)]="formContent.values[2]" type="number" disabled/>
-                                        </ng-container>
+</ng-container>
                                     </td>
                                     <td class="text-center">
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                            <input [(ngModel)]="formContent.values[0]" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                            (focus)="clearIfZero(formContent.values, 0)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 0)"
-                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
-                                            type="number" class="tableInputParent" />
+                                            <input [(ngModel)]="formContent.values[0]"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                (focus)="clearIfZero(formContent.values, 0)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 0)"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
+                                                type="number" class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                             <input [(ngModel)]="formContent.values[0]" 
@@ -83,7 +86,7 @@
                                             (blur)="restoreIfNotPositive(formContent.values, 0)"
                                             (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
                                             type="number" class="tableInputParent" />
-                                        </ng-container>
+</ng-container>
                                     </td>
                                 </ng-container>
                                 <td class="text-center">
@@ -96,70 +99,52 @@
                                     <td *ngIf="formContent.code.TypeId == 1"
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                                         {{subCode.arName}}</td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                            <div style="display: flex;">
-                                            <select class="form-control" style="text-align:center; width: 95% !important;">
-                                                <option value="0">اختيار نشاط--</option>
-                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                    {{activity.code}}-{{activity.arName}}</option>
+                                    <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                        <select class="form-control" style="width: 100% !important; text-align:center">
+                                            <option value="0">اختيار نشاط--</option>
+                                            <option *ngFor="let activity of activities" value="{{activity.id}}">
+                                                {{activity.arName}}</option>
+                                        </select>
+                                        <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
+                                    </td>
+                                    <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                        <div style="display: flex;">
+                                            <select class="form-control" [(ngModel)]="subCode.arName"
+                                                (ngModelChange)="onArCountryChange(subCode)"
+                                                style="width: 47% !important; text-align:center;margin: 5px;">
+                                                <option value="">اختيار مصدر المال--</option>
+                                                <option *ngFor="let country of countries" [value]="country.arName">
+                                                    {{country.arName}}</option>
                                             </select>
+                                            <select class="form-control" [(ngModel)]="subCode.enName"
+                                                (ngModelChange)="onEnCountryChange(subCode)"
+                                                style="width: 47% !important; text-align:center">
+                                                <option value="">اختيار جنسية المستثمر--</option>
+                                                <option *ngFor="let country of countries" [value]="country.enName">
+                                                    {{ country.arName }}
+                                                </option>
+                                            </select>
+                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
+            style="background-color: white; border:none;">
+      <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
+    </button>
+                                        </div>
+                                    </td>
+                                    <td class="text-center" *ngIf="formContent.code.TypeId == 5">
+                                        <div style="display: flex;justify-content: center;">
+                                            <input type="text" style="width: 300px !important;" />
                                             <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
                                                 style="background-color: white; border-radius: 5px;margin: 10px;"
                                                 (click)="addSubCodeRow(formContent.code)">
                                                 <img src=".././../../../assets/images/trash-can-outline.png"
                                                     class="img-fluid">
                                             </button> -->
-                                            <button  (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                        style="background-color: white; border:none;">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                            <div style="display: flex;">
-                                                <select class="form-control" [(ngModel)]="subCode.arName"
-                                                    (ngModelChange)="onArCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center;margin: 5px;">
-                                                    <option value="">اختيار مصدر المال--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.arName">
-                                                        {{country.code}}-{{country.arName}}</option>
-                                                </select>
-                                                <select class="form-control" [(ngModel)]="subCode.enName"
-                                                    (ngModelChange)="onEnCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center">
-                                                    <option value="">اختيار جنسية المستثمر--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.enName">
-                                                        {{country.code}}-{{ country.arName }}
-                                                    </option>
-                                                </select>
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                    style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                    (click)="addSubCodeRow(formContent.code)">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png"
-                                                        class="img-fluid">
-                                                </button> -->
-                                                <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                        style="background-color: white; border:none;">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="text-center" *ngIf="formContent.code.TypeId == 5">
-                                            <div style="display: flex;justify-content: center;">
-                                                <input type="text" style="width: 220px !important;" [(ngModel)]="subCode.arName"/>
-                                                <!-- <button (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                    style="background-color: white; border-radius: 5px;margin: 10px;"
-                                                    (click)="addSubCodeRow(formContent.code)">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png"
-                                                        class="img-fluid">
-                                                </button> -->
-                                                <button  (click)="removeSubCodeRow(formContent.code, subCode)"
-                                                        style="background-color: white; border:none;">
-                                                    <img src=".././../../../assets/images/trash-can-outline.png" class="img-fluid">
-                                                </button>
-                                            </div>
-    
-                                        </td>
+                                        </div>
+
+                                    </td>
                                     <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="2">
                                         <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true"> نعم
                                         <label class="mt-3"></label>
@@ -168,21 +153,21 @@
                                         <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"> لا
                                         <label class="mt-3"></label>
                                     </td>
-                                    
+
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
-                                        <input [(ngModel)]="subCode.values[1]"
-                                        (focus)="clearIfZero(subCode.values, 1)"
-                                        (blur)="restoreIfNotPositive(subCode.values, 1)"
-                                        (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
+                                        <input [(ngModel)]="subCode.values[1]" (focus)="clearIfZero(subCode.values, 1)"
+                                            (blur)="restoreIfNotPositive(subCode.values, 1)"
+                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)"
+                                            type="number" />
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[2]" type="number" disabled />
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
-                                        <input [(ngModel)]="subCode.values[0]"
-                                        (focus)="clearIfZero(subCode.values, 0)"
-                                        (blur)="restoreIfNotPositive(subCode.values, 0)"
-                                        (ngModelChange)="calculateTransaction(subCode,coverForm.status)" type="number" />
+                                        <input [(ngModel)]="subCode.values[0]" (focus)="clearIfZero(subCode.values, 0)"
+                                            (blur)="restoreIfNotPositive(subCode.values, 0)"
+                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)"
+                                            type="number" />
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />
@@ -239,20 +224,20 @@
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
                                 <input disabled type="number" [value]="getSumOfValues(1)" />
                             </td>
-                            
+
                             <!-- Difference between formContent.values[1] and formContent.values[0] -->
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
                                 <input disabled type="number" [value]="getDifferenceBetweenSums(1, 0)" />
                             </td>
-                        
+
                             <!-- Sum of formContent.values[0] -->
                             <td class="text-center" style="color: black;">
                                 <input disabled type="number" [value]="getSumOfValues(0)" style="color: black;" />
                             </td>
-                        
+
                             <td class="text-center">
                             </td>
-                        
+
                             <td class="text-start">Total</td>
                         </tr>
                     </tbody>

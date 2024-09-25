@@ -2,7 +2,7 @@ import { Component, Input, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -19,8 +19,41 @@ export class SharedQuarterTableComponent {
   Loader: boolean = false;
   @Input() formId!: string;
   @Input() tableId!: string;
-  table!: IGetTableDto;
-  coverForm!: ICoverFormDetailsDto;
+  table: IGetTableDto = {
+    id: 0,
+    arName: '',
+    enName: '',
+    arHeading: '',
+    enHeading: '',
+    arNotes: '',
+    enNotes: '',
+    Type: '',
+    Order: '',
+    formId: 0,
+    period: 0,
+    IsActive: false,
+    IsTotal: false,
+    formContents: [],   // Empty array to avoid 'undefined' error
+    tableParts: []      // Empty array for tableParts
+  };
+  coverForm: ICoverFormDetailsDto = {
+    id : 0,
+    typeQuarter : 0,
+    tables : [],
+    arName : '',
+    enName : '',
+    arNotes : '',
+    enNotes : '',
+    reviewYear : '',
+    status : 0,
+    quarterCoverData : null!,
+    coverFormData : null!,
+    certification : null!,
+    codeActivity : '',
+    codeActivityName : '',
+    GeneralData : null!,
+    Type : 0
+  };
   tablePartsCount = 0;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
@@ -31,7 +64,6 @@ export class SharedQuarterTableComponent {
 
   }
   ngOnInit(): void {
-
     this.route.paramMap.subscribe(params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
@@ -59,6 +91,7 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -87,6 +120,7 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -107,15 +141,29 @@ export class SharedQuarterTableComponent {
   }
 
   addSubCodeRow(code: ICode) {
-    const subCode: ISubCode = {
+    console.log(this.countries)
+    console.log(this.coverForm)
+    const subCode: ISubCodeForm = {
       arName: '',
-      codeId: 0,
+      codeId: code.Id,
       enName: '',
       Id: 0,
       QuestionCode: '',
-      subCodes: []
+      subCodes: [],
+      values: [0, 0, 0,0,0],
+      connectedWithId: 0,
+      connectedWithLevel: 0,
+      connectedWithType:'',
+      IsTrueAndFalse :false,
+      valueCheck:false
     }
     code.SubCodes.push(subCode);
+  }
+  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
+    const index = code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
   }
   GetActivites() {
 
@@ -125,7 +173,6 @@ export class SharedQuarterTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.activities = res.Data;
-          console.log(this.activities)
         }
       },
       error: (err: any) => {
@@ -143,7 +190,6 @@ export class SharedQuarterTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.countries = res.Data;
-          console.log(this.countries)
         }
       },
       error: (err: any) => {
@@ -414,6 +460,7 @@ export class SharedQuarterTableComponent {
     }
   }
   clearIfZero(values: any[], index: number): void {
+    debugger
     if (values[index] === 0) {
         values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
