@@ -27,8 +27,9 @@ export class CompaniesDetailsComponent implements OnInit {
   selectedImageUrl!: string
   role:string = "";
   sanitizedEmbededContent: SafeHtml = '';
+  companyEmails:string = '';
 
-  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
+  constructor(private topScreenServices: TopScreenService, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
     , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
 
   }
