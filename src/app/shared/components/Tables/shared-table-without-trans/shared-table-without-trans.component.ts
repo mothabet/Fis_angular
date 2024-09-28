@@ -317,6 +317,8 @@ export class SharedTableWithoutTransComponent {
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                     // Store the itemIndex of level 1 item
                     if (level1ItemIndex !== -1) {
+                      if(this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 4 && this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 1)
+                        this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes = [];
                       this.coverForm.tables[tableIndex].formContents[level1ItemIndex].values = item.codes;
                     }
                   } else if (item.level == 2) {
@@ -324,7 +326,7 @@ export class SharedTableWithoutTransComponent {
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                     if (level1ItemIndex !== -1) {
                       // Now find the correct subCode within the level 1 item's SubCodes
-                      if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 5) {
+                      if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId == 1 || this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId == 4) {
 
                         const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                         const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
