@@ -44,6 +44,9 @@ export class TopScreenComponent implements OnInit {
       this.Loader = true;
       this.GetProfileResearcherByUserId();
     }
+    this.topScreenServices.currentImageUrl.subscribe((url: string) => {
+      this.selectedImageUrl = url; // Update the image URL
+    });
   }
   LogOut() {
 
