@@ -281,7 +281,8 @@ export class CodeHomeComponent {
             arName: this.code.arName,
             enName: this.code.enName,
             TypeId: this.code.TypeId,
-            connectedWith: `${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`
+            connectedWith: `${res.Data.codeDto.connectedWithId}_${res.Data.codeDto.connectedWithLevel}`,
+            connectedWithType:this.code.connectedWithType
           });}
           else{
             this.codeForm.patchValue({

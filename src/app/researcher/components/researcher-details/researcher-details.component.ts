@@ -15,9 +15,10 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import { environment } from 'src/environments/environment.development';
-import { IAddListResearcherMandateDto, IAddResearcherMandateDto, IAdminDataDto, IGetResearcherMandateDto } from '../../Dtos/ResearcherDetailsDto';
+import { IAdminDataDto } from '../../Dtos/ResearcherDetailsDto';
 import { ResearcherMandateService } from 'src/app/researcher-mandate/services/researcher-mandate.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IAddResearcherMandateDto, IGetResearcherMandateDto } from 'src/app/researcher-mandate/Dtos/ResearcherMandateDto';
 
 @Component({
   selector: 'app-researcher-details',
@@ -335,7 +336,7 @@ export class ResearcherDetailsComponent implements OnInit {
 
   // Method to update profile image
   UpdateProfileImg(): void {
-    
+
     if (!this.selectedImage) {
       return;
     }
@@ -433,18 +434,18 @@ export class ResearcherDetailsComponent implements OnInit {
       this.showLoader = false;
     }
   }
-  AddResearcherMandateModel(){
-    
+  AddResearcherMandateModel() {
+
     this.researchersMandate = this.researchers.filter(researcher => researcher.UserId !== +this.researcherId);
   }
   GetAllResearcherMandate(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+        debugger
         if (res.Data) {
-          this.addResearcherMandateDto = res.Data.getResearcherMandateDtos;
-          const button = document.getElementById('addResearcherBtn');
+          this.getResearcherMandateDto = res.Data.getResearcherMandateDtos;
+          const button = document.getElementById('AllResearcherMandateBtn');
           if (button) {
             button.click();
           }
@@ -496,5 +497,29 @@ export class ResearcherDetailsComponent implements OnInit {
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
     return date.toISOString().split('T')[0];
+  }
+  CancelResearcherMandate(id: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        const button = document.getElementById('btnCancelresearcherMandate');
+        if (button) {
+          button.click();
+        }
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+
+        })
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherMandateService.CancelResearcherMandate(id).subscribe(observer);
   }
 }

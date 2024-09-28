@@ -35,6 +35,19 @@
             </div>
         </div>
         <div class="d-flex flex-grow-1 gap-1 left-align-button">
+            <button type="button" *ngIf="role=='Researchers'" class="btn btn-add"
+                (click)="GetAllResearcherMandate()" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+                تفويضات سابقه
+            </button>
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AllResearcherMandate" (click)="AddResearcherMandateModel()"
+                id="AllResearcherMandateBtn" hidden>
+                <img src="./images/list-box-outline.png" alt="">
+            </button>
             <button type="button" *ngIf="role=='Researchers' && companies.length > 0" class="btn btn-add"
                 (click)="GetResearcherMandateByResearcherId()" style="border-radius: 8px;
                             color: white;
@@ -351,33 +364,8 @@
                                     id="active" checked />
                             </div>
                         </div>
-                        <!-- Use [(ngModel)] for two-way binding instead of value -->
-                        <!-- Same for toDate -->
                     </div>
                 </div>
-                <!-- <div class="table-responsive company-table research-table table-border">
-                
-                <table class="table table-borderless">
-                    <thead>
-                        <tr class="t-header">
-                            <th scope="col">رقم</th>
-                            <th class="text-center" scope="col">الباحث المفوض له</th>
-                            <th class="text-center" scope="col">من تاريخ</th>
-                            <th class="text-center" scope="col">الي تاريخ</th>
-                            <th class="text-center" scope="col"></th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr *ngFor="let item of getResearcherMandateDto; let i = index">
-                            <td>{{ i + 1 }}</td>
-                            <td class="text-center">{{item.arName}}</td>
-                            <td class="text-center">{{item.fromDate}}</td>
-                            <td class="text-center">{{item.toDate}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
                         (click)="resetForm()">
@@ -386,14 +374,47 @@
                     <button type="button" class="btn btn-save" (click)="AddResearcherMandate()">
                         حفظ
                     </button>
-                    <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
-              إعادة ملء
-            </button>
-            <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
-              تعديل
-            </button> -->
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal company-modal fade" id="AllResearcherMandate" tabindex="-1" aria-labelledby="AllResearcherMandate"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">التفويضات السابقه</h5>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
+                            <th scope="col" style="text-align: center;">بدايه تاريخ التفويض</th>
+                            <th scope="col" style="text-align: center;">نهاية تاريخ التفويض</th>
+                            <th scope="col" style="text-align: center;">الحاله</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{researcherMandate.arName}}</td>
+                            <td class="text-center">{{getDateOnly(researcherMandate.fromDate)}}</td>
+                            <td class="text-center">{{getDateOnly(researcherMandate.toDate)}}</td>
+                            <td class="text-center" *ngIf="researcherMandate.IsCancelled">تم الغاء التفويض في تاريخ {{getDateOnly(researcherMandate.CancelledOn)}}</td>
+                            <td class="text-center" *ngIf="!researcherMandate.IsCancelled"><button type="button" class="btn btn-save" (click)="CancelResearcherMandate(researcherMandate.id)">
+                                الغاء التفويض
+                            </button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelresearcherMandate">إلغاء
+                </button>
+            </div>
         </div>
     </div>
 </div>
