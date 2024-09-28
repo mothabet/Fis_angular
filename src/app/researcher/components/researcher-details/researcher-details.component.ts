@@ -50,6 +50,7 @@ export class ResearcherDetailsComponent implements OnInit {
   getResearcherMandateDto: IGetResearcherMandateDto[] = [];
   addResearcherMandateDto!: IAddResearcherMandateDto;
   researchers: IResearcher[] = [];
+  researchersMandate: IResearcher[] = [];
   adminData: IAdminDataDto = {
     adminEmail: '',
     adminPhone: '',
@@ -334,7 +335,7 @@ export class ResearcherDetailsComponent implements OnInit {
 
   // Method to update profile image
   UpdateProfileImg(): void {
-    debugger
+    
     if (!this.selectedImage) {
       return;
     }
@@ -345,7 +346,12 @@ export class ResearcherDetailsComponent implements OnInit {
 
     const observer = {
       next: (res: any) => {
-        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+        const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+        this.selectedImageUrl = newImageUrl;
+
+        // Update the shared image URL in the service
+        this.topScreenServices.updateImageUrl(newImageUrl);
+
         this.showLoader = false;
       },
       error: (err: any) => {
@@ -427,11 +433,15 @@ export class ResearcherDetailsComponent implements OnInit {
       this.showLoader = false;
     }
   }
+  AddResearcherMandateModel(){
+    
+    this.researchersMandate = this.researchers.filter(researcher => researcher.UserId !== +this.researcherId);
+  }
   GetAllResearcherMandate(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.addResearcherMandateDto = res.Data.getResearcherMandateDtos;
           const button = document.getElementById('addResearcherBtn');

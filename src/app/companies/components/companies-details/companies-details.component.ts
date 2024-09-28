@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { TopScreenService } from 'src/app/shared/services/top-screen.service';
 
 @Component({
   selector: 'app-companies-details',
@@ -27,7 +28,7 @@ export class CompaniesDetailsComponent implements OnInit {
   role:string = "";
   sanitizedEmbededContent: SafeHtml = '';
 
-  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
+  constructor(private topScreenServices: TopScreenService, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
     , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
 
   }
@@ -206,8 +207,12 @@ export class CompaniesDetailsComponent implements OnInit {
 
     const observer = {
       next: (res: any) => {
+        const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+        this.selectedImageUrl = newImageUrl;
+
+        // Update the shared image URL in the service
+        this.topScreenServices.updateImageUrl(newImageUrl);
         this.showLoader = false;
-        this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
 
       },
       error: (err: any) => {

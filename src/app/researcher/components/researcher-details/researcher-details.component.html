@@ -44,7 +44,7 @@
                 <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
                 تفويض باحثين
             </button>
-            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#addResearcher"
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#addResearcher" (click)="AddResearcherMandateModel()"
                 id="addResearcherBtn" hidden>
                 <img src="./images/list-box-outline.png" alt="">
             </button>
@@ -329,7 +329,7 @@
                         <div class="form-group col-sm-6 mb-2">
                             <select class="form-control" formControlName="researcherMandateId">
                                 <option value="">--اختر الباحث المفوض له--</option>
-                                <option value="{{item_.id}}" *ngFor="let item_ of researchers; let i = index">
+                                <option value="{{item_.id}}" *ngFor="let item_ of researchersMandate; let i = index">
                                     {{item_.arName}}
                                 </option>
                             </select>

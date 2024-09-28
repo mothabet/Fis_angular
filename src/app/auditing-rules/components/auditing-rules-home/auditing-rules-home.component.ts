@@ -203,7 +203,6 @@ export class AuditingRulesHomeComponent implements OnInit {
     // Disable the select after choosing a value
   }
   isValidEquation(equation: string): boolean {
-    debugger
     // تحقق من أن المعادلة تحتوي على '='
     const equationParts = equation.split('=');
     if (equationParts.length !== 2) {
@@ -273,7 +272,7 @@ export class AuditingRulesHomeComponent implements OnInit {
   resetAuditRules() {
     this.selects = []; // إزالة جميع الـ <select>ات
     this.usedOptions.clear(); // مسح جميع الخيارات المستخدمة
-    this.auditForm.patchValue({ Rule: '' }); // إفراغ حقل النص
+    this.auditForm.patchValue({ Rule: '' , Type:1}); // إفراغ حقل النص
     this.id = 0;
     this.add = true;
   }
@@ -468,14 +467,14 @@ export class AuditingRulesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           const rule = res.Data.Rule;
           this.codeParent = res.Data.codeParent;
           const codes = rule.split(/[=+-]/).map((code: any) => code.trim()).filter((code: any) => code);
           const observer = {
-            next: (res: any) => {
-
-              if (res.Data) {
-                this.subCodes = res.Data.getSubCodeDtos;
+            next: (result: any) => {
+              if (result.Data) {
+                this.subCodes = result.Data.getSubCodeDtos;
               } else {
                 this.subCodes = [];
               }
@@ -505,7 +504,7 @@ export class AuditingRulesHomeComponent implements OnInit {
               });
 
               // Update form controls with the values
-              this.auditForm.patchValue({ Rule: rule });
+              this.auditForm.patchValue({ Rule: rule ,Type:res.Data.Type});
 
               // Set the value of each select element based on codes[i]
               setTimeout(() => {
