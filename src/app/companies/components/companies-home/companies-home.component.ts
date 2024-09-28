@@ -111,7 +111,6 @@ export class CompaniesHomeComponent implements OnInit {
       this.data = XLSX.utils.sheet_to_json(ws);
 
       const allErrors: string[] = [];
-      debugger
       this.addCompanyByExcel = this.data.map((row: any) => ({
         email: row['E- mail']?.toString() ?? '',        // Use the header 'E- mail'
         arName: row['اسم المنشآه']?.toString() ?? '',   // Use the header 'اسم المنشآه'
@@ -298,37 +297,53 @@ export class CompaniesHomeComponent implements OnInit {
   }
   saveCompany(): void {
     // Validate that at least one email is provided
-    debugger
     const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
     // Access the array of email objects
     const emailArray = this.companyForm.value.compEmails;
-
     // Filter out invalid emails
-    const invalidEmails = emailArray.filter((item: any) => {
-      // Ensure item is an object and has an Email property
-      if (item && typeof item === 'object' && 'Email' in item) {
-        const email = item.Email.trim(); // Get and trim the email string
-        return !regexp.test(email); // Test the trimmed email against the regex
+    if (emailArray.length > 0 && emailArray[0].Email != null) {
+      const invalidEmails = emailArray.filter((item: any) => {
+        // Ensure item is an object and has an Email property
+        if (item && typeof item === 'object' && 'Email' in item) {
+          const email = item.Email.trim(); // Get and trim the email string
+          return !regexp.test(email); // Test the trimmed email against the regex
+        }
+        return true; // Consider non-objects or missing Email as invalid
+      });
+      if (invalidEmails.length > 0) {
+        Swal.fire({
+          icon: 'error',
+          title: `${invalidEmails[0].Email} الايميل غير صالح`,
+          html: '<small>يمكن أن يحتوي البريد الإلكتروني الصالح فقط على الأحرف والأرقام اللاتينية و "@" و "."</small>',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        return;
       }
-      return true; // Consider non-objects or missing Email as invalid
-    });
-    if (invalidEmails.length > 0) {
+    }
+    const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
+    debugger
+    if (this.companyForm.value.arName == '') {
       Swal.fire({
         icon: 'error',
-        title: `${invalidEmails[0].Email} الايميل غير صالح`,
-        html: '<small>يمكن أن يحتوي البريد الإلكتروني الصالح فقط على الأحرف والأرقام اللاتينية و "@" و "."</small>',
+        title: 'يجب ادخال الاسم بالعربيه',
         showConfirmButton: false,
         timer: 2000
       });
-      return;
     }
-
-    const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    if (this.companyForm.value.subActivityId == 0) {
+    else if (this.companyForm.value.enName == '') {
       Swal.fire({
         icon: 'error',
-        title: 'يجب اختيار النشاط الثانوي',
+        title: 'يجب ادخال الاسم بالانجليزية',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
+    else if (this.companyForm.value.phoneNumber == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال رقم الهاتف',
         showConfirmButton: false,
         timer: 2000
       });
@@ -336,7 +351,7 @@ export class CompaniesHomeComponent implements OnInit {
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب القطاع',
+        title: 'يجب اختيار القطاع',
         showConfirmButton: false,
         timer: 2000
       });
@@ -349,10 +364,18 @@ export class CompaniesHomeComponent implements OnInit {
         timer: 2000
       });
     }
+    else if (this.companyForm.value.subActivityId == 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اختيار النشاط الثانوي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب رقم المنطقه',
+        title: 'يجب اختيار المنطقه',
         showConfirmButton: false,
         timer: 2000
       });
@@ -360,7 +383,7 @@ export class CompaniesHomeComponent implements OnInit {
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب رقم الولايه',
+        title: 'يجب اختيار الولايه',
         showConfirmButton: false,
         timer: 2000
       });
@@ -375,7 +398,6 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -423,6 +445,7 @@ export class CompaniesHomeComponent implements OnInit {
           });
         },
         error: (err: any) => {
+          debugger
           this.showLoader = false;
           this.sharedService.handleError(err);
 
@@ -431,6 +454,16 @@ export class CompaniesHomeComponent implements OnInit {
       this.companyHomeServices.addCompany(Model).subscribe(observer);
     }
     else {
+      debugger
+      const invalidFields: { [key: string]: any } = {}; // Store invalid fields and their errors
+
+      Object.keys(this.companyForm.controls).forEach(key => {
+        const control = this.companyForm.get(key);
+
+        if (control && control.invalid) {
+          invalidFields[key] = control.errors; // Store the field name and its errors
+        }
+      });
       Swal.fire({
         icon: 'error',
         title: 'يجب ادخال جميع البيانات بشكل صحيح',
@@ -448,7 +481,7 @@ export class CompaniesHomeComponent implements OnInit {
       enName: '',
       municipalityNumber: '',
       compRegNumber: '',
-      accountingPeriod: [''],
+      accountingPeriod: '',
       completionAccPeriod: '',
       phoneNumber: '',
       telNumber: '',
@@ -485,7 +518,7 @@ export class CompaniesHomeComponent implements OnInit {
       enName: '',
       municipalityNumber: '',
       compRegNumber: '',
-      accountingPeriod: [''],
+      accountingPeriod: '',
       completionAccPeriod: '',
       phoneNumber: '',
       telNumber: '',
