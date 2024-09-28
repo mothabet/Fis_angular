@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ICompany, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
+import { ICompany, ICompanyEmail, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
 import { ActivatedRoute } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -28,7 +28,7 @@ export class CompaniesDetailsComponent implements OnInit {
   role:string = "";
   sanitizedEmbededContent: SafeHtml = '';
 
-  constructor(private topScreenServices: TopScreenService, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
+  constructor(private http: HttpClient, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
     , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
 
   }
@@ -48,13 +48,14 @@ export class CompaniesDetailsComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
   GetCompanyById(id: number) {
-    debugger
+    
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
-          this.sanitizedEmbededContent = this.sanitizeHtml(this.company.embeded);
+          this.companyEmails = res.Data.companyEmails.map((emailObj: ICompanyEmail) => emailObj.Email)
+          .join(', ');          this.sanitizedEmbededContent = this.sanitizeHtml(this.company.embeded);
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
         }
       },
@@ -111,12 +112,12 @@ export class CompaniesDetailsComponent implements OnInit {
     }
   }
   GetCompanyPdfs(id: number) {
-    debugger
+    
 
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-    debugger
+    
 
         if (res.Data) {
           this.companyPdfs = res.Data;
@@ -128,7 +129,7 @@ export class CompaniesDetailsComponent implements OnInit {
 
       },
       error: (err: any) => {
-    debugger
+    
 
         this.sharedServices.handleError(err);
         this.showLoader = false;

@@ -42,7 +42,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+
           this.coverForm = res.Data
           const quarterCoverFormData: IQuarterCoverFormDataDto = {
             establishmentName: "",
@@ -73,6 +73,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
           var role = res_.roles;
           if (res.Data) {
             if (res.Data.length > 0) {
+
               if (res.Data[0].coverData || res.Data[0].coverData != '')
                 this.coverFormData = JSON.parse(res.Data[0].coverData) as IQuarterCoverFormDataDto;
               const quarterCoverFormData: IQuarterCoverFormDataDto = {
@@ -83,7 +84,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
                 emailAddress: "0",
                 geographicalDistribution: "0"
               };
-              debugger
+
               let storedTables = localStorage.getItem(`quarterCoverForm`);
               if (storedTables)
                 this.coverForm.quarterCoverData = JSON.parse(storedTables) as IQuarterCoverFormDataDto;
@@ -93,6 +94,12 @@ export class SharedQuarterFormCoverComponent implements OnInit {
                 this.coverForm.quarterCoverData = quarterCoverFormData;
             }
 
+          }
+          else {
+            let quarterCoverForm = localStorage.getItem(`quarterCoverForm`);
+            if (quarterCoverForm) {
+              this.coverForm.quarterCoverData = JSON.parse(quarterCoverForm) as IQuarterCoverFormDataDto;
+            }
           }
           this.Loader = false;
 

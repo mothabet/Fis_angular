@@ -316,7 +316,8 @@ export class CompaniesHomeComponent implements OnInit {
     if (invalidEmails.length > 0) {
       Swal.fire({
         icon: 'error',
-        title: `${invalidEmails[0].Email} الايميل غير صالح`, // Use backticks for template literals
+        title: `${invalidEmails[0].Email} الايميل غير صالح`,
+        html: '<small>يمكن أن يحتوي البريد الإلكتروني الصالح فقط على الأحرف والأرقام اللاتينية و "@" و "."</small>',
         showConfirmButton: false,
         timer: 2000
       });
