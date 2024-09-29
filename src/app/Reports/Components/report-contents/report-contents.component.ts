@@ -11,6 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as saveAs from 'file-saver';
 import * as XLSX from 'xlsx';
+import { CodeHomeService } from 'src/app/code/Services/code-home.service';
+import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
+import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 
 @Component({
   selector: 'app-report-contents',
@@ -30,6 +33,9 @@ export class ReportContentsComponent implements OnInit {
   subActivitiesFields: IFieldDto[] = [];
   governoratesFields: IFieldDto[] = [];
   wilayatFields: IFieldDto[] = [];
+  isDropdownOpen = false;
+  searchTerm: string = '';
+  filteredCodes: ICode[] = [];
   report: IAddReportPartDto = {
     part: '',
     query: '',
@@ -65,14 +71,16 @@ export class ReportContentsComponent implements OnInit {
   formTables: IReportFilterDto[] = [
     { id: 1, arName: 'الجداول', enName: 'Tables' },
   ];
+  codes: ICode[] = [];
   reports!: any[]
   constructor(private renderer: Renderer2, private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private reportServices: ReportService,
     private companyHomeServices: CompanyHomeService, private formServices: FormService,
-    private researcherService: ResearcherHomeService, private activeRouter: ActivatedRoute) { }
+    private researcherService: ResearcherHomeService,    private codeHomeService: CodeHomeService,
+    private activeRouter: ActivatedRoute) { }
   ngOnInit(): void {
     this.reportId = this.activeRouter.snapshot.paramMap.get('reportId')!;
-
+    this.GetAllCodes();
     this.GetReports();
   }
   GetReports(): void {
@@ -94,6 +102,19 @@ export class ReportContentsComponent implements OnInit {
       },
     };
     this.reportServices.GetReportParts(0, '', +this.reportId).subscribe(observer);
+  }
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  filterSubCodes() {
+    this.filteredCodes = this.codes.filter(code =>
+      code.arName.includes(this.searchTerm)
+    );
+  }
+  selectCode(code: any) {
+    this.searchTerm = code.arName;
+    this.isDropdownOpen = false;
+    // Perform any additional logic, like setting a FormControl value
   }
   DeleteReportContent(id: number): void {
     Swal.fire({
@@ -158,6 +179,26 @@ export class ReportContentsComponent implements OnInit {
       this.reportServices.GetTableFields(tableType).subscribe(observer);
     }
   }
+  GetAllCodes(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.codes = res.Data.getCodeDtos;
+          this.filteredCodes = res.Data.getCodeDtos;
+        }
+        else {
+          this.codes = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.codeHomeService.GetAllCodes(0).subscribe(observer);
+  }
   onTableSelect(): void {
     this.tables = [];
 
@@ -189,6 +230,17 @@ export class ReportContentsComponent implements OnInit {
         selectAllFields: false,
         enTableName: 'Forms',
         arTableName: 'الاستمارات',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTableFields(2);
+    }
+    else if (this.tableType === 4) {
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'FormContent',
+        arTableName: 'محتوى الاستمارة',
         fields: []  // Initial empty fields array
       };
       this.tables.push(tableDto);
@@ -391,7 +443,6 @@ export class ReportContentsComponent implements OnInit {
       console.error('Modal element with id "chooseTable" not found.');
     }
   }
-
   closeModal() {
     const modal = document.getElementById('chooseTable');
     if (modal) {
@@ -410,7 +461,6 @@ export class ReportContentsComponent implements OnInit {
       console.error('Modal element with id "chooseTable" not found.');
     }
   }
-
   saveReport() {
 
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
@@ -573,7 +623,7 @@ export class ReportContentsComponent implements OnInit {
             joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.wilayatId = ${tableAlias}.id `;
             break;
           case 'Tables':
-            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.id `;
+            joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.formId `;
             break;
           default:
             throw new Error(`Unknown table: ${table.enTableName}`);
@@ -586,14 +636,12 @@ export class ReportContentsComponent implements OnInit {
 
     return query;
   }
-
   onSelectAllFieldsChange(table: ITableDto) {
     // Toggle all fields based on the checkbox state
     table.fields.forEach(field => {
       field.value = table.selectAllFields ? 'selected' : '';
     });
   }
-
   printExcel() {
     // Prepare workbook and worksheet array
     const workbook: XLSX.WorkBook = { Sheets: {}, SheetNames: [] };
@@ -635,7 +683,6 @@ export class ReportContentsComponent implements OnInit {
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, 'report_export');
   }
-
   formatReportData(report: any): any[] {
     const rowData: any[] = [];
 
@@ -649,7 +696,6 @@ export class ReportContentsComponent implements OnInit {
 
     return rowData;
   }
-
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

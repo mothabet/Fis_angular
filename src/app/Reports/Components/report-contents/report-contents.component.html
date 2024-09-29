@@ -38,7 +38,8 @@
                     <i class="fa-solid fa-plus mx-1"></i>
                     إنشاء تفاصيل التقرير
                 </button>
-                <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download" (click)="printExcel()">
+                <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download"
+                    (click)="printExcel()">
                     <img src="../../../../assets/images/list-box-outline.png" alt="" />
                     استخراج تقرير
                 </button>
@@ -109,6 +110,7 @@
                                 <option [ngValue]="1">شركات</option>
                                 <option [ngValue]="2">استمارات</option>
                                 <option [ngValue]="3">باحثين</option>
+                                <option [ngValue]="4">محتوى الاستمارة</option>
                             </select>
                         </div>
                     </div>
@@ -122,15 +124,14 @@
                             <div class="modal-header pb-0">
                                 <label class="modal-title" id="add">{{table.arTableName}}</label>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" *ngIf="table.enTableName != 'FormContent'">
                                 <div class="d-flex align-items-center">
                                     <!-- Checkbox aligned on the left -->
                                     <div class="d-flex align-items-center mb-3">
                                         <!-- Checkbox with bottom margin -->
                                         <input type="checkbox" class="form-check-input me-2"
                                             id="selectAllFieldsCheckbox" style="margin-bottom: 15px;"
-                                            [(ngModel)]="table.selectAllFields" name="selectAllFields"
-                                             />
+                                            [(ngModel)]="table.selectAllFields" name="selectAllFields" />
                                         <!-- Label linked to the checkbox, with top margin for alignment -->
                                         <label for="selectAllFieldsCheckbox"
                                             style="margin-top: 5px; position: static;">اختر جميع الحقول</label>
@@ -196,7 +197,25 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="card-body" *ngIf="table.enTableName == 'FormContent'">
+                                <div style="width: 100%;" class="form-group col-sm-6 mb-2">
+                                    <div class="dropdown" [class.show]="isDropdownOpen">
+                                        <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                            placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm" (click)="toggleDropdown()" 
+                                            (input)="filterSubCodes()"
+                                            />
+                                        <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px;
+                                      width: 100%;
+                                      text-align: right;">
+                                            <li class="dropdown-item"
+                                            *ngFor="let code of filteredCodes" (click)="selectCode(code)">
+                                                {{code.arName}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <label for="inputField">الاسم بالكامل</label>
+                                </div>
+                            </div>
                         </div>
                         <!-- Add Button -->
                         <button (click)="openModal()"
@@ -205,8 +224,8 @@
                         </button>
                     </div>
                     <!-- Continue with remaining fields -->
-                    <h4 class="mb-3">نوع التقرير</h4>
-                    <div class="form-check ps-0 d-flex radio-form me-2 col-6">
+                    <!-- <h4 class="mb-3">نوع التقرير</h4> -->
+                    <!-- <div class="form-check ps-0 d-flex radio-form me-2 col-6">
                         <input class="form-check-input" checked type="radio" id="haveChart" name="chartOptions"
                             [value]="true" [(ngModel)]="report.withChart">
                         <label style="width: 17rem;margin-top: 22px;font-size: 17px !important;"
@@ -216,7 +235,7 @@
                             [value]="false" [(ngModel)]="report.withChart">
                         <label style="width: 35rem;margin-top: 24px;font-size: 17px !important;"
                             class="form-check-label" for="notHaveChart">لا يشمل رسم بيانى</label>
-                    </div>
+                    </div> -->
 
                 </div>
 
