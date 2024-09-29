@@ -254,12 +254,12 @@ export class ActivitiesComponent implements OnInit {
     return errors;
   }
   onReset(): void {
+    this.isUpdate = false;
     this.activityForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code : ['', Validators.required],
       sectorId : 0,
     });    
-      this.isUpdate = false;
   }
 }

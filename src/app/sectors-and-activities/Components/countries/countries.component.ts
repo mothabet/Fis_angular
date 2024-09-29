@@ -97,6 +97,7 @@ export class CountriesComponent implements OnInit {
     this.sectorsAndActivitiesServices.GetCountries(page, textSearch).subscribe(observer);
   }
   onReset(): void {
+    this.isUpdate = false;
     this.countryForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],

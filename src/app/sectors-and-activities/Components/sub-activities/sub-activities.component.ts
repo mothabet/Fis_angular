@@ -22,7 +22,6 @@ export class SubActivitiesComponent implements OnInit {
   id:number=0;
   constructor(    private sharedService: SharedService,private fb: FormBuilder,
     private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
-
   ngOnInit(): void {
     this.subActivityForm = this.fb.group({
       arName: ['', Validators.required],
@@ -105,6 +104,7 @@ export class SubActivitiesComponent implements OnInit {
     this.sectorsAndActivitiesServices.GetSubActivities(page, textSearch).subscribe(observer);
   }
   onReset(): void {
+    this.isUpdate = false;
     this.subActivityForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],

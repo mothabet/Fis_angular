@@ -98,6 +98,7 @@ export class SectorsComponent implements OnInit {
     this.sectorsAndActivitiesServices.GetSectors(page, textSearch).subscribe(observer);
   }
   onReset(): void {
+    this.isUpdate = false;
     this.sectorForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
