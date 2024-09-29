@@ -45,8 +45,8 @@ export class SubActivitiesComponent implements OnInit {
     if (this.subActivityForm.value.code == "" || this.subActivityForm.value.code == null) {
       allErrors.push('يجب ادخال رمز النشاط');
     }
-    if (!(this.subActivityForm.value.sectorId > 0)) {
-      allErrors.push('يجب اختيار اسم القطاع');
+    if (!(this.subActivityForm.value.activityId > 0)) {
+      allErrors.push('يجب اختيار اسم النشاط الرئيسي');
     }
     if (allErrors.length > 0) {
       Swal.fire({
