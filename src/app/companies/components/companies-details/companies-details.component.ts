@@ -54,6 +54,7 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.company = res.Data;
           this.companyEmails = res.Data.companyEmails.map((emailObj: ICompanyEmail) => emailObj.Email)
           .join(', ');          this.sanitizedEmbededContent = this.sanitizeHtml(this.company.embeded);
@@ -175,7 +176,7 @@ export class CompaniesDetailsComponent implements OnInit {
     this.companyServices.DeletePdf(id).subscribe(observer);
   }
   downloadPdf(path: string): void {
-    path = `${environment.dirUrl}PdfFile/Company_${this.companyId}/${path}`;
+    path = `${environment.dirUrl}PdfFile/Company_${this.company.id}/${path}`;
     this.companyServices.saveFile(path);
   }
   @ViewChild('imageInput') imageInput!: ElementRef;
