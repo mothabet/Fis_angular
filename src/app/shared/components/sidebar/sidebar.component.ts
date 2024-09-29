@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
   role:string = "";
   id:number=0;
 
-  constructor(private router: Router, private authService: LoginService) { }
+  constructor(private authService: LoginService) { }
 
   ngOnInit(): void {
     const isLoggedIn = this.authService.getToken();

@@ -26,7 +26,8 @@ export interface ICompany {
     researcherId:string
     accountingPeriod: number,
     legalType: string,
-    pathImgProfile:string
+    pathImgProfile:string,
+    researcherArName:string
 }
 export interface ICompaniesPDF {
     activityId: number,
