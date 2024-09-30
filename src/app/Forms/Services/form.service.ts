@@ -24,19 +24,6 @@ export class FormService {
      var resopnse = this.http.get(environment.apiUrl+`Form/GetAllForms?lang=2`,{ headers });
      return resopnse;
    }
-
-   GetCountries(){
-    var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Country/GetCountries?lang=2`,{ headers });
-     return resopnse;
-   }
-
-   GetActivities(){
-    var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?lang=2`,{ headers });
-     return resopnse;
-   }
-
    GetFormData(formId:number , companyId:number = 0,tableId=0){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`FormData/GetAllFormData?lang=2&formId=${formId}&companyId=${companyId}&tableId=${tableId}`,{ headers });

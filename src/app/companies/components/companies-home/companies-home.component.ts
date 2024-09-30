@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import * as XLSX from 'xlsx';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
   selector: 'app-companies-home',
@@ -50,7 +51,7 @@ export class CompaniesHomeComponent implements OnInit {
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService) { }
+    , private sharedService: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
@@ -170,50 +171,40 @@ export class CompaniesHomeComponent implements OnInit {
     this.currentPage = page;
     this.GetCompanies('', page);
   }
-
   GetSectorActvities(sectorId: number) {
-
-    const observer = {
-      next: (res: any) => {
-
-        if (res.Data) {
-          this.Activities = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
-  }
-  GetSubActivities(activityId: number) {
-
-    if (activityId > 0) {
+    if (sectorId>0) {
       const observer = {
         next: (res: any) => {
-          // Add a null or undefined check for res.Data
-          if (res && res.Data) {
-            this.SubActivities = res.Data;
-            console.log(this.SubActivities);
-          } else {
-            console.log('No data available');
+          if (res.Data) {
+            this.Activities = res.Data.getActivitiesDtos;
           }
         },
         error: (err: any) => {
           this.sharedService.handleError(err);
         },
       };
-
-      // Call the service and subscribe
-      this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
+      this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
     }
   }
-
+  GetSubActivities(activityId: number) {
+    if (activityId>0) {
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            this.SubActivities = res.Data.getSubActivitiesDtos;
+          }
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        },
+      };
+      this.sectorsAndActivitiesServices.GetSubActivities(0,'',activityId).subscribe(observer);
+    }
+  }
   GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-
         this.showLoader = false;
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
@@ -234,21 +225,21 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
   }
-  GetSectors() {
+  GetSectors(): void {
+    this.showLoader = true;
     const observer = {
       next: (res: any) => {
-
-
         if (res.Data) {
-          this.Sectors = res.Data;
-          console.log(this.Sectors)
+          this.Sectors = res.Data.getSectorsDtos;
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
+        this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetSectors().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   GetWilayat(govId: number) {
     if (govId > 0) {

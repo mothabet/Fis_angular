@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators } from 'ngx-editor';
-import { ToastrService } from 'ngx-toastr';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -20,9 +19,13 @@ export class ActivitiesComponent implements OnInit {
   sectors!: IGetSectorDto[];
   isUpdate: boolean = false;
   id: number = 0;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
   constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
-
-    private toastr: ToastrService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+  private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
 
   ngOnInit(): void {
     this.activityForm = this.formBuilder.group({
@@ -94,8 +97,16 @@ export class ActivitiesComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.activities = res.Data;
+          this.activities = res.Data.getActivitiesDtos;
+          this.currentPage = res.Data.PageNumber;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.onReset();
+        }
+        else{
+          this.activities = [];
         }
         this.showLoader = false;
       },
@@ -106,12 +117,19 @@ export class ActivitiesComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetActivities(page, textSearch).subscribe(observer);
   }
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.GetActivities(page);
+  }
+  countriesSearch() {
+    this.GetActivities(this.currentPage, this.searchText);
+  }
   GetSectors(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.sectors = res.Data;
+          this.sectors = res.Data.getSectorsDtos;
         }
         this.showLoader = false;
       },
@@ -120,7 +138,7 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetSectors(page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   DeleteActivity(id: number): void {
     Swal.fire({

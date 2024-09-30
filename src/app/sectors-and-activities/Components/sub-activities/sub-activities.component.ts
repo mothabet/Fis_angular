@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators } from 'ngx-editor';
-import { IAddActivityDto, IAddSubActivityDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddSubActivityDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
-import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,8 +19,13 @@ export class SubActivitiesComponent implements OnInit {
   subActivity!:IGetSectorDto;
   isUpdate: boolean = false;
   id:number=0;
-  constructor(    private sharedService: SharedService,private fb: FormBuilder,
-    private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
+  constructor(private sharedService: SharedService,private fb: FormBuilder,
+    private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
   ngOnInit(): void {
     this.subActivityForm = this.fb.group({
       arName: ['', Validators.required],
@@ -29,8 +33,8 @@ export class SubActivitiesComponent implements OnInit {
       code: ['', Validators.required],
       activityId : [0, Validators.required],
     });
-    this.GetSubActivities(1,'',)
-    this.GetActivities(1,'',)
+    this.GetSubActivities(1,'')
+    this.GetActivities()
   }
   onSave(): void {
     this.showLoader = true;
@@ -91,8 +95,16 @@ export class SubActivitiesComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.subActivities = res.Data;
+          this.subActivities = res.Data.getSubActivitiesDtos;
+          this.currentPage = res.Data.PageNumber;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.onReset();
+        }
+        else{
+          this.subActivities = [];
         }
         this.showLoader = false;
       },
@@ -103,6 +115,13 @@ export class SubActivitiesComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetSubActivities(page, textSearch).subscribe(observer);
   }
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.GetSubActivities(page);
+  }
+  countriesSearch() {
+    this.GetSubActivities(this.currentPage, this.searchText);
+  }
   onReset(): void {
     this.isUpdate = false;
     this.subActivityForm = this.fb.group({
@@ -112,12 +131,13 @@ export class SubActivitiesComponent implements OnInit {
       activityId:[0, Validators.required],
     }); 
   }
-  GetActivities(page: number, textSearch: string = ''): void {
+  GetActivities(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+
         if (res.Data) {
-          this.activities = res.Data;
+          this.activities = res.Data.getActivitiesDtos;
           this.subActivityForm.patchValue({ activityId: this.activities[0].id });
         }
         this.showLoader = false;
@@ -127,7 +147,7 @@ export class SubActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetActivities(page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetActivities(0, '').subscribe(observer);
   }
   DeleteSubActivity(id: number): void {
     Swal.fire({

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -9,6 +9,7 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { LoginService } from 'src/app/auth/services/login.service';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
   selector: 'app-shared-two-years-with-parts',
@@ -29,7 +30,8 @@ export class SharedTwoYearsWithPartsComponent {
   companyId!: string;
   formData!: IDataDto[];
   checkFormData: boolean = false;
-  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, 
+    private sharedServices: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
 
   }
@@ -129,34 +131,31 @@ export class SharedTwoYearsWithPartsComponent {
   GetActivites() {
     const observer = {
       next: (res: any) => {
-        this.Loader = false;
         if (res.Data) {
-          this.Loader = false;
-          this.activities = res.Data;
+          this.activities = res.Data.getActivitiesDtos;
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
-        this.Loader = false;
       },
     };
-    this.formServices.GetActivities().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetActivities(0, '').subscribe(observer);
   }
   GetCountrites() {
     const observer = {
       next: (res: any) => {
-        this.Loader = false;
         if (res.Data) {
-          this.Loader = false;
-          this.countries = res.Data;
+          this.countries = res.Data.getCountryDtos;
+        }
+        else{
+          this.countries = [];
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
-        this.Loader = false;
       },
     };
-    this.formServices.GetCountries().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetCountries(0, '').subscribe(observer);
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
