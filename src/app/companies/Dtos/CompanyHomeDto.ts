@@ -63,7 +63,8 @@ export interface IAddCompany {
     subActivityId: number,
     governoratesId: number,
     wilayatId: number,
-    facilityType:string
+    facilityType:string,
+    status: boolean,
     companyEmails: ICompanyEmail[];
 }
 export interface IAddCompanyByExcel{

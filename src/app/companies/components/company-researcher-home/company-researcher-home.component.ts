@@ -79,6 +79,7 @@ export class CompanyResearcherHomeComponent {
       subActivityId: [0],
       governoratesId: [0],
       wilayatId: [0],
+      status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
     debugger
@@ -316,6 +317,7 @@ export class CompanyResearcherHomeComponent {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
       }
@@ -378,6 +380,7 @@ export class CompanyResearcherHomeComponent {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status:true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -415,6 +418,7 @@ export class CompanyResearcherHomeComponent {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status:true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -538,6 +542,7 @@ export class CompanyResearcherHomeComponent {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
+              status:this.company.status,
               facilityType:this.company.facilityType
             });
             this.initializeForm();
@@ -652,6 +657,7 @@ export class CompanyResearcherHomeComponent {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType
       }

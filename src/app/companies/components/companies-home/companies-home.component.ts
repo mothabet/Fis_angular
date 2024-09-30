@@ -79,6 +79,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: [0],
       governoratesId: [0],
       wilayatId: [0],
+      status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
 
@@ -310,11 +311,10 @@ export class CompaniesHomeComponent implements OnInit {
           showConfirmButton: false,
           timer: 2000
         });
-        return;
-      }
+        this.showLoader = false;
+        return; // Stop the form submission      }
     }
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    debugger
     if (this.companyForm.value.arName == '') {
       Swal.fire({
         icon: 'error',
@@ -322,6 +322,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.enName == '') {
       Swal.fire({
@@ -330,6 +332,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.phoneNumber == '') {
       Swal.fire({
@@ -338,6 +342,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
@@ -346,6 +352,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -354,6 +362,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.subActivityId == 0) {
       Swal.fire({
@@ -362,6 +372,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
@@ -370,6 +382,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
@@ -378,6 +392,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
@@ -386,8 +402,10 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+
+      this.showLoader = false;
       return; // Stop the form submission
-    }
+        }    }
     else if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
@@ -414,6 +432,7 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status:this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
       }
@@ -487,6 +506,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status: true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -524,6 +544,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status:true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -646,6 +667,7 @@ export class CompaniesHomeComponent implements OnInit {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
+              status:this.company.status,
               facilityType: this.company.facilityType
             });
             this.initializeForm();
@@ -692,6 +714,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
@@ -700,6 +724,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -708,6 +734,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
@@ -716,6 +744,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
@@ -724,14 +754,17 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب إدخال بريد إلكتروني واحد على الأقل',
+        title: 'يجب ادخال بريد إلكتروني واحد على الأقل',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
@@ -760,6 +793,7 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status:this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType
       }
