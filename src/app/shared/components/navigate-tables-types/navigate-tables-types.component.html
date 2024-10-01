@@ -1,0 +1,317 @@
+<div class="header-nav" style="margin-bottom: 20px">
+    <app-loader *ngIf="Loader"></app-loader>
+    <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewFormNotes" id="ViewFormNotesBtn" hidden >
+      <img src="./images/list-box-outline.png" alt="">
+  </button>
+  <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AddFormNotes" id="AddFormNotesBtn" hidden >
+      <img src="./images/list-box-outline.png" alt="">
+  </button>
+  <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewInstructions" id="ViewInstructionsBtn" hidden >
+    <img src="./images/list-box-outline.png" alt="">
+</button>
+
+
+    <div class="header-nav" style="margin-bottom: -10px" *ngIf="role == 'Admin'">
+        <div class="card-box d-flex flex-wrap align-items-center justify-content-between">
+            <ul class="links">
+                <li>
+                    <a [routerLink]="['/FormDetails',formId,null]">{{coverForm.arName}}</a>
+                </li>
+            </ul>
+            <div class="btns d-flex">
+                <div class="btns d-flex mx-1">
+                    <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم الارسال للشركة
+                    </button>
+                    <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم فتح رابط الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم البدا في تعبئة الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم حفظ الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم تعبئة الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم اغلاق الاستمارة
+                    </button>
+                    <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
+                        data-bs-target="#sendFormCompany">
+                        حالة الإستمارة : تم اعتماد الاستمارة
+                    </button>
+                </div>
+                <button type="button" class="btn btn-send mx-1" (click)="GetAllFormNotesByRole('')" >
+                    <img src="./images/list-box-outline.png" alt="">
+                    اضافة ملاحظه
+                </button>
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)">
+                  <img src="./images/list-box-outline.png" alt="">
+                  الإرشادات
+              </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
+        <div class="header d-flex card-box">
+            <div class="title">
+                {{coverForm.arName}} </div>
+            <div class="btns d-flex">
+                <button *ngIf="coverForm.status == 1" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم الارسال للشركة
+                </button>
+                <button *ngIf="coverForm.status == 2" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم فتح رابط الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 3" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم البدا في تعبئة الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 4" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم حفظ الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 5" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم الموافقه على الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 6" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اغلاق الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 7" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اعتماد الاستمارة
+                </button>
+                <button *ngIf="coverForm.status == 8" type="button" class="btnStatus" data-bs-toggle="modal"
+                    data-bs-target="#sendFormCompany">
+                    حالة الإستمارة : تم اعادة فتح الاستمارة
+                </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" *ngIf="role == 'Researchers'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    اضافة ملاحظه
+                </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Admin')" *ngIf="role == 'Researchers'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    عرض ملاحظات الاداره
+                </button>
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Researchers')" *ngIf="role == 'Company'">
+                    <img src="./images/list-box-outline.png" alt="">
+                    عرض ملاحظات
+                </button>
+                
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)">
+                    <img src="./images/list-box-outline.png" alt="">
+                    الإرشادات
+                </button>
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal"
+                    data-bs-target="#addCompany">
+                    <img src="./images/printer-outline.png" alt="">
+                    طباعة pdf
+                </button>
+                <button *ngIf="role == 'Company'" type="button" class="btn btn-download">
+                    <img src="./images/file-excel-outline.png" alt="">
+                    تنزيل xls
+                </button>
+                <button
+                    *ngIf="(role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8) )"
+                    type="button" class="btn btn-save" (click)="SaveData('Save',0)">
+                    <img src="./images/content-save-outline.png" alt="">
+                    حفظ
+                </button>
+                <button
+                    *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)"
+                    type="button" class="btn btn-save" (click)="SaveData('Save',+companyId)">
+                    <img src="./images/content-save-outline.png" alt="">
+                    حفظ
+                </button>
+                <button *ngIf="role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"
+                    (click)="SaveData('Approve',0)">
+                    موافقة
+                </button>
+                <button *ngIf="role == 'Researchers' && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
+                    (click)="CompleteForm()">
+                    إكتمال
+                </button>
+                <button *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
+                    (click)="CloseForm()">
+                    إغلاق
+                </button>
+                <button *ngIf="role == 'Researchers' && coverForm.status == 6" type="button" class="btn btn-exit"
+                    (click)="OpenForm()">
+                    اعادة فتح الاستماره
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
+            <a *ngIf="!coverForm.typeQuarter" [routerLink]="['/FormDetails',formId, null,companyId]">الغلاف</a>
+            <a *ngIf="coverForm.typeQuarter" [routerLink]="['/QuarterFormCover',formId, null,companyId]">الغلاف</a>
+        </div>
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
+            <a [routerLink]="['/WorkData',formId,companyId]">معلومات عامة</a>
+        </div>
+        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" [ngClass]="{'active': table.id == tableId}"
+             (click)="TablesNavigation(table.id)"
+            style="cursor: pointer !important;">
+            <a>{{table.arName}}</a>
+        </div>
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}"
+            (click)="activateWorkData()">
+            <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
+        </div>
+    </div>
+    <!--start linked company modal -->
+<div class="modal company-modal fade" id="AddFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content p-2">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+          <h5>الملاحظات</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-table research-table table-border">
+            <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
+              اضافة ملاحظه
+            </button>
+            <table class="table table-borderless">
+              <thead>
+                <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الملاحظه</th>
+                  <th class="text-center" scope="col">Comment</th>
+                  <th class="text-center" scope="col"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">
+                    <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" ></textarea>
+                  </td>
+                  <td class="text-center">
+                    <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
+                  </td>
+                  <td class="text-center td-actions">
+                    <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
+                      <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer pt-0">
+              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
+                إلغاء
+              </button>
+              <button type="button" class="btn btn-save" (click)="saveFormNotes()" *ngIf="add">
+                حفظ
+              </button>
+            <!-- <button type="button" class="btn btn-reset" (click)="resetForm()">
+              إعادة ملء
+            </button>
+            <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
+              تعديل
+            </button> -->
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--end linked company modal -->
+  <!--start linked company modal -->
+<div class="modal company-modal fade" id="ViewFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between">
+          <h5>الملاحظات</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-table research-table table-border  p-1">
+            <table class="table table-borderless">
+              <thead>
+                <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الملاحظه</th>
+                  <th class="text-center" scope="col">Comment</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">
+                    {{item.arName}}
+                  </td>
+                  <td class="text-center">
+                    {{item.enName}}
+                  </td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!--start linked company modal -->
+<div class="modal company-modal fade" id="ViewInstructions" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between">
+          <h5>الارشادات</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-table research-table table-border  p-1">
+            <table class="table table-borderless">
+              <thead>
+                <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الارشادات</th>
+                  <th class="text-center" scope="col">Instructions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let item of addInstructions; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td class="text-center">
+                    {{item.arName}}
+                  </td>
+                  <td class="text-center">
+                    {{item.enName}}
+                  </td>
+                 
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--end linked company modal -->

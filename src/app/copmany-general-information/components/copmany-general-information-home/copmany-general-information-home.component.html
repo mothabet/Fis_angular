@@ -1,0 +1,191 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="p-4 main card" style="flex: 1">
+<!-- header -->
+<app-top-screen [title]="'عرض البيانات العامه للشركه'"></app-top-screen>
+<!-- end-header -->
+
+<!-- start content -->
+<div class="companies-details email">
+    <div class="header-nav">
+        <div class="card-box mb-3 d-flex justify-content-between align-items-center flex-wrap">
+            <ul>
+                <li>
+                    <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
+                </li>
+                <li>
+                    <a routerLink="/CompanyHome/{{companyId}}">الإستمارات</a>
+                </li>
+                <li>
+                    <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
+                </li>
+                <li  class="active">
+                    <a routerLink="/CopmanyGeneralInformation/{{companyId}}">المعنيين</a>
+                </li>
+            </ul>
+            <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#addCopmanyGeneralInformation" id="addCompanyMessageBtn">
+                اضافة معنيين
+            </button>
+        </div>
+    </div>
+    <div class="content companies">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة المعنيين
+            </div>
+        </div>
+
+        <div class="table-responsive company-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th >#</th>
+                        <th class="text-center" scope="col">الاسم</th>
+                        <th class="text-center" scope="col">رقم الهاتف</th>
+                        <th class="text-center" scope="col">البريد الالكتروني</th>
+                        <th style="min-width: 150px;" class="text-center" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let generalInformations of companyGeneralInformations ; let i = index">
+                        <th >{{i+1}}</th>
+                        <td class="text-center">{{generalInformations.arName}}</td>
+                        <td class="text-center">{{generalInformations.phone}}</td>
+                        <td class="text-center">{{generalInformations.email}}</td>
+                        <td class="text-center td-actions">
+                            <!-- <a href="#" class="icon">
+        <img src="../../../../assets/images/paperclip.png" alt="">
+    </a> -->
+                            <button class="icon" data-bs-toggle="modal"
+                                data-bs-target="#addCompany" (click)="editCopmanyGeneralInformation(generalInformations.id)">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                            <button class="icon" (click)="showAlert(generalInformations.id)">
+                                <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="noData">
+                  <tr>
+                    <th colspan="5">
+                      <div class="alert alert-warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <br />
+                        <span> لا يوجد بيانات </span>
+                      </div>
+                    </th>
+                  </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
+<!-- end content -->
+</div>
+<!--start create mail modal -->
+<!--start create mail modal -->
+<div class="modal company-modal fade" id="addCopmanyGeneralInformation" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة معنيين</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل معنيين</h5>
+      </div>
+            <form [formGroup]="copmanyGeneralInformationForm">
+                <div class="modal-body pb-1">
+                  <div class="row">
+                    <div class="form-group col-sm-6 mb-2">
+                      <input class="form-control input-modal" type="text" [(ngModel)]="copmanyGeneralInformationForm.value.arName"
+                         formControlName="arName" />
+                        <label for="inputField">الاسم بالكامل</label>
+        
+                      <div *ngIf="
+                          copmanyGeneralInformationForm.controls['arName'].invalid &&
+                          (copmanyGeneralInformationForm.controls['arName'].dirty ||
+                          copmanyGeneralInformationForm.controls['arName'].touched)
+                        ">
+                        <small *ngIf="copmanyGeneralInformationForm.controls['arName'].errors?.['required']" class="text-danger">
+                          يجب ادخال الاسم بالكامل.
+                        </small>
+                      </div>
+                    </div>
+                    <div class="form-group col-sm-6 mb-2">
+                      <input class="form-control input-modal" type="text"
+                        formControlName="enName" />
+                        <label for="inputField">English Full Name</label>
+        
+                      <div *ngIf="
+                          copmanyGeneralInformationForm.controls['enName'].invalid &&
+                          (copmanyGeneralInformationForm.controls['enName'].dirty ||
+                          copmanyGeneralInformationForm.controls['enName'].touched)
+                        ">
+                        <small *ngIf="copmanyGeneralInformationForm.controls['enName'].errors?.['required']" class="text-danger">
+                          English full name is required.
+                        </small>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group col-10 col-sm-4 mb-2">
+                      <input class="form-control input-modal" type="text" formControlName="phone"
+                        maxlength="8" minlength="8" pattern="[0-9]*" (input)="onlyNumber($event)" />
+                        <label for="inputField">رقم الهاتف</label>
+        
+                      <div *ngIf="
+                          copmanyGeneralInformationForm.controls['phone'].touched &&
+                          copmanyGeneralInformationForm.controls['phone'].dirty &&
+                          copmanyGeneralInformationForm.controls['phone'].value !== '' &&
+                          copmanyGeneralInformationForm.controls['phone'].invalid
+                        ">
+                        <small *ngIf="copmanyGeneralInformationForm.controls['phone'].errors?.['minlength']" class="text-danger">
+                          يجب ان يكون رقم الهاتف 8 ارقام.
+                        </small>
+                      </div>
+                    </div>
+                    <div class="form-group col-2 mb-2">
+                      <input class="form-control input-modal input-disabled" type="text"
+                        value="{{ phoneCode }}" />
+                        <label for="inputField">كود الهاتف</label>
+        
+                    </div>
+                    <div class="form-group col-sm-6 mb-2">
+                      <input class="form-control input-modal" type="email"
+                        [(ngModel)]="copmanyGeneralInformationForm.value.email" formControlName="email" />
+                        <label for="inputField">عنوان البريد الاليكتروني</label>
+                      <div *ngIf="
+                          copmanyGeneralInformationForm.controls['email'].invalid &&
+                          (copmanyGeneralInformationForm.controls['email'].dirty ||
+                          copmanyGeneralInformationForm.controls['email'].touched)
+                        ">
+                        <small *ngIf="copmanyGeneralInformationForm.controls['email'].errors?.['required']" class="text-danger">
+                          يجب ادخال البريد الاليكتروني.
+                        </small>
+                        <small *ngIf="copmanyGeneralInformationForm.controls['email'].errors?.['email']" class="text-danger">
+                          البريد الاليكتروني غير صحيح.
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer pt-0">
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="reset()">
+                    إلغاء
+                  </button>
+                  <button type="button" class="btn btn-reset" (click)="resetForm()">
+                    إعادة ملء
+                  </button>
+                  <button type="button" class="btn btn-save" (click)="saveCopmanyGeneralInformation()" *ngIf="add">
+                    حفظ
+                  </button>
+                  <button type="button" class="btn btn-save" (click)="UpdateCopmanyGeneralInformation()" *ngIf="!add">
+                    تعديل
+                  </button>
+                </div>
+              </form>
+        </div>
+    </div>
+</div>
+<!--end create mail modal -->
+

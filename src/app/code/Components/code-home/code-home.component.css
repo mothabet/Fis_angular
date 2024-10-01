@@ -1,0 +1,37 @@
+.input-disabled {
+    background-color: #e9ecef; /* Light gray background */
+    color: #6c757d; /* Gray text color */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
+    border: 1px solid #ced4da; /* Light border */
+    opacity: 1; /* Ensure full opacity */
+    pointer-events: none; /* Disable mouse events */
+    user-select: none; /* Prevent text selection */
+  }
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }
+  #research-btns .btn {
+    width: 160px !important;
+}
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.show {
+  display: block;
+}

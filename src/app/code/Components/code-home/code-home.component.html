@@ -1,0 +1,314 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'محتوي الاستماره'"></app-top-screen>
+
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة محتوي الاستماره</div>
+      <div class="btns d-flex">
+        <div class="search" id="research-search">
+          <input class="form-control" type="text" name="search" placeholder="البحث" (keydown.enter)="codeSearch()"
+            [(ngModel)]="searchText" />
+          <i class="fa fa-search icon" (click)="codeSearch()" id="search-icon" aria-hidden="true"></i>
+        </div>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addCodeBtn" />
+            إضافة محتوي استماره
+          </button>
+          <button type="button" (click)="printPdf()" class="btn btn-download">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">رقم</th>
+            <th class="text-center" scope="col">القسم</th>
+            <th class="text-center" scope="col">الرمز</th>
+            <th class="text-center" scope="col">الاسم</th>
+            <th class="text-center" scope="col">Name</th>
+            <th class="text-center" scope="col" style="width: 200px;"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of codes; let i = index">
+            <td>
+              {{ i + 1 }}
+            </td>
+            <td class="text-center">{{ item.Department }}</td>
+            <td class="text-center">{{ item.QuestionCode }}</td>
+            <td class="text-center">{{ item.arName }}</td>
+            <td class="text-center">{{ item.enName }}</td>
+            <td class="text-center">
+              <!-- <a routerLink="/Code-Details" class="icon">
+                <img src="../../../../assets/images/eye-outline.png" alt="" />
+              </a> -->
+              <button class="icon" (click)="showAlert(item.Id,item.Department)">
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+              </button>
+              <button class="icon" (click)="editCode(item.Id,item.Department)">
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
+<!--start modal -->
+
+<!--start add researcher modal -->
+<div class="modal company-modal fade" id="addCode" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 70%;">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add" *ngIf="add">إضافة محتوي استماره</h5>
+        <h5 class="modal-title" id="edit" *ngIf="!add">
+          تعديل محتوي الاستماره
+        </h5>
+      </div>
+      <form [formGroup]="codeForm">
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="form-group col-sm-6 mb-2">
+              <div class="dropdown" [class.show]="isDropdownOpen">
+                <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                  (click)="toggleDropdown()" [(ngModel)]="searchTerm" (input)="filterSubCodes()"
+                  formControlName="searchTerm" />
+                <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px;
+                width: 100%;
+                text-align: right;">
+                  <li *ngFor="let code of filteredSubCodes" class="dropdown-item" (click)="selectCode(code)">
+                    {{ code.arName }}
+                  </li>
+                </ul>
+              </div>
+              <label for="inputField">الاسم بالكامل</label>
+            </div>
+
+            <div class="form-group col-sm-6 mb-2">
+              <input class="form-control input-modal" type="text" id="inputField" formControlName="enName"
+                [(ngModel)]="enName" />
+              <label for="inputField">English Full Name</label>
+              <div *ngIf="
+                  codeForm.controls['enName'].invalid &&
+                  (codeForm.controls['enName'].dirty ||
+                    codeForm.controls['enName'].touched)
+                ">
+                <small *ngIf="codeForm.controls['enName'].errors?.['required']" class="text-danger">
+                  English Name is required.
+                </small>
+              </div>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input class="form-control input-modal" type="text" id="inputField" formControlName="QuestionCode"
+                (input)="onlyNumber($event)" [(ngModel)]="QuestionCode" />
+              <label for="inputField">الرمز</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <select formControlName="TypeId" id="inputField" class="form-control" [(ngModel)]="typeId">
+                <option selected value="1">عادي</option>
+                <option value="2">انشطه</option>
+                <option value="3">بلاد</option>
+                <option value="4">نعم ام لا</option>
+                <option value="5">حدد</option>
+              </select>
+              <label for="inputField">نوع محتوي الاستماره</label>
+            </div>
+            <div class="form-group col-sm-9 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
+              <select formControlName="connectedWith" id="inputField" class="form-control">
+                <option selected value="">--اختر الرمز المرتبط به--</option>
+                <option *ngFor="let item of codesAndSub" [value]="item.id + '_' + item.Level">{{ item.arName
+                  }}_{{item.Code}}</option>
+              </select>
+              <label for="inputField">الرمز المرتبط به</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
+              <select formControlName="connectedWithType" id="inputField" class="form-control">
+                <option value="=">=</option>
+                <option value=">"><</option>
+                <option value="<">></option>
+              </select>
+              <label for="inputField">نوع ارتباط الرموز</label>
+            </div>
+            <hr *ngIf="typeId == 1" />
+            <div class="table-responsive company-table research-table table-border" *ngIf="typeId == 1">
+              <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
+                اضافة سطر
+              </button>
+              <table class="table table-borderless">
+                <thead>
+                  <tr class="t-header">
+                    <th scope="col">رقم</th>
+                    <th class="text-center" scope="col">الاسم بالكامل</th>
+                    <th class="text-center" scope="col">English Full Name</th>
+                    <th class="text-center" scope="col">النوع نعم ام لا</th>
+                    <th class="text-center" scope="col">الرمز</th>
+                    <th class="text-center" scope="col">الرمز المرتبط به</th>
+                    <th class="text-center" scope="col">نوع ارتباط الرموز</th>
+                    <th class="text-center" scope="col"></th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let item of addSubCode; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td class="text-center">
+                      <input type="text" [value]="item.arName" (input)="updateSubCode(i, 'arName', $event)" />
+                    </td>
+                    <td class="text-center">
+                      <input type="text" [value]="item.enName" (input)="updateSubCode(i, 'enName', $event)" />
+                    </td>
+                    <td class="text-center">
+                      <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                        <input class="form-check-input" type="checkbox"
+                        [checked]="item.IsTrueAndFalse" (input)="updateSubCode(i, 'IsTrueAndFalse', $event)" />
+                      </div>
+                  </td>
+                    <td class="text-center">
+                      <input type="text" [value]="item.QuestionCode" (input)="updateSubCode(i, 'QuestionCode', $event)" />
+                    </td>
+                    <td class="text-center" *ngIf="item.QuestionCode">
+                      <select class="form-control" (change)="updateSubCode(i, 'id_Level', $event)">
+                        <option value="">--Select Related Code--</option>
+                        <option *ngFor="let item_ of codesAndSub" [value]="item_.id + '_' + item_.Level"
+                                [selected]="item.id_Level === item_.id + '_' + item_.Level">
+                          {{ item_.arName }}_{{ item_.Code }}
+                        </option>
+                      </select>
+                    </td>
+                    <td class="text-center" *ngIf="item.QuestionCode" >
+                      <select id="inputField" class="form-control" [value]="item.connectedWithType" (change)="updateSubCode(i, 'connectedWithType', $event)">
+                        <option value="=">=</option>
+                        <option value=">"><</option>
+                        <option value="<">></option>
+                      </select>
+                    </td>
+                    <td class="text-center td-actions">
+                      <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
+                        <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button type="button" class="btn btn-save" (click)="saveCode()" *ngIf="add">
+            حفظ
+          </button>
+          <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
+            تعديل
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end add researcher modal -->
+
+<!--start linked company modal -->
+<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+        <h5>ربط بالشركة</h5>
+        <div class="search">
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="table-responsive company-modal-table mx-2">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName1" id="companyName1" />
+                <label for="companyName1">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName2" id="companyName2" />
+                <label for="companyName2">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr class="last">
+              <td>
+                <input type="checkbox" name="companyName3" id="companyName3" />
+                <label for="companyName3">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+          إلغاء
+        </button>
+        <button type="button" class="btn btn-add">حفظ</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end linked company modal -->
+
+<!--end modal -->

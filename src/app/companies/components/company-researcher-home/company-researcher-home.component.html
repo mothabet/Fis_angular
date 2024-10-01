@@ -1,0 +1,606 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'شركات الباحث'"></app-top-screen>
+
+  <!-- start content -->
+  <div class="content companies">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة شركات الباحث</div>
+      <div class="btns d-flex">
+        <div class="search">
+          <input
+            (keydown.enter)="companiesSearch()"
+            [(ngModel)]="searchText"
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i
+            (click)="companiesSearch()"
+            class="fa fa-search icon"
+            id="search-icon"
+            aria-hidden="true"
+          ></i>
+        </div>
+        <div class="d-flex flex-grow-1 gap-1">
+          <button
+            type="button"
+            class="btn btn-add"
+            data-bs-toggle="modal"
+            (click)="popAddCompany()"
+            data-bs-target="#addCompany"
+            hidden
+          >
+            <img
+              id="addCompanyBtn"
+              src="../../../../assets/images/briefcase-plus-outli.png"
+              alt=""
+            />
+            إضافة شركة
+          </button>
+          <button (click)="printPdf()" type="button" class="btn btn-download">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="table-responsive company-table">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th>#</th>
+              <th class="text-center" scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+              <th class="text-center" scope="col">رقم الهاتف</th>
+              <th style="min-width: 150px" class="text-center" scope="col">
+                الحالة
+              </th>
+              <th style="min-width: 150px" class="text-center" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let company of companies;let i = index">
+              <th>{{i+1}}</th>
+              <td class="text-center">
+                {{ company.arName }}
+              </td>
+              <td class="text-center">{{ company.compRegNumber }}</td>
+              <td class="text-center">{{ company.id }}</td>
+              <td class="text-center">{{ company.activityId }}</td>
+              <td class="text-center">{{ company.arActivityName }}</td>
+              <td class="text-center">{{ company.address }}</td>
+              <td class="text-center">{{ company.phoneNumber }}</td>
+              <td class="text-center" *ngIf="company.status">نشط</td>
+              <td class="text-center" *ngIf="!company.status">غير نشط</td>
+              <td class="text-center">
+                <a routerLink="/Companies-Details/{{company.id}}" class="icon">
+                  <img src="../../../../assets/images/eye-outline.png" alt="" />
+                </a>
+                <button
+                  class="icon"
+                  (click)="editCompany(company.id)"
+                  data-bs-toggle="modal"
+                >
+                  <img
+                    src="../../../../assets/images/pencil-outline.png"
+                    alt=""
+                  />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="companies.length == 0">
+            <tr>
+              <th colspan="9">
+                <div class="alert alert-warning">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <br />
+                  <span> لا يوجد بيانات </span>
+                </div>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- end content -->
+  <!-- <app-pagination
+    [pageNumber]="currentPage"
+    [lastPage]="isLastPage"
+    [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"
+  ></app-pagination> -->
+</div>
+<!--start add company modal -->
+<div
+  class="modal company-modal fade"
+  id="addCompany"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add">إضافة شركة</h5>
+      </div>
+      <form [formGroup]="companyForm">
+        <div class="modal-body">
+          <div class="row">
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="username"
+                formControlName="userName"
+                name="username"
+              />
+              <label for="inputField">اسم المستخدم</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2" id="researcherPass">
+              <input
+                required
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="password"
+                formControlName="password"
+                name="password"
+              />
+              <label for="inputField">كلمة المرور</label>
+              <button
+                type="button"
+                id="reload"
+                (click)="generateRandomCredentials()"
+              >
+                <img src="../../../../assets/images/refresh.png" alt="" />
+              </button>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="arName"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">اسم الشركه بالعربي</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="enName"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">English Full Name</label>
+            </div>
+            <div required class="form-group col-sm-3 mb-2">
+              <input
+                class="form-control input-modal"
+                disabled
+                type="text"
+                value="{{ CompanyCode }}"
+              />
+              <label for="inputField">رمز الشركه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="sectorId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>اختيار القطاع</option>
+                <option *ngFor="let sector of Sectors" value="{{ sector.id }}">
+                  {{ sector.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار القطاع</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="activityId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>
+                  اختيار النشاط الرئيسي
+                </option>
+                <option
+                  *ngFor="let activity of Activities"
+                  value="{{ activity.id }}"
+                >
+                  {{ activity.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار النشاط الرئيسي</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select
+                required
+                formControlName="subActivityId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0" disabled>
+                  اختيار النشاط الثانوي
+                </option>
+                <option
+                  *ngFor="let subActivity of SubActivities"
+                  value="{{ subActivity.id }}"
+                >
+                  {{ subActivity.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار النشاط الثانوي</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="municipalityNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم البلدية</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                required
+                formControlName="compRegNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم تسجيل الشركة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="accountingPeriod"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="completionAccPeriod"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">الانتهاء من مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
+              <input
+                required
+                formControlName="phoneNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">رقم الهاتف</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
+              <input
+                formControlName="telNumber"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">الهاتف الثابت</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-2 mb-2">
+              <input
+                required
+                formControlName="fax"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">فاكس</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-3 mb-2">
+              <input
+                formControlName="mailBox"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">صندوق البريد</label>
+            </div>
+            <div class="form-group col-sm-6 col-lg-3 mb-2">
+              <input
+                formControlName="postalCode"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">الرمز البريدي</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="webSite"
+                class="form-control input-modal"
+                type="email"
+              />
+              <label for="inputField">الموقع الإلكتروني</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                required
+                formControlName="address"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">العنوان</label>
+            </div>
+            
+            <div class="form-group col-sm-6 mb-2">
+              <select
+                
+                required
+                formControlName="governoratesId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0">اختيار المحافظه</option>
+                <option
+                  *ngFor="let governorate of Governorates"
+                  value="{{ governorate.id }}"
+                >
+                  {{ governorate.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار المحافظه</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <select
+                required
+                formControlName="wilayatId"
+                class="form-control"
+                style="width: 100%"
+              >
+                <option selected value="0">اختيار الولاية</option>
+                <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
+                  {{ wilaya.arName }}
+                </option>
+              </select>
+              <label for="inputField">اختيار الولاية</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="institutionHeadquarters"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">مقر اقامة المؤسسه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                required
+                formControlName="dateOfWork"
+                class="form-control input-modal"
+                type="date"
+              />
+              <label for="inputField">تاريخ مزاولة العمل</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="institutionVlaue"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">قيمة المؤسسه</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="legalType"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">النوع القانوني</label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="facilityType"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">تصنيف المنشأه</label>
+            </div>
+            <div class="col-sm-12 mb-2">
+              <div formArrayName="compEmails" class="row mb-4">
+                <div *ngFor="let email of compEmails.controls; let i = index" class="col-6 mb-2" [formGroupName]="i">
+                  <div class="d-flex align-items-center">
+                    <input formControlName="Email" class="form-control input-modal me-2" type="email" placeholder="البريد الإلكتروني">
+                    <button class="icon btn text-white" (click)="removeEmailField(i)">
+                      <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-2">
+                <button type="button" class="btn btn-add" style="min-width: 90px;" (click)="addEmailField()" [disabled]="isAddButtonDisabled">
+                  أضف
+                  <img src="../../../../assets/images/plus-circle-outline.png" alt="">
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div class="modal-footer pt-0" style="border-top: none">
+          <button
+            type="button"
+            class="btn btn-cancel"
+            data-bs-dismiss="modal"
+            id="btnCancel"
+            (click)="resetFormWithAdd()"
+          >
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-reset" (click)="resetForm()">
+            إعادة ملء
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="saveCompany()"
+            *ngIf="add"
+          >
+            حفظ
+          </button>
+          <button
+            type="button"
+            class="btn btn-save"
+            (click)="updateCompany()"
+            *ngIf="!add"
+          >
+            تعديل
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end add company modal -->
+
+<!--start send form company modal -->
+<div
+  class="modal company-modal fade"
+  id="sendFormCompany"
+  tabindex="-1"
+  aria-labelledby="add"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-1">
+        <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
+      </div>
+      <div
+        class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0"
+      >
+        <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
+        <div class="search">
+          <input
+            class="form-control"
+            type="text"
+            name="search"
+            placeholder="البحث"
+          />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="table-responsive company-modal-table mx-2">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">اسم الشركة</th>
+              <th class="text-center" scope="col">رقم السجل التجاري</th>
+              <th class="text-center" scope="col">رقم الشركة</th>
+              <th class="text-center" scope="col">رمز النشاط</th>
+              <th class="text-center" scope="col">النشاط</th>
+              <th class="text-center" scope="col">عنوان الشركة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName1" id="companyName1" />
+                <label for="companyName1">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" name="companyName2" id="companyName2" />
+                <label for="companyName2">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+            <tr class="last">
+              <td>
+                <input type="checkbox" name="companyName3" id="companyName3" />
+                <label for="companyName3">شركة الابداع</label>
+              </td>
+              <td class="text-center">021124444</td>
+              <td class="text-center">86431</td>
+              <td class="text-center">184510</td>
+              <td class="text-center">الترفيه</td>
+              <td class="text-center">الخوير، مسقط</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <form>
+        <div class="modal-body pb-1">
+          <div class="form-title mb-3">تفاصيل الرسالة</div>
+          <div class="row">
+            <div class="col-sm-12 mb-2">
+              <div class="input-floating-label mb-0">
+                <select
+                  class="form-form send-company-select"
+                  style="width: 100%"
+                >
+                  <option
+                    selected
+                    value="0"
+                    id="messageType"
+                    name="messageType"
+                  >
+                    النشاط الاقتصادي الرئيسي
+                  </option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+                <label for="user">نوع الرسالة</label>
+              </div>
+            </div>
+            <div class="col-sm-12 mb-2">
+              <input
+                class="form-control input-modal"
+                type="text"
+                placeholder="عنوان الرسالة"
+              />
+            </div>
+            <div class="col-sm-12 mb-2">
+              <textarea
+                class="form-control input-modal"
+                rows="2"
+                placeholder="نص الرسالة"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0" style="border-top: none">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-save">إرسال</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end send form company modal -->

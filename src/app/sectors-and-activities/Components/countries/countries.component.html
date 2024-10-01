@@ -1,0 +1,117 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card  " style="flex: 1;">
+    <!-- header -->
+  <app-top-screen [title]="'الدول'"></app-top-screen>
+  <!-- end-header -->
+    <div class="header-nav companies-details">
+        <div class="card-box mb-3">
+            <ul>
+                <li routerLinkActive="active">
+                    <a routerLink="/Sectors">القطاعات</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/Activities">الأنشطة الرئيسية</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/SubActivities">الأنشطة الفرعية</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/Countries">الدول</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- start content -->
+    <div class="content companies researcher">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة الدول
+            </div>
+            <div class="btns d-flex">
+                <div class="search" id="research-search">
+                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+                    <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
+                        <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
+                        اضافة دولة
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">اسم القطاع</th>
+                        <th class="text-center" scope="col">تاريخ انشاءه</th>
+                        <th class="text-center" scope="col">الرمز</th>
+                        <th style="width: 150px;" class="text-center" scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let country of countries">
+                        <td class="text-center">{{country.arName}}</td>
+                        <td class="text-center active">{{country.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{country.code}}</td>
+                        <td class="text-center td-actions">
+                            <button class="icon" (click)="DeleteCountry(country.id)">
+                                <img src="../../../../assets/images/trash-can-outline.png"
+                                     alt="">
+                            </button>
+                            <button class="icon" (click)="openUpdatePopup(country.id)" data-bs-toggle="modal" data-bs-target="#addSector">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- end content -->
+
+</div>
+<div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+        <div class="modal-content" style="width: 50%;">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">إضافة دولة</h5>
+            </div>
+            <form [formGroup]="countryForm"  (ngSubmit)="onSave()">
+                <div class="modal-body pb-1">
+                  <div class="row">
+                    <div class="form-group col-sm-12 mb-2">
+                      <input class="form-control input-modal"  type="text"
+                         formControlName="arName" name="arName"/>
+                        <label for="inputField">اسم الدوله بالعربية</label>
+                    </div>
+                    <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="enName" name="enName"/>
+                          <label for="inputField">Country Name in English</label>
+                      </div>
+                      <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="code" name="code"/>
+                          <label for="inputField">رمز الدولة</label>
+                      </div>
+                  </div>
+                </div>
+                <div class="modal-footer pt-0">
+                  <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
+                    إلغاء
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+                    حفظ
+                  </button>
+                  <button type="button" class="btn btn-save" *ngIf="isUpdate" (click) = "updateCountry()" type="button" class="btn btn-save">
+                    تعديل
+                  </button>
+                </div>
+              </form>
+        </div>
+    </div>
+</div>

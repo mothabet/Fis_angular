@@ -1,0 +1,51 @@
+/* Ensure the table layout adapts to content */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header and cell styles */
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  vertical-align: top;
+}
+
+/* Set max width for all table cells */
+td {
+  max-width: 250px;
+}
+
+/* Specific styles for the subcode cells to handle long text */
+
+/* Ensure table is responsive with scroll */
+.table-responsive {
+  overflow-x: auto; /* Enables horizontal scrolling */
+}
+.clipped-element-first {
+  min-width: 120px !important;
+}
+/* Style for input elements in the table */
+table input {
+  width: 70px;
+  border-color: #c9cdd0;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 6px;
+  text-align: center;
+  padding: 1px 7px;
+  color: #7b7890;
+}
+
+/* Fix header position on scroll */
+thead th {
+  position: sticky;
+  top: 0; /* Keep the header fixed at the top during scroll */
+  background: #fff; /* Ensure the background is white for readability */
+  z-index: 1; /* Ensure header stays above other content */
+}
+
+.colActive{
+  background-color: rgb(202 227 224);
+  color: black;
+}
