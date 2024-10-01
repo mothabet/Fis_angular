@@ -1,0 +1,10 @@
+<app-loader *ngIf="Loader"></app-loader>
+
+<div class="main-content p-4 main card" style="flex: 1">
+    <!-- header -->
+    <app-top-screen [title]="'عرض الاستمارة'"></app-top-screen>
+    <!-- end-header -->
+    <!-- start content -->
+    <app-shared-one-year-with-parts [formId]="formId" style="min-width: 75rem;max-width: 75rem;" *ngIf="role == 'Researchers'"></app-shared-one-year-with-parts>
+    <app-shared-one-year-with-parts [formId]="formId" style="max-width: 74rem;" *ngIf="role != 'Researchers'"></app-shared-one-year-with-parts>
+</div>

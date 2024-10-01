@@ -1,0 +1,403 @@
+<!-- main content -->
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="p-4 main card " style="flex: 1;     min-height: 100vb;">
+
+    <app-top-screen [title]="'عرض تفاصيل الباحث'"></app-top-screen>
+
+    <!-- start researcher header -->
+    <div class="card-box d-flex align-items-center mb-3 company-card">
+        <div class="image-box position-relative" style="width:80px !important;border:1px solid gray">
+            <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
+            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="company">
+
+            <!-- زر تغيير الصورة -->
+            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
+                <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
+                <span *ngIf="hovering">Change Image</span>
+            </button>
+
+            <!-- Input لاختيار الصور فقط -->
+            <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput>
+        </div>
+        <div class="researcher-info">
+            <h6 class="user">{{researcher.arName}}</h6>
+            <div class="details d-flex flex-wrap">
+                <div class="detail-box d-flex">
+                    <p class="m-0 mx-2 name">اسم المستخدم :</p>
+                    <p class="data m-0">{{researcher.userName}}</p>
+                </div>
+                <div class="detail-box d-flex">
+                    <p class="m-0 mx-2 name">البريد الإلكترونى :</p>
+                    <p class="data m-0">{{researcher.email}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-grow-1 gap-1 left-align-button">
+            <button type="button" *ngIf="role=='Researchers'" class="btn btn-add" (click)="GetAllResearcherMandate()" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+                تفويضات سابقه
+            </button>
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AllResearcherMandate" (click)="AddResearcherMandateModel()" id="AllResearcherMandateBtn" hidden>
+                <img src="./images/list-box-outline.png" alt="">
+            </button>
+            <button type="button" *ngIf="role=='Researchers' && companies.length > 0" class="btn btn-add" (click)="GetResearcherMandateByResearcherId()" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+                تفويض باحثين
+            </button>
+            <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#addResearcher" (click)="AddResearcherMandateModel()" id="addResearcherBtn" hidden>
+                <img src="./images/list-box-outline.png" alt="">
+            </button>
+
+            <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal" data-bs-target="#sendFormCompany" *ngIf="role == 'Researchers'">
+                <img src="../../../../assets/images/email-edit-outline.png" alt="" />
+                إرسال إستمارة
+            </button>
+        </div>
+    </div>
+    <!-- end researcher header -->
+
+
+    <!--start total -->
+    <div class="row totals">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card company text-center">
+                <div class="header py-3">
+                    <div class="total-num">
+                        {{companiesCount}}
+                    </div>
+                    <div class="total-title">
+                        إجمالي عدد الشركات
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics">
+            <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics" style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
+                <div class="header py-3">
+                    <div class="total-num">
+                        {{static.count}}
+                    </div>
+                    <div class="total-title">
+                        {{static.name}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--end total -->
+
+    <!--start table -->
+    <div class="tab-content precise">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="card-box">
+                <div class="header d-flex align-items-center justify-content-between">
+                    <h4 class="title">
+                        قائمة الشركات
+                    </h4>
+                    <div class="d-flex justify-content-start">
+                        <button (click)="printPdf()" type="button" class="btn btn-download" style="border-radius: 8px;
+                            color: white;
+                            font-size: 12px;
+                            background-color: #133C8B;
+                            ">
+                            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+                            تنزيل PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive research-details-table">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="t-header">
+                                <th scope="col">اسم الشركة</th>
+                                <th class="text-center" scope="col">رقم السجل التجارى</th>
+                                <th class="text-center" scope="col">رقم الشركة</th>
+                                <th class="text-center" scope="col">رمز النشاط</th>
+                                <th class="text-center" scope="col">النشاط</th>
+                                <th class="text-center" scope="col">عنوان الشركة</th>
+                                <th class="text-center" scope="col">نوع الشركه</th>
+                                <th class="text-center" scope="col">الحالة</th>
+                                <th class="text-center" scope="col">الأستمارات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let company of companies">
+                                <td>{{company.arName}}</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">{{company.id}}</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">{{company.address}}</td>
+                                <td class="text-center notes">
+
+                                </td>
+                                <td *ngIf="company.status" class="text-center">
+                                    <div class=" status-active">نشط</div>
+                                </td>
+                                <td *ngIf="!company.status" class="text-center  ">
+                                    <div class=" status-notactive">غير نشط</div>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
+                                        <a>إستماره</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr *ngFor="let company of companiesMandate">
+                                <td>{{company.arName}}</td>
+                                <td class="text-center">021124444</td>
+                                <td class="text-center">{{company.id}}</td>
+                                <td class="text-center">184510</td>
+                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">{{company.address}}</td>
+                                <td class="text-center notes">
+                                    شركه مفوضه من قبل {{company.researcherArName}}
+                                </td>
+                                <td *ngIf="company.status" class="text-center">
+                                    <div class=" status-active">نشط</div>
+                                </td>
+                                <td *ngIf="!company.status" class="text-center ">
+                                    <div class=" status-notactive">غير نشط</div>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
+                                        <a>إستماره</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--end table -->
+
+
+</div>
+<!-- end main content -->
+<div class="modal company-modal fade" id="sendFormCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1">
+                <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
+            </div>
+            <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
+                <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
+                <div class="search">
+                    <input (keydown.enter)="researcherCompanySerach()" [(ngModel)]="text" class="form-control" type="text" name="search" placeholder="البحث" />
+                    <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col">اسم الشركة</th>
+                            <th class="text-center" scope="col">رقم السجل التجاري</th>
+                            <th class="text-center" scope="col">رقم الشركة</th>
+                            <th class="text-center" scope="col">رمز النشاط</th>
+                            <th class="text-center" scope="col">النشاط</th>
+                            <th class="text-center" scope="col">عنوان الشركة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let company of researcher.companies">
+                            <td>
+                                <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)" [checked]="isSelected(company.id)" type="checkbox" name="companyName1" id="companyName1" /> {{company.arName}}
+                            </td>
+                            <td class="text-center">{{company.compRegNumber}}</td>
+                            <td class="text-center">{{company.id}}</td>
+                            <td class="text-center">184510</td>
+                            <td class="text-center">الترفيه</td>
+                            <td class="text-center">{{company.address}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <form>
+                <div class="modal-body pb-1">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-0">
+                                <select class="form-control" style="width: 100%" name="formType" (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0">
+                                        --اختار الاستماره--
+                                    </option>
+                                    <option *ngFor="let form of forms" [value]="form.id">{{form.arName}}</option>
+                                </select>
+                                <label for="user">الاستماره</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-0">
+                                <select class="form-control" style="width: 100%" name="messageType" (change)="onSelectMessage($event)">
+                                    <option selected disabled value="0">
+                                        --اختار الرساله--
+                                    </option>
+                                    <option *ngFor="let message of messages" [value]="message.Id">{{message.arName}}
+                                    </option>
+                                </select>
+                                <label for="user">الرسالة</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <p>بيانات المسؤول</p>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-2"><input class="form-control input-modal" type="text" placeholder="اسم المسؤول" [(ngModel)]="adminData.adminName" name="adminName" />
+                                <label for="user">اسم المسؤول</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-2"><input class="form-control input-modal" type="text" placeholder="البريد الإلكتروني" [(ngModel)]="adminData.adminEmail" name="adminEmail" />
+                                <label for="user">البريد الالكتروني</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class="input-floating-label mb-2">
+                                <input class="form-control input-modal" type="text" placeholder="رقم الهاتف" [(ngModel)]="adminData.adminPhone" name="adminPhone" />
+                                <label for="user">رقم الهاتف</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0" style="border-top: none">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
+                        إلغاء
+                    </button>
+                    <button (click)="onSubmit()" type="button" class="btn btn-save">إرسال</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">الاستمارات</h5>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th scope="col" style="text-align: center;">اسم الشركة</th>
+                            <th scope="col" style="text-align: center;">اسم الإستمارة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let form of formsStaticsStatus; let i = index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{form.companyName}}</td>
+                            <td class="text-center">{{form.formName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer pt-0" style="border-top: none">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-2">
+            <form [formGroup]="researcherMandateForm">
+                <div class="modal-body pb-1">
+                    <div class="row">
+                        <div class="form-group col-sm-6 mb-2">
+                            <select class="form-control" formControlName="researcherMandateId">
+                                <option value="">--اختر الباحث المفوض له--</option>
+                                <option value="{{item_.id}}" *ngFor="let item_ of researchersMandate; let i = index">
+                                    {{item_.arName}}
+                                </option>
+                            </select>
+                            <label for="inputField">الباحث المفوض له</label>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input type="date" class="form-control" formControlName="fromDate">
+                            <label for="inputField">من تاريخ</label>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input type="date" class="form-control" formControlName="toDate">
+                            <label for="inputField">من تاريخ</label>
+                        </div>
+                        <div class="orm-group col-sm-3 mb-2" *ngIf="researcherMandateForm.value.researcherMandateId>0">
+                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                                <label class="form-check-label" for="active" style="position: relative;transform: translateY(0px);">الغاء التفويض</label>
+                                <input formControlName="IsCancelled" class="form-check-input" type="checkbox" id="active" checked />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
+                        إلغاء
+                    </button>
+                    <button type="button" class="btn btn-save" (click)="AddResearcherMandate()">
+                        حفظ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal company-modal fade" id="AllResearcherMandate" tabindex="-1" aria-labelledby="AllResearcherMandate" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">التفويضات السابقه</h5>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
+                            <th scope="col" style="text-align: center;">بدايه تاريخ التفويض</th>
+                            <th scope="col" style="text-align: center;">نهاية تاريخ التفويض</th>
+                            <th scope="col" style="text-align: center;">الحاله</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{researcherMandate.arName}}</td>
+                            <td class="text-center">{{getDateOnly(researcherMandate.fromDate)}}</td>
+                            <td class="text-center">{{getDateOnly(researcherMandate.toDate)}}</td>
+                            <td class="text-center" *ngIf="researcherMandate.IsCancelled">تم الغاء التفويض في تاريخ {{getDateOnly(researcherMandate.CancelledOn)}}</td>
+                            <td class="text-center" *ngIf="!researcherMandate.IsCancelled"><button type="button" class="btn btn-save" (click)="CancelResearcherMandate(researcherMandate.id)">
+                                الغاء التفويض
+                            </button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelresearcherMandate">إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

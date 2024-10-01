@@ -1,0 +1,22 @@
+.input-disabled {
+  background-color: #e9ecef; /* خلفية رمادية فاتحة */
+  color: #6c757d; /* لون نص رمادي */
+  cursor: text; /* مؤشر النص */
+  border: 1px solid #ced4da; /* إطار فاتح */
+  opacity: 1; /* تأكد من الشفافية الكاملة */
+  pointer-events: auto; /* تمكين الأحداث المؤشرة */
+  user-select: text; /* السماح بتحديد النص */
+}
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }

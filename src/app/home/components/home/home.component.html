@@ -1,0 +1,184 @@
+<!-- main content -->
+        <div class="main-content p-4 main card ">
+
+            <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
+            <!-- tabs -->
+            <div class="tabs">
+                <ul class="nav nav-pills mb-3">
+                    <li class="nav-item">
+                        <a href="./home.html" class="nav-link ms-0 active d-flex" type="button">
+                            <i class="fa-solid fa-square-poll-vertical icon"></i>
+                            المؤشرات العامة
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a href="./map.html" class="nav-link ms-0 d-flex" type="button">
+                            <i class="fa-regular fa-map icon"></i>
+                            خريطة عمان
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a href="./precise.html" class="nav-link ms-0 d-flex" type="button">
+                            <i class="fa-solid fa-table icon"></i>
+                            تدقيق
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- total -->
+            <div class="row totals">
+                <div class="col-lg-4 col-sm-12 mb-3">
+                    <div class="card company text-center">
+                        <div class="header">
+                            <div class="total-num">
+                                2,895,547
+                            </div>
+                            <div class="total-title">
+                                إجمالي الشركات
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="footer">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-6 details" style="border-left: 1px solid white;">
+                                    قطاع حكومي : 1,446,476
+                                </div>
+                                <div class="col-6 details">
+                                    قطاع خاص: 1,213,476
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-12 mb-3">
+                    <div class="card invest text-center">
+                        <div class="header">
+                            <div class="total-num">
+                                6,214,665
+                            </div>
+                            <div class="total-title">
+                                إجمالي الإستثمارات
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="footer">
+                            <div class="row">
+                                <div class="col-6 details" style="border-left: 1px solid white;">
+                                    قطاع حكومي : 1,235,476
+                                </div>
+                                <div class="col-6 details">
+                                    قطاع خاص : 1,635,476
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-12 mb-3">
+                    <div class="card researcher text-center">
+                        <div class="header">
+                            <div class="total-num">
+                                43,533,547
+                            </div>
+                            <div class="total-title">
+                                إجمالي الباحثين
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="footer">
+                            <div class="row">
+                                <div class="col-6 details" style="border-left: 1px solid white;">
+                                    ذكور : 1,152,476
+                                </div>
+                                <div class="col-6 details">
+                                    إناث : 1,684,476
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- tab content -->
+            <div class="tab-content charts">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12 mb-3">
+                            <div class="card ">
+                                <div class="card-title d-flex justify-content-between align-items-center m-0">
+                                    <h4 class="title">
+                                        قيمة الاستثمار الأجنبي وأنواعه
+                                    </h4>
+                                    <div class="icon">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </div>
+                                </div>
+                                <div class="card-chart p-2">
+                                    <canvas id="myChart1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 mb-3">
+                            <div class="card ">
+                                <div class="card-title d-flex justify-content-between align-items-center m-0">
+                                    <h4 class="title">
+                                        قيمة الاستثمار الأجنبي المباشر
+                                    </h4>
+                                    <div class="icon">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </div>
+                                </div>
+                                <div class="card-chart p-2">
+                                    <canvas id="myChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card ">
+                                <div class="card-title d-flex justify-content-between align-items-center m-0">
+                                    <h4 class="title">
+                                        قيمة الاستثمار الأجنبي وأنواعه
+                                    </h4>
+                                    <div class="icon">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </div>
+                                </div>
+                                <div class="card-chart p-2">
+                                    <canvas id="myChart3"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="card ">
+                                <div class="card-title d-flex justify-content-between align-items-center m-0">
+                                    <h4 class="title">
+                                        قيمة الاستثمار الأجنبي وأنواعه
+                                    </h4>
+                                    <div class="icon">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </div>
+                                </div>
+                                <div class="card-chart p-2">
+                                    <canvas id="myChart4"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 mb-3">
+                            <div class="card ">
+                                <div class="card-title d-flex justify-content-between align-items-center m-0">
+                                    <h4 class="title">
+                                        قيمة الاستثمار الأجنبي وأنواعه
+                                    </h4>
+                                    <div class="icon">
+                                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+                                    </div>
+                                </div>
+                                <div class="card-chart p-2">
+                                    <canvas id="myChart5"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,57 @@
+﻿
+html, body {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Helvetica;
+}
+
+#tree {
+    width: 100%;
+    height: 100%;
+    direction: ltr;
+}
+.boc-light .boc-toolbar-container svg circle, .boc-light .boc-toolbar-container svg line, .boc-light .boc-toolbar-container svg path{
+    stroke: #133C8B !important;
+}
+.boc-toolbar-container {
+    position: absolute !important;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: auto !important;
+    right: 0 !important;
+    width: 50px;
+}
+.boc-toolbar-container div {
+    margin: 5px;
+    cursor: pointer;
+}
+.boc-toolbar-container div svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    border: 0 !important;
+    
+}
+.create-text:hover{
+   fill: var(--active-btn-color) !important;
+}
+.editBox:hover,.deleteBox:hover, .viewBox:hover{
+    cursor: pointer !important;
+    opacity: 0.5 !important;
+    transition: all 0.1s linear !important;
+
+}
+.active-modal {
+    transform: translate(-50%, -50%) scale(1);
+    display:block;
+    top:50%;
+    left:50%;
+  }
+ 

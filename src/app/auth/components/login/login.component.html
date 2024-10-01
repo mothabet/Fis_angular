@@ -1,0 +1,48 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- Start Background Design -->
+
+<div class="login">
+    <div class="overLay">
+        <div class="login-content d-flex justify-content-center align-items-center">
+            <div class="login-box card px-4 py-5 rounded">
+                <img src="../../../../assets/images/NationalCenterStatistics.png" class="card-img-top" alt="...">
+                <div class="card-body pt-4 text-center">
+                    <h1 class="card-title fs-4 fw-bold">تسجيل الدخول</h1>
+
+                    <!-- start form -->
+                    <form class="login-form needs-validation" [formGroup]="logInForm">
+                        <div class=" input-floating-label">
+                            <input class="form-control" type="text" id="user" name="user" placeholder="اسم المستخدم"
+                                formControlName="UserName" required>
+                            <label for="user">اسم المستخدم</label>
+                        </div>
+                        <div class="input-floating-label">
+                            <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="pass"
+                                name="pass" formControlName="password" placeholder="كلمة المرور" required>
+                            <label for="pass">كلمة المرور</label>
+                            <span class="fa-regular icon" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                                (click)="togglePasswordVisibility()" id="icon">
+                            </span>
+                        </div>
+                        <div class="login-footer pb-5 d-flex justify-content-between align-items-center">
+                            <div class="remember d-flex align-items-center">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">تذكرنى</label>
+                            </div>
+                            <div class="forget-pass">
+                                <a href="#" class="forget-password">هل نسيت كلمة المرور</a>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary login-btn w-100" (click)="Login()">تسجيل
+                            الدخول</button>
+                    </form>
+                    <!-- end form -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- End Background Design -->

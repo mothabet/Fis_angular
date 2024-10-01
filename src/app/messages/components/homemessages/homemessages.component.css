@@ -1,0 +1,8 @@
+.modal-dialog{
+    max-width: 900px !important;
+}
+ .ProseMirror ,.NgxEditor__Wrapper{
+    height: 200px !important;
+    overflow-y: scroll;
+}
+ 

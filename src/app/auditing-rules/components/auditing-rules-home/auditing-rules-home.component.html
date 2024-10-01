@@ -1,0 +1,148 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'قواعد التدقيق'"></app-top-screen>
+
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة قواعد التدقيق</div>
+      <div class="btns d-flex">
+        <div class="search" id="research-search">
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+        </div>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addAuditRulesBtn" />
+            إضافة قاعدة تدقيق
+          </button>
+          <button type="button" class="btn btn-download" (click)="printPdf()">
+            <img src="../../../../assets/images/list-box-outline.png" alt="" />
+            تنزيل PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">رقم</th>
+            <th class="text-center" scope="col">قاعدة التدقيق</th>
+            <th class="text-center" scope="col">تاريخ الانشاء</th>
+            <th class="text-center" scope="col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of auditRules; let i = index">
+            <td>
+              {{ i + 1 }}
+            </td>
+            <td class="text-center">{{ item.Rule }}</td>
+            <td class="text-center">{{getDateOnly(item.CreatedOn) }}</td>
+            <td class="text-center td-actions">
+              <!-- <a routerLink="/Code-Details" class="icon">
+                <img src="../../../../assets/images/eye-outline.png" alt="" />
+              </a> -->
+              <button class="icon" (click)="showAlert(item.Id)">
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+              </button>
+              <button class="icon" (click)="editAuditRules(item.Id)">
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
+<!--start modal-->
+
+<!--start add researcher modal -->
+<div class="modal company-modal fade" id="addCode" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <div class="header-right">
+          <h5 class="modal-title" id="add" *ngIf="add">إضافة قاعدة تدقيق</h5>
+          <h5 class="modal-title" id="add" *ngIf="!add">تعديل قاعدة التدقيق</h5>
+        </div>
+        <div class="header-left">
+          <button (click)="addNegative($event)" class="btn btn-save ms-1" [disabled]="isLastCharacterValidPlus()">-</button>
+          <button (click)="addPlus($event)" class="btn btn-save ms-1"[disabled]="isLastCharacterValidNegative()">+</button>
+          <button (click)="addSelect()" class="btn btn-save" [disabled]="!isLastCharacterValid()">اضافه</button>
+        </div>
+      </div>
+      <form [formGroup]="auditForm">
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="col-sm-12 mb-2">
+              <div class="row">
+                <!-- Inside the modal -->
+                <div *ngFor="let select of selects; let i = index" class="col-3 mb-2 mx-auto">
+                  <div class="d-flex align-items-center">
+                    
+                    <select class="form-control ml-2" [disabled]="select.disabled" (change)="onSelectChange($event, i)">
+                      <option value="" disabled selected>اختر قيمة</option>
+                      <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode
+                        }}</option>
+                    </select>
+                    <button class="btn btn-delete" (click)="removeSelect(i)" *ngIf="i>0||usedOptions.size==1">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-8 mb-2">
+              <input class="form-control input-modal" type="text" placeholder="قاعدة الندقيق"
+                formControlName="Rule" />
+            </div>
+            <div class="col-sm-4 mb-2">
+                <select formControlName="Type" class="form-control" id="">
+                  <option value="1">سنوي</option>
+                  <option value="2">ربعي</option>
+                </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
+            (click)="resetAuditRules()">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-save" id="saveButton" [disabled]="isSaveDisabled()" (click)="SaveAuditRule()"
+            *ngIf="add">
+            حفظ
+          </button>
+          <button type="button" class="btn btn-save" id="saveButton" [disabled]="isSaveDisabled()" (click)="UpdateAuditRule()"
+            *ngIf="!add">
+            تعديل
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--end add researcher modal -->
+<!--end modal -->

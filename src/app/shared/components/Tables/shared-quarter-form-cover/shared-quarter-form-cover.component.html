@@ -1,0 +1,130 @@
+<app-loader *ngIf="Loader"></app-loader>
+
+<div class="companies-details form-details prev-form" style="width: 100%;">
+    <app-navigate-tables-types [coverForm]="coverForm" [tapType]="1"
+    [isCoverActive]="isCoverActive"
+    ></app-navigate-tables-types>
+    <div class="card-box">
+        <div class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
+          <div class="title-ar flex-fill">
+            <h6>سلطنة عمان</h6>
+            <h6>المركز الوطني للإحصاء والمعلومات</h6>
+            <h6>المديرية العامة للاحصاءات الوطنية</h6>
+          </div>
+          <div class="image d-none d-sm-block">
+            <img class="img-fluid" src=".././../../../assets/images/logo.png" alt="">
+          </div>
+          <div class="title-en flex-fill text-start">
+            <h6>Sultanate of Oman</h6>
+            <h6>National Center for Statistics & Information</h6>
+            <h6>Directorate General of National Statistics</h6>
+          </div>
+        </div>
+        
+        <div class="form-details-section mb-3 d-flex flex-wrap justify-content-between align-items-center w-100">
+          <div class="subtitle-ar">
+            <h6>{{coverForm.arName}}</h6>
+          </div>
+          <div class="subtitle-en text-start">
+            <h6>{{coverForm.enName}}</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>اسم مؤسستك</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input style="text-align: center;" type="text" [(ngModel)]="coverForm.quarterCoverData.establishmentName" class="w-100">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>Name of your Establishment</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>الرمز البريدي</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input style="text-align: center;" type="text" [(ngModel)]="coverForm.quarterCoverData.postalAddress" class="w-100">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>Postal Address</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+            <div class="detail-ar col-md-4 col-6 order-1">
+                <h6>رقم الاستماره</h6>
+            </div>
+            <div class=" col-md-4 col-sm-6 order-md-2 order-3">
+                <input style="text-align: center;" disabled type="text" value="{{formId}}"
+                    class=" col-md-4 col-sm-6 order-md-2 order-3 w-100">
+            </div>
+            <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+                <h6>QUESTIONNAIRE NO.</h6>
+            </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>رقم الهاتف</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input type="text" [(ngModel)]="coverForm.quarterCoverData.telephoneNumber" class="w-100" style="text-align: center;">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>Telephone number</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>رقم الفاكس</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input type="text" [(ngModel)]="coverForm.quarterCoverData.faxNumber" class="w-100" style="text-align: center;">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>Fax number</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>عنوان البريد الإلكتروني</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input type="text" [(ngModel)]="coverForm.quarterCoverData.emailAddress" class="w-100" style="text-align: center;">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>E-mail address</h6>
+          </div>
+        </div>
+      
+        <div class="row details mb-3 mx-0">
+          <div class="detail-ar col-md-4 col-6 order-1">
+            <h6>التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)</h6>
+          </div>
+          <div class="col-md-4 col-sm-6 order-md-2 order-3">
+            <input type="text" [(ngModel)]="coverForm.quarterCoverData.geographicalDistribution" class="w-100" style="text-align: center;">
+          </div>
+          <div class="detail-en col-md-4 col-6 order-md-3 order-2">
+            <h6>Geographical Distribution of Foreign Direct Investment Outward (Country)</h6>
+          </div>
+        </div>
+      </div>
+      
+    <footer class="projection-notes d-flex flex-wrap my-3 card-box">
+        <div class="col-sm-6 footer-ar">
+            <p>{{coverForm.arNotes}}
+            </p>
+        </div>
+        <div class="col-sm-6 footer-en">
+            <p>{{coverForm.enNotes}}</p>
+        </div>
+    </footer>
+    <!-- end content -->
+
+</div>

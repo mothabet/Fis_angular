@@ -1,0 +1,35 @@
+/* Ensure the table layout adapts to content */
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+  }
+  
+  /* Set max width for all table cells */
+  td {
+    max-width: 250px;
+  }
+  
+  /* Specific styles for the subcode cells to handle long text */
+  .subcode-cell {
+    color: orange;
+    max-width: 100px;
+    white-space: normal;       /* Allow the text to wrap to the next line */
+    word-wrap: break-word;     /* Break long words to the next line */
+    word-break: break-all;     /* Ensure the text breaks within words if necessary */
+    overflow: visible;         /* Ensure the overflow content is visible */
+  }
+  .colActive{
+    background-color: rgb(202 227 224);
+    color: black;
+  }
+  /* radio-button.component.css */
+label {
+  position: static;
+}
+

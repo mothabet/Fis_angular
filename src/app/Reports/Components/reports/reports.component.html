@@ -1,0 +1,184 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card " style="flex: 1;">
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            التقارير
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="current-lang">عربى</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="content companies researcher">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة التقارير
+            </div>
+            <div class="btns d-flex">
+                <div class="search" id="research-search">
+                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher" (click)="onReset(1)">
+                        <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
+                        اضافة تقرير
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">اسم التقرير</th>
+                        <th class="text-center" scope="col">تاريخ انشاءه</th>
+                        <th class="text-center" scope="col">الحالة</th>
+                        <th style="width: 150px;" class="text-center" scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let report of reports">
+                        <td class="text-center">{{report.arName}}</td>
+                        <td class="text-center ">{{report.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center " *ngIf="+report.status == 1">
+                            <div class="Gactive">نشط</div>
+                        </td>
+                        <td class="text-center" *ngIf="+report.status == 0">
+                            <div class="Gnotactive">غير نشط</div>
+                        </td>
+                        <td class="text-center td-actions">
+                            <a routerLink="/ReportContents/{{report.id}}" class="icon">
+                                <img src="../../../../assets/images/eye-outline.png" alt="">
+                            </a>
+                            <button class="icon">
+                                <img src="../../../../assets/images/trash-can-outline.png" (click)="DeleteReport(report.id)" alt="">
+                            </button>
+                            <button class="icon" (click)="openUpdatePopup(report.id)" data-bs-toggle="modal" data-bs-target="#addResearcher">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- end content -->
+
+</div>
+<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+        <div class="modal-content" style="width: 50%;">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">إضافة نشاط</h5>
+            </div>
+            <form [formGroup]="reportForm" (ngSubmit)="onSave()">
+                <div class="row" style="padding: 10px;">
+                    <!-- Arabic Report Name -->
+                    <div class="col-sm-12 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="arName" placeholder="اسم التقرير بالعربية">
+                    </div>
+
+                    <!-- English Report Name -->
+                    <div class="col-sm-12 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="enName" placeholder="Report Name in English">
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-sm-12 mb-2">
+                        <select class="form-control input-modal" formControlName="status">
+                            <option value="1" selected>نشط</option>
+                            <option value="2">غير نشط</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
+                    <button type="button" class="btn btn-reset" (click)="onReset()">إعادة ملء</button>
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
+                    <button *ngIf="isUpdate" (click)="updateReport()" type="button" class="btn btn-save">تعديل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="next-part" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header flex-center" style="border-bottom: none;">
+                <h2 class="modal-title">شكل الرسم البيانى</h2>
+            </div>
+            <div class="modal-body py-1">
+                <div class="  d-flex flex-column align-items-start chart-type">
+
+                    <button class="btn transparent-btn" type="button" data-bs-toggle="collapse" data-bs-target="#column" aria-expanded="false" aria-controls="column">
+                        <i class="fa-solid fa-chart-column icon"></i>
+                        عمود
+                    </button>
+                    <div class="collapse mb-2 me-3" id="column">
+                        <div class="flex-center mt-2 gap-2">
+                            <!-- Start colum choices  -->
+                            <div class="form-check ps-0 d-flex radio-form radio-with-icon checkedRadioIcon">
+                                <input class="form-check-input" type="radio" name="columChoices" id="chartBar">
+                                <label class="form-check-label " for="chartBar">
+                                    <img src="images/chart-bar.png" alt="">
+                                    <span>متجمعة</span>
+                                </label>
+                            </div>
+                            <div class="form-check ps-0 d-flex radio-form radio-with-icon">
+                                <input class="form-check-input" type="radio" name="columChoices" id="chartStacked">
+                                <label class="form-check-label " for="chartStacked">
+                                    <img src="images/chart-bar-stacked.png" alt="">
+                                    <span>مرصوصة</span>
+                                </label>
+                            </div>
+                            <div class="form-check ps-0 d-flex radio-form radio-with-icon">
+                                <input class="form-check-input" type="radio" name="columChoices" id="chartWaterfall">
+                                <label class="form-check-label " for="chartWaterfall">
+                                    <img src="images/chart-waterfall.png" alt="">
+                                    <span>من 100%</span>
+                                </label>
+                            </div>
+                            <!-- End colum choices  -->
+                        </div>
+                    </div>
+                    <button class="btn transparent-btn" type="button" id="line">
+                        <i class="fa-solid fa-chart-line icon"></i>
+                        خط
+                    </button>
+                    <button class="btn transparent-btn" type="button" id="pie">
+                        <i class="fa-solid fa-chart-pie icon"></i>
+                        دائرة
+                    </button>
+                    <button class="btn transparent-btn" type="button" id="bar">
+                        <i class="fa-solid fa-chart-bar icon"></i>
+                        شريط
+                    </button>
+                </div>
+                <div class="modal-footer" style="border-top: none;">
+                    <button type="button" class="btn white-btn c-shadow flex-grow-1" data-bs-dismiss="modal">الغاء</button>
+                    <button type="button" class="btn red-btn flex-grow-1">حفظ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

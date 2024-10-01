@@ -1,0 +1,21 @@
+.modal-header {
+    display: flex;
+    justify-content: space-between; /* Distributes space between children */
+    align-items: center; /* Vertically centers children */
+  }
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  #research-btns .btn {
+    width: 160px !important;
+}
+.disabled{
+  pointer-events: none;
+}

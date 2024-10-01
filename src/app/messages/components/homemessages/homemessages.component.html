@@ -1,0 +1,392 @@
+<app-loader *ngIf="showLoader"></app-loader>
+
+<!-- main content -->
+<div class="main-content p-4 main card " style="flex: 1;">
+
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            إعدادات&nbsp; > &nbsp;{{buttonText}}
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    عربي
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+
+    <div class="companies-details form-details messages">
+        <div class="header-nav">
+            <div class="card-box mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <ul class="nav nav-tabs d-flex align-items-center" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="messages-tab" data-bs-toggle="tab" href="#messages"
+                                role="tab" aria-controls="messages" aria-selected="true"
+                                (click)="setButtonText('رسالة','Message',1)">الرسائل</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="emails-tab" data-bs-toggle="tab" href="#emails" role="tab"
+                                aria-controls="emails" aria-selected="false"
+                                (click)="setButtonText('ايميل','Email',2)">الإيميلات</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="notifications-tab" data-bs-toggle="tab" href="#notifications"
+                                role="tab" aria-controls="notifications" aria-selected="false"
+                                (click)="setButtonText('اشعار','Notifications',3)">الإشعارات</a>
+                        </li>
+                    </ul>
+                    <button class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMessage"
+                        id="addMessageBtn">
+                        <img src="../../../../assets/images/email-outline-white.png" alt="">
+                        <span>انشاء {{buttonText}}</span>
+                    </button>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                        <!-- start content -->
+                        <div class="content companies messages">
+                            <div class="header d-flex">
+                                <div class="title">
+                                    قائمة الرسائل
+                                </div>
+                                <div class="btns d-flex request">
+                                    <div class="search">
+                                        <input class="form-control" type="text" name="search" placeholder="البحث"
+                                            (keydown.enter)="researcherSearch()" [(ngModel)]="searchText">
+                                        <i (click)="researcherSearch()" class="fa fa-search  icon" id="search-icon"
+                                            aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive company-table">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr class="t-header">
+                                            <th class="text-center" scope="col">#</th>
+                                            <th style="min-width: 150px;" scope="col">اسم الرسالة</th>
+                                            <th class="text-center" scope="col">نوع الرسالة
+                                            </th>
+                                            <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل الرسالة
+                                            </th>
+                                            <th style="min-width: 100px;" class="text-center" scope="col">عنوان الرسالة
+                                            </th>
+                                            <th style="min-width: 150px;" class="text-center" scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let message of messages ; let i = index">
+                                            <th class="text-center" scope="col">{{i+1}}</th>
+                                            <td>{{message.arName}}</td>
+                                            <td class="text-center">
+                                                {{ getTypeMessage(message.typeMessage) }}
+                                            </td>
+                                            <td class="text-center">{{message.arDetails}}</td>
+                                            <td class="text-center">{{message.arSubject}}</td>
+                                            <td class="text-center">
+                                                <!-- <a href="#" class="icon">
+                            <img src="../../../../assets/images/paperclip.png" alt="">
+                        </a> -->
+                                                <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
+                                                    (click)="editMessage(message.Id)">
+                                                    <img src="../../../../assets/images/pencil-outline.png" alt="">
+                                                </button>
+                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                    <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end content -->
+                    </div>
+                    <div class="tab-pane fade" id="emails" role="tabpanel" aria-labelledby="emails-tab">
+                        <!-- start content -->
+                        <div class="content companies messages">
+                            <div class="header d-flex">
+                                <div class="title">
+                                    قائمة الايميلات
+                                </div>
+                                <div class="btns d-flex request">
+                                    <div class="search">
+                                        <input class="form-control" type="text" name="search" placeholder="البحث"
+                                            (keydown.enter)="researcherSearch()" [(ngModel)]="searchText">
+                                        <i (click)="researcherSearch()" class="fa fa-search  icon" id="search-icon"
+                                            aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive company-table">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr class="t-header">
+                                            <th class="text-center" scope="col">#</th>
+                                            <th style="min-width: 150px;" scope="col">اسم الايميل</th>
+                                            <th class="text-center" scope="col">نوع الايميل
+                                            </th>
+                                            <!-- <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل
+                                                الايميل
+                                            </th> -->
+                                            <th style="min-width: 100px;" class="text-center" scope="col">عنوان
+                                                الايميل
+                                            </th>
+                                            <th style="min-width: 150px;" class="text-center" scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let message of emails ; let i = index">
+                                            <th class="text-center" scope="col">{{i+1}}</th>
+                                            <td>{{message.arName}}</td>
+                                            <td class="text-center">
+                                                {{ getTypeMessage(message.typeMessage) }}
+                                            </td>
+                                            <!-- <td class="text-center" style="max-width: 10px;"> <p  [innerHTML]="message.arDetails"></p> </td> -->
+                                            <td class="text-center">{{message.arSubject}}</td>
+                                            <td class="text-center">
+                                                <!-- <a href="#" class="icon">
+                            <img src="../../../../assets/images/paperclip.png" alt="">
+                        </a> -->
+                                                <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
+                                                    (click)="editMessage(message.Id)">
+                                                    <img src="../../../../assets/images/pencil-outline.png" alt="">
+                                                </button>
+                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                    <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end content -->
+                    </div>
+                    <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                        <!-- start content -->
+                        <div class="content companies messages">
+                            <div class="header d-flex">
+                                <div class="title">
+                                    قائمة الاشعارات
+                                </div>
+                                <div class="btns d-flex request">
+                                    <div class="search">
+                                        <input class="form-control" type="text" name="search" placeholder="البحث"
+                                            (keydown.enter)="researcherSearch()" [(ngModel)]="searchText">
+                                        <i (click)="researcherSearch()" class="fa fa-search  icon" id="search-icon"
+                                            aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive company-table">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr class="t-header">
+                                            <th class="text-center" scope="col">#</th>
+                                            <th style="min-width: 150px;" scope="col">اسم الاشعار</th>
+                                            <th class="text-center" scope="col">نوع الاشعار
+                                            </th>
+                                            <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل
+                                                الاشعار
+                                            </th>
+                                            <th style="min-width: 100px;" class="text-center" scope="col">عنوان
+                                                الاشعار
+                                            </th>
+                                            <th style="min-width: 150px;" class="text-center" scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let message of emails ; let i = index">
+                                            <th class="text-center" scope="col">{{i+1}}</th>
+                                            <td>{{message.arName}}</td>
+                                            <td class="text-center">
+                                                {{ getTypeMessage(message.typeMessage) }}
+                                            </td>
+                                            <td class="text-center">{{message.arDetails}}</td>
+                                            <td class="text-center">{{message.arSubject}}</td>
+                                            <td class="text-center">
+                                                <!-- <a href="#" class="icon">
+                        <img src="../../../../assets/images/paperclip.png" alt="">
+                    </a> -->
+                                                <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
+                                                    (click)="editMessage(message.Id)">
+                                                    <img src="../../../../assets/images/pencil-outline.png" alt="">
+                                                </button>
+                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                    <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- end content -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<!--start modal -->
+
+<!--start create message modal -->
+<div class="modal company-modal fade" id="createMessage" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md ">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء {{buttonText}}</h5>
+                <h5 class="modal-title" id="sendForm" *ngIf="!add">تعديل {{buttonText}}</h5>
+            </div>
+            <form [formGroup]="messageForm">
+                <div class="modal-body pb-1">
+                    <div class="row">
+
+                        <!-- <div class="col-sm-12 mb-3">
+                            <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة">
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <textarea class="form-control input-modal" rows="2"
+                                placeholder="تفاصيل المراسلة"></textarea>
+                        </div>
+                    </div> -->
+                        <div class="form-group col-sm-6 mb-2">
+                            <input class="form-control input-modal" type="text" formControlName="arName" />
+                            <label for="inputField">اسم {{buttonText}}</label>
+
+                            <div *ngIf="
+                        messageForm.controls['arName'].invalid &&
+                            (messageForm.controls['arName'].dirty ||
+                            messageForm.controls['arName'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['arName'].errors?.['required']" class="text-danger">
+                                    يجب ادخال اسم {{buttonText}}.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input class="form-control input-modal" type="text" formControlName="enName" />
+                            <label for="inputField" dir="ltr">English {{buttonTextEn}} Name</label>
+
+                            <div *ngIf="
+                        messageForm.controls['enName'].invalid &&
+                            (messageForm.controls['enName'].dirty ||
+                            messageForm.controls['enName'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['enName'].errors?.['required']" class="text-danger">
+                                    English {{buttonTextEn}} name is required.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <!-- <textarea class="form-control input-modal" rows="3" 
+                                id="arDetails"></textarea> -->
+                            <div class="NgxEditor__Wrapper" >
+                                <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                <ngx-editor [editor]="editor" [ngModel]="emailAr" [disabled]="false"
+                                    [placeholder]="'Type here...'" formControlName="arDetails"  ></ngx-editor>
+                            </div>
+                            <label for="inputField">تفاصيل {{buttonText}}</label>
+
+                            <div *ngIf="
+                        messageForm.controls['arDetails'].invalid &&
+                            (messageForm.controls['arDetails'].dirty ||
+                            messageForm.controls['arDetails'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['arDetails'].errors?.['required']"
+                                    class="text-danger">
+                                    يجب ادخال تفاصيل {{buttonText}}.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <!-- <textarea class="form-control input-modal" rows="3" formControlName="enDetails"
+                                id="enDetails"></textarea> -->
+                                <div class="NgxEditor__Wrapper" >
+                                    <ngx-editor-menu [editor]="editoren"> </ngx-editor-menu>
+                                    <ngx-editor [editor]="editoren" [ngModel]="emailEn" [disabled]="false"
+                                        [placeholder]="'Type here...'" formControlName="enDetails"  ></ngx-editor>
+                                </div>
+                            <label for="inputField">{{buttonTextEn}} details</label>
+
+                            <div *ngIf="
+                        messageForm.controls['enDetails'].invalid &&
+                            (messageForm.controls['enDetails'].dirty ||
+                            messageForm.controls['enDetails'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['enDetails'].errors?.['required']"
+                                    class="text-danger">
+                                    {{buttonTextEn}} details is required.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input class="form-control input-modal" type="text" formControlName="arSubject" />
+                            <label for="inputField">عنوان {{buttonText}}</label>
+
+                            <div *ngIf="
+                        messageForm.controls['arSubject'].invalid &&
+                            (messageForm.controls['arSubject'].dirty ||
+                            messageForm.controls['arSubject'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['arSubject'].errors?.['required']"
+                                    class="text-danger">
+                                    يجب ادخال عنوان {{buttonText}}.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 mb-2">
+                            <input class="form-control input-modal" type="text" formControlName="enSubject" />
+                            <label for="inputField" dir="ltr">Subject Name</label>
+
+                            <div *ngIf="
+                        messageForm.controls['enSubject'].invalid &&
+                            (messageForm.controls['enSubject'].dirty ||
+                            messageForm.controls['enSubject'].touched)
+                          ">
+                                <small *ngIf="messageForm.controls['enSubject'].errors?.['required']"
+                                    class="text-danger">
+                                    {{buttonText}} subject is required.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
+                        (click)="resetForm()">إلغاء</button>
+                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
+                        (click)="AddMessage(typeMessage)" *ngIf="add">حفظ</button>
+                    <button type="button" class="btn btn-save" style="background-color: #00AF9D;"
+                        (click)="UpdateMessage(typeMessage)" *ngIf="!add">تعديل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end create message modal -->
+
+<!--end modal -->
