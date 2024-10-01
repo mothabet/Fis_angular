@@ -120,7 +120,7 @@
                         style="gap: 15px; white-space: nowrap; padding: 15px;">
                         <!-- Card 1 -->
                         <div class="card" *ngFor="let table of tables"
-                            style="min-width: 490px; border: 1px solid #ccc;max-height: 200px;min-height: 200px;">
+                            style="min-width: 490px; border: 1px solid #ccc;max-height: 280px;min-height: 280px;">
                             <div class="modal-header pb-0">
                                 <label class="modal-title" id="add">{{table.arTableName}}</label>
                             </div>
@@ -140,54 +140,86 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <!-- Select input aligned next to the checkbox with more space -->
-                                    <select class="form-select add-report-select"
-                                        (change)="onFieldSelect($event, table)" style="width: 40%;">
-                                        <option selected value="0" disabled>اختر الحقل</option>
-                                        <ng-container *ngIf="table.enTableName == 'Companies'">
-                                            <option *ngFor="let field of companyFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Forms'">
-                                            <option *ngFor="let field of formFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Researcher'">
-                                            <option *ngFor="let field of researcherFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Sectors'">
-                                            <option *ngFor="let field of sectorFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Activities'">
-                                            <option *ngFor="let field of activitiesFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'SubActivities'">
-                                            <option *ngFor="let field of subActivitiesFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Governorates'">
-                                            <option *ngFor="let field of governoratesFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Wilayats'">
-                                            <option *ngFor="let field of wilayatFields">{{field.name}}</option>
-                                        </ng-container>
-                                        <ng-container *ngIf="table.enTableName == 'Tables'">
-                                            <option *ngFor="let field of tableFields">{{field.name}}</option>
-                                        </ng-container>
-                                    </select>
+                                    <div class="form-group col-sm-4 mb-2" *ngIf="table.enTableName == 'Cover'"
+                                        style="margin-left:5px;">
+                                        <select class="form-select add-report-select" style="width: 100%;"
+                                            (change)="onFormTypeChange($event)">
+                                            <option value="1">استمارة سنوية</option>
+                                            <option value="2">استمارة ربعية</option>
+                                        </select>
+                                        <label for="inputField">نوع الإستمارة</label>
+                                    </div>
+                                    <div class="form-group col-sm-6 mb-2">
+                                        <select class="form-select add-report-select"
+                                            (change)="onFieldSelect($event, table)" style="width: 100%;">
+                                            <option selected value="0" disabled>اختر الحقل</option>
+                                            <ng-container *ngIf="table.enTableName == 'Companies'">
+                                                <option *ngFor="let field of companyFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Forms'">
+                                                <option *ngFor="let field of formFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Researcher'">
+                                                <option *ngFor="let field of researcherFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Sectors'">
+                                                <option *ngFor="let field of sectorFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Activities'">
+                                                <option *ngFor="let field of activitiesFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'SubActivities'">
+                                                <option *ngFor="let field of subActivitiesFields">{{field.name}}
+                                                </option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Governorates'">
+                                                <option *ngFor="let field of governoratesFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Wilayats'">
+                                                <option *ngFor="let field of wilayatFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Tables'">
+                                                <option *ngFor="let field of tableFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'GeneralData'">
+                                                <option *ngFor="let field of generalDataFields">{{field.name}}</option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Certification'">
+                                                <option *ngFor="let field of certificationFields">{{field.name}}
+                                                </option>
+                                            </ng-container>
+                                            <ng-container *ngIf="table.enTableName == 'Cover'">
+                                                <option *ngFor="let field of currentFields">{{field.name}}
+                                                </option>
+                                            </ng-container>
+                                        </select>
+                                        <label for="inputField">الفلتر</label>
+                                    </div>
                                     <h5 style="margin-right: 10px;">اختر الفلتر</h5>
                                 </div>
                                 <div class="field-container"
-                                    style="padding-left: 5px; padding-top: 5px; max-height: 75px;">
+                                    style="padding-left: 5px; padding-top: 5px; max-height: 145px;">
                                     <div class="field-item" *ngFor="let field of table.fields; let i = index">
                                         <!-- Bind field properties to the input element -->
-                                        <input type="text" class="field-input" [(ngModel)]="field.value"
-                                            name="field-{{ i }}">
+                                        <select style="width: 177px;margin-left: 10px;" *ngIf="field.dataType === 'bool'" class="form-select add-report-select"
+                                            [(ngModel)]="field.value" [ngModelOptions]="{standalone: true}">
+                                            <option value="" disabled>اختر --</option>
+                                            <option value="1">نعم</option>
+                                            <option value="0">لا</option>
+                                        </select>
+                                        <input *ngIf="field.dataType != 'bool'" type="text" class="field-input"
+                                            [(ngModel)]="field.value" name="field-{{ i }}">
                                         <select style="width: 120px;" class="form-select add-report-select"
                                             [(ngModel)]="field.filter" [ngModelOptions]="{standalone: true}">
                                             <option value="" disabled>اختر الفلتر</option>
-                                            <ng-container *ngIf="field.dataType !== 'String'">
+                                            <ng-container
+                                                *ngIf="field.dataType !== 'String' && field.dataType != 'bool'">
                                                 <option *ngFor="let filter of numberFilterItems" [ngValue]="filter.id">
                                                     {{filter.arName}}
                                                 </option>
                                             </ng-container>
-                                            <ng-container *ngIf="field.dataType === 'String'">
+                                            <ng-container
+                                                *ngIf="field.dataType === 'String' || field.dataType === 'bool'">
                                                 <option *ngFor="let filter of stringFilterItems" [ngValue]="filter.id">
                                                     {{filter.arName}}
                                                 </option>
@@ -201,19 +233,25 @@
                                 <div style="width: 100%;" class="form-group col-sm-6 mb-2">
                                     <div class="dropdown" [class.show]="isDropdownOpen">
                                         <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                            placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm" (click)="toggleDropdown()" 
-                                            (input)="filterSubCodes()"
-                                            />
-                                        <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px;
+                                            placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm"
+                                            (click)="toggleDropdown()" (input)="filterSubCodes()" />
+                                        <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
-                                            <li class="dropdown-item"
-                                            *ngFor="let code of filteredCodes" (click)="selectCode(code)">
+                                            <li class="dropdown-item" *ngFor="let code of filteredCodes"
+                                                (click)="selectCode($event, table,code)">
                                                 {{code.arName}}
                                             </li>
                                         </ul>
                                     </div>
                                     <label for="inputField">الاسم بالكامل</label>
+                                </div>
+                                <div class="field-container"
+                                    style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
+                                    <div class="field-item" *ngFor="let content of table.fields; let i = index">
+                                        <!-- Bind field properties to the input element -->
+                                        <span style="text-align: left;" class="field-text col-2">{{content.name}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -270,6 +308,9 @@
                         </ng-container>
                         <ng-container *ngIf="tableType==3">
                             <option *ngFor="let table of researcherTables" [ngValue]="table">{{table.arName}}</option>
+                        </ng-container>
+                        <ng-container *ngIf="tableType==4">
+                            <option *ngFor="let table of formContentTables" [ngValue]="table">{{table.arName}}</option>
                         </ng-container>
                     </select>
 
