@@ -57,7 +57,7 @@
                 <tbody>
                     <tr *ngFor="let activity of activities">
                         <td class="text-center">{{activity.arName}}</td>
-                        <td class="text-center active">{{activity.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{activity.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{activity.code}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteActivity(activity.id)">

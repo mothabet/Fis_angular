@@ -56,7 +56,7 @@
                 <tbody>
                     <tr *ngFor="let sector of sectors">
                         <td class="text-center">{{sector.arName}}</td>
-                        <td class="text-center active">{{sector.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{sector.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{sector.code}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteSector(sector.id)">

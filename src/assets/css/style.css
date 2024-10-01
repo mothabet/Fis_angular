@@ -2083,7 +2083,7 @@ status-notactive {
 }
 
 .projection-table .table tbody input {
-    width: 70px;
+    width: 65px;
     border-color: #c9cdd0;
     border-width: 1px;
     border-style: solid;
@@ -2441,7 +2441,9 @@ status-notactive {
     overflow: hidden;
     font-size: 14px !important;
 }
-
+.table-responsive th{
+    text-wrap: wrap !important;
+}
 .notification-table table thead,
 .notification-table table tbody tr:hover {
     background-color: #F5F6FA;

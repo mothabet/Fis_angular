@@ -58,7 +58,7 @@
                     <tr *ngFor="let subActivity of subActivities; let i = index">
                         <td class="text-center">{{i+1}}</td>
                         <td class="text-center">{{subActivity.arName}}</td>
-                        <td class="text-center active">{{subActivity.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{subActivity.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{subActivity.code}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteSubActivity(subActivity.id)">
