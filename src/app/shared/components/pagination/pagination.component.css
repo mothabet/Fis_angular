@@ -1,35 +1,41 @@
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    direction: ltr;
-  }
-  .pagination ul {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-  }
-  .pagination ul li {
-    padding: 10px 15px;
-    margin: 0 5px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-    text-align: center;
-  }
-  .pagination ul li.active {
-    background-color: #00AF9D;
-    color: white;
-    border-color: #00AF9D;
-  }
-  .pagination ul li:hover:not(.active):not(.disabled) {
-    background-color: #f1f1f1;
-  }
-  .pagination ul li.disabled {
-    pointer-events: none;
-    color: #aaa;
-    border-color: #ddd;
-  }
-  .pagination .active {
-    color: #f1f1f1 !important;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  direction: ltr;
+}
+
+.pagination ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.pagination ul li {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
+}
+
+.pagination ul li.active {
+  background-color: #00AF9D;
+  color: white;
+  border-color: #00AF9D;
+}
+
+.pagination ul li:hover:not(.active):not(.disabled) {
+  background-color: #f1f1f1;
+}
+
+.pagination ul li.disabled {
+  pointer-events: none;
+  color: #aaa;
+  border-color: #ddd;
+}
+
+.pagination .active {
+  color: #f1f1f1 !important;
 }

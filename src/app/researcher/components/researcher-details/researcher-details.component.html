@@ -6,14 +6,12 @@
 
     <!-- start researcher header -->
     <div class="card-box d-flex align-items-center mb-3 company-card">
-        <div class="image-box position-relative" style="width:50px;">
+        <div class="image-box position-relative" style="width:80px !important;border:1px solid gray;height: 80px;">
             <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
-            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid"
-                alt="company">
+            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="">
 
             <!-- زر تغيير الصورة -->
-            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true"
-                (mouseleave)="hovering=false">
+            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
                 <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
                 <span *ngIf="hovering">Change Image</span>
             </button>
@@ -121,6 +119,7 @@
                             color: white;
                             font-size: 12px;
                             background-color: #133C8B;
+                            width: 150px;
                             ">
                             <img src="../../../../assets/images/list-box-outline.png" alt="" />
                             تنزيل PDF
@@ -155,9 +154,12 @@
                                 <td class="text-center notes" *ngIf="!(company.researcherArName=='')">
                                     شركه مفوضه من قبل ({{company.researcherArName}})
                                 </td>
-                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
-                                <td *ngIf="!company.status" class="text-center status-active"
-                                    style="color: red !important;">غير نشط</td>
+                                <td *ngIf="company.status" class="text-center">
+                                    <div class=" status-active">نشط</div>
+                                </td>
+                                <td *ngIf="!company.status" class="text-center ">
+                                    <div class="Gnotactive">غير نشط</div>
+                                </td>
                                 <td class="text-center">
                                     <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
                                         <a>إستماره</a>
