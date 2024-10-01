@@ -33,7 +33,6 @@ export class ResearcherDetailsComponent implements OnInit {
   researcherId!: string;
   companiesCount: number = 0;
   companies!: ICompany[]
-  companiesMandate!: ICompany[]
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -57,6 +56,11 @@ export class ResearcherDetailsComponent implements OnInit {
     adminPhone: '',
     adminName: ''
   };
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
@@ -66,7 +70,7 @@ export class ResearcherDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.researcherId = this.activeRouter.snapshot.paramMap.get('researcherId')!;
     this.topScreenServices.setResearcherId(this.researcherId);
-    this.GetResearcherById(+this.researcherId);
+    this.GetResearcherById(+this.researcherId,1,'');
     this.GetAllMessages(0, '')
     this.GetAllForms();
     const isLoggedIn = this.authService.getToken();
@@ -82,29 +86,36 @@ export class ResearcherDetailsComponent implements OnInit {
     });
   }
 
-  GetResearcherById(id: number) {
+  GetResearcherById(id: number,page: number, textSearch: string = '') {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.showLoader = false;
         if (res.Data) {
-
           this.researcher = res.Data;
-          this.companies = res.Data.companies;
-          this.companiesMandate = res.Data.companiesMandate;
+          this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
+          this.companies = res.Data.companies.getCompaniesDtos;
+          this.currentPage = res.Data.companies.PageNumber;
+          this.isLastPage = res.Data.companies.LastPage;
+          this.totalPages = res.Data.companies.TotalCount;
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.pathImgProfile}`;
-
-          this.companiesCount = this.researcher.companies.length;
+          this.companiesCount = res.Data.companiesCount;
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
         this.showLoader = false;
       },
     };
-    this.researcherServices.GetResearcherById(id).subscribe(observer);
+    this.researcherServices.GetResearcherByIdWithCompaniesAndCompaniesMandate(id,page,textSearch).subscribe(observer);
   }
-
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.GetResearcherById(+this.researcherId ,page);
+  }
+  companiesSearch() {
+    this.GetResearcherById(+this.researcherId ,this.currentPage, this.searchText);
+  }
   GetFormsStatistics() {
     this.showLoader = true;
     const observer = {

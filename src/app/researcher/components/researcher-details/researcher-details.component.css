@@ -47,4 +47,16 @@
   .change-image-btn span {
     font-size: 16px; /* حجم النص */
   }
-  
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }
