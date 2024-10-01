@@ -365,13 +365,11 @@ export class SharedQuarterTableComponent {
                   }
                 });
               });
-              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
           else if (role === 'Admin' || role === 'Researchers') {
-            debugger
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             // this.modifyInputById(this.coverForm.typeQuarter);
             return;

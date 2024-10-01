@@ -219,7 +219,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let company of researcher.companies">
+                        <tr *ngFor="let company of companies">
                             <td>
                                 <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
                                     [checked]="isSelected(company.id)" type="checkbox" name="companyName1"
