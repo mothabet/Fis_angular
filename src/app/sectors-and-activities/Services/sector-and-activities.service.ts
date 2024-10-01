@@ -40,9 +40,9 @@ export class SectorAndActivitiesService {
      var resopnse = this.http.post(environment.apiUrl+`Activity/AddActivity?lang=2`, Activity, { headers });
      return resopnse;
    }
-   GetActivities(pageNumber:number , textSearch : string =''){
+   GetActivities(pageNumber:number , textSearch : string ='',sectorId:number = 0){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&sectorId=${sectorId}`, { headers });
      return resopnse;
    }
    DeleteActivity(id:number){
@@ -65,9 +65,9 @@ export class SectorAndActivitiesService {
      var resopnse = this.http.post(environment.apiUrl+`SubActivity/AddSubActivity?lang=2`, subActivity, { headers });
      return resopnse;
    }
-   GetSubActivities(pageNumber:number , textSearch : string =''){
+   GetSubActivities(pageNumber:number , textSearch : string ='',activityId:number =0){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`SubActivity/GetSubActivities?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`SubActivity/GetSubActivities?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&activityId=${activityId}`, { headers });
      return resopnse;
    }
    DeleteSubActivity(id:number){

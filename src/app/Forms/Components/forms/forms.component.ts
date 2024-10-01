@@ -16,6 +16,7 @@ import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 import { IAddInstructionsDto, IAddListInstructionsDto } from 'src/app/shared/Dtos/NavigateDto';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
   selector: 'app-forms',
@@ -83,8 +84,8 @@ export class FormsComponent implements OnInit {
     private sharedServices: SharedService,
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
-    private companyHomeServices: CompanyHomeService, 
-    private instructionsService : InstructionsService
+    private instructionsService : InstructionsService,
+    private sectorsAndActivitiesServices: SectorAndActivitiesService
   ) { }
   ngOnInit(): void {
     this.formForm = this.formBuilder.group({
@@ -601,14 +602,14 @@ export class FormsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Activities = res.Data;
+          this.Activities = res.Data.getActivitiesDtos;
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
       },
     };
-    this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
   }
   GetAllForms(): void {
     this.Loader = true;

@@ -36,8 +36,6 @@ export class TableWithPeriodComponent implements OnInit {
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
@@ -111,41 +109,5 @@ export class TableWithPeriodComponent implements OnInit {
       subCodes:[]
     }
     code.SubCodes.push(subCode);
-  }
-  GetActivites() {
-    
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.activities = res.Data;
-          console.log(this.activities)
-        }
-      },
-      error: (err: any) => {
-        
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetActivities().subscribe(observer);
-  }
-  GetCountrites() {
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.countries = res.Data;
-          console.log(this.countries)
-        }
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetCountries().subscribe(observer);
   }
 }

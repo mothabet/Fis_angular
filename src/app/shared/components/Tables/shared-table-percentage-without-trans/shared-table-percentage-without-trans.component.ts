@@ -7,6 +7,7 @@ import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/a
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -27,7 +28,9 @@ export class SharedTablePercentageWithoutTransComponent {
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
-  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, private sharedServices: SharedService) {
+  constructor(private route: ActivatedRoute, private authService: LoginService, 
+    private formServices: FormService, private sharedServices: SharedService,
+    private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
 
   }
@@ -139,37 +142,31 @@ export class SharedTablePercentageWithoutTransComponent {
   GetActivites() {
     const observer = {
       next: (res: any) => {
-        this.Loader = false;
         if (res.Data) {
-          this.Loader = false;
-          this.activities = res.Data;
-          console.log(this.activities)
+          this.activities = res.Data.getActivitiesDtos;
         }
       },
       error: (err: any) => {
-
         this.sharedServices.handleError(err);
-        this.Loader = false;
       },
     };
-    this.formServices.GetActivities().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetActivities(0, '').subscribe(observer);
   }
   GetCountrites() {
     const observer = {
       next: (res: any) => {
-        this.Loader = false;
         if (res.Data) {
-          this.Loader = false;
-          this.countries = res.Data;
-          console.log(this.countries)
+          this.countries = res.Data.getCountryDtos;
+        }
+        else{
+          this.countries = [];
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
-        this.Loader = false;
       },
     };
-    this.formServices.GetCountries().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetCountries(0, '').subscribe(observer);
   }
   GetFormData() {
     this.Loader = true;

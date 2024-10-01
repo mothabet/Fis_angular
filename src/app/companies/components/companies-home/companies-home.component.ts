@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import * as XLSX from 'xlsx';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
   selector: 'app-companies-home',
@@ -50,7 +51,7 @@ export class CompaniesHomeComponent implements OnInit {
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService) { }
+    , private sharedService: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
@@ -78,6 +79,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: [0],
       governoratesId: [0],
       wilayatId: [0],
+      status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
 
@@ -170,50 +172,40 @@ export class CompaniesHomeComponent implements OnInit {
     this.currentPage = page;
     this.GetCompanies('', page);
   }
-
   GetSectorActvities(sectorId: number) {
-
-    const observer = {
-      next: (res: any) => {
-
-        if (res.Data) {
-          this.Activities = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.companyHomeServices.GetSectorActvities(sectorId).subscribe(observer);
-  }
-  GetSubActivities(activityId: number) {
-
-    if (activityId > 0) {
+    if (sectorId>0) {
       const observer = {
         next: (res: any) => {
-          // Add a null or undefined check for res.Data
-          if (res && res.Data) {
-            this.SubActivities = res.Data;
-            console.log(this.SubActivities);
-          } else {
-            console.log('No data available');
+          if (res.Data) {
+            this.Activities = res.Data.getActivitiesDtos;
           }
         },
         error: (err: any) => {
           this.sharedService.handleError(err);
         },
       };
-
-      // Call the service and subscribe
-      this.companyHomeServices.GetSubActivities(activityId).subscribe(observer);
+      this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
     }
   }
-
+  GetSubActivities(activityId: number) {
+    if (activityId>0) {
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            this.SubActivities = res.Data.getSubActivitiesDtos;
+          }
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        },
+      };
+      this.sectorsAndActivitiesServices.GetSubActivities(0,'',activityId).subscribe(observer);
+    }
+  }
   GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-
         this.showLoader = false;
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
@@ -234,21 +226,21 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
   }
-  GetSectors() {
+  GetSectors(): void {
+    this.showLoader = true;
     const observer = {
       next: (res: any) => {
-
-
         if (res.Data) {
-          this.Sectors = res.Data;
-          console.log(this.Sectors)
+          this.Sectors = res.Data.getSectorsDtos;
         }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
+        this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetSectors().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   GetWilayat(govId: number) {
     if (govId > 0) {
@@ -319,11 +311,10 @@ export class CompaniesHomeComponent implements OnInit {
           showConfirmButton: false,
           timer: 2000
         });
-        return;
-      }
+        this.showLoader = false;
+        return; // Stop the form submission      }
     }
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    debugger
     if (this.companyForm.value.arName == '') {
       Swal.fire({
         icon: 'error',
@@ -331,6 +322,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.enName == '') {
       Swal.fire({
@@ -339,6 +332,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.phoneNumber == '') {
       Swal.fire({
@@ -347,6 +342,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
@@ -355,6 +352,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -363,6 +362,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.subActivityId == 0) {
       Swal.fire({
@@ -371,6 +372,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
@@ -379,6 +382,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
@@ -387,6 +392,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
@@ -395,8 +402,10 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+
+      this.showLoader = false;
       return; // Stop the form submission
-    }
+        }    }
     else if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
@@ -423,6 +432,7 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status:this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
       }
@@ -496,6 +506,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status: true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -533,6 +544,7 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
+      status:true,
       email_2: '',
       email_1: '',
       compValue: '',
@@ -655,6 +667,7 @@ export class CompaniesHomeComponent implements OnInit {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
+              status:this.company.status,
               facilityType: this.company.facilityType
             });
             this.initializeForm();
@@ -701,6 +714,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
@@ -709,6 +724,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -717,6 +734,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
@@ -725,6 +744,8 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
@@ -733,14 +754,17 @@ export class CompaniesHomeComponent implements OnInit {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب إدخال بريد إلكتروني واحد على الأقل',
+        title: 'يجب ادخال بريد إلكتروني واحد على الأقل',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
@@ -769,6 +793,7 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
+        status:this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType
       }

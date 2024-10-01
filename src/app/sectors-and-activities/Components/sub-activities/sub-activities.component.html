@@ -28,10 +28,11 @@
                 قائمة النشاطات
             </div>
             <div class="btns d-flex">
-                <div class="search" id="research-search">
-                    <input class="form-control" type="text" name="search" placeholder="البحث">
-                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
-                </div>
+                <div class="search">
+                    <input (keydown.enter)="countriesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+                      name="search" placeholder="البحث">
+                    <i (click)="countriesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                  </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
                     <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
@@ -46,6 +47,7 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
+                        <th class="text-center" scope="col">#</th>
                         <th class="text-center" scope="col">اسم النشاط</th>
                         <th class="text-center" scope="col">تاريخ انشاءه</th>
                         <th class="text-center" scope="col">الرمز</th>
@@ -53,7 +55,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let subActivity of subActivities">
+                    <tr *ngFor="let subActivity of subActivities; let i = index">
+                        <td class="text-center">{{i+1}}</td>
                         <td class="text-center">{{subActivity.arName}}</td>
                         <td class="text-center active">{{subActivity.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{subActivity.code}}</td>
@@ -68,12 +71,24 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot *ngIf="noData">
+                    <tr>
+                      <th colspan="7">
+                        <div class="alert alert-warning">
+                          <i class="fa-solid fa-triangle-exclamation"></i>
+                          <br />
+                          <span> لا يوجد بيانات </span>
+                        </div>
+                      </th>
+                    </tr>
+                  </tfoot>
             </table>
         </div>
     </div>
     <!-- end content -->
-
 </div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
         <div class="modal-content" style="width: 50%;">

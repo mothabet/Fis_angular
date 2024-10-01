@@ -34,8 +34,6 @@ export class TwoYearsWithPartsComponent {
     this.tableId = this.activeRouter.snapshot.paramMap.get('tableId')!;
     this.GetTableById(+this.tableId);
     this.GetFormById(+this.formId);
-    this.GetActivites();
-    this.GetCountrites();
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
     this.role = result.roles;
@@ -96,39 +94,6 @@ export class TwoYearsWithPartsComponent {
     if (index > -1) {
       code.SubCodes.splice(index, 1);
     }
-  }
-  
-  GetActivites() {
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.activities = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetActivities().subscribe(observer);
-  }
-  GetCountrites() {
-    const observer = {
-      next: (res: any) => {
-        this.Loader = false;
-        if (res.Data) {
-          this.Loader = false;
-          this.countries = res.Data;
-        }
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.formServices.GetCountries().subscribe(observer);
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);

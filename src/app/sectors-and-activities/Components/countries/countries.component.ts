@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IAddSectorDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { ToastrService } from 'ngx-toastr';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import Swal from 'sweetalert2';
 
@@ -18,8 +17,13 @@ export class CountriesComponent implements OnInit {
   country!:IGetSectorDto;
   isUpdate: boolean = false;
   id:number=0;
-  constructor(    private sharedService: SharedService,private fb: FormBuilder,
-    private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
+  constructor(private sharedService: SharedService,private fb: FormBuilder,
+    private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
 
   ngOnInit(): void {
     this.countryForm = this.fb.group({
@@ -84,8 +88,16 @@ export class CountriesComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.countries = res.Data;
+          this.countries = res.Data.getCountryDtos;
+          this.currentPage = res.Data.PageNumber;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.onReset();
+        }
+        else{
+          this.countries = [];
         }
         this.showLoader = false;
       },
@@ -95,6 +107,13 @@ export class CountriesComponent implements OnInit {
       },
     };
     this.sectorsAndActivitiesServices.GetCountries(page, textSearch).subscribe(observer);
+  }
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.GetCountries(page);
+  }
+  countriesSearch() {
+    this.GetCountries(this.currentPage, this.searchText);
   }
   onReset(): void {
     this.isUpdate = false;

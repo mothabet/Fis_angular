@@ -18,8 +18,13 @@ export class SectorsComponent implements OnInit {
   sector!:IGetSectorDto;
   isUpdate: boolean = false;
   id:number=0;
-  constructor(    private sharedService: SharedService,private fb: FormBuilder,
-    private toastr: ToastrService,private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
+  constructor(private sharedService: SharedService,private fb: FormBuilder,
+    private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
 
   ngOnInit(): void {
     this.sectorForm = this.fb.group({
@@ -84,9 +89,16 @@ export class SectorsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.sectors = res.Data;
-          console.log(this.sectors)
+          this.sectors = res.Data.getSectorsDtos;
+          this.currentPage = res.Data.PageNumber;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.onReset();
+        }
+        else{
+          this.sectors = [];
         }
         this.showLoader = false;
       },
@@ -96,6 +108,13 @@ export class SectorsComponent implements OnInit {
       },
     };
     this.sectorsAndActivitiesServices.GetSectors(page, textSearch).subscribe(observer);
+  }
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.GetSectors(page);
+  }
+  countriesSearch() {
+    this.GetSectors(this.currentPage, this.searchText);
   }
   onReset(): void {
     this.isUpdate = false;
