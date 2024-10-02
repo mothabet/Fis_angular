@@ -16,20 +16,25 @@
           </div>
       </div>
   </div> -->
-  <div class="col-lg-3 col-md-6 col-sm-12 mb-3" *ngFor="let static of formStatics">
-      <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics"
-          style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
-          <div class="header py-3">
-              <div class="total-num">
-                  {{static.count}}
-              </div>
-              <div class="total-title">
-                  {{static.name}}
-              </div>
-          </div>
-      </div>
-  </div>
+  <ng-container *ngFor="let static of formStatics">
+    <ng-container *ngIf="static.name !='إجمالي عدد الاستمارات التي تم الانتهاء من تعبئتها'">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 
+            <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics" style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
+                <div class="header py-3">
+                    <div class="total-num">
+                        {{static.count}}
+                    </div>
+                    <div class="total-title">
+                        {{static.name}}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </ng-container>
+</ng-container>
 </div>
 <!--end total -->
   <!-- start content -->
@@ -57,60 +62,62 @@
 
     <div class="table-responsive company-table research-table">
       <table class="table table-borderless">
-        <thead>
-          <tr class="t-header">
-            <th scope="col">رقم</th>
-            <th class="text-center" scope="col">الاسم</th>
-            <th class="text-center" scope="col">البريد الإلكتروني</th>
-            <th class="text-center" scope="col">رقم الهاتف</th>
-            <th class="text-center" scope="col">الحالة</th>
-            <th class="text-center" scope="col"></th>
-          </tr>
-        </thead>
+          <thead>
+              <tr class="t-header">
+                  <th scope="col">رقم</th>
+                  <th class="text-center" scope="col">الاسم</th>
+                  <th class="text-center" scope="col">البريد الإلكتروني</th>
+                  <th class="text-center" scope="col">رقم الهاتف</th>
+                  <th class="text-center" scope="col">الحالة</th>
+                  <th class="text-center" scope="col"></th>
+              </tr>
+          </thead>
 
-        <tbody>
-          <tr *ngFor="let item of researchers; let i = index">
-            <td>
-              {{ i + 1 }}
-            </td>
-            <td class="text-center">{{ item.arName }}</td>
-            <td class="text-center">{{ item.email }}</td>
-            <td class="text-center">{{ item.phone }}</td>
-            <td class="text-center active">
-              <ng-container *ngIf="item.status; else inactive">
-                نشط
-              </ng-container>
-              <ng-template #inactive> غير نشط </ng-template>
-            </td>
-            <td class="text-center td-actions">
-              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)">
-                <img src="../../../../assets/images/link.png" alt="" />
-              </a>
-              <a routerLink="/Researcher-Details/{{item.id}}" class="icon">
-                <img src="../../../../assets/images/eye-outline.png" alt="" />
-              </a>
-              <button class="icon" (click)="showAlert(item.id)">
-                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
-              </button>
-              <button class="icon" (click)="editResearcher(item.id)">
-                <img src="../../../../assets/images/pencil-outline.png" alt="" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot *ngIf="noData">
-          <tr>
-            <th colspan="7">
-              <div class="alert alert-warning">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <br />
-                <span> لا يوجد بيانات </span>
-              </div>
-            </th>
-          </tr>
-        </tfoot>
+          <tbody>
+              <tr *ngFor="let item of researchers; let i = index">
+                  <td>
+                      {{ i + 1 }}
+                  </td>
+                  <td class="text-center">{{ item.arName }}</td>
+                  <td class="text-center">{{ item.email }}</td>
+                  <td class="text-center">{{ item.phone }}</td>
+                  <td class="text-center">
+                      <ng-container *ngIf="item.status; else inactive">
+                          <div class="active"> نشط </div>
+                      </ng-container>
+                      <ng-template #inactive>
+                          <div class="notactive"> غير نشط </div>
+                      </ng-template>
+                  </td>
+                  <td class="text-center td-actions">
+                      <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)">
+                          <img src="../../../../assets/images/link.png" alt="" />
+                      </a>
+                      <a routerLink="/Researcher-Details/{{item.id}}" class="icon">
+                          <img src="../../../../assets/images/eye-outline.png" alt="" />
+                      </a>
+                      <button class="icon" (click)="showAlert(item.id)">
+          <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+        </button>
+                      <button class="icon" (click)="editResearcher(item.id)">
+          <img src="../../../../assets/images/pencil-outline.png" alt="" />
+        </button>
+                  </td>
+              </tr>
+          </tbody>
+          <tfoot *ngIf="noData">
+              <tr>
+                  <th colspan="7">
+                      <div class="alert alert-warning">
+                          <i class="fa-solid fa-triangle-exclamation"></i>
+                          <br />
+                          <span> لا يوجد بيانات </span>
+                      </div>
+                  </th>
+              </tr>
+          </tfoot>
       </table>
-    </div>
+  </div>
   </div>
   <!-- end content -->
 </div>

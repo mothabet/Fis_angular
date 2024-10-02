@@ -35,6 +35,12 @@ export class ResearcherHomeService {
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherById?id=${id}&lang=2`, { headers });
      return resopnse;
    }
+   GetResearcherByIdWithCompaniesAndCompaniesMandate(id:number,pageNumber:number , textSearch : string =''){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherByIdWithCompaniesAndCompaniesMandate?id=${id}&lang=2&pageNumber=${pageNumber}&textSearch=${textSearch}`, { headers });
+     return resopnse;
+   }
    GetFormsStatistics(id:number=0){
     debugger
     var headers= this.sharedService.getHeaders();

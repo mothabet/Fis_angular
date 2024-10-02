@@ -6,14 +6,12 @@
 
     <!-- start researcher header -->
     <div class="card-box d-flex align-items-center mb-3 company-card">
-        <div class="image-box position-relative" style="width:50px;">
+        <div class="image-box position-relative" style="width:80px !important;border:1px solid gray;height: 80px;">
             <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
-            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid"
-                alt="company">
+            <img [src]="selectedImageUrl || '../../../../assets/images/companyLogo.png'" class="img-fluid" alt="">
 
             <!-- زر تغيير الصورة -->
-            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true"
-                (mouseleave)="hovering=false">
+            <button class="change-image-btn" (click)="triggerImageUpload()" (mouseover)="hovering=true" (mouseleave)="hovering=false">
                 <img src="../../../../assets/images/edit-icon.png" *ngIf="hovering">
                 <span *ngIf="hovering">Change Image</span>
             </button>
@@ -112,10 +110,16 @@
                         قائمة الشركات
                     </h4>
                     <div class="d-flex justify-content-start">
+                        <div class="search">
+                            <input (keydown.enter)="companiesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+                              name="search" placeholder="البحث">
+                            <i (click)="companiesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                          </div>
                         <button (click)="printPdf()" type="button" class="btn btn-download" style="border-radius: 8px;
                             color: white;
                             font-size: 12px;
                             background-color: #133C8B;
+                            width: 150px;
                             ">
                             <img src="../../../../assets/images/list-box-outline.png" alt="" />
                             تنزيل PDF
@@ -146,10 +150,16 @@
                                 <td class="text-center">184510</td>
                                 <td class="text-center">الترفيه</td>
                                 <td class="text-center">{{company.address}}</td>
-                                <td class="text-center notes"></td>
-                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
-                                <td *ngIf="!company.status" class="text-center status-active"
-                                    style="color: red !important;">غير نشط</td>
+                                <td class="text-center notes" *ngIf="company.researcherArName==''"></td>
+                                <td class="text-center notes" *ngIf="!(company.researcherArName=='')">
+                                    شركه مفوضه من قبل ({{company.researcherArName}})
+                                </td>
+                                <td *ngIf="company.status" class="text-center">
+                                    <div class=" status-active">نشط</div>
+                                </td>
+                                <td *ngIf="!company.status" class="text-center ">
+                                    <div class="Gnotactive">غير نشط</div>
+                                </td>
                                 <td class="text-center">
                                     <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
                                         <a>إستماره</a>
@@ -157,27 +167,17 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody>
-                            <tr *ngFor="let company of companiesMandate">
-                                <td>{{company.arName}}</td>
-                                <td class="text-center">021124444</td>
-                                <td class="text-center">{{company.id}}</td>
-                                <td class="text-center">184510</td>
-                                <td class="text-center">الترفيه</td>
-                                <td class="text-center">{{company.address}}</td>
-                                <td class="text-center notes">
-                                    شركه مفوضه من قبل {{company.researcherArName}}
-                                </td>
-                                <td *ngIf="company.status" class="text-center status-active">نشط</td>
-                                <td *ngIf="!company.status" class="text-center status-active"
-                                    style="color: red !important;">غير نشط</td>
-                                <td class="text-center">
-                                    <button class="btn btn-form" [routerLink]="['/CompanyHome', company.id]">
-                                        <a>إستماره</a>
-                                    </button>
-                                </td>
+                        <tfoot *ngIf="noData">
+                            <tr>
+                              <th colspan="9">
+                                <div class="alert alert-warning">
+                                  <i class="fa-solid fa-triangle-exclamation"></i>
+                                  <br />
+                                  <span> لا يوجد بيانات </span>
+                                </div>
+                              </th>
                             </tr>
-                        </tbody>
+                          </tfoot>
                     </table>
                 </div>
 
@@ -189,6 +189,8 @@
 
 
 </div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>
 <!-- end main content -->
 <div class="modal company-modal fade" id="sendFormCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -217,7 +219,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let company of researcher.companies">
+                        <tr *ngFor="let company of companies">
                             <td>
                                 <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
                                     [checked]="isSelected(company.id)" type="checkbox" name="companyName1"

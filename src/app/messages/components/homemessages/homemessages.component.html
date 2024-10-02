@@ -80,10 +80,6 @@
                                         <tr class="t-header">
                                             <th class="text-center" scope="col">#</th>
                                             <th style="min-width: 150px;" scope="col">اسم الرسالة</th>
-                                            <th class="text-center" scope="col">نوع الرسالة
-                                            </th>
-                                            <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل الرسالة
-                                            </th>
                                             <th style="min-width: 100px;" class="text-center" scope="col">عنوان الرسالة
                                             </th>
                                             <th style="min-width: 150px;" class="text-center" scope="col"></th>
@@ -93,10 +89,6 @@
                                         <tr *ngFor="let message of messages ; let i = index">
                                             <th class="text-center" scope="col">{{i+1}}</th>
                                             <td>{{message.arName}}</td>
-                                            <td class="text-center">
-                                                {{ getTypeMessage(message.typeMessage) }}
-                                            </td>
-                                            <td class="text-center">{{message.arDetails}}</td>
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
                                                 <!-- <a href="#" class="icon">
@@ -140,11 +132,7 @@
                                         <tr class="t-header">
                                             <th class="text-center" scope="col">#</th>
                                             <th style="min-width: 150px;" scope="col">اسم الايميل</th>
-                                            <th class="text-center" scope="col">نوع الايميل
-                                            </th>
-                                            <!-- <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل
-                                                الايميل
-                                            </th> -->
+                                            
                                             <th style="min-width: 100px;" class="text-center" scope="col">عنوان
                                                 الايميل
                                             </th>
@@ -155,10 +143,6 @@
                                         <tr *ngFor="let message of emails ; let i = index">
                                             <th class="text-center" scope="col">{{i+1}}</th>
                                             <td>{{message.arName}}</td>
-                                            <td class="text-center">
-                                                {{ getTypeMessage(message.typeMessage) }}
-                                            </td>
-                                            <!-- <td class="text-center" style="max-width: 10px;"> <p  [innerHTML]="message.arDetails"></p> </td> -->
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
                                                 <!-- <a href="#" class="icon">
@@ -202,11 +186,7 @@
                                         <tr class="t-header">
                                             <th class="text-center" scope="col">#</th>
                                             <th style="min-width: 150px;" scope="col">اسم الاشعار</th>
-                                            <th class="text-center" scope="col">نوع الاشعار
-                                            </th>
-                                            <th style="min-width: 100px;" class="text-center" scope="col">تفاصيل
-                                                الاشعار
-                                            </th>
+                                            
                                             <th style="min-width: 100px;" class="text-center" scope="col">عنوان
                                                 الاشعار
                                             </th>
@@ -214,13 +194,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let message of emails ; let i = index">
+                                        <tr *ngFor="let message of notifications ; let i = index">
                                             <th class="text-center" scope="col">{{i+1}}</th>
                                             <td>{{message.arName}}</td>
-                                            <td class="text-center">
-                                                {{ getTypeMessage(message.typeMessage) }}
-                                            </td>
-                                            <td class="text-center">{{message.arDetails}}</td>
+                                            
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
                                                 <!-- <a href="#" class="icon">

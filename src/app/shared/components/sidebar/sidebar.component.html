@@ -1,5 +1,5 @@
 <!-- menu -->
-<div class="home">
+<div class="home" style="height: 100% !important;">
   <aside id="sidebar" class="expand">
     <!-- logo -->
     <div class="px-2 mt-3 d-flex justify-content-between align-items-center">
@@ -13,17 +13,17 @@
 
     <!-- menu list -->
     <ul class="sidebar-nav">
-      <li class="sidebar-item mb-3" id="searchList">
-        <div class="d-flex justify-content-between align-items-center flex-nowrap">
-          <div class="sidebar-link d-flex justify-content-between" id="navSearch">
-            <input class="form-control" type="text" placeholder="البحث" />
-            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-          </div>
-          <button class="filter text-center">
-            <i class="fa-solid fa-sliders fa-rotate-90 icon" id="filter-icon"></i>
-          </button>
-        </div>
-      </li>
+      <!-- <li class="sidebar-item mb-3" id="searchList">
+              <div class="d-flex justify-content-between align-items-center flex-nowrap">
+                  <div class="sidebar-link d-flex justify-content-between" id="navSearch">
+                      <input class="form-control" type="text" placeholder="البحث" />
+                      <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                  </div>
+                  <button class="filter text-center">
+          <i class="fa-solid fa-sliders fa-rotate-90 icon" id="filter-icon"></i>
+        </button>
+              </div>
+          </li> -->
 
       <li class="sidebar-item" routerLink="/Home" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link">
@@ -31,7 +31,8 @@
           <span class="">الرئيسية</span>
         </a>
       </li>
-      <li class="sidebar-item" [routerLink]="['/Companies-Details',id]" routerLinkActive="active" *ngIf="role === 'Company'">
+      <li class="sidebar-item" [routerLink]="['/Companies-Details',id]" routerLinkActive="active"
+        *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
@@ -49,7 +50,8 @@
           <span>الباحثين او المشرف</span>
         </a>
       </li>
-      <li class="sidebar-item" [routerLink]="['/Researcher-Details',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+      <li class="sidebar-item" [routerLink]="['/Researcher-Details',id]" routerLinkActive="active"
+        *ngIf="role === 'Researchers'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
           <span>الباحث او المشرف</span>
@@ -61,7 +63,8 @@
           <span>الشركات</span>
         </a>
       </li>
-      <li class="sidebar-item" [routerLink]="['/Companies-Researcher',id]" routerLinkActive="active" *ngIf="role === 'Researchers'">
+      <li class="sidebar-item" [routerLink]="['/Companies-Researcher',id]" routerLinkActive="active"
+        *ngIf="role === 'Researchers'">
         <a class="sidebar-link" [routerLink]="['/Companies-Researcher',id]">
           <i class="fa-solid fa-building icon"></i>
           <span>شركات الباحث</span>
@@ -91,8 +94,7 @@
             <i class="fa-solid fa-file-lines icon"></i>
             <span>تصميم الاستمارات</span>
           </a>
-          <span class="fa-solid fa-caret-down drop-dowm-icon collapsed" data-bs-toggle="collapse"
-            data-bs-target="#forms" aria-expanded="false" aria-controls="forms"></span>
+          <!-- <span class="fa-solid fa-caret-down drop-dowm-icon collapsed" data-bs-toggle="collapse" data-bs-target="#forms" aria-expanded="false" aria-controls="forms"></span> -->
 
         </div>
         <ul id="forms" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
@@ -123,10 +125,9 @@
             <i class="fa-solid fa-gear icon"></i>
             <span class="">الإعدادات</span>
           </a>
-          <span class="drop-dowm-icon fa-solid fa-caret-down collapsed" data-bs-toggle="collapse"
-            data-bs-target="#setting" aria-expanded="false" aria-controls="setting"></span>
+          <!-- <span class="drop-dowm-icon fa-solid fa-caret-down collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting"></span> -->
         </div>
-        <ul id="setting" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+        <ul id="setting" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
           <li class="sidebar-item">
             <a routerLink="/Codes" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>

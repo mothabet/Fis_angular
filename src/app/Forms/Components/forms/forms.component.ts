@@ -13,7 +13,6 @@ import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service'
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IAddTablePartsDto } from '../../Dtos/TablePartsDto';
 import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
-import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 import { IAddInstructionsDto, IAddListInstructionsDto } from 'src/app/shared/Dtos/NavigateDto';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
@@ -464,7 +463,9 @@ export class FormsComponent implements OnInit {
     this.renderer.setStyle(crtbLabel, 'transform', 'translateY(0)');
     this.renderer.setStyle(img, 'padding', '8px');
     this.renderer.setStyle(divIcon, 'position', 'relative');
-
+    this.renderer.setStyle(divIcon, 'width', '400px');
+    this.renderer.setStyle(divIcon, 'border-top', '1px solid');
+    this.renderer.setStyle(divIcon, 'padding-top', '10px');
     // Toggle child ul visibility
     formLi.addEventListener('click', (e: Event) => {
       e.stopPropagation();

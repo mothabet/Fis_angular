@@ -37,7 +37,8 @@
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher" (click)="onReset(1)">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher"
+                        (click)="onReset(1)">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة تقرير
                     </button>
@@ -59,17 +60,23 @@
                 <tbody>
                     <tr *ngFor="let report of reports">
                         <td class="text-center">{{report.arName}}</td>
-                        <td class="text-center active">{{report.createdOn | date:'yyyy-MM-dd'}}</td>
-                        <td class="text-center" *ngIf="+report.status == 1">نشط</td>
-                        <td class="text-center" *ngIf="+report.status == 0">غير نشط</td>
+                        <td class="text-center">{{report.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center" *ngIf="+report.status == 1">
+                            <div class="Gactive">نشط</div>
+                        </td>
+                        <td class="text-center" *ngIf="+report.status == 0">
+                            <div class="Gnotactive">غير نشط</div>
+                        </td>
                         <td class="text-center td-actions">
                             <a routerLink="/ReportContents/{{report.id}}" class="icon">
                                 <img src="../../../../assets/images/eye-outline.png" alt="">
                             </a>
                             <button class="icon">
-                                <img src="../../../../assets/images/trash-can-outline.png" (click)="DeleteReport(report.id)" alt="">
+                                <img src="../../../../assets/images/trash-can-outline.png"
+                                    (click)="DeleteReport(report.id)" alt="">
                             </button>
-                            <button class="icon" (click)="openUpdatePopup(report.id)" data-bs-toggle="modal" data-bs-target="#addResearcher">
+                            <button class="icon" (click)="openUpdatePopup(report.id)" data-bs-toggle="modal"
+                                data-bs-target="#addResearcher">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
                         </td>
@@ -87,7 +94,7 @@
             <div class="modal-header pb-0">
                 <h5 class="modal-title" id="add">إضافة نشاط</h5>
             </div>
-            <form [formGroup]="reportForm"  (ngSubmit)="onSave()">
+            <form [formGroup]="reportForm" (ngSubmit)="onSave()">
                 <div class="row" style="padding: 10px;">
                     <!-- Arabic Report Name -->
                     <div class="col-sm-12 mb-2">
@@ -114,7 +121,7 @@
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
                     <button type="button" class="btn btn-reset" (click)="onReset()">إعادة ملء</button>
                     <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
-                    <button *ngIf="isUpdate" (click) = "updateReport()" type="button" class="btn btn-save">تعديل</button>
+                    <button *ngIf="isUpdate" (click)="updateReport()" type="button" class="btn btn-save">تعديل</button>
                 </div>
             </form>
         </div>
@@ -129,8 +136,8 @@
             <div class="modal-body py-1">
                 <div class="  d-flex flex-column align-items-start chart-type">
 
-                    <button class="btn transparent-btn" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#column" aria-expanded="false" aria-controls="column">
+                    <button class="btn transparent-btn" type="button" data-bs-toggle="collapse" data-bs-target="#column"
+                        aria-expanded="false" aria-controls="column">
                         <i class="fa-solid fa-chart-column icon"></i>
                         عمود
                     </button>
@@ -152,8 +159,7 @@
                                 </label>
                             </div>
                             <div class="form-check ps-0 d-flex radio-form radio-with-icon">
-                                <input class="form-check-input" type="radio" name="columChoices"
-                                    id="chartWaterfall">
+                                <input class="form-check-input" type="radio" name="columChoices" id="chartWaterfall">
                                 <label class="form-check-label " for="chartWaterfall">
                                     <img src="images/chart-waterfall.png" alt="">
                                     <span>من 100%</span>

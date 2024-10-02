@@ -84,7 +84,6 @@ export class CompanyHomeService {
      return response;
    }
    UpdateCompanyToRecearcher(id:number,Model: ICompany[]){
-    
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompanyToRecearcher?id=${id}`, Model, { headers });
      return response;
