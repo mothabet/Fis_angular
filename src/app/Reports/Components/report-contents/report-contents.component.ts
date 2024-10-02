@@ -163,23 +163,27 @@ export class ReportContentsComponent implements OnInit {
       code.arName.includes(this.searchTerm)
     );
   }
-  selectCode(code: any) {
+  selectCode(event: Event, table: ITableDto, code: any) {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
+    debugger
+    const selectedField = this.codes.find(field => field.arName === code.arName);
 
-    if (this.formContents) { // Check if formContents is initialized
-      const isAlreadySelected = this.formContents.some(
-        (item: any) => item === code.arName
-      );
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
 
-      if (!isAlreadySelected) {
-        this.formContents.push(code.arName); // Push the arName, as requested
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.Id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
       }
-    } else {
-      this.formContents = [code.arName]; // Initialize with the first value if undefined
     }
-
-
     // Perform any additional logic, like setting a FormControl value
   }
   DeleteReportContent(id: number): void {
@@ -596,7 +600,6 @@ export class ReportContentsComponent implements OnInit {
   saveReport() {
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
-    
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
       Swal.fire({
         icon: 'error',
@@ -687,7 +690,7 @@ export class ReportContentsComponent implements OnInit {
       let fromTable = '';
       let fields = '';
       let whereClause = '';
-      
+
       tables.forEach((table, tableIndex) => {
         const tableAlias = `t${tableIndex + 1}`;
 
@@ -776,7 +779,7 @@ export class ReportContentsComponent implements OnInit {
 
       return query;
     }
-    else{
+    else {
       return '';
     }
   }

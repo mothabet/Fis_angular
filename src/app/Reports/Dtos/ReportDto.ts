@@ -17,7 +17,7 @@ export interface ITableDto {
     fields: ITableFieldDto[];           // List of fields in the table
 }
 export interface ITableFieldDto {
-    dataType: string;
+    dataType: string|null;
     name: string;  // Name of the field
     filter: number|null; // Filter applied to the field
     value: any;     // Value of the field, can be any type

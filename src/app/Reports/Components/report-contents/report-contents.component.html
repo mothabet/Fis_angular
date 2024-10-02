@@ -239,7 +239,7 @@
                                       width: 100%;
                                       text-align: right;">
                                             <li class="dropdown-item" *ngFor="let code of filteredCodes"
-                                                (click)="selectCode(code)">
+                                                (click)="selectCode($event, table,code)">
                                                 {{code.arName}}
                                             </li>
                                         </ul>
@@ -248,9 +248,9 @@
                                 </div>
                                 <div class="field-container"
                                     style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                    <div class="field-item" *ngFor="let content of formContents; let i = index">
+                                    <div class="field-item" *ngFor="let content of table.fields; let i = index">
                                         <!-- Bind field properties to the input element -->
-                                        <span style="text-align: left;" class="field-text col-2">{{content}}</span>
+                                        <span style="text-align: left;" class="field-text col-2">{{content.name}}</span>
                                     </div>
                                 </div>
                             </div>
