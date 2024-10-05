@@ -45,6 +45,11 @@ export class SectorAndActivitiesService {
      var resopnse = this.http.get(environment.apiUrl+`Activity/GetActivities?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&sectorId=${sectorId}`, { headers });
      return resopnse;
    }
+   getActivityByActivityId(activityId:number){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Activity/getActivityByActivityId?lang=2&activityId=${activityId}`, { headers });
+     return resopnse;
+   }
    DeleteActivity(id:number){
     var headers= this.sharedService.getHeaders();
      var response = this.http.delete(environment.apiUrl+`Activity/DeleteActivity?id=${id}`, { headers });

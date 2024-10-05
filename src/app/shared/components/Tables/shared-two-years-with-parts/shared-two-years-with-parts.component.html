@@ -185,7 +185,7 @@
                                             style="text-wrap: balance; text-align: left !important;color: #133c8b; padding-left: 25px !important;">
                                             {{subCode.enName}} -</td>
                                             <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                                <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.enName">
+                                                <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.arName">
                                                     <option value="">Choose Activity --</option>
                                                     <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                         {{activity.code}}-{{activity.enName}}</option>

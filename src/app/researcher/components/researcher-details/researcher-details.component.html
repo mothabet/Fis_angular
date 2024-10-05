@@ -145,10 +145,10 @@
                         <tbody>
                             <tr *ngFor="let company of companies">
                                 <td>{{company.arName}}</td>
-                                <td class="text-center">021124444</td>
+                                <td class="text-center">{{ company.compRegNumber }}</td>
                                 <td class="text-center">{{company.id}}</td>
-                                <td class="text-center">184510</td>
-                                <td class="text-center">الترفيه</td>
+                                <td class="text-center">{{ company.activityId }}</td>
+                                <td class="text-center">{{ company.arActivityName }}</td>
                                 <td class="text-center">{{company.address}}</td>
                                 <td class="text-center notes" *ngIf="company.researcherArName==''"></td>
                                 <td class="text-center notes" *ngIf="!(company.researcherArName=='')">

@@ -36,7 +36,8 @@ export class CompanyResearcherHomeComponent {
   Wilaya: string = '';
   Govenorates: string = '';
   sectorId: number = 0;
-  companyForm!: FormGroup;
+  sectorName: string = "";
+  activityName: string = "";  companyForm!: FormGroup;
   showLoader: boolean = false;
   companyEmails: FormArray | null = null;
   company!: IAddCompany;
@@ -237,25 +238,71 @@ export class CompanyResearcherHomeComponent {
   }
   saveCompany(): void {
     // Validate that at least one email is provided
+    const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    // Access the array of email objects
     const emailArray = this.companyForm.value.compEmails;
+    // Filter out invalid emails
+    if (emailArray.length > 0 && emailArray[0].Email != null) {
+      const invalidEmails = emailArray.filter((item: any) => {
+        // Ensure item is an object and has an Email property
+        if (item && typeof item === 'object' && 'Email' in item) {
+          const email = item.Email.trim(); // Get and trim the email string
+          return !regexp.test(email); // Test the trimmed email against the regex
+        }
+        return true; // Consider non-objects or missing Email as invalid
+      });
+      if (invalidEmails.length > 0) {
+        Swal.fire({
+          icon: 'error',
+          title: `${invalidEmails[0].Email} الايميل غير صالح`,
+          html: '<small>يمكن أن يحتوي البريد الإلكتروني الصالح فقط على الأحرف والأرقام اللاتينية و "@" و "."</small>',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        this.showLoader = false;
+        return; // Stop the form submission      }
+      }
+    }
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-
-
-    if (this.companyForm.value.subActivityId == 0) {
+    if (this.companyForm.value.arName == '') {
       Swal.fire({
         icon: 'error',
-        title: 'يجب اختيار النشاط الثانوي',
+        title: 'يجب ادخال الاسم بالعربيه',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.enName == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال الاسم بالانجليزية',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.phoneNumber == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال رقم الهاتف',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب القطاع',
+        title: 'يجب اختيار القطاع',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -264,22 +311,28 @@ export class CompanyResearcherHomeComponent {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب رقم المنطقه',
+        title: 'يجب اختيار المنطقه',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب رقم الولايه',
+        title: 'يجب اختيار الولايه',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
@@ -288,10 +341,11 @@ export class CompanyResearcherHomeComponent {
         showConfirmButton: false,
         timer: 2000
       });
+
+      this.showLoader = false;
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -320,7 +374,12 @@ export class CompanyResearcherHomeComponent {
         status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
+        activityName: this.companyForm.value.sectorName,
+        sectorName: this.companyForm.value.sectorName,
+        subActivityName: this.companyForm.value.sectorName,
       }
+      if (Model.subActivityId.toString() == "")
+        Model.subActivityId = 0
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
@@ -340,6 +399,7 @@ export class CompanyResearcherHomeComponent {
           });
         },
         error: (err: any) => {
+          debugger
           this.showLoader = false;
           this.sharedService.handleError(err);
 
@@ -348,6 +408,16 @@ export class CompanyResearcherHomeComponent {
       this.companyHomeServices.addCompany(Model).subscribe(observer);
     }
     else {
+      debugger
+      const invalidFields: { [key: string]: any } = {}; // Store invalid fields and their errors
+
+      Object.keys(this.companyForm.controls).forEach(key => {
+        const control = this.companyForm.get(key);
+
+        if (control && control.invalid) {
+          invalidFields[key] = control.errors; // Store the field name and its errors
+        }
+      });
       Swal.fire({
         icon: 'error',
         title: 'يجب ادخال جميع البيانات بشكل صحيح',
@@ -386,7 +456,10 @@ export class CompanyResearcherHomeComponent {
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType:''
+      facilityType:'',
+      activityName: '',
+      sectorName: '',
+      subActivityName: '',
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();
@@ -424,7 +497,10 @@ export class CompanyResearcherHomeComponent {
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType:''
+      facilityType:'',
+      activityName: '',
+      sectorName: '',
+      subActivityName: '',
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();    // إضافة حقل واحد فارغ على الأقل
@@ -443,19 +519,6 @@ export class CompanyResearcherHomeComponent {
       this.GetCompanyCode();
       this.resetForm();
     }
-    this.companyForm.get('sectorId')!.valueChanges.subscribe(value => {
-      if (value != 0) {
-        this.clearActivity();
-        this.clearSubActivity();
-      }
-      this.GetSectorActvities(value);
-    });
-    this.companyForm.get('activityId')!.valueChanges.subscribe(value => {
-      if (value != 0) {
-        this.clearSubActivity();
-      }
-      this.GetSubActivities(value);
-    });
     this.companyForm.get('governoratesId')!.valueChanges.subscribe(value => {
       if (value != 0) {
         this.clearWilayat();
@@ -503,11 +566,29 @@ export class CompanyResearcherHomeComponent {
   validateInput(event: KeyboardEvent) {
     this.sharedService.validateInput(event);
   }
+  getActivityByActivityId(activityId :number){
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          this.sectorId = res.Data.sectorId;
+          this.sectorName = res.Data.sectorName;
+          this.activityName = res.Data.arName;
+          this.companyForm.value.sectorId = this.sectorId;
+          this.companyForm.value.sectorName = this.sectorName;
+          this.companyForm.value.activityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
+  }
   editCompany(id: number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         if (res.Data) {
           this.company = res.Data;
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
@@ -542,8 +623,11 @@ export class CompanyResearcherHomeComponent {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
-              status:this.company.status,
-              facilityType:this.company.facilityType
+              status: this.company.status,
+              facilityType: this.company.facilityType,
+              activityName: this.company.activityName,
+              sectorName: this.company.sectorName,
+              subActivityName: this.company.subActivityName,
             });
             this.initializeForm();
 
@@ -582,21 +666,15 @@ export class CompanyResearcherHomeComponent {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    if (this.companyForm.value.subActivityId == 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب اختيار النشاط الثانوي',
-        showConfirmButton: false,
-        timer: 2000
-      });
-    }
-    else if (this.companyForm.value.sectorId == 0) {
+    if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب القطاع',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
@@ -605,6 +683,8 @@ export class CompanyResearcherHomeComponent {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
@@ -613,6 +693,8 @@ export class CompanyResearcherHomeComponent {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (this.companyForm.value.wilayatId == 0) {
       Swal.fire({
@@ -621,14 +703,17 @@ export class CompanyResearcherHomeComponent {
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
+      return; // Stop the form submission
     }
     else if (!emailProvided) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب إدخال بريد إلكتروني واحد على الأقل',
+        title: 'يجب ادخال بريد إلكتروني واحد على الأقل',
         showConfirmButton: false,
         timer: 2000
       });
+      this.showLoader = false;
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
@@ -659,8 +744,13 @@ export class CompanyResearcherHomeComponent {
         wilayatId: this.companyForm.value.wilayatId,
         status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
-        facilityType: this.companyForm.value.facilityType
+        facilityType: this.companyForm.value.facilityType,
+        activityName: this.companyForm.value.activityName,
+        sectorName: this.companyForm.value.sectorName,
+        subActivityName: this.companyForm.value.subActivityName,
       }
+      if (Model.subActivityId.toString() == "")
+        Model.subActivityId = 0
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -671,7 +761,7 @@ export class CompanyResearcherHomeComponent {
           this.GetCompanies('', 1);
           this.showLoader = false;
           this.add = true;
-          
+
           Swal.fire({
             icon: 'success',
             title: res.Message,

@@ -146,7 +146,7 @@
                 formControlName="userName"
                 name="username"
               />
-              <label for="inputField">اسم المستخدم</label>
+              <label for="inputField"  class="text-danger">اسم المستخدم <span>*</span></label>
             </div>
             <div class="form-group col-sm-6 mb-2" id="researcherPass">
               <input
@@ -157,7 +157,7 @@
                 formControlName="password"
                 name="password"
               />
-              <label for="inputField">كلمة المرور</label>
+              <label for="inputField" class="text-danger">كلمة المرور <span>*</span></label>
               <button
                 type="button"
                 id="reload"
@@ -173,39 +173,43 @@
                 class="form-control input-modal"
                 type="text"
               />
-              <label for="inputField">اسم الشركه بالعربي</label>
+              <label for="inputField" class="text-danger">اسم الشركه بالعربي <span>*</span></label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-4 mb-2">
               <input
                 required
                 formControlName="enName"
                 class="form-control input-modal"
                 type="text"
               />
-              <label for="inputField">English Full Name</label>
+              <label for="inputField" class="text-danger">English Full Name <span>*</span></label>
             </div>
-            <div required class="form-group col-sm-3 mb-2">
+            <div  class="form-group col-sm-2 mb-2">
               <input
                 class="form-control input-modal"
                 disabled
                 type="text"
                 value="{{ CompanyCode }}"
               />
-              <label for="inputField">رمز الشركه</label>
+              <label for="inputField">رقم الشركه</label>
             </div>
             <div class="form-group col-sm-3 mb-2">
-              <select
-                required
+              <input
                 formControlName="sectorId"
-                class="form-control"
-                style="width: 100%"
-              >
-                <option selected value="0" disabled>اختيار القطاع</option>
-                <option *ngFor="let sector of Sectors" value="{{ sector.id }}">
-                  {{ sector.arName }}
-                </option>
-              </select>
-              <label for="inputField">اختيار القطاع</label>
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="sectorId"
+              />
+              <label for="inputField" class="text-danger">رمز القطاع <span>*</span></label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="sectorName"
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="sectorName"
+              />
+              <label for="inputField" class="text-danger">القطاع <span>*</span></label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <select
@@ -213,63 +217,79 @@
                 formControlName="activityId"
                 class="form-control"
                 style="width: 100%"
+                (change)="getActivityByActivityId(companyForm.value.activityId)"
               >
-                <option selected value="0" disabled>
-                  اختيار النشاط الرئيسي
+                <option value="">
+                  النشاط الرئيسي
                 </option>
                 <option
                   *ngFor="let activity of Activities"
                   value="{{ activity.id }}"
                 >
-                  {{ activity.arName }}
+                {{activity.code}}
                 </option>
               </select>
-              <label for="inputField">اختيار النشاط الرئيسي</label>
+              <label for="inputField" class="text-danger">رمز النشاط الرئيسي <span>*</span></label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="activityName"
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="activityName"
+              />
+              <label for="inputField" class="text-danger">النشاط الرئيسي <span>*</span></label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <select
-                required
                 formControlName="subActivityId"
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0" disabled>
+                <option selected value=0 disabled>
                   اختيار النشاط الثانوي
                 </option>
                 <option
-                  *ngFor="let subActivity of SubActivities"
-                  value="{{ subActivity.id }}"
+                *ngFor="let activity of Activities"
+                value="{{ activity.id }}"
                 >
-                  {{ subActivity.arName }}
+                {{activity.code}}-{{ activity.arName }}
                 </option>
               </select>
               <label for="inputField">اختيار النشاط الثانوي</label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
+                formControlName="subActivityName"
+                class="form-control input-modal"
+                type="text"
+                [(ngModel)]="activityName"
+              />
+              <label for="inputField">النشاط الثانوي</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
                 formControlName="municipalityNumber"
                 class="form-control input-modal"
                 type="text"
-                (keypress)="validateInput($event)"
               />
               <label for="inputField">رقم البلدية</label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
-                required
+                
                 formControlName="compRegNumber"
                 class="form-control input-modal"
                 type="text"
                 (keypress)="validateInput($event)"
               />
-              <label for="inputField">رقم تسجيل الشركة</label>
+              <label for="inputField" class="text-danger">رقم تسجيل الشركة <span>*</span></label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
                 formControlName="accountingPeriod"
                 class="form-control input-modal"
-                type="text"
-                (keypress)="validateInput($event)"
+                type="date"
               />
               <label for="inputField">مدة المحاسبة</label>
             </div>
@@ -277,20 +297,19 @@
               <input
                 formControlName="completionAccPeriod"
                 class="form-control input-modal"
-                type="text"
-                (keypress)="validateInput($event)"
+                type="date"
               />
               <label for="inputField">الانتهاء من مدة المحاسبة</label>
             </div>
             <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
-                required
+                
                 formControlName="phoneNumber"
                 class="form-control input-modal"
                 type="text"
                 (keypress)="validateInput($event)"
               />
-              <label for="inputField">رقم الهاتف</label>
+              <label for="inputField" class="text-danger">رقم الهاتف <span>*</span></label>
             </div>
             <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
@@ -303,7 +322,7 @@
             </div>
             <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
-                required
+                
                 formControlName="fax"
                 class="form-control input-modal"
                 type="text"
@@ -337,7 +356,7 @@
             </div>
             <div class="form-group col-sm-6 mb-2">
               <input
-                required
+                
                 formControlName="address"
                 class="form-control input-modal"
                 type="text"
@@ -347,13 +366,11 @@
             
             <div class="form-group col-sm-6 mb-2">
               <select
-                
-                required
                 formControlName="governoratesId"
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">اختيار المحافظه</option>
+                <option selected value="0">المحافظه</option>
                 <option
                   *ngFor="let governorate of Governorates"
                   value="{{ governorate.id }}"
@@ -361,21 +378,21 @@
                   {{ governorate.arName }}
                 </option>
               </select>
-              <label for="inputField">اختيار المحافظه</label>
+              <label for="inputField" class="text-danger">المحافظه <span>*</span></label>
             </div>
             <div class="form-group col-sm-6 mb-2">
               <select
-                required
+                
                 formControlName="wilayatId"
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">اختيار الولاية</option>
+                <option selected value="0">الولاية</option>
                 <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
                   {{ wilaya.arName }}
                 </option>
               </select>
-              <label for="inputField">اختيار الولاية</label>
+              <label for="inputField" class="text-danger">الولاية <span>*</span></label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
@@ -387,7 +404,7 @@
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
-                required
+                
                 formControlName="dateOfWork"
                 class="form-control input-modal"
                 type="date"
@@ -399,7 +416,7 @@
                 <option [ngValue]="true">نشط</option>
                 <option [ngValue]="false">غير نشط</option>
               </select>
-              <label for="inputField">الحاله</label>
+              <label for="inputField" class="text-danger">الحاله <span>*</span></label>
               
             </div>
             <div class="form-group col-sm-3 mb-2">
@@ -412,12 +429,18 @@
               <label for="inputField">قيمة المؤسسه</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
-              <input
-                formControlName="legalType"
-                class="form-control input-modal"
-                type="text"
-              />
-              <label for="inputField">النوع القانوني</label>
+              <select class="form-control" style="width: 100%" formControlName="legalType">
+                <option value="">--اختر الشكل القانوني--</option>
+                <option [ngValue]="1">منشاة فردية</option>
+                <option [ngValue]="2">تضامنية</option>
+                <option [ngValue]="3">توصية</option>
+                <option [ngValue]="4">محاصة</option>
+                <option [ngValue]="5">مساهمة ( عامه او مقفله )</option>
+                <option [ngValue]="6">محدودة المسؤولية</option>
+                <option [ngValue]="7">فرع شركة اجنبية</option>
+                <option [ngValue]="8">أخرى (حدد)</option>
+              </select>
+              <label for="inputField">الشكل القانوني</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
               <input
@@ -431,7 +454,7 @@
               <div formArrayName="compEmails" class="row mb-4">
                 <div *ngFor="let email of compEmails.controls; let i = index" class="col-6 mb-2" [formGroupName]="i">
                   <div class="d-flex align-items-center">
-                    <input formControlName="Email" class="form-control input-modal me-2" type="email" placeholder="البريد الإلكتروني">
+                    <input formControlName="Email" class="form-control input-modal me-2" type="email" placeholder="*البريد الإلكتروني">
                     <button class="icon btn text-white" (click)="removeEmailField(i)">
                       <img src="../../../../assets/images/trash-can-outline.png" alt="">
                     </button>
