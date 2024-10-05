@@ -25,6 +25,5 @@ export interface IDataDto{
 }
 
 export interface ICoverFormData {
-    officialUse:string,
     activityCode:string
 }
