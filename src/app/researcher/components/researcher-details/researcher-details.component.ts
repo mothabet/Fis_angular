@@ -90,6 +90,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;

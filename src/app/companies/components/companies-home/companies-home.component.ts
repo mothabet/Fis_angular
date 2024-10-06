@@ -37,6 +37,9 @@ export class CompaniesHomeComponent implements OnInit {
   Wilaya: string = '';
   Govenorates: string = '';
   sectorId: number = 0;
+  sectorName: string = "";
+  activityName: string = "";
+  subActivityName:string ="";
   companyForm!: FormGroup;
   showLoader: boolean = false;
   companyEmails: FormArray | null = null;
@@ -51,18 +54,18 @@ export class CompaniesHomeComponent implements OnInit {
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+    , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
       facilityType: [''],
-      arName: [''],
-      enName: [''],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
       municipalityNumber: [''],
-      compRegNumber: [''],
-      accountingPeriod: [''],
-      completionAccPeriod: [''],
+      compRegNumber: ['', Validators.required],
+      accountingPeriod: [null],
+      completionAccPeriod: [null],
       phoneNumber: [''],
       telNumber: [''],
       fax: [''],
@@ -74,9 +77,12 @@ export class CompaniesHomeComponent implements OnInit {
       legalType: [''],
       institutionVlaue: [''],
       institutionHeadquarters: [''],
-      sectorId: [0],
-      activityId: [0],
+      sectorId: [{value:'',disabled:true}, Validators.required],
+      sectorName: [{value:'',disabled:true}, Validators.required],
+      activityId: ['', Validators.required],
+      activityName: [{value:'',disabled:true}, Validators.required],
       subActivityId: [0],
+      subActivityName: [{value:'',disabled:true},],
       governoratesId: [0],
       wilayatId: [0],
       status: [true],
@@ -85,7 +91,41 @@ export class CompaniesHomeComponent implements OnInit {
 
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
-    console.log(this.compEmails.controls)
+    this.GetSectorActvities(0);
+  }
+  getActivityByActivityId(activityId: number) {
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.sectorId = res.Data.sectorId;
+          this.sectorName = res.Data.sectorName;
+          this.activityName = res.Data.arName;
+          this.companyForm.value.sectorId = this.sectorId;
+          this.companyForm.value.sectorName = this.sectorName;
+          this.companyForm.value.activityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
+  }
+  getActivityBySubActivityId(activityId: number) {
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.subActivityName = res.Data.arName;
+          this.companyForm.value.subActivityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
   }
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -173,22 +213,20 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetCompanies('', page);
   }
   GetSectorActvities(sectorId: number) {
-    if (sectorId>0) {
-      const observer = {
-        next: (res: any) => {
-          if (res.Data) {
-            this.Activities = res.Data.getActivitiesDtos;
-          }
-        },
-        error: (err: any) => {
-          this.sharedService.handleError(err);
-        },
-      };
-      this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
-    }
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.Activities = res.Data.getActivitiesDtos;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetActivities(0, '', 0).subscribe(observer);
   }
   GetSubActivities(activityId: number) {
-    if (activityId>0) {
+    if (activityId > 0) {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
@@ -199,7 +237,7 @@ export class CompaniesHomeComponent implements OnInit {
           this.sharedService.handleError(err);
         },
       };
-      this.sectorsAndActivitiesServices.GetSubActivities(0,'',activityId).subscribe(observer);
+      this.sectorsAndActivitiesServices.GetSubActivities(0, '', activityId).subscribe(observer);
     }
   }
   GetCompanies(textSearch: string = '', page: number) {
@@ -290,7 +328,6 @@ export class CompaniesHomeComponent implements OnInit {
   saveCompany(): void {
     // Validate that at least one email is provided
     const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
     // Access the array of email objects
     const emailArray = this.companyForm.value.compEmails;
     // Filter out invalid emails
@@ -313,6 +350,7 @@ export class CompaniesHomeComponent implements OnInit {
         });
         this.showLoader = false;
         return; // Stop the form submission      }
+      }
     }
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
     if (this.companyForm.value.arName == '') {
@@ -335,10 +373,10 @@ export class CompaniesHomeComponent implements OnInit {
       this.showLoader = false;
       return; // Stop the form submission
     }
-    else if (this.companyForm.value.phoneNumber == '') {
+    else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب ادخال رقم الهاتف',
+        title: 'يجب النشاط الرئيسي',
         showConfirmButton: false,
         timer: 2000
       });
@@ -355,20 +393,20 @@ export class CompaniesHomeComponent implements OnInit {
       this.showLoader = false;
       return; // Stop the form submission
     }
-    else if (this.companyForm.value.activityId == 0) {
+    else if (this.companyForm.value.compRegNumber == '') {
       Swal.fire({
         icon: 'error',
-        title: 'يجب النشاط الرئيسي',
+        title: 'يجب ادخال رقم التسجيل الضريبي',
         showConfirmButton: false,
         timer: 2000
       });
       this.showLoader = false;
       return; // Stop the form submission
     }
-    else if (this.companyForm.value.subActivityId == 0) {
+    else if (this.companyForm.value.phoneNumber == '') {
       Swal.fire({
         icon: 'error',
-        title: 'يجب اختيار النشاط الثانوي',
+        title: 'يجب ادخال رقم الهاتف',
         showConfirmButton: false,
         timer: 2000
       });
@@ -378,7 +416,7 @@ export class CompaniesHomeComponent implements OnInit {
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب اختيار المنطقه',
+        title: 'يجب اختيار المحافظه',
         showConfirmButton: false,
         timer: 2000
       });
@@ -405,7 +443,7 @@ export class CompaniesHomeComponent implements OnInit {
 
       this.showLoader = false;
       return; // Stop the form submission
-        }    }
+    }
     else if (this.companyForm.valid) {
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
@@ -414,8 +452,8 @@ export class CompaniesHomeComponent implements OnInit {
         enName: this.companyForm.value.enName,
         municipalityNumber: this.companyForm.value.municipalityNumber,
         compRegNumber: this.companyForm.value.compRegNumber,
-        accountingPeriod: this.companyForm.value.accountingPeriod,
-        completionAccPeriod: this.companyForm.value.completionAccPeriod,
+        accountingPeriod: this.companyForm.value.accountingPeriod || null,  // Adjust this
+        completionAccPeriod: this.companyForm.value.completionAccPeriod || null,  // Adjust this
         phoneNumber: this.companyForm.value.phoneNumber,
         telNumber: this.companyForm.value.telNumber,
         fax: this.companyForm.value.fax,
@@ -432,10 +470,16 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        status:this.companyForm.value.status,
+        status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
+        activityName: this.activityName,
+        sectorName: this.sectorName,
+        subActivityName: this.subActivityName,
       }
+      
+      if (Model.subActivityId.toString() == "")
+        Model.subActivityId = 0
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
@@ -455,7 +499,7 @@ export class CompaniesHomeComponent implements OnInit {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.showLoader = false;
           this.sharedService.handleError(err);
 
@@ -464,7 +508,7 @@ export class CompaniesHomeComponent implements OnInit {
       this.companyHomeServices.addCompany(Model).subscribe(observer);
     }
     else {
-      debugger
+      
       const invalidFields: { [key: string]: any } = {}; // Store invalid fields and their errors
 
       Object.keys(this.companyForm.controls).forEach(key => {
@@ -506,13 +550,16 @@ export class CompaniesHomeComponent implements OnInit {
       subActivityId: '',
       governoratesId: '',
       wilayatId: '',
-      status: true,
+      status:true,
       email_2: '',
       email_1: '',
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType: ''
+      facilityType:'',
+      activityName: '',
+      sectorName: '',
+      subActivityName: '',
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();
@@ -550,7 +597,10 @@ export class CompaniesHomeComponent implements OnInit {
       compValue: '',
       compBuild: '',
       webSite: '',
-      facilityType: ''
+      facilityType:'',
+      activityName: '',
+      sectorName: '',
+      subActivityName: '',
     });
     if (this.companyForm.get('emails'))
       (this.companyForm.get('emails') as FormArray).clear();    // إضافة حقل واحد فارغ على الأقل
@@ -569,19 +619,6 @@ export class CompaniesHomeComponent implements OnInit {
       this.GetCompanyCode();
       this.resetForm();
     }
-    this.companyForm.get('sectorId')!.valueChanges.subscribe(value => {
-      if (value != 0) {
-        this.clearActivity();
-        this.clearSubActivity();
-      }
-      this.GetSectorActvities(value);
-    });
-    this.companyForm.get('activityId')!.valueChanges.subscribe(value => {
-      if (value != 0) {
-        this.clearSubActivity();
-      }
-      this.GetSubActivities(value);
-    });
     this.companyForm.get('governoratesId')!.valueChanges.subscribe(value => {
       if (value != 0) {
         this.clearWilayat();
@@ -642,6 +679,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
+            
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -649,8 +687,8 @@ export class CompaniesHomeComponent implements OnInit {
               password: this.company.password,
               municipalityNumber: this.company.municipalityNumber,
               compRegNumber: this.company.compRegNumber,
-              accountingPeriod: this.company.accountingPeriod,
-              completionAccPeriod: this.company.completionAccPeriod,
+              accountingPeriod: this.getDateOnly(this.company.accountingPeriod),
+              completionAccPeriod: this.getDateOnly(this.company.completionAccPeriod),
               phoneNumber: this.company.phoneNumber,
               telNumber: this.company.telNumber,
               fax: this.company.fax,
@@ -667,8 +705,11 @@ export class CompaniesHomeComponent implements OnInit {
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
-              status:this.company.status,
-              facilityType: this.company.facilityType
+              status: this.company.status,
+              facilityType: this.company.facilityType,
+              activityName: this.company.activityName,
+              sectorName: this.company.sectorName,
+              subActivityName: this.company.subActivityName,
             });
             this.initializeForm();
 
@@ -707,17 +748,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    if (this.companyForm.value.subActivityId == 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب اختيار النشاط الثانوي',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      this.showLoader = false;
-      return; // Stop the form submission
-    }
-    else if (this.companyForm.value.sectorId == 0) {
+    if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
         title: 'يجب القطاع',
@@ -768,6 +799,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
+      
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -793,10 +825,15 @@ export class CompaniesHomeComponent implements OnInit {
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
         wilayatId: this.companyForm.value.wilayatId,
-        status:this.companyForm.value.status,
+        status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
-        facilityType: this.companyForm.value.facilityType
+        facilityType: this.companyForm.value.facilityType,
+        activityName: this.activityName,
+        sectorName: this.sectorName,
+        subActivityName: this.subActivityName,
       }
+      if (Model.subActivityId.toString() == "")
+        Model.subActivityId = 0
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -919,5 +956,9 @@ export class CompaniesHomeComponent implements OnInit {
   closePopup() {
     this.add = true;
     this.resetForm();
+  }
+  getDateOnly(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toISOString().split('T')[0];
   }
 }

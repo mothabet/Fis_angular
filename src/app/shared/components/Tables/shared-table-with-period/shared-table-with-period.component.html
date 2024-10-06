@@ -4,21 +4,23 @@
       <!-- start table -->
       <div class="content companies projection-table">
         <div class="header d-flex flex-wrap">
-          <div class="title flex-fill">
-          </div>
-          <div class="title flex-fill en">
-          </div>
+            <div class="title flex-fill">
+                {{table.arName}}
+            </div>
+            <div class="title flex-fill en">
+                {{table.enName}}
+            </div>
         </div>
         <div class="table-responsive company-table">
           <table class="table table-borderless">
             <thead>
               <tr class="t-header">
-                <th scope="col" style="min-width: 220px;">الاستمارات المخططة</th>
+                <th scope="col" style="min-width: 220px;">{{table.arHeading}}</th>
                 <th class="text-center" scope="col" *ngFor="let year of years">
                   خلال {{year}} During
                 </th>
                 <th class="text-center" scope="col">الرمز Code</th>
-                <th class="text-start" scope="col" style="min-width: 220px;">New Investment Planned</th>
+                <th class="text-start" scope="col" style="min-width: 220px;">{{table.enHeading}}</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +139,7 @@
                       style="text-wrap: balance; text-align: center !important; color: #00af9d;">
                       {{subCode.enName}}</td>
                       <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                        <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.enName">
+                        <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.arName">
                             <option value="">Choose Activity --</option>
                             <option *ngFor="let activity of activities" value="{{activity.id}}">
                                 {{activity.code}}-{{activity.enName}}</option>

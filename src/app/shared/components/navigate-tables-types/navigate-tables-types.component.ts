@@ -83,10 +83,10 @@ export class NavigateTablesTypesComponent implements OnInit {
           case 2:
             navigationPromise = this.router.navigate(['/TableWithoutTrans', this.formId, id, this.companyId]);
             break;
-          case 3:
+          case 4:
             navigationPromise = this.router.navigate(['/TwoYearsWithParts', this.formId, id, this.companyId]);
             break;
-          case 4:
+          case 3:
             navigationPromise = this.router.navigate(['/OneYearWithParts', this.formId, id, this.companyId]);
             break;
           case 5:

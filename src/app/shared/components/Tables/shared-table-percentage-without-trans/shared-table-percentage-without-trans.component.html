@@ -15,13 +15,13 @@
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
-                            <th class="text-end" scope="col" style="min-width: 240px;">البيان</th>
+                            <th class="text-end" scope="col" style="min-width: 240px;">{{table.arHeading}}</th>
                             <th class="text-center" scope="col">نهاية عام Year-end {{coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col">نهاية عام Year-end {{+coverForm.reviewYear - 1}}
                             </th>
                             <th class="text-center">ملكية رأس المال في نهاية Percentage of ownership {{+coverForm.reviewYear - 1}}</th>
                             <th class="text-center" scope="col">الرمز Code</th>
-                            <th class="text-start" scope="col" style="min-width: 240px;">Items</th>
+                            <th class="text-start" scope="col" style="min-width: 240px;">{{table.enHeading}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -190,7 +190,7 @@
                                         style="text-wrap: balance; text-align: center !important; color: #00af9d;">
                                         {{subCode.enName}}</td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                            <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.enName">
+                                            <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.arName">
                                                 <option value="">Choose Activity --</option>
                                                 <option *ngFor="let activity of activities" value="{{activity.id}}">
                                                     {{activity.code}}-{{activity.enName}}</option>
