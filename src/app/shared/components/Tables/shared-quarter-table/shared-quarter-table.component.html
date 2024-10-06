@@ -2,11 +2,20 @@
     <div class="header-nav" style="margin-bottom: -10px">
         <app-navigate-tables-types [coverForm]="coverForm" [table]="table"></app-navigate-tables-types>
         <!-- start table -->
+        <div class="content companies projection-table">
+            <div class="header d-flex flex-wrap">
+                <div class="title flex-fill">
+                    {{table.arName}}
+                </div>
+                <div class="title flex-fill en">
+                    {{table.enName}}
+                </div>
+            </div>
         <div class="table-responsive company-table">
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th scope="col" style="min-width: 250px;">البيان</th>
+                        <th scope="col" style="min-width: 250px;">{{table.arHeading}}</th>
                         <th class="text-center quarter4" scope="col">30.012.{{+coverForm.reviewYear + 1}} Position
                         </th>
                         <th class="text-center" [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''" scope="col">
@@ -29,7 +38,7 @@
                         <th class="text-center" scope="col" style="color: black;">Year End {{coverForm.reviewYear}}
                             Position</th>
                         <th class="text-center" scope="col">الرمز Code</th>
-                        <th class="text-start" scope="col" style="min-width: 250px;">Items</th>
+                        <th class="text-start" scope="col" style="min-width: 250px;">{{table.enHeading}}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -303,7 +312,7 @@
                 </tbody>
             </table>
         </div>
-
+        </div>
 
         <!-- end table -->
 

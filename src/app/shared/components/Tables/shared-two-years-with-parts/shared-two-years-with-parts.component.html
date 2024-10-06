@@ -15,14 +15,13 @@
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
-                            <th scope="col" colspan="" style="min-width: 250px;">البيان</th>
-                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">التعاملات خلال
-                                Transactions during {{coverForm.reviewYear}}
-                            </th>
-                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end
+                            <th scope="col" colspan="" style="min-width: 250px;">{{table.arHeading}}</th>
+                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">خلال During
+                                {{+coverForm.reviewYear - 1}}</th>
+                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">خلال During
                                 {{coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col" colspan="">الرمز Code</th>
-                            <th class="text-start" scope="col" colspan="" style="min-width: 250px;">Items</th>
+                            <th class="text-start" scope="col" colspan="" style="min-width: 250px;">{{table.enHeading}}</th>
                         </tr>
                         <tr class="t-header">
                             <th class="text-center" scope="col"></th>
@@ -237,20 +236,20 @@
                                         </tr>
                                     </ng-container>
                                 </ng-container>
-                                <tr class="footer" *ngIf="table.IsTotal">
-                                    <td>الاجمالى</td>
-                                    <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
-                                        <input type="number" disabled placeholder="0" [value]="getSumOfValues(i)" />
-                                    </td>
-                                    <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
-                                        <input type="number" disabled placeholder="0"
-                                            [value]="getSumOfValues(table.tableParts.length + i)" />
-                                    </td>
-                                    <td></td>
-                                    <td class="text-start">Total</td>
-                                </tr>
                             </ng-container>
                         </ng-container>
+                        <tr class="footer" *ngIf="table.IsTotal">
+                            <td>الاجمالى</td>
+                            <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                                <input type="number" disabled placeholder="0" [value]="getSumOfValues(i)" />
+                            </td>
+                            <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                                <input type="number" disabled placeholder="0"
+                                    [value]="getSumOfValues(table.tableParts.length + i)" />
+                            </td>
+                            <td></td>
+                            <td class="text-start">Total</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
