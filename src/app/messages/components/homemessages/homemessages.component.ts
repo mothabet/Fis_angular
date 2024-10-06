@@ -108,6 +108,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
       enName: '',
       arName: '',
     });
+    this.add = true
   }
   GetAllMessages(page: number, textSearch: string = ''): void {
     this.showLoader = true;
