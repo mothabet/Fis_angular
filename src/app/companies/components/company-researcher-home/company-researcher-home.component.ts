@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IAddCompany, ICompaniesPDF, ICompany, ICompanyEmail } from '../../Dtos/CompanyHomeDto';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { IAddCompany, IAddCompanyByExcel, ICompaniesPDF, ICompany, ICompanyEmail } from '../../Dtos/CompanyHomeDto';
 import { IDropdownList } from '../../Dtos/SharedDto';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyHomeService } from '../../services/companyHome.service';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { arabicFont } from '../../Dtos/arabic-font';
 import autoTable from 'jspdf-autotable';
-import { ActivatedRoute } from '@angular/router';
+import * as XLSX from 'xlsx';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class CompanyResearcherHomeComponent {
     'ص': 'ﺹ', 'ض': 'ﺽ', 'ط': 'ﻁ', 'ظ': 'ﻅ', 'ع': 'ﻉ', 'غ': 'ﻍ', 'ف': 'ﻑ', 'ق': 'ﻕ', 'ك': 'ﻙ', 'ل': 'ﻝ',
     'م': 'ﻡ', 'ن': 'ﻥ', 'ه': 'ﻩ', 'و': 'ﻭ', 'ي': 'ﻱ'
   };
+  addCompanyByExcel: IAddCompanyByExcel[] = []
   companies: ICompany[] = []
   companiesPDF: ICompaniesPDF[] = []
   Activities: IDropdownList[] = []
@@ -37,7 +38,9 @@ export class CompanyResearcherHomeComponent {
   Govenorates: string = '';
   sectorId: number = 0;
   sectorName: string = "";
-  activityName: string = "";  companyForm!: FormGroup;
+  activityName: string = "";
+  subActivityName:string ="";
+  companyForm!: FormGroup;
   showLoader: boolean = false;
   companyEmails: FormArray | null = null;
   company!: IAddCompany;
@@ -48,22 +51,21 @@ export class CompanyResearcherHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
-  researcherId!: string;
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
+  data: any[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService, private activeRouter: ActivatedRoute,
-    private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+    , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
       facilityType: [''],
-      arName: [''],
-      enName: [''],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
       municipalityNumber: [''],
-      compRegNumber: [''],
-      accountingPeriod: [''],
-      completionAccPeriod: [''],
+      compRegNumber: ['', Validators.required],
+      accountingPeriod: [null],
+      completionAccPeriod: [null],
       phoneNumber: [''],
       telNumber: [''],
       fax: [''],
@@ -75,19 +77,110 @@ export class CompanyResearcherHomeComponent {
       legalType: [''],
       institutionVlaue: [''],
       institutionHeadquarters: [''],
-      sectorId: [0],
-      activityId: [0],
+      sectorId: ['', Validators.required],
+      sectorName: [{value:'',disabled:true}, Validators.required],
+      activityId: ['', Validators.required],
+      activityName: ['', Validators.required],
       subActivityId: [0],
+      subActivityName: [''],
       governoratesId: [0],
       wilayatId: [0],
       status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
-    debugger
-    this.researcherId = this.activeRouter.snapshot.paramMap.get('researcherId')!;
+
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
+    this.GetSectorActvities(0);
+  }
+  getActivityByActivityId(activityId: number) {
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.sectorId = res.Data.sectorId;
+          this.sectorName = res.Data.sectorName;
+          this.activityName = res.Data.arName;
+          this.companyForm.value.sectorId = this.sectorId;
+          this.companyForm.value.sectorName = this.sectorName;
+          this.companyForm.value.activityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
+  }
+  getActivityBySubActivityId(activityId: number) {
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.subActivityName = res.Data.arName;
+          this.companyForm.value.subActivityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
+  }
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click(); // Trigger the hidden file input
+  }
+
+  onFileChange(event: any) {
+    const target: DataTransfer = <DataTransfer>(event.target);
+
+    if (target.files.length !== 1) {
+      alert('Cannot upload multiple files');
+      return;
+    }
+
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      this.data = XLSX.utils.sheet_to_json(ws);
+
+      const allErrors: string[] = [];
+      this.addCompanyByExcel = this.data.map((row: any) => ({
+        email: row['E- mail']?.toString() ?? '',        // Use the header 'E- mail'
+        arName: row['اسم المنشآه']?.toString() ?? '',   // Use the header 'اسم المنشآه'
+        enName: row['اسم المنشآه انجليزية']?.toString() ?? '', // Use the header 'اسم المنشآه انجليزية'
+        compRegNumber: row['السجل التجاري ']?.toString() ?? '',  // Use the header 'السجل التجاري '
+        governorate: row['المحافظة ']?.toString() ?? '',  // Use the header 'المحافظة '
+        activity: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
+        wilaya: row['الولاية']?.toString() ?? '',        // Use the header 'الولاية'
+        phoneNumber: row['هاتف']?.toString() ?? '',            // Use the header 'هاتف'
+      }));
+
+      this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
+        next: (res: any) => {
+          this.GetCompanies('', 1);
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        }
+      });
+    };
+
+    reader.readAsBinaryString(target.files[0]);
   }
   // Getter for the form array
   get compEmails(): FormArray {
@@ -119,24 +212,21 @@ export class CompanyResearcherHomeComponent {
     this.currentPage = page;
     this.GetCompanies('', page);
   }
-
   GetSectorActvities(sectorId: number) {
-    if (sectorId>0) {
-      const observer = {
-        next: (res: any) => {
-          if (res.Data) {
-            this.Activities = res.Data.getActivitiesDtos;
-          }
-        },
-        error: (err: any) => {
-          this.sharedService.handleError(err);
-        },
-      };
-      this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
-    }
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.Activities = res.Data.getActivitiesDtos;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetActivities(0, '', 0).subscribe(observer);
   }
   GetSubActivities(activityId: number) {
-    if (activityId>0) {
+    if (activityId > 0) {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
@@ -147,20 +237,19 @@ export class CompanyResearcherHomeComponent {
           this.sharedService.handleError(err);
         },
       };
-      this.sectorsAndActivitiesServices.GetSubActivities(0,'',activityId).subscribe(observer);
+      this.sectorsAndActivitiesServices.GetSubActivities(0, '', activityId).subscribe(observer);
     }
   }
-
   GetCompanies(textSearch: string = '', page: number) {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          this.companies = res.Data;
-          // this.currentPage = page;
-          // this.isLastPage = res.Data.LastPage;
-          // this.totalPages = res.Data.TotalCount;
+          this.companies = res.Data.getCompaniesDtos;
+          this.currentPage = page;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
           this.resetForm();
         }
         else {
@@ -173,7 +262,7 @@ export class CompanyResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetCompaniesByResearcherId(+this.researcherId, textSearch, page).subscribe(observer);
+    this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
   }
   GetSectors(): void {
     this.showLoader = true;
@@ -192,7 +281,7 @@ export class CompanyResearcherHomeComponent {
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   GetWilayat(govId: number) {
-    if(govId>0){
+    if (govId > 0) {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
@@ -284,10 +373,10 @@ export class CompanyResearcherHomeComponent {
       this.showLoader = false;
       return; // Stop the form submission
     }
-    else if (this.companyForm.value.phoneNumber == '') {
+    else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب ادخال رقم الهاتف',
+        title: 'يجب النشاط الرئيسي',
         showConfirmButton: false,
         timer: 2000
       });
@@ -304,10 +393,20 @@ export class CompanyResearcherHomeComponent {
       this.showLoader = false;
       return; // Stop the form submission
     }
-    else if (this.companyForm.value.activityId == 0) {
+    else if (this.companyForm.value.compRegNumber == '') {
       Swal.fire({
         icon: 'error',
-        title: 'يجب النشاط الرئيسي',
+        title: 'يجب ادخال رقم التسجيل الضريبي',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.phoneNumber == '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال رقم الهاتف',
         showConfirmButton: false,
         timer: 2000
       });
@@ -317,7 +416,7 @@ export class CompanyResearcherHomeComponent {
     else if (this.companyForm.value.governoratesId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب اختيار المنطقه',
+        title: 'يجب اختيار المحافظه',
         showConfirmButton: false,
         timer: 2000
       });
@@ -353,8 +452,8 @@ export class CompanyResearcherHomeComponent {
         enName: this.companyForm.value.enName,
         municipalityNumber: this.companyForm.value.municipalityNumber,
         compRegNumber: this.companyForm.value.compRegNumber,
-        accountingPeriod: this.companyForm.value.accountingPeriod,
-        completionAccPeriod: this.companyForm.value.completionAccPeriod,
+        accountingPeriod: this.companyForm.value.accountingPeriod || null,  // Adjust this
+        completionAccPeriod: this.companyForm.value.completionAccPeriod || null,  // Adjust this
         phoneNumber: this.companyForm.value.phoneNumber,
         telNumber: this.companyForm.value.telNumber,
         fax: this.companyForm.value.fax,
@@ -374,10 +473,11 @@ export class CompanyResearcherHomeComponent {
         status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
-        activityName: this.companyForm.value.sectorName,
-        sectorName: this.companyForm.value.sectorName,
-        subActivityName: this.companyForm.value.sectorName,
+        activityName: this.activityName,
+        sectorName: this.sectorName,
+        subActivityName: this.subActivityName,
       }
+      debugger
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
       this.showLoader = true;
@@ -399,7 +499,7 @@ export class CompanyResearcherHomeComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.showLoader = false;
           this.sharedService.handleError(err);
 
@@ -408,7 +508,7 @@ export class CompanyResearcherHomeComponent {
       this.companyHomeServices.addCompany(Model).subscribe(observer);
     }
     else {
-      debugger
+      
       const invalidFields: { [key: string]: any } = {}; // Store invalid fields and their errors
 
       Object.keys(this.companyForm.controls).forEach(key => {
@@ -435,7 +535,7 @@ export class CompanyResearcherHomeComponent {
       enName: '',
       municipalityNumber: '',
       compRegNumber: '',
-      accountingPeriod: [''],
+      accountingPeriod: '',
       completionAccPeriod: '',
       phoneNumber: '',
       telNumber: '',
@@ -476,7 +576,7 @@ export class CompanyResearcherHomeComponent {
       enName: '',
       municipalityNumber: '',
       compRegNumber: '',
-      accountingPeriod: [''],
+      accountingPeriod: '',
       completionAccPeriod: '',
       phoneNumber: '',
       telNumber: '',
@@ -565,25 +665,6 @@ export class CompanyResearcherHomeComponent {
   }
   validateInput(event: KeyboardEvent) {
     this.sharedService.validateInput(event);
-  }
-  getActivityByActivityId(activityId :number){
-    const observer = {
-      next: (res: any) => {
-        debugger
-        if (res.Data) {
-          this.sectorId = res.Data.sectorId;
-          this.sectorName = res.Data.sectorName;
-          this.activityName = res.Data.arName;
-          this.companyForm.value.sectorId = this.sectorId;
-          this.companyForm.value.sectorName = this.sectorName;
-          this.companyForm.value.activityName = this.activityName;
-        }
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-      },
-    };
-    this.sectorsAndActivitiesServices.getActivityByActivityId(activityId).subscribe(observer);
   }
   editCompany(id: number): void {
     this.showLoader = true;
@@ -717,6 +798,7 @@ export class CompanyResearcherHomeComponent {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
+      debugger
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -745,9 +827,9 @@ export class CompanyResearcherHomeComponent {
         status: this.companyForm.value.status,
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
-        activityName: this.companyForm.value.activityName,
-        sectorName: this.companyForm.value.sectorName,
-        subActivityName: this.companyForm.value.subActivityName,
+        activityName: this.activityName,
+        sectorName: this.sectorName,
+        subActivityName: this.subActivityName,
       }
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
@@ -873,5 +955,9 @@ export class CompanyResearcherHomeComponent {
   closePopup() {
     this.add = true;
     this.resetForm();
+  }
+  getDateOnly(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    return date.toISOString().split('T')[0];
   }
 }
