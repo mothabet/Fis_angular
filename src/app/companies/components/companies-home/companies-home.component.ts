@@ -77,12 +77,12 @@ export class CompaniesHomeComponent implements OnInit {
       legalType: [''],
       institutionVlaue: [''],
       institutionHeadquarters: [''],
-      sectorId: ['', Validators.required],
+      sectorId: [{value:'',disabled:true}, Validators.required],
       sectorName: [{value:'',disabled:true}, Validators.required],
       activityId: ['', Validators.required],
-      activityName: ['', Validators.required],
+      activityName: [{value:'',disabled:true}, Validators.required],
       subActivityId: [0],
-      subActivityName: [''],
+      subActivityName: [{value:'',disabled:true},],
       governoratesId: [0],
       wilayatId: [0],
       status: [true],
@@ -477,7 +477,7 @@ export class CompaniesHomeComponent implements OnInit {
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
-      debugger
+      
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
       this.showLoader = true;
@@ -679,7 +679,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            debugger
+            
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -687,8 +687,8 @@ export class CompaniesHomeComponent implements OnInit {
               password: this.company.password,
               municipalityNumber: this.company.municipalityNumber,
               compRegNumber: this.company.compRegNumber,
-              accountingPeriod: this.company.accountingPeriod,
-              completionAccPeriod: this.company.completionAccPeriod,
+              accountingPeriod: this.getDateOnly(this.company.accountingPeriod),
+              completionAccPeriod: this.getDateOnly(this.company.completionAccPeriod),
               phoneNumber: this.company.phoneNumber,
               telNumber: this.company.telNumber,
               fax: this.company.fax,
@@ -799,7 +799,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      debugger
+      
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
