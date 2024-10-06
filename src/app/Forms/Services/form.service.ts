@@ -132,4 +132,9 @@ export class FormService {
      var resopnse = this.http.delete(environment.apiUrl+`Form/DeleteCompanyForm?formId=${formId}&companyId=${companyId}&lang=2`, { headers });
      return resopnse;
    }
+   GetTables(){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Table/GetTables?lang=2`, { headers });
+     return resopnse;
+   }
 }
