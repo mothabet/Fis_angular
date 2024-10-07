@@ -424,7 +424,6 @@ export class SharedOneYearWithPartsComponent {
         values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
 }
-
 restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null || values[index] <= 0) {
         values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة

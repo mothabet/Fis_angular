@@ -68,7 +68,6 @@ export class LoginService {
       'Researcher-Details',
       'Reports',
       'ReportContents',
-      'SubActivities',
       'Countries',
       'Activities',
       'Sectors'
