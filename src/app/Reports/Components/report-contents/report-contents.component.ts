@@ -86,10 +86,14 @@ export class ReportContentsComponent implements OnInit {
   isActivityDropdownOpen = false;
   isCountryDropdownOpen = false;
   isYearsDropdownOpen = false;
+  isCompanyDropdownOpen = false;
+  isSectorDropdownOpen = false;
   searchTerm: string = '';
   searchActivityTerm: string = '';
   searchCountryTerm: string = '';
   searchYearTerm: string = '';
+  searchCompanyTerm: string = '';
+  searchSectorTerm: string = '';
   filteredCodes: ICode[] = [];
   report: IAddReportPartDto = {
     part: '',
@@ -128,13 +132,15 @@ export class ReportContentsComponent implements OnInit {
   ];
   formContentTables: IReportFilterDto[] = [
     { id: 1, arName: 'الغلاف', enName: 'Cover' },
-    { id: 1, arName: 'البيانات العامة', enName: 'GeneralData' },
-    { id: 1, arName: 'الشهادة', enName: 'Certification' },
+    { id: 2, arName: 'البيانات العامة', enName: 'GeneralData' },
+    { id: 3, arName: 'الشهادة', enName: 'Certification' },
   ];
   tableRepTables: IReportFilterDto[] = [
     { id: 1, arName: 'الانشطة', enName: 'ActivitiesRep' },
-    { id: 1, arName: 'الدول', enName: 'Countries' },
-    { id: 1, arName: 'السنوات', enName: 'Years' },
+    { id: 2, arName: 'الدول', enName: 'Countries' },
+    { id: 3, arName: 'القطاعات', enName: 'SectorsRep' },
+    { id: 4, arName: 'الشركات', enName: 'CompaniesRep' },
+    { id: 5, arName: 'السنوات', enName: 'Years' },
   ];
   codes: ICode[] = [];
   tablesRep: IGetTableRep[] = [];
@@ -144,6 +150,8 @@ export class ReportContentsComponent implements OnInit {
   currentFields: IFieldDto[] = this.coverFields;
   activities: IDropdownList[] = []
   countries: IDropdownList[] = []
+  companies: IDropdownList[] = []
+  sectors: IDropdownList[] = []
   years: IDropdownList[] = [
     { id: 1, arName: '2007', enName: '2007', code: '' },
     { id: 1, arName: '2008', enName: '2008', code: '' },
@@ -166,9 +174,11 @@ export class ReportContentsComponent implements OnInit {
   ]
   filteredActivities: IDropdownList[] = [];
   filteredCountries: IDropdownList[] = [];
+  filteredSectors: IDropdownList[] = [];
+  filteredCompanies: IDropdownList[] = [];
   filteredYears: IDropdownList[] = this.years;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private reportServices: ReportService
+    private reportServices: ReportService , private companyService : CompanyHomeService
     , private formServices: FormService,
     private codeHomeService: CodeHomeService,
     private activeRouter: ActivatedRoute) { }
@@ -208,6 +218,12 @@ export class ReportContentsComponent implements OnInit {
   toggleYearsDropdown() {
     this.isYearsDropdownOpen = !this.isYearsDropdownOpen;
   }
+  toggleCompanyDropdown() {
+    this.isCompanyDropdownOpen = !this.isCompanyDropdownOpen;
+  }
+  toggleSectorDropdown() {
+    this.isSectorDropdownOpen = !this.isYearsDropdownOpen;
+  }
   filterSubCodes() {
     this.filteredCodes = this.codes.filter(code =>
       code.arName.includes(this.searchTerm)
@@ -226,6 +242,16 @@ export class ReportContentsComponent implements OnInit {
   filterYearsRep() {
     this.filteredYears = this.years.filter(code =>
       code.arName.includes(this.searchYearTerm)
+    );
+  }
+  filterCompaniesRep() {
+    this.filteredCompanies = this.companies.filter(code =>
+      code.arName.includes(this.searchCompanyTerm)
+    );
+  }
+  filterSectorRep() {
+    this.filteredSectors = this.sectors.filter(code =>
+      code.arName.includes(this.searchSectorTerm)
     );
   }
   filterTablesRep() {
@@ -330,6 +356,52 @@ export class ReportContentsComponent implements OnInit {
     this.isYearsDropdownOpen = false;
 
     const selectedField = this.years.find(field => field.arName === year.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectCompanyRep(event: Event, table: ITableDto, company: any) {
+    this.searchCompanyTerm = company.arName;
+    this.isCompanyDropdownOpen = false;
+
+    const selectedField = this.companies.find(field => field.arName === company.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectSectorRep(event: Event, table: ITableDto, sector: any) {
+    this.searchSectorTerm = sector.arName;
+    this.isCompanyDropdownOpen = false;
+
+    const selectedField = this.sectors.find(field => field.arName === sector.arName);
 
     if (selectedField && table) {
       // Check if the field already exists in the table's fields array
@@ -926,8 +998,10 @@ export class ReportContentsComponent implements OnInit {
         this.GetCountries();
       else if (this.selectedTable.enName == 'ActivitiesRep')
         this.GetActivities();
-      else if (this.selectedTable.enName == 'Years')
-        this.GetTableFields(9);
+      else if (this.selectedTable.enName == 'SectorsRep')
+        this.GetSectors();
+      else if (this.selectedTable.enName == 'CompaniesRep')
+        this.GetCompanies();
       this.closeModal();
     }
   }
@@ -1138,7 +1212,6 @@ export class ReportContentsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-
         if (res.Data) {
           this.activities = res.Data.getActivitiesDtos;
           this.filteredActivities = res.Data.getActivitiesDtos;
@@ -1177,5 +1250,49 @@ export class ReportContentsComponent implements OnInit {
       },
     };
     this.sectorsAndActivitiesServices.GetCountries(0).subscribe(observer);
+  }
+  GetCompanies() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          debugger
+          this.companies = res.Data.getCountryDtos;
+          this.filteredCompanies = res.Data.getCountryDtos;
+        }
+        else {
+          this.companies = [];
+          this.filteredCompanies = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.companyService.GetCompanies(null,0).subscribe(observer);
+  }
+  GetSectors() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+
+          this.sectors = res.Data.getCountryDtos;
+          this.filteredSectors = res.Data.getCountryDtos;
+        }
+        else {
+          this.sectors = [];
+          this.filteredSectors = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSector(0).subscribe(observer);
   }
 }
