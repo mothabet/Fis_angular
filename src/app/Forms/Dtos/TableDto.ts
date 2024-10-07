@@ -38,3 +38,9 @@ export interface IGetTableParts{
     arName: string,
     enName: string
 }
+
+export interface IGetTableRep{
+    Id:number,
+    arName: string,
+    enName: string,
+}

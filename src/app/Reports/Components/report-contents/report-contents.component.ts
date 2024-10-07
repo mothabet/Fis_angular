@@ -14,6 +14,10 @@ import * as XLSX from 'xlsx';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { IGetTableRep } from 'src/app/Forms/Dtos/TableDto';
+import { SectorsAndActivitiesModule } from 'src/app/sectors-and-activities/sectors-and-activities.module';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 
 @Component({
   selector: 'app-report-contents',
@@ -79,7 +83,13 @@ export class ReportContentsComponent implements OnInit {
     { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)' },
   ]
   isDropdownOpen = false;
+  isActivityDropdownOpen = false;
+  isCountryDropdownOpen = false;
+  isYearsDropdownOpen = false;
   searchTerm: string = '';
+  searchActivityTerm: string = '';
+  searchCountryTerm: string = '';
+  searchYearTerm: string = '';
   filteredCodes: ICode[] = [];
   report: IAddReportPartDto = {
     part: '',
@@ -121,18 +131,49 @@ export class ReportContentsComponent implements OnInit {
     { id: 1, arName: 'البيانات العامة', enName: 'GeneralData' },
     { id: 1, arName: 'الشهادة', enName: 'Certification' },
   ];
+  tableRepTables: IReportFilterDto[] = [
+    { id: 1, arName: 'الانشطة', enName: 'ActivitiesRep' },
+    { id: 1, arName: 'الدول', enName: 'Countries' },
+    { id: 1, arName: 'السنوات', enName: 'Years' },
+  ];
   codes: ICode[] = [];
+  tablesRep: IGetTableRep[] = [];
+  filteredTables: IGetTableRep[] = [];
   reports!: any[];
   formContents!: any[];
   currentFields: IFieldDto[] = this.coverFields;
-  constructor(private renderer: Renderer2, private sharedService: SharedService, private fb: FormBuilder,
-    private toastr: ToastrService, private reportServices: ReportService,
-    private companyHomeServices: CompanyHomeService, private formServices: FormService,
-    private researcherService: ResearcherHomeService, private codeHomeService: CodeHomeService,
+  activities: IDropdownList[] = []
+  countries: IDropdownList[] = []
+  years: IDropdownList[] = [
+    { id: 1, arName: '2007', enName: '2007', code: '' },
+    { id: 1, arName: '2008', enName: '2008', code: '' },
+    { id: 1, arName: '2009', enName: '2009', code: '' },
+    { id: 1, arName: '2010', enName: '2010', code: '' },
+    { id: 1, arName: '2011', enName: '2011', code: '' },
+    { id: 1, arName: '2012', enName: '2012', code: '' },
+    { id: 1, arName: '2013', enName: '2013', code: '' },
+    { id: 1, arName: '2014', enName: '2014', code: '' },
+    { id: 1, arName: '2015', enName: '2015', code: '' },
+    { id: 1, arName: '2016', enName: '2016', code: '' },
+    { id: 1, arName: '2017', enName: '2017', code: '' },
+    { id: 1, arName: '2018', enName: '2018', code: '' },
+    { id: 1, arName: '2019', enName: '2019', code: '' },
+    { id: 1, arName: '2020', enName: '2020', code: '' },
+    { id: 1, arName: '2021', enName: '2021', code: '' },
+    { id: 1, arName: '2022', enName: '2022', code: '' },
+    { id: 1, arName: '2023', enName: '2023', code: '' },
+    { id: 1, arName: '2024', enName: '2024', code: '' },
+  ]
+  filteredActivities: IDropdownList[] = [];
+  filteredCountries: IDropdownList[] = [];
+  filteredYears: IDropdownList[] = this.years;
+  constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private reportServices: ReportService
+    , private formServices: FormService,
+    private codeHomeService: CodeHomeService,
     private activeRouter: ActivatedRoute) { }
   ngOnInit(): void {
     this.reportId = this.activeRouter.snapshot.paramMap.get('reportId')!;
-    this.GetAllCodes();
     this.GetReports();
   }
   GetReports(): void {
@@ -158,15 +199,44 @@ export class ReportContentsComponent implements OnInit {
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+  toggleActivityDropdown() {
+    this.isActivityDropdownOpen = !this.isActivityDropdownOpen;
+  }
+  toggleCountryDropdown() {
+    this.isCountryDropdownOpen = !this.isCountryDropdownOpen;
+  }
+  toggleYearsDropdown() {
+    this.isYearsDropdownOpen = !this.isYearsDropdownOpen;
+  }
   filterSubCodes() {
     this.filteredCodes = this.codes.filter(code =>
+      code.arName.includes(this.searchTerm)
+    );
+  }
+  filterActivitiesRep() {
+    this.filteredTables = this.tablesRep.filter(code =>
+      code.arName.includes(this.searchActivityTerm)
+    );
+  }
+  filterCountriesRep() {
+    this.filteredCountries = this.countries.filter(code =>
+      code.arName.includes(this.searchCountryTerm)
+    );
+  }
+  filterYearsRep() {
+    this.filteredYears = this.years.filter(code =>
+      code.arName.includes(this.searchYearTerm)
+    );
+  }
+  filterTablesRep() {
+    this.filteredTables = this.tablesRep.filter(code =>
       code.arName.includes(this.searchTerm)
     );
   }
   selectCode(event: Event, table: ITableDto, code: any) {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
-    debugger
+
     const selectedField = this.codes.find(field => field.arName === code.arName);
 
     if (selectedField && table) {
@@ -179,6 +249,98 @@ export class ReportContentsComponent implements OnInit {
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.Id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectTable(event: Event, table: ITableDto, tableRep: any) {
+    this.searchTerm = tableRep.arName;
+    this.isDropdownOpen = false;
+
+    const selectedField = this.tablesRep.find(field => field.arName === tableRep.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.Id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectActivityRep(event: Event, table: ITableDto, activity: any) {
+    this.searchActivityTerm = activity.arName;
+    this.isActivityDropdownOpen = false;
+
+    const selectedField = this.activities.find(field => field.arName === activity.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectCountryRep(event: Event, table: ITableDto, country: any) {
+    this.searchCountryTerm = country.arName;
+    this.isCountryDropdownOpen = false;
+
+    const selectedField = this.countries.find(field => field.arName === country.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectYearRep(event: Event, table: ITableDto, year: any) {
+    this.searchYearTerm = year.arName;
+    this.isYearsDropdownOpen = false;
+
+    const selectedField = this.years.find(field => field.arName === year.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
         };
 
         table.fields.push(tableField);
@@ -249,7 +411,6 @@ export class ReportContentsComponent implements OnInit {
       this.reportServices.GetTableFields(tableType).subscribe(observer);
     }
   }
-
   onFormTypeChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
 
@@ -278,6 +439,27 @@ export class ReportContentsComponent implements OnInit {
       },
     };
     this.codeHomeService.GetAllCodes(0).subscribe(observer);
+  }
+  GetTables(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+
+          this.tablesRep = res.Data;
+          this.filteredTables = res.Data;
+        }
+        else {
+          this.tablesRep = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.formServices.GetTables().subscribe(observer);
   }
   onTableSelect(): void {
     this.tables = [];
@@ -325,7 +507,18 @@ export class ReportContentsComponent implements OnInit {
       };
       this.tables.push(tableDto);
       // Fetch table fields for the selected type (1 for Companies)
-      this.GetTableFields(2);
+      this.GetAllCodes();
+    }
+    else if (this.tableType === 5) {
+      const tableDto: ITableDto = {
+        selectAllFields: false,
+        enTableName: 'TablesReport',
+        arTableName: 'تقرير الجداول',
+        fields: []  // Initial empty fields array
+      };
+      this.tables.push(tableDto);
+      // Fetch table fields for the selected type (1 for Companies)
+      this.GetTables();
     }
   }
   onFieldSelect(event: Event, table: ITableDto): void {
@@ -598,6 +791,18 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
+
+    if (this.tables[0].enTableName == 'TablesReport') {
+      if (this.tables[0].fields.length == 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'يجب اختيار جدول فلتر على الاقل',
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+    }
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
@@ -609,6 +814,7 @@ export class ReportContentsComponent implements OnInit {
       });
       return;
     }
+
     if (this.report.query == '' || this.report.query == 'SELECT    ;' || this.report.query == null || this.report.query == undefined) {
       Swal.fire({
         icon: 'error',
@@ -648,21 +854,57 @@ export class ReportContentsComponent implements OnInit {
   appendTable(): void {
     if (this.selectedTable) {
 
-      const tableDto: ITableDto = {
-        selectAllFields: false,
-        enTableName: this.selectedTable.enName,
-        arTableName: this.selectedTable.arName,
-        fields: []  // Initial empty fields array
-      };
-      const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
+      if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries' || this.selectedTable.enName == 'Years') {
+        if (this.tables.length > 1) {
+          this.tables = [this.tables[0]];
+          const tableDto: ITableDto = {
+            selectAllFields: false,
+            enTableName: this.selectedTable.enName,
+            arTableName: this.selectedTable.arName,
+            fields: []  // Initial empty fields array
+          };
+          const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
+          if (!tableExists) {
+            this.tables.push(tableDto);
+          } else {
+            this.closeModal();
+            return;
+          }
+        }
+        else {
+          const tableDto: ITableDto = {
+            selectAllFields: false,
+            enTableName: this.selectedTable.enName,
+            arTableName: this.selectedTable.arName,
+            fields: []  // Initial empty fields array
+          };
+          const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
+          if (!tableExists) {
+            this.tables.push(tableDto);
+          } else {
+            this.closeModal();
+            return;
+          }
+        }
+      }
+      else {
+        const tableDto: ITableDto = {
+          selectAllFields: false,
+          enTableName: this.selectedTable.enName,
+          arTableName: this.selectedTable.arName,
+          fields: []  // Initial empty fields array
+        };
+        const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
+        if (!tableExists) {
+          this.tables.push(tableDto);
+        } else {
+          this.closeModal();
+          return;
+        }
+      }
 
       // Append the table only if it doesn't already exist
-      if (!tableExists) {
-        this.tables.push(tableDto);
-      } else {
-        this.closeModal();
-        return;
-      }
+
       const temp = this.generalDataFields
       if (this.selectedTable.enName == 'Companies')
         this.GetTableFields(1);
@@ -680,11 +922,17 @@ export class ReportContentsComponent implements OnInit {
         this.GetTableFields(8);
       else if (this.selectedTable.enName == 'Tables')
         this.GetTableFields(9);
+      else if (this.selectedTable.enName == 'Countries')
+        this.GetCountries();
+      else if (this.selectedTable.enName == 'ActivitiesRep')
+        this.GetActivities();
+      else if (this.selectedTable.enName == 'Years')
+        this.GetTableFields(9);
       this.closeModal();
     }
   }
   fbuildJoinQuery(tables: ITableDto[], stringFilterItems: IReportFilterDto[], numberFilterItems: IReportFilterDto[]): string {
-    if (tables[0].enTableName != 'FormContent') {
+    if (tables[0].enTableName != 'FormContent' && tables[0].enTableName != 'TablesReport') {
       let query = 'SELECT ';
       let joins = '';
       let fromTable = '';
@@ -779,6 +1027,43 @@ export class ReportContentsComponent implements OnInit {
 
       return query;
     }
+    else if (tables[0].enTableName == 'TablesReport') {
+      let query = 'SELECT t.*, f.reviewYear FROM forms f INNER JOIN tables t ON t.formId = f.id';
+      let whereClause = '';
+
+      // Handle fields from tables[0]
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        tables[0].fields.forEach((field, fieldIndex) => {
+          if (field.name) {
+            // Build the condition for arName
+            const condition = `t.arName = N'${field.name}'`;
+
+            // Append condition to whereClause
+            whereClause += whereClause ? ` or ${condition}` : ` WHERE (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND ${condition}`;
+          }
+        });
+      }
+
+      // Handle conditions based on tables[1] (Years)
+      if (tables.length > 1 && tables[1].enTableName == 'Years') {
+        if (tables[1].fields && tables[1].fields.length > 0) {
+          tables[1].fields.forEach((field, fieldIndex) => {
+            if (field.name) {
+              // Add the condition for f.reviewYear
+              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+              // Append this to the whereClause as well
+              whereClause += whereClause ? ` or ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+            }
+          });
+        }
+      }
+
+      // Final query with WHERE clause
+      query += whereClause;
+
+      return query;
+    }
     else {
       return '';
     }
@@ -843,10 +1128,54 @@ export class ReportContentsComponent implements OnInit {
 
     return rowData;
   }
-  private saveAsExcelFile(buffer: any, fileName: string): void {
+  saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
     saveAs(data, `${fileName}_export_${new Date().getTime()}.xlsx`);
+  }
+  GetActivities() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+
+        if (res.Data) {
+          this.activities = res.Data.getActivitiesDtos;
+          this.filteredActivities = res.Data.getActivitiesDtos;
+        }
+        else {
+          this.tablesRep = [];
+          this.filteredActivities = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetActivities(0).subscribe(observer);
+  }
+  GetCountries() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+
+          this.countries = res.Data.getCountryDtos;
+          this.filteredCountries = res.Data.getCountryDtos;
+        }
+        else {
+          this.tablesRep = [];
+          this.filteredCountries = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetCountries(0).subscribe(observer);
   }
 }
