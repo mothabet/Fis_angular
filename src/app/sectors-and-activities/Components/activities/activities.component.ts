@@ -50,6 +50,9 @@ export class ActivitiesComponent implements OnInit {
     if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
       allErrors.push('يجب ادخال رمز النشاط');
     }
+    else if (this.activityForm.value.code.length != 6) {
+      allErrors.push('يجب ان يكون رمز النشاط مكون من 6');
+    }
     if (!(this.activityForm.value.sectorId > 0)) {
       allErrors.push('يجب اختيار اسم القطاع');
     }
@@ -210,6 +213,9 @@ export class ActivitiesComponent implements OnInit {
     if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
       allErrors.push('يجب ادخال رمز النشاط');
     }
+    else if (this.activityForm.value.code.length != 6) {
+      allErrors.push('يجب ان يكون رمز النشاط مكون من 6 ارقام');
+    }
     if (!(this.activityForm.value.sectorId > 0)) {
       allErrors.push('يجب اختيار اسم القطاع');
     }
@@ -279,5 +285,9 @@ export class ActivitiesComponent implements OnInit {
       code : ['', Validators.required],
       sectorId : 0,
     });    
+  }
+  onlyNumber(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
   }
 }
