@@ -510,6 +510,8 @@ export class CompaniesHomeComponent implements OnInit {
       
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
+      if (Model.legalType.toString() == "")
+        Model.legalType = 0
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
@@ -864,6 +866,8 @@ export class CompaniesHomeComponent implements OnInit {
       }
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
+      if (Model.legalType.toString() == "")
+        Model.legalType = 0
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');

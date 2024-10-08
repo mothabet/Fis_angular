@@ -50,8 +50,6 @@ export class HomeCompanyMessagesComponent {
     this.companyMessageForm = this.formBuilder.group({
       companyid: '',
       messageid: ['', Validators.required],
-      date: ['', Validators.required],
-      time: ['', Validators.required],
       arDetails: '',
     });
     this.GetAllCompanyMessages(1);
@@ -64,8 +62,6 @@ export class HomeCompanyMessagesComponent {
       const Model: IAddCompanyMessage = {
         companyid: Number(this.companyId),
         messageid: this.companyMessageForm.value.messageid,
-        date: this.companyMessageForm.value.date,
-        time: this.companyMessageForm.value.time,
       };
       const observer = {
         next: (res: any) => {
@@ -183,14 +179,14 @@ export class HomeCompanyMessagesComponent {
       next: (res: any) => {
         if (res.Data) {
           this.companyMessage = res.Data;
-          const formattedDate = this.companyMessage.date
-          ? new Date(this.companyMessage.date).toISOString().split('T')[0]
-          : '';
+          // const formattedDate = this.companyMessage.date
+          // ? new Date(this.companyMessage.date).toISOString().split('T')[0]
+          // : '';
           this.companyMessageForm.patchValue({
             companyid: Number(this.companyId),
             messageid: this.companyMessage.messageid,
-            date: formattedDate,
-            time: this.companyMessage.time,
+            // date: formattedDate,
+            // time: this.companyMessage.time,
           });
           if (this.selectedMessage) {
             this.selectedMessage.arDetails = this.companyMessage.arDetails;
@@ -216,8 +212,8 @@ export class HomeCompanyMessagesComponent {
       const Model: IAddCompanyMessage = {
         companyid: Number(this.companyId),
         messageid: this.companyMessageForm.value.messageid,
-        date: this.companyMessageForm.value.date,
-        time: this.companyMessageForm.value.time,
+        // date: this.companyMessageForm.value.date,
+        // time: this.companyMessageForm.value.time,
       };
       const observer = {
         next: (res: any) => {

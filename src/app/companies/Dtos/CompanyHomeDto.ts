@@ -60,7 +60,7 @@ export interface IAddCompany {
     dateOfWork: string,
     institutionHeadquarters: string,
     institutionVlaue: string,
-    legalType: string,
+    legalType: number,
     sectorId: number,
     activityId: number,
     subActivityId: number,
