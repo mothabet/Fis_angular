@@ -20,7 +20,8 @@ export class SharedQuarterTableComponent {
   Loader: boolean = false;
   @Input() formId!: string;
   @Input() tableId!: string;
-  table: IGetTableDto = {
+  isCollapsedColumns: boolean[] = [false, false, false, false];
+    table: IGetTableDto = {
     id: 0,
     arName: '',
     enName: '',
@@ -76,7 +77,17 @@ export class SharedQuarterTableComponent {
       this.GetCountrites();
     });
   }
-
+  toggleCollapse(column: number) {
+    for (let index = 4; index >= column; index--) {      
+      this.isCollapsedColumns[index] = false;
+    }
+  }
+  toggleExpand(column: number) {
+    for (let index = 4; index >= column; index--) {      
+      this.isCollapsedColumns[index] = true;
+    }
+    // تبديل حالة العرض/الإخفاء للعمود المحدد
+  }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {

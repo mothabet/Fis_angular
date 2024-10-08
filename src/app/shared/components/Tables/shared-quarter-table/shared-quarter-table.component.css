@@ -11,3 +11,17 @@
     color: black;
     
 }
+
+.transaction-controls {
+    display: inline-flex; /* استخدام flexbox لعرض المحتوى في صف */
+    align-items: center; /* لضمان محاذاة الصور والنص في نفس المستوى */
+  }
+  
+  .transaction-controls img {
+    margin: 0 5px; /* مسافة بين الصور والنص */
+  }
+  
+  .transaction-controls span {
+    margin: 0 5px; /* مسافة بين النص والصور */
+  }
+  
