@@ -202,17 +202,40 @@
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
                           </button>
                     </div>
-                    <div *ngFor="let pdf of companyPdfs" class="file-section d-flex justify-content-between align-items-center">
-                        <div class="file-box d-flex justify-content-between align-items-center mb-4">
-                            <!-- <img src="../../../../assets/images/pdf.png" alt=""> -->
-                            <div class="file-data" style="border-bottom: 1px solid;">
-                                <p class="m-0 data">{{pdf.arName}}</p>
-                            </div>
-                        </div>
-                        <div class="btns d-flex">
-                            <button class="btn btn-danger" (click)="showAlert(pdf.id)"><span>حذف</span></button>
-                            <button class="btn btn-download" (click)="downloadPdf(pdf.path)">تحميل</button>
-                        </div>
+                    <div class="table-responsive company-table research-table">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="t-header">
+                                    <th scope="col">رقم</th>
+                                    <th class="text-center" scope="col">اسم الملف</th>
+                                    <th class="text-center" scope="col"></th>
+                                </tr>
+                            </thead>
+                  
+                            <tbody>
+                                <tr *ngFor="let pdf of companyPdfs; let i = index">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td class="text-center">{{ pdf.arName }}</td>
+                                    <td class="text-center td-actions">
+                                        <a class="btn btn-danger" style='border-radius: 6px;
+                                        font-family: "SST Arabic";
+                                        font-size: 15px;
+                                        font-weight: bold;
+                                        font-style: normal;
+                                        width: 70px;'(click)="showAlert(pdf.id)"><span>حذف</span></a>
+                                        <a class="btn btn-download" style='border-radius: 6px;
+                                        background: #133b8b44;
+                                        font-family: "SST Arabic";
+                                        font-size: 15px;
+                                        font-weight: bold;
+                                        font-style: normal;
+                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)">تحميل</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

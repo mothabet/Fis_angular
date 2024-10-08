@@ -387,7 +387,7 @@
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">المحافظه</option>
+                <option selected value="0">--اختر المحافظه--</option>
                 <option
                   *ngFor="let governorate of Governorates"
                   value="{{ governorate.id }}"
@@ -404,7 +404,7 @@
                 class="form-control"
                 style="width: 100%"
               >
-                <option selected value="0">الولاية</option>
+                <option selected value="0" >--اختر الولاية--</option>
                 <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
                   {{ wilaya.arName }}
                 </option>

@@ -376,7 +376,7 @@ export class CompaniesHomeComponent implements OnInit {
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب النشاط الرئيسي',
+        title: 'يجب اختيار النشاط الرئيسي',
         showConfirmButton: false,
         timer: 2000
       });
@@ -407,6 +407,36 @@ export class CompaniesHomeComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'يجب ادخال رقم الهاتف',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.phoneNumber.length != 8 ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون رقم الهاتف مكون من 8 ارقام',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.telNumber.length != 8 && this.companyForm.value.telNumber.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون رقم الهاتف الثابت مكون من 8 ارقام',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.fax.length != 8 && this.companyForm.value.fax.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون الفاكس مكون من 8 ارقام',
         showConfirmButton: false,
         timer: 2000
       });
