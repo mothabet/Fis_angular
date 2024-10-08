@@ -831,7 +831,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      
+      debugger
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -852,7 +852,7 @@ export class CompaniesHomeComponent implements OnInit {
         institutionHeadquarters: this.companyForm.value.institutionHeadquarters,
         institutionVlaue: this.companyForm.value.institutionVlaue,
         legalType: this.companyForm.value.legalType,
-        sectorId: this.companyForm.value.sectorId,
+        sectorId: this.sectorId,
         activityId: this.companyForm.value.activityId,
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
@@ -993,6 +993,10 @@ export class CompaniesHomeComponent implements OnInit {
   }
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+    return `${year}-${month}-${day}`;
   }
+  
 }

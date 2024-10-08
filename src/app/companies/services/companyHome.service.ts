@@ -79,6 +79,7 @@ export class CompanyHomeService {
      return response;
    }
    UpdateCompany(id:number,Model: IAddCompany){
+    debugger
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });
      return response;

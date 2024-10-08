@@ -302,22 +302,6 @@
               />
               <label for="inputField" class="text-danger">رقم تسجيل الشركة <span>*</span></label>
             </div>
-            <div class="form-group col-sm-3 mb-2">
-              <input
-                formControlName="accountingPeriod"
-                class="form-control input-modal"
-                type="date"
-              />
-              <label for="inputField">مدة المحاسبة</label>
-            </div>
-            <div class="form-group col-sm-3 mb-2">
-              <input
-                formControlName="completionAccPeriod"
-                class="form-control input-modal"
-                type="date"
-              />
-              <label for="inputField">الانتهاء من مدة المحاسبة</label>
-            </div>
             <div class="form-group col-sm-6 col-lg-2 mb-2">
               <input
                 
@@ -364,24 +348,6 @@
               <label for="inputField">الرمز البريدي</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
-              <input
-                formControlName="webSite"
-                class="form-control input-modal"
-                type="email"
-              />
-              <label for="inputField">الموقع الإلكتروني</label>
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input
-                
-                formControlName="address"
-                class="form-control input-modal"
-                type="text"
-              />
-              <label for="inputField">العنوان</label>
-            </div>
-            
-            <div class="form-group col-sm-6 mb-2">
               <select
                 formControlName="governoratesId"
                 class="form-control"
@@ -399,7 +365,6 @@
             </div>
             <div class="form-group col-sm-6 mb-2">
               <select
-                
                 formControlName="wilayatId"
                 class="form-control"
                 style="width: 100%"
@@ -410,6 +375,14 @@
                 </option>
               </select>
               <label for="inputField" class="text-danger">الولاية <span>*</span></label>
+            </div>
+            <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="address"
+                class="form-control input-modal"
+                type="text"
+              />
+              <label for="inputField">العنوان</label>
             </div>
             <div class="form-group col-sm-3 mb-2">
               <input
@@ -428,24 +401,15 @@
               />
               <label for="inputField">تاريخ مزاولة العمل</label>
             </div>
-            <div class="form-group col-sm-3 mb-2">
-              <select class="form-control" style="width: 100%" formControlName="status">
-                <option [ngValue]="true">نشط</option>
-                <option [ngValue]="false">غير نشط</option>
-              </select>
-              <label for="inputField" class="text-danger">الحاله <span>*</span></label>
-              
-            </div>
-            <div class="form-group col-sm-3 mb-2">
-              <input
-                formControlName="institutionVlaue"
-                class="form-control input-modal"
-                type="text"
-                (keypress)="validateInput($event)"
-              />
-              <label for="inputField">قيمة المؤسسه</label>
-            </div>
             <div class="form-group col-sm-6 mb-2">
+              <input
+                formControlName="webSite"
+                class="form-control input-modal"
+                type="email"
+              />
+              <label for="inputField">الموقع الإلكتروني</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
               <select class="form-control" style="width: 100%" formControlName="legalType">
                 <option value="">--اختر الشكل القانوني--</option>
                 <option [ngValue]="1">منشاة فردية</option>
@@ -459,13 +423,46 @@
               </select>
               <label for="inputField">الشكل القانوني</label>
             </div>
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="institutionVlaue"
+                class="form-control input-modal"
+                type="text"
+                (keypress)="validateInput($event)"
+              />
+              <label for="inputField">قيمة المؤسسه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="accountingPeriod"
+                class="form-control input-modal"
+                type="date"
+              />
+              <label for="inputField">مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <input
+                formControlName="completionAccPeriod"
+                class="form-control input-modal"
+                type="date"
+              />
+              <label for="inputField">الانتهاء من مدة المحاسبة</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
               <input
                 formControlName="facilityType"
                 class="form-control input-modal"
                 type="text"
               />
               <label for="inputField">تصنيف المنشأه</label>
+            </div>
+            <div class="form-group col-sm-3 mb-2">
+              <select class="form-control" style="width: 100%" formControlName="status">
+                <option [ngValue]="true">نشط</option>
+                <option [ngValue]="false">غير نشط</option>
+              </select>
+              <label for="inputField" class="text-danger">الحاله <span>*</span></label>
+              
             </div>
             <div class="col-sm-12 mb-2">
               <div formArrayName="compEmails" class="row mb-4">
