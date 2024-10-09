@@ -508,8 +508,12 @@ export class ResearcherDetailsComponent implements OnInit {
   }
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+    return `${year}-${month}-${day}`;
   }
+  
   CancelResearcherMandate(id: number) {
     this.showLoader = true;
     const observer = {

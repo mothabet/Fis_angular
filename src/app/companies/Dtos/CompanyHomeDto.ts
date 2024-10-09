@@ -8,6 +8,7 @@ export interface ICompany {
     compRegNumber: string,
     municipalityNumber: string,
     fax: string,
+    telNumber:string,
     activity: string,
     subActivity: string,
     governorates: string,
@@ -24,10 +25,17 @@ export interface ICompany {
     status: string,
     id: number,
     researcherId:string
-    accountingPeriod: number,
+    accountingPeriod: Date,
     legalType: string,
     pathImgProfile:string,
-    researcherArName:string
+    researcherArName:string,
+    activityName:string,
+    sectorName:string,
+    subActivityName:string,
+    institutionHeadquarters: string,
+    completionAccPeriod:Date,
+    dateOfWork:Date,
+    institutionVlaue: string,
 }
 export interface ICompaniesPDF {
     activityId: number,
@@ -60,7 +68,7 @@ export interface IAddCompany {
     dateOfWork: string,
     institutionHeadquarters: string,
     institutionVlaue: string,
-    legalType: string,
+    legalType: number,
     sectorId: number,
     activityId: number,
     subActivityId: number,

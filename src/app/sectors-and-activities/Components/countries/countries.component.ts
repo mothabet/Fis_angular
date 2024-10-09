@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IAddSectorDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddCountryDto, IAddSectorDto, IGetCountryDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import Swal from 'sweetalert2';
@@ -13,8 +13,9 @@ import Swal from 'sweetalert2';
 export class CountriesComponent implements OnInit {
   countryForm!: FormGroup;
   showLoader: boolean = false;
-  countries!:IGetSectorDto[];
-  country!:IGetSectorDto;
+  countries!:IGetCountryDto[];
+  country!:IAddCountryDto;
+  getcountry!:IGetCountryDto;
   isUpdate: boolean = false;
   id:number=0;
   currentPage: number = 1;
@@ -29,7 +30,8 @@ export class CountriesComponent implements OnInit {
     this.countryForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      code: ['', Validators.required]
+      code: ['', Validators.required],
+      countryPhone:['',Validators.required]
     });
     this.GetCountries(1,'',)
   }
@@ -45,6 +47,9 @@ export class CountriesComponent implements OnInit {
     if (this.countryForm.value.code == "" || this.countryForm.value.code == null) {
       allErrors.push('يجب ادخال رمز الدولة');
     }
+    if (this.countryForm.value.countryPhone == "" || this.countryForm.value.countryPhone == null) {
+      allErrors.push('يجب ادخال رقم الدولة');
+    }
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -55,10 +60,11 @@ export class CountriesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const country : IAddSectorDto = {
+      const country : IAddCountryDto = {
         arName : this.countryForm.value.arName,
         enName : this.countryForm.value.enName,
         code : this.countryForm.value.code,
+        countryPhone : this.countryForm.value.countryPhone,
       }
       const observer = {
         next: (res: any) => {
@@ -120,7 +126,8 @@ export class CountriesComponent implements OnInit {
     this.countryForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      code: [0, Validators.required]
+      code: ['', Validators.required],
+      countryPhone:['',Validators.required]
     });
   }
   DeleteCountry(id: number): void {
@@ -161,13 +168,14 @@ export class CountriesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.country = res.Data;
+          this.getcountry = res.Data;
           this.countryForm.patchValue({
-            arName: this.country.arName,
-            enName: this.country.enName,
-            code: this.country.code,
+            arName: this.getcountry.arName,
+            enName: this.getcountry.enName,
+            code: this.getcountry.code,
+            countryPhone:this.getcountry.countryPhone
           });
-          this.id = this.country.id;
+          this.id = this.getcountry.id;
         }
         this.isUpdate = true;
         this.showLoader = false;
@@ -191,6 +199,9 @@ export class CountriesComponent implements OnInit {
     if (this.countryForm.value.code == "" || this.countryForm.value.code == null) {
       allErrors.push('يجب ادخال رمز الدولة');
     }
+    if (this.countryForm.value.countryPhone == "" || this.countryForm.value.countryPhone == null) {
+      allErrors.push('يجب ادخال رقم الدولة');
+    }
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -201,10 +212,11 @@ export class CountriesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const Model: IAddSectorDto = {
+      const Model: IAddCountryDto = {
         arName: this.countryForm.value.arName,
         enName: this.countryForm.value.enName,
         code: this.countryForm.value.code,
+        countryPhone: this.countryForm.value.countryPhone,
       };
       const observer = {
         next: (res: any) => {

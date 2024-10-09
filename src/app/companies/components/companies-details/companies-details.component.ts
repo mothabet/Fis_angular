@@ -28,7 +28,7 @@ export class CompaniesDetailsComponent implements OnInit {
   role:string = "";
   sanitizedEmbededContent: SafeHtml = '';
   companyEmails:string = '';
-
+  legalTypeName:string = '';
   constructor(private topScreenServices: TopScreenService, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
     , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
 
@@ -54,8 +54,32 @@ export class CompaniesDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
           this.company = res.Data;
+          if (this.company.legalType == "1") {
+            this.legalTypeName = "منشاة فردية"
+          }
+          else if (this.company.legalType == "2"){
+            this.legalTypeName = "تضامنية"
+          }
+          else if (this.company.legalType == "3"){
+            this.legalTypeName = "توصية"
+          }
+          else if (this.company.legalType == "4"){
+            this.legalTypeName = "محاصة"
+          }
+          else if (this.company.legalType == "5"){
+            this.legalTypeName = "مساهمة ( عامه او مقفله )"
+          }
+          else if (this.company.legalType == "6"){
+            this.legalTypeName = "محدودة المسؤولية"
+          }
+          else if (this.company.legalType == "7"){
+            this.legalTypeName = "فرع شركة اجنبية"
+          }
+          else if (this.company.legalType == "8"){
+            this.legalTypeName = "أخرى (حدد)"
+          }
+
           this.companyEmails = res.Data.companyEmails.map((emailObj: ICompanyEmail) => emailObj.Email)
           .join(', ');          this.sanitizedEmbededContent = this.sanitizeHtml(this.company.embeded);
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${this.company.pathImgProfile}`;
@@ -226,4 +250,12 @@ export class CompaniesDetailsComponent implements OnInit {
 
       this.companyServices.UpdateProfileImg(formData,+this.companyId).subscribe(observer);
   }
+  getDateOnly(dateTimeString: string): string {
+    const date = new Date(dateTimeString);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+    return `${year}-${month}-${day}`;
+  }
+  
 }

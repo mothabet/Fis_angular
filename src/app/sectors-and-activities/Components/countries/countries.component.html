@@ -50,6 +50,7 @@
                         <th class="text-center" scope="col">اسم القطاع</th>
                         <th class="text-center" scope="col">تاريخ انشاءه</th>
                         <th class="text-center" scope="col">الرمز</th>
+                        <th class="text-center" scope="col">رقم الدوله</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
                 </thead>
@@ -58,6 +59,7 @@
                         <td class="text-center">{{country.arName}}</td>
                         <td class="text-center">{{country.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{country.code}}</td>
+                        <td class="text-center">{{country.countryPhone}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteCountry(country.id)">
                                 <img src="../../../../assets/images/trash-can-outline.png"
@@ -110,6 +112,11 @@
                         <input class="form-control input-modal"  type="text"
                            formControlName="code" name="code"/>
                           <label for="inputField">رمز الدولة</label>
+                      </div>
+                      <div class="form-group col-sm-12 mb-2">
+                        <input class="form-control input-modal"  type="text"
+                           formControlName="countryPhone" name="countryPhone"/>
+                          <label for="inputField">رقم الدولة</label>
                       </div>
                   </div>
                 </div>

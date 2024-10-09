@@ -44,8 +44,18 @@
                     <h4 class="title">{{company.arName}}</h4>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/deskphone.png" alt="">
+                        <p class="m-0 mx-2 name">رقم الشركه :</p>
+                        <p class="data m-0">{{company.id}}</p>
+                    </div>
+                    <div class="detail-box flex-nowrap d-flex">
+                        <img src="../../../../assets/images/deskphone.png" alt="">
                         <p class="m-0 mx-2 name">رقم الهاتف :</p>
                         <p class="data m-0">{{company.phoneNumber}}</p>
+                    </div>
+                    <div class="detail-box flex-nowrap d-flex">
+                        <img src="../../../../assets/images/deskphone.png" alt="">
+                        <p class="m-0 mx-2 name">رقم الهاتف الثابت:</p>
+                        <p class="data m-0">{{company.telNumber}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/fax.png" alt="">
@@ -72,6 +82,12 @@
                         </div>
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
+                                <p class="m-0 mx-2 name">مقر اقامة المؤسسه :</p>
+                                <p class="data text-nowrap m-0">{{company.institutionHeadquarters}}</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/archive-marker-outli.png" alt="">
                                     <p class="m-0 mx-2 name">صندوق البريد :</p>
@@ -88,15 +104,7 @@
                                 <p class="data text-nowrap m-0">{{company.postalCode}}</p>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex flex-nowrap align-items-center">
-                                    <img src="../../../../assets/images/select-marker.png" alt="">
-                                    <p class="m-0 mx-2 name">رقم الولاية :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">{{company.wilayatId}}</p>
-                            </div>
-                        </div>
+                        
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
@@ -114,48 +122,6 @@
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.governorates}}</p>
                             </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-md-6 box-details mb-3">
-                <div class="card-box">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex flex-nowrap align-items-center">
-                                    <img src="../../../../assets/images/domain.png" alt="">
-                                    <p class="m-0 mx-2 name">رمز الشركة :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">{{company.id}}</p>
-                            </div>
-                        </div>
-                        <div class="col-6 pe-0">
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex flex-nowrap align-items-center">
-                                    <img src="../../../../assets/images/book-account-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">رمز القطاع :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">{{company.sectorId}}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center flex-wrap">
-                            <div class="detail-box flex-nowrap d-flex col-12">
-                                <div class="d-flex align-items-center flex-nowrap">
-                                    <img src="../../../../assets/images/book-cog-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الرئيسي :</p>
-                                </div>
-                                <p class="data text-wrap m-0">{{company.activity}}</p>
-                            </div>
-                            <div class="detail-box flex-wrap d-flex">
-                                <div class="d-flex align-items-center flex-nowrap">
-                                    <img src=" ../../../../assets/images/notebook-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الثانوي :</p>
-                                </div>
-                                <p class="data text-nowrap m-0">{{company.subActivity}}</p>
-                            </div>
-
                         </div>
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
@@ -181,16 +147,109 @@
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
                                     <p class="m-0 mx-2 name">مدة المحاسبة :</p>
                                 </div>
-                                <p class="data text-nowrap m-0">{{company.accountingPeriod}}</p>
+                                <p class="data text-nowrap m-0">{{getDateOnly(company.accountingPeriod.toString())}}</p>
                             </div>
-                            <div class="detail-box flex-wrap d-flex">
+                            <div class="detail-box flex-nowrap d-flex col-6">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src="../../../../assets/images/calculator-variant-o.png" alt="">
+                                    <p class="m-0 mx-2 name">الانتهاء من مدة المحاسبة :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{getDateOnly(company.completionAccPeriod.toString())}}</p>
+                            </div>
+                            <div class="detail-box flex-nowrap d-flex col-6">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src="../../../../assets/images/calculator-variant-o.png" alt="">
+                                    <p class="m-0 mx-2 name">تاريخ مزاولة العمل :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{getDateOnly(company.dateOfWork.toString())}}</p>
+                            </div>
+                            <div class="detail-box flex-wrap d-flex col-6">
                                 <img src="../../../../assets/images/briefcase-outline.png" alt="">
                                 <p class="m-0 mx-2 name">النوع القانوني :</p>
-                                <p class="data text-nowrap m-0">{{company.legalType}}</p>
+                                <p class="data text-nowrap m-0">{{legalTypeName}}</p>
+                            </div>
+                            <div class="detail-box flex-nowrap d-flex col-6">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src="../../../../assets/images/calculator-variant-o.png" alt="">
+                                    <p class="m-0 mx-2 name">قيمة المؤسسه :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.institutionVlaue}}</p>
+                            </div>
+                            <div class="detail-box flex-wrap d-flex col-6">
+                                <img src="../../../../assets/images/briefcase-outline.png" alt="">
+                                <p class="m-0 mx-2 name">مقر اقامة المؤسسه :</p>
+                                <p class="data text-nowrap m-0">{{company.institutionHeadquarters}}</p>
                             </div>
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <div class="col-md-6 box-details mb-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="detail-box flex-nowrap d-flex col-12">
+                                <div class="d-flex flex-nowrap align-items-center">
+                                    <img src="../../../../assets/images/book-account-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">رمز القطاع :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.sectorId}}</p>
+                            </div>
+                            <div class="detail-box flex-wrap d-flex col-12">
+                                <div class="d-flex flex-nowrap align-items-center">
+                                    <img src="../../../../assets/images/book-account-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">القطاع :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.sectorName}}</p>
+                            </div>
+
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="detail-box flex-nowrap d-flex col-12">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src="../../../../assets/images/book-cog-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">رمز النشاط الاقتصادي الرئيسي :</p>
+                                </div>
+                                <p class="data text-wrap m-0">{{company.activityId}}</p>
+                            </div>
+                            <div class="detail-box flex-wrap d-flex col-12">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src=" ../../../../assets/images/notebook-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الرئيسي :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.activityName}}</p>
+                            </div>
+
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="detail-box flex-nowrap d-flex col-12">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src="../../../../assets/images/book-cog-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">رمز النشاط الاقتصادي الثانوي :</p>
+                                </div>
+                                <p class="data text-wrap m-0">{{company.sectorId}}</p>
+                            </div>
+                            <div class="detail-box flex-wrap d-flex col-12">
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <img src=" ../../../../assets/images/notebook-outline.png" alt="">
+                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الثانوي :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.sectorName}}</p>
+                            </div>
+
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="detail-box flex-wrap d-flex">
+                                <div class="d-flex flex-nowrap align-items-center">
+                                    <img src="../../../../assets/images/domain.png" alt="">
+                                    <p class="m-0 mx-2 name">الموقع الإلكتروني: :</p>
+                                </div>
+                                <p class="data text-nowrap m-0">{{company.webSite}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 box-details mb-3">
@@ -202,17 +261,40 @@
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
                           </button>
                     </div>
-                    <div *ngFor="let pdf of companyPdfs" class="file-section d-flex justify-content-between align-items-center">
-                        <div class="file-box d-flex justify-content-between align-items-center mb-4">
-                            <!-- <img src="../../../../assets/images/pdf.png" alt=""> -->
-                            <div class="file-data" style="border-bottom: 1px solid;">
-                                <p class="m-0 data">{{pdf.arName}}</p>
-                            </div>
-                        </div>
-                        <div class="btns d-flex">
-                            <button class="btn btn-danger" (click)="showAlert(pdf.id)"><span>حذف</span></button>
-                            <button class="btn btn-download" (click)="downloadPdf(pdf.path)">تحميل</button>
-                        </div>
+                    <div class="table-responsive company-table research-table">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="t-header">
+                                    <th scope="col">رقم</th>
+                                    <th class="text-center" scope="col">اسم الملف</th>
+                                    <th class="text-center" scope="col"></th>
+                                </tr>
+                            </thead>
+                  
+                            <tbody>
+                                <tr *ngFor="let pdf of companyPdfs; let i = index">
+                                    <td>
+                                        {{ i + 1 }}
+                                    </td>
+                                    <td class="text-center">{{ pdf.arName }}</td>
+                                    <td class="text-center td-actions">
+                                        <a class="btn btn-danger" style='border-radius: 6px;
+                                        font-family: "SST Arabic";
+                                        font-size: 15px;
+                                        font-weight: bold;
+                                        font-style: normal;
+                                        width: 70px;'(click)="showAlert(pdf.id)"><span>حذف</span></a>
+                                        <a class="btn btn-download" style='border-radius: 6px;
+                                        background: #133b8b44;
+                                        font-family: "SST Arabic";
+                                        font-size: 15px;
+                                        font-weight: bold;
+                                        font-style: normal;
+                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)">تحميل</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

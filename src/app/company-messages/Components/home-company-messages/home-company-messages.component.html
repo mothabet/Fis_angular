@@ -42,8 +42,6 @@
                         <th >#</th>
                         <th class="text-center" scope="col">عنوان المراسلة</th>
                         <th class="text-center" scope="col">تفاصيل المراسلة</th>
-                        <th class="text-center" scope="col">تاريخ المراسلة</th>
-                        <th class="text-center" scope="col">وقت المراسلة</th>
                         <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
                     </tr>
                 </thead>
@@ -52,10 +50,6 @@
                         <th >{{i+1}}</th>
                         <td class="text-center">{{message.arName}}</td>
                         <td class="text-center">{{message.arDetails}}</td>
-                        <td class="text-center">
-                            {{ getDateOnly(message.date.toString()) }}
-                        </td>
-                        <td class="text-center">{{message.time}}</td>
                         <td class="text-center td-actions">
                             <!-- <a href="#" class="icon">
         <img src="../../../../assets/images/paperclip.png" alt="">
@@ -100,7 +94,7 @@
                                 <label for="user">المراسلة</label>
                             </div>
                         </div>
-                        <div class="col-sm-12 mb-3">
+                        <!-- <div class="col-sm-12 mb-3">
                             <div class=" input-floating-label mb-0">
                                 <input class="form-control input-modal" type="time" formControlName="time">
                                 <label>الوقت</label>
@@ -111,7 +105,7 @@
                                 <input class="form-control input-modal" type="date" formControlName="date">
                                 <label>التاريخ</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12 mb-3">
                             <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة" >{{ selectedMessage.arDetails || '' }}</textarea>
                         </div>

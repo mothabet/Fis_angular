@@ -376,7 +376,7 @@ export class CompaniesHomeComponent implements OnInit {
     else if (this.companyForm.value.activityId == 0) {
       Swal.fire({
         icon: 'error',
-        title: 'يجب النشاط الرئيسي',
+        title: 'يجب اختيار النشاط الرئيسي',
         showConfirmButton: false,
         timer: 2000
       });
@@ -407,6 +407,36 @@ export class CompaniesHomeComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'يجب ادخال رقم الهاتف',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.phoneNumber.length != 8 ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون رقم الهاتف مكون من 8 ارقام',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.telNumber.length != 8 && this.companyForm.value.telNumber.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون رقم الهاتف الثابت مكون من 8 ارقام',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+      return; // Stop the form submission
+    }
+    else if (this.companyForm.value.fax.length != 8 && this.companyForm.value.fax.length > 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ان يكون الفاكس مكون من 8 ارقام',
         showConfirmButton: false,
         timer: 2000
       });
@@ -480,6 +510,8 @@ export class CompaniesHomeComponent implements OnInit {
       
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
+      if (Model.legalType.toString() == "")
+        Model.legalType = 0
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
@@ -799,7 +831,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      
+      debugger
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -820,7 +852,7 @@ export class CompaniesHomeComponent implements OnInit {
         institutionHeadquarters: this.companyForm.value.institutionHeadquarters,
         institutionVlaue: this.companyForm.value.institutionVlaue,
         legalType: this.companyForm.value.legalType,
-        sectorId: this.companyForm.value.sectorId,
+        sectorId: this.sectorId,
         activityId: this.companyForm.value.activityId,
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
@@ -834,6 +866,8 @@ export class CompaniesHomeComponent implements OnInit {
       }
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
+      if (Model.legalType.toString() == "")
+        Model.legalType = 0
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel');
@@ -959,6 +993,10 @@ export class CompaniesHomeComponent implements OnInit {
   }
   getDateOnly(dateTimeString: string): string {
     const date = new Date(dateTimeString);
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+    return `${year}-${month}-${day}`;
   }
+  
 }
