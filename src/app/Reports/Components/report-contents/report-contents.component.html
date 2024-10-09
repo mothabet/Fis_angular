@@ -64,7 +64,7 @@
         </div>
         <div>
             <div class="table-responsive company-table" style="max-height: 300px; overflow-y: auto;">
-                <table class="table table-borderless scrollable-table">
+                <table class="table table-borderless scrollable-table" *ngIf="report.reportType != 'TablesReport'">
                     <thead>
                         <tr class="t-header">
                             <th style="text-align: center;" scope="col">#</th>
@@ -79,6 +79,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <app-table-with-trans-rep [report]="report" *ngIf="report.reportType == 'TablesReport'"></app-table-with-trans-rep>
             </div>
 
         </div>
@@ -126,9 +127,8 @@
                             <div class="modal-header pb-0">
                                 <label class="modal-title" id="add">{{table.arTableName}}</label>
                             </div>
-                            <div class="card-body"
-                                *ngIf="table.enTableName != 'FormContent' && table.enTableName != 'TablesReport' && 
-                                table.enTableName != 'ActivitiesRep' 
+                            <div class="card-body" *ngIf="table.enTableName != 'FormContent' && table.enTableName != 'TablesReport' && 
+                                table.enTableName != 'ActivitiesRep' && table.enTableName != 'CompaniesRep' && table.enTableName != 'SectorsRep'
                                 && table.enTableName != 'Countries' && table.enTableName != 'Years'">
                                 <div class="d-flex align-items-center">
                                     <!-- Checkbox aligned on the left -->
@@ -235,10 +235,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body"
-                                *ngIf="table.enTableName == 'FormContent' || table.enTableName == 'TablesReport' || 
-                                table.enTableName == 'ActivitiesRep' 
-                                || table.enTableName == 'Countries' || table.enTableName == 'Years'">
+                            <div class="card-body" *ngIf="table.enTableName == 'FormContent' || table.enTableName == 'TablesReport'  
+                                || table.enTableName == 'ActivitiesRep' || table.enTableName == 'SectorsRep' 
+                                || table.enTableName == 'CompaniesRep' || table.enTableName == 'Countries' 
+                                || table.enTableName == 'Years'">
                                 <div style="width: 100%;" class="form-group col-sm-6 mb-2">
                                     <div class="dropdown" [class.show]="isDropdownOpen"
                                         *ngIf="table.enTableName == 'FormContent'">
@@ -254,7 +254,8 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="dropdown" [class.show]="isDropdownOpen" *ngIf="table.enTableName == 'TablesReport'">
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'TablesReport'">
                                         <input type="text" id="searchableDropdown" class="form-control input-modal"
                                             placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm"
                                             (click)="toggleDropdown()" (input)="filterTablesRep()" />
@@ -267,10 +268,12 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="dropdown" [class.show]="isDropdownOpen" *ngIf="table.enTableName == 'ActivitiesRep'">
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'ActivitiesRep'">
                                         <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                            placeholder="Search..." [(ngModel)]="searchActivityTerm" name="searchActivityTerm"
-                                            (click)="toggleActivityDropdown()" (input)="filterActivitiesRep()" />
+                                            placeholder="Search..." [(ngModel)]="searchActivityTerm"
+                                            name="searchActivityTerm" (click)="toggleActivityDropdown()"
+                                            (input)="filterActivitiesRep()" />
                                         <ul class="dropdown-menu" [class.show]="isActivityDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
@@ -280,10 +283,12 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="dropdown" [class.show]="isDropdownOpen" *ngIf="table.enTableName == 'Countries'">
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'Countries'">
                                         <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                            placeholder="Search..." [(ngModel)]="searchCountryTerm" name="searchCountryTerm"
-                                            (click)="toggleCountryDropdown()" (input)="filterCountriesRep()" />
+                                            placeholder="Search..." [(ngModel)]="searchCountryTerm"
+                                            name="searchCountryTerm" (click)="toggleCountryDropdown()"
+                                            (input)="filterCountriesRep()" />
                                         <ul class="dropdown-menu" [class.show]="isCountryDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
@@ -293,7 +298,8 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="dropdown" [class.show]="isDropdownOpen" *ngIf="table.enTableName == 'Years'">
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'Years'">
                                         <input type="text" id="searchableDropdown" class="form-control input-modal"
                                             placeholder="Search..." [(ngModel)]="searchYearTerm" name="searchYearTerm"
                                             (click)="toggleYearsDropdown()" (input)="filterYearsRep()" />
@@ -303,6 +309,36 @@
                                             <li class="dropdown-item" *ngFor="let year of years"
                                                 (click)="selectYearRep($event, table,year)">
                                                 {{year.arName}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'SectorsRep'">
+                                        <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                            placeholder="Search..." [(ngModel)]="searchSectorTerm"
+                                            name="searchSectorTerm" (click)="toggleSectorDropdown()"
+                                            (input)="filterSectorRep()" />
+                                        <ul class="dropdown-menu" [class.show]="isSectorDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 100%;
+                                      text-align: right;">
+                                            <li class="dropdown-item" *ngFor="let sector of sectors"
+                                                (click)="selectSectorRep($event, table,sector)">
+                                                {{sector.arName}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="dropdown" [class.show]="isDropdownOpen"
+                                        *ngIf="table.enTableName == 'CompaniesRep'">
+                                        <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                            placeholder="Search..." [(ngModel)]="searchCompanyTerm"
+                                            name="searchCompanyTerm" (click)="toggleCompanyDropdown()"
+                                            (input)="filterCompaniesRep()" />
+                                        <ul class="dropdown-menu" [class.show]="isCompanyDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 100%;
+                                      text-align: right;">
+                                            <li class="dropdown-item" *ngFor="let company of companies"
+                                                (click)="selectCountryRep($event, table,company)">
+                                                {{company.arName}}
                                             </li>
                                         </ul>
                                     </div>

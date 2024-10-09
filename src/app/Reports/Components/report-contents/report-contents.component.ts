@@ -98,6 +98,8 @@ export class ReportContentsComponent implements OnInit {
   report: IAddReportPartDto = {
     part: '',
     query: '',
+    reportType: '',
+    seconedTable: '',
     withChart: false,  // default to false
     chartType: 0,      // default chart type
     reportId: 0        // default ID
@@ -178,7 +180,7 @@ export class ReportContentsComponent implements OnInit {
   filteredCompanies: IDropdownList[] = [];
   filteredYears: IDropdownList[] = this.years;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private reportServices: ReportService , private companyService : CompanyHomeService
+    private reportServices: ReportService, private companyService: CompanyHomeService
     , private formServices: FormService,
     private codeHomeService: CodeHomeService,
     private activeRouter: ActivatedRoute) { }
@@ -192,6 +194,7 @@ export class ReportContentsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.reports = res.Data;
+          console.log(this.reports[0])
         }
         else {
           res.Data = []
@@ -300,7 +303,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.Id // Initialize value as needed
         };
 
-        table.fields.push(tableField);
+        table.fields[0] = tableField;
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -399,7 +402,7 @@ export class ReportContentsComponent implements OnInit {
   }
   selectSectorRep(event: Event, table: ITableDto, sector: any) {
     this.searchSectorTerm = sector.arName;
-    this.isCompanyDropdownOpen = false;
+    this.isSectorDropdownOpen = false;
 
     const selectedField = this.sectors.find(field => field.arName === sector.arName);
 
@@ -863,16 +866,29 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
-
+    debugger
     if (this.tables[0].enTableName == 'TablesReport') {
-      if (this.tables[0].fields.length == 0) {
+      if (this.tables[0].fields.length == 0 || this.tables[0].fields.length > 1) {
         Swal.fire({
           icon: 'error',
-          title: 'يجب اختيار جدول فلتر على الاقل',
+          title: 'يجب اختيار جدول فلتر واحد',
           showConfirmButton: true,
           confirmButtonText: 'اغلاق'
         });
         return;
+      }
+    }
+    if (this.tables.length > 1) {
+      if (this.tables[1].enTableName == 'Years') {
+        if (this.tables[1].fields.length == 0 || this.tables[1].fields.length > 1) {
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب اختيار سنة واحدة',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
       }
     }
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
@@ -904,6 +920,8 @@ export class ReportContentsComponent implements OnInit {
         this.report = {
           part: '',
           query: '',
+          reportType: '',
+          seconedTable: '',
           withChart: false,  // default to false
           chartType: 0,      // default chart type
           reportId: 0        // default ID
@@ -926,7 +944,9 @@ export class ReportContentsComponent implements OnInit {
   appendTable(): void {
     if (this.selectedTable) {
 
-      if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries' || this.selectedTable.enName == 'Years') {
+      if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries' || this.selectedTable.enName == 'Years'
+        || this.selectedTable.enName == 'SectorsRep' || this.selectedTable.enName == 'CompaniesRep'
+      ) {
         if (this.tables.length > 1) {
           this.tables = [this.tables[0]];
           const tableDto: ITableDto = {
@@ -978,6 +998,7 @@ export class ReportContentsComponent implements OnInit {
       // Append the table only if it doesn't already exist
 
       const temp = this.generalDataFields
+
       if (this.selectedTable.enName == 'Companies')
         this.GetTableFields(1);
       else if (this.selectedTable.enName == 'Researcher')
@@ -1006,6 +1027,7 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   fbuildJoinQuery(tables: ITableDto[], stringFilterItems: IReportFilterDto[], numberFilterItems: IReportFilterDto[]): string {
+    this.report.reportType = tables[0].enTableName;
     if (tables[0].enTableName != 'FormContent' && tables[0].enTableName != 'TablesReport') {
       let query = 'SELECT ';
       let joins = '';
@@ -1102,45 +1124,54 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else if (tables[0].enTableName == 'TablesReport') {
-      let query = 'SELECT t.*, f.reviewYear FROM forms f INNER JOIN tables t ON t.formId = f.id';
-      let whereClause = '';
-
-      // Handle fields from tables[0]
-      if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            const condition = `t.arName = N'${field.name}'`;
-
-            // Append condition to whereClause
-            whereClause += whereClause ? ` or ${condition}` : ` WHERE (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND ${condition}`;
-          }
-        });
+      if (tables.length == 1) {
+        return this.createYearRepQuery(tables);
       }
-
-      // Handle conditions based on tables[1] (Years)
-      if (tables.length > 1 && tables[1].enTableName == 'Years') {
-        if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
-
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` or ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
-          });
-        }
+      else if (tables.length > 1 && tables[1].enTableName == 'Years' && tables[1].enTableName != undefined) {
+        return this.createYearRepQuery(tables);
       }
-
-      // Final query with WHERE clause
-      query += whereClause;
-
-      return query;
+      return '';
     }
     else {
       return '';
     }
+  }
+  createYearRepQuery(tables: ITableDto[]): string {
+    if (tables.length > 1)
+      this.report.seconedTable = tables[1].enTableName;
+    let query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,(SELECT STRING_AGG(value, ',')FROM OPENJSON(JSON_QUERY(c.value, '$.codes'))WITH (value int '$')) AS codeValues FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    let whereClause = '';
+
+    // Handle fields from tables[0]
+    if (tables[0].fields && tables[0].fields.length > 0) {
+      tables[0].fields.forEach((field, fieldIndex) => {
+        if (field.name) {
+          // Build the condition for arName
+          const condition = `t.arName = N'${field.name}'`;
+
+          // Append condition to whereClause
+          whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND ${condition}`;
+        }
+      });
+    }
+
+    // Handle conditions based on tables[1] (Years)
+    if (tables.length > 1 && tables[1].enTableName == 'Years') {
+      if (tables[1].fields && tables[1].fields.length > 0) {
+        tables[1].fields.forEach((field, fieldIndex) => {
+          if (field.name) {
+            // Add the condition for f.reviewYear
+            const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+            // Append this to the whereClause as well
+            whereClause += whereClause ? ` or ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+          }
+        });
+      }
+    }
+    // Final query with WHERE clause
+    query += whereClause;
+    return query;
   }
   onSelectAllFieldsChange(table: ITableDto) {
     // Toggle all fields based on the checkbox state
@@ -1256,9 +1287,8 @@ export class ReportContentsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
-          this.companies = res.Data.getCountryDtos;
-          this.filteredCompanies = res.Data.getCountryDtos;
+          this.companies = res.Data.getCompaniesDtos;
+          this.filteredCompanies = res.Data.getCompaniesDtos;
         }
         else {
           this.companies = [];
@@ -1271,16 +1301,16 @@ export class ReportContentsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.companyService.GetCompanies(null,0).subscribe(observer);
+    this.companyService.GetCompanies('', 0).subscribe(observer);
   }
   GetSectors() {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
-
-          this.sectors = res.Data.getCountryDtos;
-          this.filteredSectors = res.Data.getCountryDtos;
+          this.sectors = res.Data.getSectorsDtos;
+          this.filteredSectors = res.Data.getSectorsDtos;
         }
         else {
           this.sectors = [];
@@ -1293,6 +1323,6 @@ export class ReportContentsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetSector(0).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSectors(0).subscribe(observer);
   }
 }
