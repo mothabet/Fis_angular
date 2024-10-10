@@ -485,6 +485,17 @@ export class ResearcherHomeComponent {
     this.GetCompanies(this.searchText, 1);
   }
   GetFormsStatistics() {
+    debugger
+    if (this.fromDate && this.toDate && this.fromDate > this.toDate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب أن يكون "من تاريخ" أصغر من "إلى تاريخ"',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+  
     this.showLoader = true;
     const observer = {
       next: (res: any) => {

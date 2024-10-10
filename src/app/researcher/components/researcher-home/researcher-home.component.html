@@ -4,7 +4,7 @@
   <app-top-screen [title]="'الباحثين'"></app-top-screen>
 <!--start total -->
 <!-- start filter section -->
-<div class="filter-section d-flex flex-wrap justify-content-between align-items-center mb-3">
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
   <div class="first-section search d-flex align-items-center">
       <!-- <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
@@ -20,16 +20,20 @@
       <!-- <button class="btn">
           <img src="./images/Combined Shape.png" alt="">
       </button> -->
-      <button class="btn" (click)="GetFormsStatistics()">
-        بحث بالتاريخ </button>
-      <div class="form-group">
+      <div class="form-group mx-1">
         <input type="date" id="fromDate" [(ngModel)]="fromDate" class="form-control" />
         <label for="inputField">من تاريخ :</label>
       </div>
-      <div class="form-group">
+      <div class="form-group mx-1">
         <input type="date" id="toDate" [(ngModel)]="toDate" class="form-control" />
         <label for="inputField">الي تاريخ</label>
       </div>
+      <button class="btn mx-1" style="border-radius: 8px;
+      color: white;
+      font-size: 12px;
+      background-color: #133C8B;
+      " (click)="GetFormsStatistics()">
+        بحث </button>
   </div>
 
 </div>

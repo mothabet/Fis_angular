@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ICompany, ICompanyEmail, IGetPdfDto, IPdfDto } from '../../Dtos/CompanyHomeDto';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
@@ -250,12 +250,16 @@ export class CompaniesDetailsComponent implements OnInit {
 
       this.companyServices.UpdateProfileImg(formData,+this.companyId).subscribe(observer);
   }
-  getDateOnly(dateTimeString: string): string {
-    const date = new Date(dateTimeString);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
-    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
-    return `${year}-${month}-${day}`;
+  getDateOnly(dateTimeString: Date): string {
+    if(dateTimeString!=null && dateTimeString.toString() != ""){
+      const date = new Date(dateTimeString.toString());
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+      const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+      return `${year}-${month}-${day}`;
+    }
+    else
+      return ""
   }
   
 }

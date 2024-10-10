@@ -233,16 +233,17 @@
               </div>
               <div class="form-group col-4 mb-2">
                 <input formControlName="phoneNumber" class="form-control input-modal" type="text"
-                  (keypress)="validateInput($event)" />
+                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
                 <label for="inputField" class="text-danger">رقم الهاتف <span>*</span></label>
               </div>
               <div class="form-group col-4 mb-2">
                 <input formControlName="telNumber" class="form-control input-modal" type="text"
-                  (keypress)="validateInput($event)" />
+                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
                 <label for="inputField">الهاتف الثابت</label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="fax" class="form-control input-modal" type="text" (keypress)="validateInput($event)" />
+                <input formControlName="fax" class="form-control input-modal" type="text" 
+                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
                 <label for="inputField">فاكس</label>
               </div>
               <div class="form-group col-sm-12 col-lg-6 mb-2">

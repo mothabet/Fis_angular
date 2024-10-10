@@ -89,14 +89,10 @@ export class SharedQuarterTableComponent {
   }
   
   toggleCollapse(column: number) {
-    for (let index = 4; index >= column; index--) {      
-      this.isCollapsedColumns[index] = false;
-    }
+      this.isCollapsedColumns[column] = false;
   }
   toggleExpand(column: number) {
-    for (let index = 4; index >= column; index--) {      
-      this.isCollapsedColumns[index] = true;
-    }
+      this.isCollapsedColumns[column] = true;
     // تبديل حالة العرض/الإخفاء للعمود المحدد
   }
   onArCountryChange(subCode: any) {

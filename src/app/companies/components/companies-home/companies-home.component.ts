@@ -64,8 +64,8 @@ export class CompaniesHomeComponent implements OnInit {
       enName: ['', Validators.required],
       municipalityNumber: [''],
       compRegNumber: ['', Validators.required],
-      accountingPeriod: [null],
-      completionAccPeriod: [null],
+      accountingPeriod: [''],
+      completionAccPeriod: [''],
       phoneNumber: [''],
       telNumber: [''],
       fax: [''],
@@ -495,7 +495,7 @@ export class CompaniesHomeComponent implements OnInit {
         institutionHeadquarters: this.companyForm.value.institutionHeadquarters,
         institutionVlaue: this.companyForm.value.institutionVlaue,
         legalType: this.companyForm.value.legalType,
-        sectorId: this.companyForm.value.sectorId,
+        sectorId: this.sectorId,
         activityId: this.companyForm.value.activityId,
         subActivityId: this.companyForm.value.subActivityId,
         governoratesId: this.companyForm.get('governoratesId')?.value,
@@ -507,7 +507,7 @@ export class CompaniesHomeComponent implements OnInit {
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
-      
+      debugger
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
       if (Model.legalType.toString() == "")
@@ -702,6 +702,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         if (res.Data) {
           this.company = res.Data;
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
@@ -719,8 +720,6 @@ export class CompaniesHomeComponent implements OnInit {
               password: this.company.password,
               municipalityNumber: this.company.municipalityNumber,
               compRegNumber: this.company.compRegNumber,
-              accountingPeriod: this.getDateOnly(this.company.accountingPeriod),
-              completionAccPeriod: this.getDateOnly(this.company.completionAccPeriod),
               phoneNumber: this.company.phoneNumber,
               telNumber: this.company.telNumber,
               fax: this.company.fax,
@@ -743,6 +742,20 @@ export class CompaniesHomeComponent implements OnInit {
               sectorName: this.company.sectorName,
               subActivityName: this.company.subActivityName,
             });
+            if(this.company.accountingPeriod != null)
+            {
+              this.companyForm.value.accountingPeriod = this.getDateOnly(this.company.accountingPeriod)
+            }
+            else{
+              this.companyForm.value.accountingPeriod = this.company.accountingPeriod
+            }
+            if(this.company.completionAccPeriod !=null)
+              {
+                this.companyForm.value.completionAccPeriod = this.getDateOnly(this.company.completionAccPeriod)
+              }
+              else{
+                this.companyForm.value.completionAccPeriod = this.company.completionAccPeriod
+              }
             this.initializeForm();
 
           }
@@ -839,8 +852,8 @@ export class CompaniesHomeComponent implements OnInit {
         enName: this.companyForm.value.enName,
         municipalityNumber: this.companyForm.value.municipalityNumber,
         compRegNumber: this.companyForm.value.compRegNumber,
-        accountingPeriod: this.companyForm.value.accountingPeriod,
-        completionAccPeriod: this.companyForm.value.completionAccPeriod,
+        accountingPeriod: this.companyForm.value.accountingPeriod || null,  // Adjust this
+        completionAccPeriod: this.companyForm.value.completionAccPeriod || null,  // Adjust this
         phoneNumber: this.companyForm.value.phoneNumber,
         telNumber: this.companyForm.value.telNumber,
         fax: this.companyForm.value.fax,
@@ -866,7 +879,10 @@ export class CompaniesHomeComponent implements OnInit {
       }
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
-      if (Model.legalType.toString() == "")
+      debugger
+      if(Model.legalType == null)
+        Model.legalType = 0
+      else if (Model.legalType.toString() == "")
         Model.legalType = 0
       const observer = {
         next: (res: any) => {
