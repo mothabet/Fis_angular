@@ -77,6 +77,17 @@ export class SharedQuarterTableComponent {
       this.GetCountrites();
     });
   }
+  onCheckboxChange(event: Event,column: number) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (!isChecked) {
+      // Collapse columns
+      this.toggleCollapse(column);  // Adjust the number as needed
+    } else {
+      // Expand columns
+      this.toggleExpand(column);  // Adjust the number as needed
+    }
+  }
+  
   toggleCollapse(column: number) {
     for (let index = 4; index >= column; index--) {      
       this.isCollapsedColumns[index] = false;

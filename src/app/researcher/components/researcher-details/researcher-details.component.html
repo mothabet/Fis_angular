@@ -69,7 +69,37 @@
     </div>
     <!-- end researcher header -->
 
+<!-- start filter section -->
+<div class="filter-section d-flex flex-wrap justify-content-between align-items-center mb-3">
 
+    <div class="first-section search d-flex align-items-center">
+        <!-- <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
+        <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+  
+        <div class="form-check form-switch me-3">
+            <input class="form-check-input" type="checkbox" id="seeAll">
+            <label class="form-check-label text-nowrap" for="seeAll">عرض الكل</label>
+        </div> -->
+    </div>
+  
+    <div class="last-section  d-flex align-items-center">
+        <!-- <button class="btn">
+            <img src="./images/Combined Shape.png" alt="">
+        </button> -->
+        <button class="btn" (click)="GetFormsStatistics()">
+          بحث بالتاريخ </button>
+        <div class="form-group">
+          <input type="date" id="fromDate" [(ngModel)]="fromDate" class="form-control" />
+          <label for="inputField">من تاريخ :</label>
+        </div>
+        <div class="form-group">
+          <input type="date" id="toDate" [(ngModel)]="toDate" class="form-control" />
+          <label for="inputField">الي تاريخ</label>
+        </div>
+    </div>
+  
+  </div>
+  <!-- end filter section -->
     <!--start total -->
     <div class="row totals">
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
@@ -335,50 +365,49 @@
 </div>
 <div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content p-2">
-            <form [formGroup]="researcherMandateForm">
-                <div class="modal-body pb-1">
-                    <div class="row">
-                        <div class="form-group col-sm-6 mb-2">
-                            <select class="form-control" formControlName="researcherMandateId">
-                                <option value="">--اختر الباحث المفوض له--</option>
-                                <option value="{{item_.id}}" *ngFor="let item_ of researchersMandate; let i = index">
-                                    {{item_.arName}}
-                                </option>
-                            </select>
-                            <label for="inputField">الباحث المفوض له</label>
-                        </div>
-                        <div class="form-group col-sm-6 mb-2">
-                            <input type="date" class="form-control" formControlName="fromDate">
-                            <label for="inputField">من تاريخ</label>
-                        </div>
-                        <div class="form-group col-sm-6 mb-2">
-                            <input type="date" class="form-control" formControlName="toDate">
-                            <label for="inputField">من تاريخ</label>
-                        </div>
-                        <div class="orm-group col-sm-3 mb-2" *ngIf="researcherMandateForm.value.researcherMandateId>0">
-                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
-                                <label class="form-check-label" for="active"
-                                    style="position: relative;transform: translateY(0px);">الغاء التفويض</label>
-                                <input formControlName="IsCancelled" class="form-check-input" type="checkbox"
-                                    id="active" checked />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer pt-0">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
-                        (click)="resetForm()">
-                        إلغاء
-                    </button>
-                    <button type="button" class="btn btn-save" (click)="AddResearcherMandate()">
-                        حفظ
-                    </button>
-                </div>
-            </form>
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+            <div class="form-group col-sm-6 mb-2">
+                <select class="form-control" [(ngModel)]="researcherMandateId">
+                    <option value="">--اختر الباحث المفوض له--</option>
+                    <option value="{{item_.id}}" *ngFor="let item_ of researchersMandate; let i = index">
+                        {{item_.arName}}
+                    </option>
+                </select>
+                <label for="inputField">الباحث المفوض له</label>
+            </div>
+                      <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
         </div>
+        <div class="table-responsive company-modal-table mx-2">
+          <table class="table table-borderless">
+            <thead>
+              <tr class="t-header">
+                <th scope="col">اسم الشركة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let company of companiesSelect">
+                <td>
+                   <input type="checkbox" (change)="onCheckboxChangeCompany(company.id, $event)" [checked]="selecteCompanyIds.has(company.id)"/>
+                  <!--<i class="fa fa-close delete-icon" *ngIf="selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id)"></i>
+   -->
+                  {{ company.arName }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcher" (click)="resetForm()">إلغاء</button>
+          <button type="button" class="btn btn-save" (click)="AddResearcherMandate()">
+            حفظ
+        </button>        </div>
+      </div>
     </div>
-</div>
+  </div>
 <div class="modal company-modal fade" id="AllResearcherMandate" tabindex="-1" aria-labelledby="AllResearcherMandate"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -392,17 +421,16 @@
                         <tr class="t-header">
                             <th scope="col"></th>
                             <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
-                            <th scope="col" style="text-align: center;">بدايه تاريخ التفويض</th>
-                            <th scope="col" style="text-align: center;">نهاية تاريخ التفويض</th>
+                            <th scope="col" style="text-align: center;"> تاريخ التفويض</th>
                             <th scope="col" style="text-align: center;">الحاله</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index">
-                            <td class="text-center">{{i+1}}</td>
+                        <!-- <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index" (click)="GetCompanyResearcherMandate(researcherMandate)"> -->
+                            <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index" (click)="GetCompanyResearcherMandate(researcherMandate)">
+                                <td class="text-center">{{i+1}}</td>
                             <td class="text-center">{{researcherMandate.arName}}</td>
-                            <td class="text-center">{{getDateOnly(researcherMandate.fromDate)}}</td>
-                            <td class="text-center">{{getDateOnly(researcherMandate.toDate)}}</td>
+                            <td class="text-center">{{getDateOnly(researcherMandate.CreatedOn)}}</td>
                             <td class="text-center" *ngIf="researcherMandate.IsCancelled">تم الغاء التفويض في تاريخ {{getDateOnly(researcherMandate.CancelledOn)}}</td>
                             <td class="text-center" *ngIf="!researcherMandate.IsCancelled"><button type="button" class="btn btn-save" (click)="CancelResearcherMandate(researcherMandate.id)">
                                 الغاء التفويض
@@ -418,3 +446,37 @@
         </div>
     </div>
 </div>
+<!-- <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#CompanyResearcherMandate" (click)="AddResearcherMandateModel()"
+                id="CompanyResearcherMandateBtn" hidden>
+                <img src="./images/list-box-outline.png" alt="">
+            </button>
+<div class="modal company-modal " id="CompanyResearcherMandate" tabindex="-1" aria-labelledby="CompanyResearcherMandate"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">شركات الباحث المفوض</h5>
+            </div>
+            <div class="table-responsive company-modal-table mx-2">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th scope="col" style="text-align: center;">اسم الشركه</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let companyRM of companyResearcherMandate; let i = index">
+                            <td class="text-center">{{i+1}}</td>
+                            <td class="text-center">{{companyRM.arName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcherMandate">إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->

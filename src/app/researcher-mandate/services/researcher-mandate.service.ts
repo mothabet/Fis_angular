@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment.development';
-import { IAddResearcherMandateDto } from '../Dtos/ResearcherMandateDto';
+import { IAddResearcherMandateDto, IGetResearcherMandateDto } from '../Dtos/ResearcherMandateDto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,11 @@ export class ResearcherMandateService {
    GetAllResearcherMandate(researcherId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`ResearcherMandate/GetAllResearcherMandate?researcherId=${researcherId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
+     return resopnse;
+   }
+   GetCompanyResearcherMandate(researcherId:string,researcherMandateId:string){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`ResearcherMandate/GetCompanyResearcherMandate?lang=2&researcherId=${researcherId}&researcherMandateId=${researcherMandateId}`, { headers });
      return resopnse;
    }
    GetResearcherMandateByResearcherId(researcherId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){

@@ -32,7 +32,8 @@ export class ResearcherDetailsComponent implements OnInit {
   researcher!: IResearcher;
   researcherId!: string;
   companiesCount: number = 0;
-  companies!: ICompany[]
+  companies!: ICompany[];
+  companiesSelect!: ICompany[];
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -51,6 +52,7 @@ export class ResearcherDetailsComponent implements OnInit {
   addResearcherMandateDto!: IAddResearcherMandateDto;
   researchers: IResearcher[] = [];
   researchersMandate: IResearcher[] = [];
+  companyResearcherMandate : ICompany[] = [];
   adminData: IAdminDataDto = {
     adminEmail: '',
     adminPhone: '',
@@ -61,6 +63,13 @@ export class ResearcherDetailsComponent implements OnInit {
   totalPages: number = 0;
   searchText: string = '';
   noData: boolean = false;
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+  selectedCompaniesNames: string = '';  // لعرض أسماء الشركات المختارة
+  selectedCompanyIdsIsResearcher: Set<number> = new Set<number>();
+  selecteCompanyIds: Set<number> = new Set<number>();
+  researcherMandateId!: string;
+
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
@@ -80,21 +89,41 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetAllReseachers();
     this.researcherMandateForm = this.formBuilder.group({
       researcherMandateId: ['', Validators.required],
-      fromDate: ['', Validators.required],
-      toDate: ['', Validators.required],
-      IsCancelled: [false, Validators.required],
     });
   }
+  onCheckboxChangeCompany(companyId: number, event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.checked) {
+      this.selecteCompanyIds.add(companyId);
+      this.selectedCompanyIdsIsResearcher.add(companyId);
+    } else {
+      this.selecteCompanyIds.delete(companyId);
+      this.selectedCompanyIdsIsResearcher.delete(companyId);
+    }
+  }
+  onSelectCompanies(event: Event) {
+    const selectedOptions = (event.target as HTMLSelectElement).selectedOptions;
+    const selectedCompanyIds = Array.from(selectedOptions).map(option => option.value);
+    const selectedCompanyNames = Array.from(selectedOptions).map(option => option.text);
 
+    // تحديث القيم في النموذج
+    this.researcherMandateForm.patchValue({
+      companyIds: selectedCompanyIds
+    });
+
+    // تحديث حقل الإدخال بأسماء الشركات المختارة
+    this.selectedCompaniesNames = selectedCompanyNames.join(', ');
+  }
   GetResearcherById(id: number,page: number, textSearch: string = '') {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
           this.companies = res.Data.companies.getCompaniesDtos;
+          this.companiesSelect = this.companies.filter(c=>c.researcherArName === "");
           this.currentPage = res.Data.companies.PageNumber;
           this.isLastPage = res.Data.companies.LastPage;
           this.totalPages = res.Data.companies.TotalCount;
@@ -131,7 +160,7 @@ export class ResearcherDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.researcherServices.GetFormsStatistics(+this.researcherId).subscribe(observer);
+    this.researcherServices.GetFormsStatistics(+this.researcherId,this.fromDate,this.toDate).subscribe(observer);
   }
 
   GetFormsByStatus(status: number) {
@@ -406,17 +435,19 @@ export class ResearcherDetailsComponent implements OnInit {
   }
   AddResearcherMandate() {
     this.showLoader = true;
-    if (this.researcherMandateForm.valid) {
+    
+    if (this.selecteCompanyIds.size >0 && this.researcherMandateId != "") {
+      const selectedCompanies = this.companies
+  .filter(company => this.selecteCompanyIds.has(company.id))
+  .map(company => company.id);
       const Model: IAddResearcherMandateDto = {
-        fromDate: this.researcherMandateForm.value.fromDate,
         researcherId: this.researcherId,
-        researcherMandateId: this.researcherMandateForm.value.researcherMandateId,
-        toDate: this.researcherMandateForm.value.toDate,
-        IsCancelled: this.researcherMandateForm.value.IsCancelled
+        researcherMandateId: this.researcherMandateId,
+        selectedCompanies :selectedCompanies
       }
       const observer = {
         next: (res: any) => {
-          const button = document.getElementById('btnCancel');
+          const button = document.getElementById('btnCancelCompanyResearcher');
           if (button) {
             button.click();
           }
@@ -481,17 +512,48 @@ export class ResearcherDetailsComponent implements OnInit {
     };
     this.researcherMandateService.GetAllResearcherMandate(this.researcherId, 0).subscribe(observer);
   }
+  GetCompanyResearcherMandate(researchersMandate:IGetResearcherMandateDto): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        if (res.Data) {
+          this.companyResearcherMandate = res.Data;
+          const button = document.getElementById('CompanyResearcherMandateBtn');
+          if (button) {
+            button.click();
+          }
+          this.showLoader = false;
+        }
+        else {
+          Swal.fire({
+            icon: 'error',
+            title: res.Message,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          this.showLoader = false;
+
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.researcherMandateService.GetCompanyResearcherMandate(researchersMandate.researcherId,researchersMandate.researcherMandateId).subscribe(observer);
+  }
+  
   GetResearcherMandateByResearcherId(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        this.addResearcherMandateDto = res.Data;
-        if (this.addResearcherMandateDto != null) {
-          this.researcherMandateForm.patchValue({
-            fromDate: this.getDateOnly(this.addResearcherMandateDto.fromDate),
-            toDate: this.getDateOnly(this.addResearcherMandateDto.toDate),
-            researcherMandateId: this.addResearcherMandateDto.researcherMandateId,
-          });
+        this.addResearcherMandateDto = res.Data.getResearcherMandateDto;
+        if(this.addResearcherMandateDto != null)
+          this.researcherMandateId = this.addResearcherMandateDto.researcherMandateId;
+        this.selecteCompanyIds = new Set<number>();
+        for (let index = 0; index < res.Data.getCompaniesDtos.length; index++) {
+          this.selecteCompanyIds.add(res.Data.getCompaniesDtos[index].id)
         }
         const button = document.getElementById('addResearcherBtn');
         if (button) {

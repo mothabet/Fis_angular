@@ -45,6 +45,9 @@ export class ResearcherHomeComponent {
   selectedCompanyIdsIsResearcher: Set<number> = new Set<number>();
   formStatics!: any[];
   formsStaticsStatus!: any[];
+  filteredFormStatics: any[] = []; // البيانات المصفاة
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -428,10 +431,6 @@ export class ResearcherHomeComponent {
           for (let index = 0; index < res.Data.length; index++) {
             this.selectedCompanyIdsIsResearcher.add(res.Data[index].id);
           }
-          // res.Data.getCompaniesDtos.forEach((element:any) => {
-
-          //   
-          // });
         }
         this.showLoader = false;
       },
@@ -491,7 +490,8 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          this.formStatics = res.Data
+          this.formStatics = res.Data;
+          this.filteredFormStatics = this.formStatics; 
         }
       },
       error: (err: any) => {
@@ -499,7 +499,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.researcherService.GetFormsStatistics().subscribe(observer);
+    this.researcherService.GetFormsStatistics(0,this.fromDate,this.toDate).subscribe(observer);
   }
   GetFormsByStatus(status: number) {
     this.showLoader = true;

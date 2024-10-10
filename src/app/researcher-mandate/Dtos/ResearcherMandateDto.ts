@@ -1,10 +1,9 @@
+import { ICompany } from "src/app/companies/Dtos/CompanyHomeDto"
 
 export interface IAddResearcherMandateDto {
     researcherMandateId:string,
-    fromDate:string,
-    toDate:string,
     researcherId:string,
-    IsCancelled : boolean,
+    selectedCompanies:number[]
 }
 export interface IGetResearcherMandateDto {
     id:number,
@@ -14,7 +13,8 @@ export interface IGetResearcherMandateDto {
     researcherId:string,
     arName:string
     IsCancelled : boolean,
-    CancelledOn:string
+    CancelledOn:string,
+    CreatedOn:string
 }
 export interface IAddListResearcherMandateDto {
     addResearcherMandateDtos : IAddResearcherMandateDto[],
