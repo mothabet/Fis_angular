@@ -9,9 +9,7 @@
                             <th scope="col"></th>
                             <th class="text-center" scope="col">السؤال</th>
                             <th class="text-center" scope="col">الرمز Code</th>
-                            <th class="text-center" scope="col">نهاية عام {{report.fields[0][0].value}} Year-end</th>
-                            <th class="text-center" scope="col">التعاملات خلال Transactions during</th>
-                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][0].value)-1}} Year-end</th>
+                            <th class="text-center" scope="col" *ngFor="let year of years">خلال {{year + 1}} During</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -19,9 +17,7 @@
                             <th scope="col"></th>
                             <td style="text-align: center;">{{field[2].value}}</td>
                             <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{(+field[4].value) - (+field[4].value)}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;" *ngFor="let year of years">{{field[4].value}}</td>
                         </tr>
                     </tbody>
                 </table>

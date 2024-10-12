@@ -1,0 +1,49 @@
+<div class="companies-details form-details prev-form" style="width: 100%;">
+    <div class="header-nav" style="margin-bottom: -10px">
+        <!-- start table -->
+        <div class="content companies projection-table">
+            <div class="table-responsive company-table">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col">السؤال</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][0].value}} Year-end
+                            </th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields" scope="col">
+                            <th scope="col"></th>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- end content -->
+    </div>
+</div>

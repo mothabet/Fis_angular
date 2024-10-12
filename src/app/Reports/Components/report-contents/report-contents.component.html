@@ -50,9 +50,16 @@
     <div class="content companies report-table" style="margin-bottom: 15px;max-width: 74rem;"
         *ngFor="let report of reports">
         <div class="header d-flex ">
-            <h4 class="">
-                {{report.part}}
-            </h4>
+            <div>
+                <h4 class="" style="margin-bottom: 10px;">
+                    <p style="font-weight: 900;">
+                        {{report.part}}
+                    </p>
+                </h4>
+                <h4 class="" *ngIf="report.reportType == 'TablesReport'">
+                    {{(report.fields[0][1]).value}}
+                </h4>
+            </div>
             <div class="btns d-flex">
                 <div class="d-flex flex-grow-1 gap-2 btns-group ">
                     <button type="button" class="btn btn-send" (click)="DeleteReportContent(report.id)">
@@ -79,7 +86,16 @@
                         </tr>
                     </tbody>
                 </table>
-                <app-table-with-trans-rep [report]="report" *ngIf="report.reportType == 'TablesReport'"></app-table-with-trans-rep>
+                <app-table-with-trans-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields[0][5].value == 1"></app-table-with-trans-rep>
+                <app-table-without-trans-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields[0][5].value == 2"></app-table-without-trans-rep>
+                <app-one-year-with-parts-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields[0][5].value == 3"></app-one-year-with-parts-rep>
+                <app-two-years-with-parts-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields[0][5].value == 4"></app-two-years-with-parts-rep>
+                    <app-table-with-periods-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields[0][5].value == 5"></app-table-with-periods-rep>
             </div>
 
         </div>

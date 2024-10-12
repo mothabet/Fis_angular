@@ -1139,7 +1139,7 @@ export class ReportContentsComponent implements OnInit {
   createYearRepQuery(tables: ITableDto[]): string {
     if (tables.length > 1)
       this.report.seconedTable = tables[1].enTableName;
-    let query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,(SELECT STRING_AGG(value, ',')FROM OPENJSON(JSON_QUERY(c.value, '$.codes'))WITH (value int '$')) AS codeValues FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    let query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,(SELECT SUM([value]) FROM OPENJSON(JSON_QUERY(c.value, '$.codes')) WITH ([value] int '$')) AS codeValuesSum, t.type As tableType,t.period as tablePeriod FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
     let whereClause = '';
 
     // Handle fields from tables[0]
@@ -1164,7 +1164,7 @@ export class ReportContentsComponent implements OnInit {
             const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
 
             // Append this to the whereClause as well
-            whereClause += whereClause ? ` or ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+            whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
           }
         });
       }
