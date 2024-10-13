@@ -9,7 +9,9 @@ export class TableWithPeriodsRepComponent implements OnInit{
   @Input() report:any;
   years: number[] = [];
   ngOnInit(): void {
-    this.generateYearsList(this.report.fields[0][6].value);
+    this.generateYearsList(this.report.fields[0][4].value);
+    console.log(this.report)
+    
   }
   generateYearsList(period: number): void {
     for (let i = 0; i < period; i++) {

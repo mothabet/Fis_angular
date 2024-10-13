@@ -26,6 +26,7 @@ import { TableWithoutTransRepComponent } from './components/ReportTables/table-w
 import { OneYearWithPartsRepComponent } from './components/ReportTables/one-year-with-parts-rep/one-year-with-parts-rep.component';
 import { TwoYearsWithPartsRepComponent } from './components/ReportTables/two-years-with-parts-rep/two-years-with-parts-rep.component';
 import { TableWithPeriodsRepComponent } from './components/ReportTables/table-with-periods-rep/table-with-periods-rep.component';
+import { NoRepDataComponent } from './components/ReportTables/no-rep-data/no-rep-data.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { TableWithPeriodsRepComponent } from './components/ReportTables/table-wi
     OneYearWithPartsRepComponent,
     TwoYearsWithPartsRepComponent,
     TableWithPeriodsRepComponent,
+    NoRepDataComponent,
   ],
   imports: [
     CommonModule,
@@ -88,7 +90,8 @@ import { TableWithPeriodsRepComponent } from './components/ReportTables/table-wi
     TableWithoutTransRepComponent,
     OneYearWithPartsRepComponent,
     TwoYearsWithPartsRepComponent,
-    TableWithPeriodsRepComponent
+    TableWithPeriodsRepComponent,
+    NoRepDataComponent
   ]
 })
 export class SharedModule { }

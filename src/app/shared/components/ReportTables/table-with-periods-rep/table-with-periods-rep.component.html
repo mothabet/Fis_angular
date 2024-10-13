@@ -7,9 +7,9 @@
                     <thead>
                         <tr class="t-header">
                             <th scope="col"></th>
-                            <th class="text-center" scope="col">السؤال</th>
+                            <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
-                            <th class="text-center" scope="col" *ngFor="let year of years">خلال {{year + 1}} During</th>
+                            <th class="text-center" scope="col" *ngFor="let year of years">خلال {{year}} During</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -17,7 +17,7 @@
                             <th scope="col"></th>
                             <td style="text-align: center;">{{field[2].value}}</td>
                             <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;" *ngFor="let year of years">{{field[4].value}}</td>
+                            <td style="text-align: center;" *ngFor="let year of years;let i = index">{{field[i+4].value}}</td>
                         </tr>
                     </tbody>
                 </table>

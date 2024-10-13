@@ -7,13 +7,13 @@
                     <thead>
                         <tr class="t-header">
                             <th scope="col"></th>
-                            <th class="text-center" scope="col">السؤال</th>
+                            <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value}} Year-end
+                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
                             </th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
+                                نهاية عام {{report.fields[0][0].value}} Year-end
                             </th>
                         </tr>
                         <tr class="t-header">
@@ -21,12 +21,12 @@
                             <th class="text-center" scope="col"></th>
                             <th class="text-center" scope="col"></th>
                             <!-- Subheader 1 -->
-                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
                             <!-- Subheader 2 -->
-                            <th class="text-center" scope="col">مستلمReceipts</th>
-                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
                             <!-- Subheader 2 -->
-                            <th class="text-center" scope="col">مستلمReceipts</th>
+                            <th class="text-center" scope="col">عمانيOmani</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,8 +36,8 @@
                             <td style="text-align: center;">{{field[3].value}}</td>
                             <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
+                            <td style="text-align: center;">{{field[7].value}}</td>
                         </tr>
                     </tbody>
                 </table>

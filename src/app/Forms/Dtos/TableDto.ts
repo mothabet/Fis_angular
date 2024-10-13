@@ -41,6 +41,8 @@ export interface IGetTableParts{
 
 export interface IGetTableRep{
     Id:number,
+    Type:string,
+    period:number,
     arName: string,
     enName: string,
 }
