@@ -22,6 +22,7 @@ export interface IDataDto{
     TableEnName:string|null,
     arName:string|null,
     enName:string|null,
+    IsDisabled:boolean
 }
 
 export interface ICoverFormData {

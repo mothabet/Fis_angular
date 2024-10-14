@@ -36,7 +36,8 @@ export class SharedQuarterTableComponent {
     IsActive: false,
     IsTotal: false,
     formContents: [],   // Empty array to avoid 'undefined' error
-    tableParts: []      // Empty array for tableParts
+    tableParts: [] ,
+    IsDisabled:false     // Empty array for tableParts
   };
   coverForm: ICoverFormDetailsDto = {
     id : 0,
@@ -250,6 +251,7 @@ export class SharedQuarterTableComponent {
 
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
+                  this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];

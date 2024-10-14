@@ -168,7 +168,6 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
@@ -180,7 +179,7 @@ export class SharedTableWithoutTransComponent {
                 if (!acc[item.TableId]) {
                   acc[item.TableId] = {
                     TableId: item.TableId,
-                    items: []
+                    items: [],
                   };
                 }
                 // Push the current item into the corresponding TableId group
@@ -197,10 +196,12 @@ export class SharedTableWithoutTransComponent {
                 this.coverForm = JSON.parse(storedCoverForm);
               }
               tablesList.forEach((table: any) => {
-
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
+                  this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
+
                   if (this.coverForm.tables[tableIndex].Type == "1") {
+
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];
                       formContent.values[1] = formContent.values[1] || 0;
@@ -223,14 +224,14 @@ export class SharedTableWithoutTransComponent {
                   }
                   else if (this.coverForm.tables[tableIndex].Type == "2") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
-                      formContent.values = formContent.values || [0];
+                      formContent.values = formContent.values || [0, 0];
                       formContent.values[0] = formContent.values[0] || 0;
                       formContent.values[1] = formContent.values[1] || 0;
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Initialize subCode `values` array if it doesn't exist
-                          subCode.values = subCode.values || [0,0];
+                          subCode.values = subCode.values || [0, 0];
 
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
@@ -313,11 +314,12 @@ export class SharedTableWithoutTransComponent {
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                     // Store the itemIndex of level 1 item
                     if (level1ItemIndex !== -1) {
-                      if(this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 4 && this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 1)
+                      if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 4 && this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.TypeId != 1)
                         this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes = [];
                       this.coverForm.tables[tableIndex].formContents[level1ItemIndex].values = item.codes;
                     }
-                  } else if (item.level == 2) {
+                  } 
+                  else if (item.level == 2) {
                     // Find the corresponding level 1 item first
                     const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                     if (level1ItemIndex !== -1) {
@@ -327,8 +329,8 @@ export class SharedTableWithoutTransComponent {
                         const subCodes = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes;
                         const subCodeIndex = subCodes.findIndex(subCode => subCode.Id === item.codeId);
                         if (subCodeIndex !== -1) {
-                            subCodes[subCodeIndex].valueCheck = item.valueCheck
-                            subCodes[subCodeIndex].values = item.codes;
+                          subCodes[subCodeIndex].valueCheck = item.valueCheck
+                          subCodes[subCodeIndex].values = item.codes;
                         }
                       }
                       else {
@@ -345,24 +347,25 @@ export class SharedTableWithoutTransComponent {
                           connectedWithType: '',
                           IsTrueAndFalse: false,
                           valueCheck: false
-
                         }
                         this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
+
                       }
                     }
                   }
                 });
               });
-
+              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
           else if (role === 'Admin' || role === 'Researchers') {
+            debugger
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
+            // this.modifyInputById(this.coverForm.typeQuarter);
             return;
           }
-
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -373,7 +376,7 @@ export class SharedTableWithoutTransComponent {
             this.table = this.coverForm.tables[tableIndex];
           }
         }
-
+        // this.modifyInputById(this.coverForm.typeQuarter);
         this.Loader = false;
       },
       error: (err: any) => {
@@ -381,7 +384,6 @@ export class SharedTableWithoutTransComponent {
         this.Loader = false;
       },
     };
-
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   getSumOfValues(index: number): number {
@@ -397,7 +399,6 @@ export class SharedTableWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {

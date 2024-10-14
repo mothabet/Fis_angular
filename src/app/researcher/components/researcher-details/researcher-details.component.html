@@ -46,7 +46,7 @@
                 id="AllResearcherMandateBtn" hidden>
                 <img src="./images/list-box-outline.png" alt="">
             </button>
-            <button type="button" *ngIf="role=='Researchers' && companies.length > 0" class="btn btn-add"
+            <button type="button" *ngIf="role=='Researchers'" class="btn btn-add"
                 (click)="GetResearcherMandateByResearcherId()" style="border-radius: 8px;
                             color: white;
                             font-size: 12px;
@@ -59,11 +59,10 @@
                 id="addResearcherBtn" hidden>
                 <img src="./images/list-box-outline.png" alt="">
             </button>
-
             <button type="button" class="btn btn-send sendForm" data-bs-toggle="modal" data-bs-target="#sendFormCompany"
                 *ngIf="role == 'Researchers'">
                 <img src="../../../../assets/images/email-edit-outline.png" alt="" />
-                إرسال إستمارة
+                ارسال إستمارة
             </button>
         </div>
     </div>
@@ -380,10 +379,6 @@
                 </select>
                 <label for="inputField">الباحث المفوض له</label>
             </div>
-                      <!-- <div class="search">
-            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
-            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-          </div> -->
         </div>
         <div class="table-responsive company-modal-table mx-2">
           <table class="table table-borderless">
@@ -396,8 +391,6 @@
               <tr *ngFor="let company of companiesSelect">
                 <td>
                    <input type="checkbox" (change)="onCheckboxChangeCompany(company.id, $event)" [checked]="selecteCompanyIds.has(company.id)"/>
-                  <!--<i class="fa fa-close delete-icon" *ngIf="selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id)"></i>
-   -->
                   {{ company.arName }}
                 </td>
               </tr>
@@ -415,7 +408,7 @@
 <div class="modal company-modal fade" id="AllResearcherMandate" tabindex="-1" aria-labelledby="AllResearcherMandate"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height: 650px; min-width: 1000px;">
             <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
                 <h5 class="modal-title order-2 ms-auto" id="sendForm">التفويضات السابقه</h5>
             </div>
@@ -426,15 +419,19 @@
                             <th scope="col"></th>
                             <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
                             <th scope="col" style="text-align: center;"> تاريخ التفويض</th>
+                            <th></th>
                             <th scope="col" style="text-align: center;">الحاله</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index" (click)="GetCompanyResearcherMandate(researcherMandate)"> -->
-                            <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index" (click)="GetCompanyResearcherMandate(researcherMandate)">
+                            <tr *ngFor="let researcherMandate of getResearcherMandateDto; let i = index">
                                 <td class="text-center">{{i+1}}</td>
                             <td class="text-center">{{researcherMandate.arName}}</td>
                             <td class="text-center">{{getDateOnly(researcherMandate.CreatedOn)}}</td>
+                            <td class="text-center" ><button type="button" class="btn btn-send sendForm"  (click)="GetCompanyResearcherMandate(researcherMandate.id)">
+                                شركات الباحث المفوضه
+                            </button></td>
                             <td class="text-center" *ngIf="researcherMandate.IsCancelled">تم الغاء التفويض في تاريخ {{getDateOnly(researcherMandate.CancelledOn)}}</td>
                             <td class="text-center" *ngIf="!researcherMandate.IsCancelled"><button type="button" class="btn btn-save" (click)="CancelResearcherMandate(researcherMandate.id)">
                                 الغاء التفويض
@@ -450,37 +447,40 @@
         </div>
     </div>
 </div>
-<!-- <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#CompanyResearcherMandate" (click)="AddResearcherMandateModel()"
-                id="CompanyResearcherMandateBtn" hidden>
-                <img src="./images/list-box-outline.png" alt="">
-            </button>
-<div class="modal company-modal " id="CompanyResearcherMandate" tabindex="-1" aria-labelledby="CompanyResearcherMandate"
+
+<button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AllCompanyResearcherMandate"
+id="CompanyResearcherMandateBtn" hidden>
+<img src="./images/list-box-outline.png" alt="">
+</button>
+<div class="modal company-modal fade" id="AllCompanyResearcherMandate" tabindex="-1" aria-labelledby="AllCompanyResearcherMandate"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+        <div class="modal-content" style="max-height: 650px; min-width: 1000px;">
             <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
-                <h5 class="modal-title order-2 ms-auto" id="sendForm">شركات الباحث المفوض</h5>
+                <h5 class="modal-title order-2 ms-auto" id="sendForm">شركات المفوض</h5>
             </div>
             <div class="table-responsive company-modal-table mx-2">
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
                             <th scope="col"></th>
-                            <th scope="col" style="text-align: center;">اسم الشركه</th>
+                            <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
+                            <th scope="col" style="text-align: center;"> اسم الشركه</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let companyRM of companyResearcherMandate; let i = index">
-                            <td class="text-center">{{i+1}}</td>
-                            <td class="text-center">{{companyRM.arName}}</td>
+                            <tr *ngFor="let researcherMandate of getCompanyResearcherMandateDto; let i = index" (click)="GetCompanyResearcherMandate(researcherMandate)">
+                                <td class="text-center">{{i+1}}</td>
+                                <td class="text-center">{{researcherMandate.researcherMandate.arName}}</td>
+                            <td class="text-center">{{researcherMandate.company.arName}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer pt-0">
-                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcherMandate">إلغاء
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelresearcherMandate" (click)="closebtnCancelresearcherMandate()">إلغاء
                 </button>
             </div>
         </div>
     </div>
-</div> -->
+</div>

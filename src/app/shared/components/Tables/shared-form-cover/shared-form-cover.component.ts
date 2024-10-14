@@ -91,6 +91,7 @@ export class SharedFormCoverComponent implements OnInit {
 
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
+                  this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];
@@ -126,6 +127,27 @@ export class SharedFormCoverComponent implements OnInit {
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
                           subCode.values[1] = subCode.values[1] || 0; // nextYear
+                        });
+                      }
+                    });
+                  }
+                  else if (this.coverForm.tables[tableIndex].Type == "6") {
+                    this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
+                      formContent.values = formContent.values || [0, 0,0];
+                      formContent.values[0] = formContent.values[0] || 0;
+                      formContent.values[1] = formContent.values[1] || 0;
+                      formContent.values[2] = formContent.values[2] || 0;
+                      // If there are subCodes, ensure their values are also initialized
+                      if (formContent.code.SubCodes) {
+                        formContent.code.SubCodes.forEach((subCode: any) => {
+                          // Initialize subCode `values` array if it doesn't exist
+                          subCode.values = subCode.values || [0, 0];
+
+                          // Ensure the `values` array has the correct length and initial values
+                          subCode.values[0] = subCode.values[0] || 0; // lastYear
+                          subCode.values[1] = subCode.values[1] || 0; // nextYear
+                          subCode.values[2] = subCode.values[2] || 0; // nextYear
+                          
                         });
                       }
                     });

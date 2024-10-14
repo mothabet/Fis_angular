@@ -170,7 +170,6 @@ export class SharedTransTableComponent {
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
-
           if (res.Data) {
             if (res.Data.length > 0) {
               const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
@@ -189,15 +188,15 @@ export class SharedTransTableComponent {
               // Convert the grouped object into an array of tables
               const tablesList = Object.values(groupedTables);
               this.formData = res.Data[0].dataDtos;
-
               const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);
               }
-
               tablesList.forEach((table: any) => {
+
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
+                  this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];
@@ -221,14 +220,14 @@ export class SharedTransTableComponent {
                   }
                   else if (this.coverForm.tables[tableIndex].Type == "2") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
-                      formContent.values = formContent.values || [0];
+                      formContent.values = formContent.values || [0, 0];
                       formContent.values[0] = formContent.values[0] || 0;
                       formContent.values[1] = formContent.values[1] || 0;
                       // If there are subCodes, ensure their values are also initialized
                       if (formContent.code.SubCodes) {
                         formContent.code.SubCodes.forEach((subCode: any) => {
                           // Initialize subCode `values` array if it doesn't exist
-                          subCode.values = subCode.values || [0,0];
+                          subCode.values = subCode.values || [0, 0];
 
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
@@ -303,7 +302,6 @@ export class SharedTransTableComponent {
                   }
                 }
                 table.items.forEach((item: any) => {
-                  
                   if (item.codeType == 4) {
                     const level1ItemIndex_ = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.codeId);
                     this.coverForm.tables[tableIndex].formContents[level1ItemIndex_].valueCheck = item.valueCheck
@@ -353,16 +351,17 @@ export class SharedTransTableComponent {
                   }
                 });
               });
-
+              debugger
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
           else if (role === 'Admin' || role === 'Researchers') {
+            debugger
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
+            // this.modifyInputById(this.coverForm.typeQuarter);
             return;
           }
-
           const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
           if (storedCoverForm) {
             this.coverForm = JSON.parse(storedCoverForm);
@@ -373,7 +372,7 @@ export class SharedTransTableComponent {
             this.table = this.coverForm.tables[tableIndex];
           }
         }
-
+        // this.modifyInputById(this.coverForm.typeQuarter);
         this.Loader = false;
       },
       error: (err: any) => {
@@ -381,7 +380,6 @@ export class SharedTransTableComponent {
         this.Loader = false;
       },
     };
-
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   onArCountryChange(subCode: any) {

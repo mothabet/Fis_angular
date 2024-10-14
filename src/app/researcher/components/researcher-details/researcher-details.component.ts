@@ -69,7 +69,7 @@ export class ResearcherDetailsComponent implements OnInit {
   selectedCompanyIdsIsResearcher: Set<number> = new Set<number>();
   selecteCompanyIds: Set<number> = new Set<number>();
   researcherMandateId!: string;
-
+  getCompanyResearcherMandateDto:any[] = [];
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
@@ -512,13 +512,13 @@ export class ResearcherDetailsComponent implements OnInit {
     };
     this.researcherMandateService.GetAllResearcherMandate(this.researcherId, 0).subscribe(observer);
   }
-  GetCompanyResearcherMandate(researchersMandate:IGetResearcherMandateDto): void {
+  GetCompanyResearcherMandate(id:number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         debugger
         if (res.Data) {
-          this.companyResearcherMandate = res.Data;
+          this.getCompanyResearcherMandateDto = res.Data;
           const button = document.getElementById('CompanyResearcherMandateBtn');
           if (button) {
             button.click();
@@ -541,7 +541,7 @@ export class ResearcherDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.researcherMandateService.GetCompanyResearcherMandate(researchersMandate.researcherId,researchersMandate.researcherMandateId).subscribe(observer);
+    this.researcherMandateService.GetCompanyResearcherMandate(id).subscribe(observer);
   }
   
   GetResearcherMandateByResearcherId(): void {
@@ -555,9 +555,13 @@ export class ResearcherDetailsComponent implements OnInit {
         for (let index = 0; index < res.Data.getCompaniesDtos.length; index++) {
           this.selecteCompanyIds.add(res.Data.getCompaniesDtos[index].id)
         }
-        const button = document.getElementById('addResearcherBtn');
+        const button = document.getElementById('btnCancelresearcherMandate');
         if (button) {
           button.click();
+        }
+        const button_ = document.getElementById('addResearcherBtn');
+        if (button_) {
+          button_.click();
         }
         this.showLoader = false;
       },
@@ -600,4 +604,9 @@ export class ResearcherDetailsComponent implements OnInit {
     };
     this.researcherMandateService.CancelResearcherMandate(id).subscribe(observer);
   }
+  closebtnCancelresearcherMandate(){
+    const button = document.getElementById('AllResearcherMandateBtn');
+    if (button) {
+      button.click();
+    }}
 }

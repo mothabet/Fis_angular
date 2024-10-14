@@ -21,9 +21,9 @@ export class ResearcherMandateService {
      var resopnse = this.http.get(environment.apiUrl+`ResearcherMandate/GetAllResearcherMandate?researcherId=${researcherId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
      return resopnse;
    }
-   GetCompanyResearcherMandate(researcherId:string,researcherMandateId:string){
+   GetCompanyResearcherMandate(id:number){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`ResearcherMandate/GetCompanyResearcherMandate?lang=2&researcherId=${researcherId}&researcherMandateId=${researcherMandateId}`, { headers });
+     var resopnse = this.http.get(environment.apiUrl+`CompanyResearcherMandates/GetCompanyResearcherMandateById?lang=2&id=${id}`, { headers });
      return resopnse;
    }
    GetResearcherMandateByResearcherId(researcherId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){

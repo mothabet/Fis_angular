@@ -6,6 +6,9 @@
   <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AddFormNotes" id="AddFormNotesBtn" hidden >
       <img src="./images/list-box-outline.png" alt="">
   </button>
+  <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#OpenFormModel" id="OpenFormModelBtn" hidden >
+    <img src="./images/list-box-outline.png" alt="">
+</button>
   <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewInstructions" id="ViewInstructionsBtn" hidden >
     <img src="./images/list-box-outline.png" alt="">
 </button>
@@ -148,8 +151,7 @@
                     (click)="CloseForm()">
                     إغلاق
                 </button>
-                <button *ngIf="role == 'Researchers' && coverForm.status == 6" type="button" class="btn btn-exit"
-                    (click)="OpenForm()">
+                <button *ngIf="role == 'Researchers' && coverForm.status == 6" type="button" class="btn btn-exit" data-bs-toggle="modal" data-bs-target="#OpenFormModel">
                     اعادة فتح الاستماره
                 </button>
             </div>
@@ -163,11 +165,12 @@
         <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
             <a [routerLink]="['/WorkData',formId,companyId]">معلومات عامة</a>
         </div>
-        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" [ngClass]="{'active': table.id == tableId}"
-             (click)="TablesNavigation(table.id)"
-            style="cursor: pointer !important;">
-            <a>{{table.arName}}</a>
-        </div>
+        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" 
+        [ngClass]="{'active': table.id == tableId, 'disabled': table.IsDisabled}"
+        [ngStyle]="{'cursor': (table.IsDisabled && role == 'Company' && (coverForm.status < 6 || coverForm.status == 8)) ? 'not-allowed' : 'pointer'}"
+        (click)="!(table.IsDisabled && role == 'Company'&& (coverForm.status < 6 || coverForm.status == 8)) && TablesNavigation(table.id)">
+        <a [ngStyle]="{'cursor': (table.IsDisabled && role == 'Company'&& (coverForm.status < 6 || coverForm.status == 8)) ? 'not-allowed' : 'pointer'}">{{table.arName}}</a>
+    </div>
         <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}"
             (click)="activateWorkData()">
             <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
@@ -278,7 +281,7 @@
   <!--start linked company modal -->
 <div class="modal company-modal fade" id="ViewInstructions" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
+      <div class="modal-content" style="max-height: 650px; min-width: 900px;">
         <div class="modal-title pt-3 modal-header d-flex justify-content-between">
           <h5>الارشادات</h5>
           <!-- <div class="search">
@@ -315,3 +318,39 @@
   </div>
   
   <!--end linked company modal -->
+
+  <div class="modal company-modal fade" id="OpenFormModel" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between">
+          <h5>الجداول الممنوعه من الدخول التعديل عليها</h5>
+          <!-- <div class="search">
+            <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText" (keydown.enter)="companiesSearch()"/>
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div> -->
+        </div>
+        <div class="table-responsive company-modal-table mx-2">
+          <table class="table table-borderless">
+            <thead>
+              <tr class="t-header">
+                <th scope="col">اسم الجدول</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let table of tableSelecte">
+                <td>
+                   <input type="checkbox" (change)="onCheckboxChangeCompany(table.id, $event)" [checked]="!selecteTableIds.has(table.id)"/>
+                  {{ table.arName }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div> 
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcher" (click)="resetForm()">إلغاء</button>
+          <button type="button" class="btn btn-save" (click)="OpenForm()">
+            حفظ
+        </button>        </div>
+      </div>
+    </div>
+  </div>
