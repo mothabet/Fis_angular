@@ -142,7 +142,6 @@ export class ReportContentsComponent implements OnInit {
     { id: 2, arName: 'الدول', enName: 'Countries' },
     { id: 3, arName: 'القطاعات', enName: 'SectorsRep' },
     { id: 4, arName: 'الشركات', enName: 'CompaniesRep' },
-    { id: 5, arName: 'السنوات', enName: 'Years' },
   ];
   codes: ICode[] = [];
   tablesRep: IGetTableRep[] = [];
@@ -194,7 +193,7 @@ export class ReportContentsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.reports = res.Data;
-          console.log(this.reports[0])
+          console.log(this.reports)
         }
         else {
           res.Data = []
@@ -298,8 +297,8 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
-          dataType: null,
-          filter: null, // Initialize as null or a valid default value
+          dataType: selectedField.Type,
+          filter: selectedField.period, // Initialize as null or a valid default value
           value: selectedField.Id // Initialize value as needed
         };
 
@@ -372,7 +371,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.id // Initialize value as needed
         };
 
-        table.fields.push(tableField);
+        table.fields[0] = tableField;
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -520,7 +519,6 @@ export class ReportContentsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
           this.tablesRep = res.Data;
           this.filteredTables = res.Data;
         }
@@ -585,13 +583,21 @@ export class ReportContentsComponent implements OnInit {
       this.GetAllCodes();
     }
     else if (this.tableType === 5) {
-      const tableDto: ITableDto = {
+      const tableDto: ITableDto[] = [{
         selectAllFields: false,
         enTableName: 'TablesReport',
         arTableName: 'تقرير الجداول',
         fields: []  // Initial empty fields array
-      };
-      this.tables.push(tableDto);
+      },
+      {
+        selectAllFields: false,
+        enTableName: 'Years',
+        arTableName: 'السنوات',
+        fields: []  // Initial empty fields array
+      },
+      ];
+      this.tables = tableDto;
+      debugger
       // Fetch table fields for the selected type (1 for Companies)
       this.GetTables();
     }
@@ -944,7 +950,7 @@ export class ReportContentsComponent implements OnInit {
   appendTable(): void {
     if (this.selectedTable) {
 
-      if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries' || this.selectedTable.enName == 'Years'
+      if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries'
         || this.selectedTable.enName == 'SectorsRep' || this.selectedTable.enName == 'CompaniesRep'
       ) {
         if (this.tables.length > 1) {
@@ -1124,22 +1130,31 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else if (tables[0].enTableName == 'TablesReport') {
-      if (tables.length == 1) {
-        return this.createYearRepQuery(tables);
-      }
-      else if (tables.length > 1 && tables[1].enTableName == 'Years' && tables[1].enTableName != undefined) {
-        return this.createYearRepQuery(tables);
-      }
-      return '';
+      return this.createYearRepQuery(tables);
     }
     else {
       return '';
     }
   }
   createYearRepQuery(tables: ITableDto[]): string {
+    let query = ''
     if (tables.length > 1)
       this.report.seconedTable = tables[1].enTableName;
-    let query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,(SELECT STRING_AGG(value, ',')FROM OPENJSON(JSON_QUERY(c.value, '$.codes'))WITH (value int '$')) AS codeValues FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    if (tables[0].fields[0].dataType == '1')
+      query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3, t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    else if (tables[0].fields[0].dataType == '2')
+      query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    else if (tables[0].fields[0].dataType == '3')
+      query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue2,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    else if (tables[0].fields[0].dataType == '4')
+      query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    else if (tables[0].fields[0].dataType == '5') {
+      query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,t.period as tablePeriod`;
+      for(let i = 0;i< Number(tables[0].fields[0].filter);i++){
+        query += `,SUM(CAST(JSON_VALUE(c.value, '$.codes[${i}]') AS INT)) AS totalCodeValue${i+1}`
+      }
+      query += `,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+    }
     let whereClause = '';
 
     // Handle fields from tables[0]
@@ -1164,14 +1179,16 @@ export class ReportContentsComponent implements OnInit {
             const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
 
             // Append this to the whereClause as well
-            whereClause += whereClause ? ` or ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+            whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
           }
         });
       }
     }
     // Final query with WHERE clause
-    query += whereClause;
+    let group = ` GROUP BY f.reviewYear,JSON_VALUE(c.value, '$.TableArName'),JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+    query += whereClause + group;
     return query;
+
   }
   onSelectAllFieldsChange(table: ITableDto) {
     // Toggle all fields based on the checkbox state

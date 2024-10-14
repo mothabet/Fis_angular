@@ -22,6 +22,11 @@ import { SharedQuarterFormCoverComponent } from './components/Tables/shared-quar
 import { SharedCertificationComponent } from './components/Tables/shared-certification/shared-certification.component';
 import { SharedTablePercentageWithoutTransComponent } from './components/Tables/shared-table-percentage-without-trans/shared-table-percentage-without-trans.component';
 import { TableWithTransRepComponent } from './components/ReportTables/table-with-trans-rep/table-with-trans-rep.component';
+import { TableWithoutTransRepComponent } from './components/ReportTables/table-without-trans-rep/table-without-trans-rep.component';
+import { OneYearWithPartsRepComponent } from './components/ReportTables/one-year-with-parts-rep/one-year-with-parts-rep.component';
+import { TwoYearsWithPartsRepComponent } from './components/ReportTables/two-years-with-parts-rep/two-years-with-parts-rep.component';
+import { TableWithPeriodsRepComponent } from './components/ReportTables/table-with-periods-rep/table-with-periods-rep.component';
+import { NoRepDataComponent } from './components/ReportTables/no-rep-data/no-rep-data.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +48,11 @@ import { TableWithTransRepComponent } from './components/ReportTables/table-with
     SharedTablePercentageWithoutTransComponent,
     TableWithTransRepComponent,
     TableWithTransRepComponent,
+    TableWithoutTransRepComponent,
+    OneYearWithPartsRepComponent,
+    TwoYearsWithPartsRepComponent,
+    TableWithPeriodsRepComponent,
+    NoRepDataComponent,
   ],
   imports: [
     CommonModule,
@@ -76,7 +86,12 @@ import { TableWithTransRepComponent } from './components/ReportTables/table-with
     HttpClientModule,
     NgxEditorModule,
     SharedCertificationComponent,
-    TableWithTransRepComponent
+    TableWithTransRepComponent,
+    TableWithoutTransRepComponent,
+    OneYearWithPartsRepComponent,
+    TwoYearsWithPartsRepComponent,
+    TableWithPeriodsRepComponent,
+    NoRepDataComponent
   ]
 })
 export class SharedModule { }

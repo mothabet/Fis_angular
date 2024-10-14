@@ -8,6 +8,6 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TableWithTransRepComponent implements OnInit {
   @Input() report:any;
   ngOnInit(): void {
-    console.log(this.report);
+    const temp = this.report
   }
 }
