@@ -370,7 +370,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
-            <div class="form-group col-sm-6 mb-2">
+            <div class="form-group col-sm-12 mb-2">
                 <select class="form-control" [(ngModel)]="researcherMandateId">
                     <option value="">--اختر الباحث المفوض له--</option>
                     <option value="{{item_.id}}" *ngFor="let item_ of researchersMandate; let i = index">
@@ -384,7 +384,7 @@
           <table class="table table-borderless">
             <thead>
               <tr class="t-header">
-                <th scope="col">اسم الشركة</th>
+                <th scope="col">اختر الشركة</th>
               </tr>
             </thead>
             <tbody>
@@ -419,7 +419,7 @@
                             <th scope="col"></th>
                             <th scope="col" style="text-align: center;">اسم الباحث المفوض له</th>
                             <th scope="col" style="text-align: center;"> تاريخ التفويض</th>
-                            <th></th>
+                            <th scope="col" style="text-align: center;"> الشركات المفوضه</th>
                             <th scope="col" style="text-align: center;">الحاله</th>
                         </tr>
                     </thead>

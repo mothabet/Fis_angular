@@ -262,7 +262,7 @@ export class CompanyResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetCompanies(textSearch, page).subscribe(observer);
+    this.companyHomeServices.GetCompaniesByResearcherId(0,textSearch, page).subscribe(observer);
   }
   GetSectors(): void {
     this.showLoader = true;

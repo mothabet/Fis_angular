@@ -89,10 +89,10 @@ export class CompanyHomeService {
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompanyToRecearcher?id=${id}`, Model, { headers });
      return response;
    }
-   GetCompaniesByResearcherId(id:number,textSearch : string ='',pageNumber:number=0){
+   GetCompaniesByResearcherId(id:number=0,textSearch : string ='',pageNumber:number=0){
     debugger
     var headers= this.sharedService.getHeaders();
-     var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0`, { headers });
+     var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0&textSearch=${textSearch}&pageNumber=${pageNumber}`, { headers });
      return response;
    }
    GetCompaniesIsSelectedResearcher(){

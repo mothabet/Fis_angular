@@ -586,6 +586,13 @@ export class NavigateTablesTypesComponent implements OnInit {
           next: (res: any) => {
             this.GetFormById(this.formId);
             this.Loader = false;
+            if(btnType==="Open"){
+
+              const button = document.getElementById('btnOpenFormModel');
+              if (button) {
+                button.click();
+              }
+            }
             Swal.fire({
               icon: 'success',
               title: res.Message,
