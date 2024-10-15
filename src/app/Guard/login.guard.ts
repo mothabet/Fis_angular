@@ -17,6 +17,7 @@ export class LoginGuard {
       if(!(this.authService.isTableRoute(url))){
         localStorage.clear();
       }
+      debugger
       if (role === 'Admin' && this.authService.isAdminRoute(url)) {
         return true;
       } 

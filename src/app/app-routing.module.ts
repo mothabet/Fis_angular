@@ -34,6 +34,7 @@ import { SubActivitiesComponent } from './sectors-and-activities/Components/sub-
 import { CountriesComponent } from './sectors-and-activities/Components/countries/countries.component';
 import { CompanyResearcherHomeComponent } from './companies/components/company-researcher-home/company-researcher-home.component';
 import { TablePercentageWithoutTransComponent } from './Forms/Components/table-percentage-without-trans/table-percentage-without-trans.component';
+import { SettingsAuthHomeComponent } from './settings-auth/Components/settings-auth-home/settings-auth-home.component';
 
 const routes: Routes = [
   { path: 'Sectors', component: SectorsComponent, canActivate: [LoginGuard] },
@@ -62,6 +63,7 @@ const routes: Routes = [
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
   { path: 'Messages', component: HomemessagesComponent, canActivate: [LoginGuard] },
+  { path: 'SettingsAuth', component: SettingsAuthHomeComponent, canActivate: [LoginGuard] },
   { path: 'CopmanyMessages/:companyId', component: HomeCompanyMessagesComponent, canActivate: [LoginGuard] },
   { path: 'CopmanyGeneralInformation/:companyId', component: CopmanyGeneralInformationHomeComponent, canActivate: [LoginGuard] },
   { path: 'Login', component: LoginComponent, canActivate: [LogoutGuard] },

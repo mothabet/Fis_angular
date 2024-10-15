@@ -246,7 +246,7 @@ export class CompanyResearcherHomeComponent {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          this.companies = res.Data.getCompaniesDtos;
+          this.companies = res.Data;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;

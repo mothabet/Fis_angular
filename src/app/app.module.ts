@@ -14,9 +14,9 @@ import { FromsModule } from './Forms/froms.module';
 import { MessagesModule } from './messages/messages.module';
 import { CompanyMessagesModule } from './company-messages/company-messages.module';
 import { CopmanyGeneralInformationModule } from './copmany-general-information/copmany-general-information.module';
-import { ReportsComponent } from './Reports/Components/reports/reports.component';
 import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and-activities.module';
 import { ReportsModule } from './Reports/reports.module';
+import { SettingsAuthModule } from './settings-auth/settings-auth.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +35,7 @@ import { ReportsModule } from './Reports/reports.module';
     ReportsModule,
     MessagesModule,
     CompanyMessagesModule,
+    SettingsAuthModule,
     CopmanyGeneralInformationModule,
     BrowserModule,
     AppRoutingModule,

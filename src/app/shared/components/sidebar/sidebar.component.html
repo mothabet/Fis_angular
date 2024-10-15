@@ -146,8 +146,8 @@
               <span>الرسائل</span>
             </a>
           </li>
-          <li class="sidebar-item">
-            <a href="./settings-auth.html" class="sidebar-link inactive">
+          <li class="sidebar-item" routerLink="/SettingsAuth" routerLinkActive="active" *ngIf="role === 'Admin'">
+            <a class="sidebar-link inactive">
               <i class="fa-solid fa-address-card icon inactive"></i>
               <span>الصلاحيات</span>
             </a>

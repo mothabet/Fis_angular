@@ -1,0 +1,303 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'إعدادات&nbsp; > &nbsp;الصلاحيات'"></app-top-screen>
+  <!-- start content -->
+  <div class="content companies auth">
+    <div class="header d-flex">
+        <div class="title">
+            قائمة الصلاحيات
+        </div>
+        <div class="btns d-flex">
+            <div class="search">
+                <input class="form-control" type="text" name="search" placeholder="البحث">
+                <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+            </div>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#authModal">
+                <i class="fa-solid fa-plus"></i>
+                إضافة صلاحية
+            </button>
+        </div>
+    </div>
+
+    <div class="table-responsive company-table">
+        <table class="table table-borderless">
+            <thead>
+                <tr class="t-header">
+                    <th style="min-width: 150px;" scope="col">اسم المستخدم</th>
+                    <th class="text-center" scope="col">المستخدم</th>
+                    <th class="text-center" scope="col">الصلاحية</th>
+                    <th class="text-center" scope="col">التاريخ</th>
+                    <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+
+                        <input type="checkbox" name="Name1" id="Name1">
+                        <label class="text-nowrap" for="Name1"></label>
+
+                    </td>
+                    <td class="text-center">حمد العامري</td>
+                    <td class="text-center">
+                        إضافة، حذف، تعديل، إغلاق
+                    </td>
+                    <td class="text-center">
+                        كتابة تفاصيل الإشعار
+                    </td>
+                    <td class="text-center td-actions">
+                        
+                        <button class="icon" >
+                            <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                        </button>
+                        <button class="icon">
+                            <img src="../../../../assets/images/pencil-outline.png" alt="" />
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- end content -->
+  </div>
+  <!--start request modal -->
+  <div class="modal company-modal fade" id="authModal" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="auth">أضف صلاحية</h5>
+            </div>
+            <form [formGroup]="authForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="modal-body pb-1">
+                            <div class="row">
+                                <div class="form-group col-sm-6 mb-2">
+                                    <input class="form-control input-modal" type="text"
+                                        formControlName="userName" name="username" />
+                                    <label for="inputField">اسم المستخدم</label>
+                                </div>
+                                <div class="form-group col-sm-6 mb-2" id="researcherPass">
+                                    <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
+                                        formControlName="password" name="password" />
+                                    <label for="inputField">كلمة المرور</label>
+                                    <div *ngIf="
+                                                          authForm.controls['password'].invalid &&
+                                                            (authForm.controls['password'].dirty ||
+                                                            authForm.controls['password'].touched)
+                                                          ">
+                                        <small *ngIf="authForm.controls['password'].errors?.['required']" class="text-danger">
+                                            يجب ادخال الرقم السري
+                                        </small>
+                                    </div>
+                                    <!-- <button type="button" id="reload" (click)="generateRandomCredentials()" *ngIf="add">
+                                        <img src="../../../../assets/images/refresh.png" alt="" />
+                                    </button> -->
+                                </div>
+                                <div class="form-group col-sm-6 mb-2">
+                                    <input class="form-control input-modal" type="text" [(ngModel)]="authForm.value.arName"
+                                        formControlName="arName" />
+                                    <label for="inputField">الاسم بالكامل</label>
+                        
+                                    <div *ngIf="authForm.controls['arName'].invalid &&
+                                                            (authForm.controls['arName'].dirty ||
+                                                            authForm.controls['arName'].touched)">
+                                        <small *ngIf="authForm.controls['arName'].errors?.['required']" class="text-danger">
+                                            يجب ادخال الاسم بالكامل.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6 mb-2">
+                                    <input class="form-control input-modal" type="text" formControlName="enName" />
+                                    <label for="inputField">English Full Name</label>
+                        
+                                    <div *ngIf="authForm.controls['enName'].invalid &&
+                                                            (authForm.controls['enName'].dirty ||
+                                                            authForm.controls['enName'].touched)">
+                                        <small *ngIf="authForm.controls['enName'].errors?.['required']" class="text-danger">
+                                            English full name is required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6 mb-2">
+                                    <select class="form-control" style="width: 100%" formControlName="status"
+                                        [(ngModel)]="authForm.value.status">
+                                        <option [ngValue]="true">نشط</option>
+                                        <option [ngValue]="false">غير نشط</option>
+                                    </select>
+                                    <label for="inputField">الحاله</label>
+                                    <div *ngIf="authForm.controls['status'].invalid &&
+                                                            (authForm.controls['status'].dirty ||
+                                                            authForm.controls['status'].touched)">
+                                        <small *ngIf="authForm.controls['status'].errors?.['required']" class="text-danger">
+                                            Status is required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-10 col-sm-4 mb-2">
+                                    <!-- <input class="form-control input-modal" type="text" formControlName="phone" maxlength="8" minlength="8"
+                                        pattern="[0-9]*" (input)="onlyNumber($event)" />
+                                    <label for="inputField">رقم الهاتف</label>
+                         -->
+                                    <div style="text-align: right;" *ngIf="authForm.controls['phone'].touched &&
+                                                            authForm.controls['phone'].dirty &&
+                                                            authForm.controls['phone'].value !== '' &&
+                                                            authForm.controls['phone'].invalid">
+                                        <small *ngIf="authForm.controls['phone'].errors?.['minlength']" class="text-danger">
+                                            يجب ان يكون رقم الهاتف 8 ارقام.
+                                        </small>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group col-2 mb-2">
+                                    <input class="form-control input-modal input-disabled" type="text" value="{{ phoneCode }}" />
+                                    <label for="inputField">كود الهاتف</label>
+                        
+                                </div> -->
+                                <div class="form-group col-sm-6 mb-2">
+                                    <input class="form-control input-modal" type="email" [(ngModel)]="authForm.value.email"
+                                        formControlName="email" />
+                                    <label for="inputField">عنوان البريد الاليكتروني</label>
+                                    <div *ngIf="authForm.controls['email'].invalid &&
+                                                            (authForm.controls['email'].dirty ||
+                                                            authForm.controls['email'].touched)">
+                                        <small *ngIf="authForm.controls['email'].errors?.['required']" class="text-danger">
+                                            يجب ادخال البريد الاليكتروني.
+                                        </small>
+                                        <small *ngIf="authForm.controls['email'].errors?.['email']" class="text-danger">
+                                            البريد الاليكتروني غير صحيح.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="modal-title my-2" id="auth">الصلاحيات</h5>
+                        <div class="col-sm-4 d-flex justify-content-between mb-2">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="document" id="document">
+                                <label class="text-nowrap" for="document">قواعد التدقيق</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-content-between mb-3">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="add" id="add">
+                                <label class="text-nowrap" for="add">إضافة</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="edit" id="edit">
+                                <label class="text-nowrap" for="edit">تعديل</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="delete" id="delete">
+                                <label class="text-nowrap" for="delete">حذف</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="close" id="close">
+                                <label class="text-nowrap" for="close">تنزيل Pdf</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 d-flex justify-content-between mb-2">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="report" id="report">
+                                <label class="text-nowrap" for="report">التقارير</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-content-between mb-3">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="add" id="add1">
+                                <label class="text-nowrap" for="add1">إضافة</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="edit" id="edit1">
+                                <label class="text-nowrap" for="edit1">تعديل</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="delete" id="delete1">
+                                <label class="text-nowrap" for="delete1">حذف</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="close" id="close1">
+                                <label class="text-nowrap" for="close1">إغلاق</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 d-flex justify-content-between mb-2">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="kpi" id="kpi">
+                                <label class="text-nowrap" for="kpi">مؤشرات الاداء</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-content-between mb-3">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="add2" id="add2">
+                                <label class="text-nowrap" for="add2">إضافة</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="edit2" id="edit2">
+                                <label class="text-nowrap" for="edit2">تعديل</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="delete2" id="delete2">
+                                <label class="text-nowrap" for="delete2">حذف</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="close2" id="close2">
+                                <label class="text-nowrap" for="close2">إغلاق</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 d-flex justify-content-between mb-2">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="auth" id="auth">
+                                <label class="text-nowrap" for="auth">الصلاحيات</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 d-flex justify-content-between mb-3">
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="add3" id="add3">
+                                <label class="text-nowrap" for="add3">إضافة</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="edit3" id="edit3">
+                                <label class="text-nowrap" for="edit3">تعديل</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="delete3" id="delete3">
+                                <label class="text-nowrap" for="delete3">حذف</label>
+                            </div>
+                            <div class="form-check d-flex jutify-content-center align-items-center flex-nowrap"
+                                style="flex:1">
+                                <input type="checkbox" name="close3" id="close3">
+                                <label class="text-nowrap" for="close3">إغلاق</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-reset">ارسال</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--end request modal -->
