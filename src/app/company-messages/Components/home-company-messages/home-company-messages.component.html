@@ -40,27 +40,26 @@
                 <thead>
                     <tr class="t-header">
                         <th >#</th>
-                        <th class="text-center" scope="col">عنوان المراسلة</th>
-                        <th class="text-center" scope="col">تفاصيل المراسلة</th>
-                        <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
+                        <th class="text-center" scope="col">اسم المراسلة</th>
+                       <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let message of companyMessages ; let i = index">
                         <th >{{i+1}}</th>
                         <td class="text-center">{{message.arName}}</td>
-                        <td class="text-center">{{message.arDetails}}</td>
                         <td class="text-center td-actions">
                             <!-- <a href="#" class="icon">
         <img src="../../../../assets/images/paperclip.png" alt="">
     </a> -->
-                            <button class="icon" data-bs-toggle="modal"
+                            <!-- <button class="icon" data-bs-toggle="modal"
                                 data-bs-target="#addCompany" (click)="editMessage(message.id)">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
                             <button class="icon" (click)="showAlert(message.id)">
                                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
-                            </button>
+                            </button> -->
+                            تم الارسال
                         </td>
                     </tr>
                 </tbody>
@@ -75,7 +74,7 @@
 <!--start create mail modal -->
 <!--start create mail modal -->
 <div class="modal company-modal fade" id="createMail" tabindex="-1" aria-labelledby="add" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-sm ">
+    <div class="modal-dialog modal-dialog-centered modal-sm "  style="max-width: 40%;">
         <div class="modal-content">
             <div class="modal-header pb-0">
                 <h5 class="modal-title pb-0" id="sendForm" *ngIf="add">إنشاء مراسلة</h5>
@@ -107,7 +106,12 @@
                             </div>
                         </div> -->
                         <div class="col-sm-12 mb-3">
-                            <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة" >{{ selectedMessage.arDetails || '' }}</textarea>
+                            <div 
+                                class="form-control input-modal" 
+                                style="height: auto; max-height: 200px; overflow-y: auto; font-size: 0.8em; padding: 10px; background-color: #f8f9fa; border: 1px solid #ced4da; color: #6c757d;" 
+                                contentEditable="false" 
+                                [innerHTML]="selectedMessage.arDetails || ''"
+                            ></div>
                         </div>
                     </div>
                 </div>

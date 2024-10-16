@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { IMessage } from 'src/app/messages/Dtos/MessageDto';
 import { HomemessagesService } from 'src/app/messages/services/homemessages.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home-company-messages',
@@ -45,6 +46,7 @@ export class HomeCompanyMessagesComponent {
     private sharedService: SharedService,
     private activeRouter: ActivatedRoute,
     private messageService: HomemessagesService,
+    private sanitizer: DomSanitizer
   ) { }
   ngOnInit(): void {
     this.companyMessageForm = this.formBuilder.group({
@@ -56,6 +58,14 @@ export class HomeCompanyMessagesComponent {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetAllMessages(0, '');
   }
+  updateMessage(event: Event) {
+    const target = event.target as HTMLElement; // Cast to HTMLElement
+    this.selectedMessage.arDetails = target.innerHTML; // Access innerHTML safely
+}
+
+get sanitizedContent() {
+    return this.sanitizer.bypassSecurityTrustHtml(this.selectedMessage.arDetails);
+}
   AddCompanyMessage(): void {
     this.showLoader = true;
     if (this.companyMessageForm.valid) {
@@ -111,6 +121,7 @@ export class HomeCompanyMessagesComponent {
       time: '',
       arDetails: ''
     });
+    this.selectedMessage.arDetails = "";
   }
   GetAllCompanyMessages(page: number, textSearch: string = ''): void {
     this.showLoader = true;
