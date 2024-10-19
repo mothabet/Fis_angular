@@ -10,4 +10,8 @@ export class TableWithTransRepComponent implements OnInit {
   ngOnInit(): void {
     const temp = this.report
   }
+  getRowSpan(fields: any[], activityName: string): number {
+    // Count how many times the activity (field[8].value) appears in the fields array
+    return fields.filter(field => field[9].value === activityName).length;
+  }
 }

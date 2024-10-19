@@ -8,6 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TableWithoutTransRepComponent implements OnInit{
   @Input() report:any;
   ngOnInit(): void {
-    console.log(this.report)
+  }
+  getRowSpan(fields: any[], activityName: string): number {
+    // Count how many times the activity (field[8].value) appears in the fields array
+    return fields.filter(field => field[8].value === activityName).length;
   }
 }

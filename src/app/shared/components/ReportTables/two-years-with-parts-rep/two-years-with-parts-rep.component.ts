@@ -7,4 +7,8 @@ import { Component, Input } from '@angular/core';
 })
 export class TwoYearsWithPartsRepComponent {
   @Input() report:any;
+  getRowSpan(fields: any[], activityName: string): number {
+    // Count how many times the activity (field[8].value) appears in the fields array
+    return fields.filter(field => field[10].value === activityName).length;
+  }
 }
