@@ -49,19 +49,38 @@
     <!-- start content -->
     <div class="content companies report-table" style="margin-bottom: 15px;max-width: 74rem;"
         *ngFor="let report of reports">
-        <div class="header d-flex ">
-            <div style="display: contents;">
-                <h4 class="" style="margin-bottom: 10px;">
-                    <p style="font-weight: 900;">
-                        {{report.part}}
-                    </p>
-                </h4>
-                <h4 style="text-align: center;" class="" *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0">
-                    <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
-                    <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات</div>
-                    <div class="mb-2">{{ (report.fields[0][1]).value }}</div>
-                </h4>
+        <div class="header d-flex justify-content-between align-items-center" style="width: 100%;">
+            <div class="mb-2 d-flex flex-column justify-content-center align-items-center text-center"
+                style="width: 90%;">
+                <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
+                <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات
+                </div>
+                <div class="mb-2">اسم المحتوى / {{report.part}}</div>
+                <div class="mb-2">الجدول / {{ (report.fields[0][1]).value }}</div>
+                <div class="mb-2">السنة / {{ (report.fields[0][0]).value }}</div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep'">
+                    الانشطة /
+                    <ng-container *ngFor="let field of getUniqueActivities(report.fields); let isLast = last">
+                        {{ field.value }}<span *ngIf="!isLast"> - </span>
+                    </ng-container>
+                </div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep'">
+                    الشركات /
+                    <ng-container *ngFor="let field of getUniqueCompanies(report.fields); let isLast = last">
+                        {{ field.value }}<span *ngIf="!isLast"> - </span>
+                    </ng-container>
+                </div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep'">
+                    القطاعات /
+                    <ng-container *ngFor="let field of getUniqueSectors(report.fields); let isLast = last">
+                        {{ field.value }}<span *ngIf="!isLast"> - </span>
+                    </ng-container>
+                </div>
             </div>
+
             <div class="btns d-flex">
                 <div class="d-flex flex-grow-1 gap-2 btns-group ">
                     <button type="button" class="btn btn-send" (click)="DeleteReportContent(report.id)">
@@ -89,15 +108,17 @@
                     </tbody>
                 </table>
                 <app-table-with-trans-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][7]?.value == 1"></app-table-with-trans-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][8]?.value == 1"></app-table-with-trans-rep>
+                <app-quarter-table-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][10]?.value == 0"></app-quarter-table-rep>
                 <app-table-without-trans-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][6]?.value == 2"></app-table-without-trans-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][7]?.value == 2"></app-table-without-trans-rep>
                 <app-one-year-with-parts-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][6]?.value == 3"></app-one-year-with-parts-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][7]?.value == 3"></app-one-year-with-parts-rep>
                 <app-two-years-with-parts-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][8]?.value == 4"></app-two-years-with-parts-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][9]?.value == 4"></app-two-years-with-parts-rep>
                 <app-table-with-periods-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][4]?.value == 5"></app-table-with-periods-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][5]?.value == 5"></app-table-with-periods-rep>
                 <app-no-rep-data [report]="report" *ngIf="report.fields.length == 0"></app-no-rep-data>
 
             </div>
@@ -133,7 +154,6 @@
                                 <option [ngValue]="3">باحثين</option>
                                 <option [ngValue]="4">محتوى الاستمارة</option>
                                 <option [ngValue]="5">تقرير الجداول</option>
-
                             </select>
                         </div>
                     </div>
@@ -276,7 +296,7 @@
                                       width: 100%;
                                       text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let code of filteredCodes"
-                                                    (click)="selectCode($event, table,code)">
+                                                    (click)="selectCode($event, tables[2],code)">
                                                     {{code.arName}}
                                                 </li>
                                             </ul>
@@ -335,7 +355,7 @@
                                       width: 100%;
                                       text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let activity of filteredActivities"
-                                                    (click)="selectActivityRep($event, table,activity)">
+                                                    (click)="selectActivityRep($event, tables[2],activity)">
                                                     {{activity.arName}}
                                                 </li>
                                             </ul>
@@ -350,7 +370,7 @@
                                       width: 100%;
                                       text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let country of filteredCountries"
-                                                    (click)="selectCountryRep($event, table,country)">
+                                                    (click)="selectCountryRep($event, tables[2],country)">
                                                     {{country.arName}}
                                                 </li>
                                             </ul>
@@ -366,7 +386,7 @@
                                       width: 100%;
                                       text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let sector of sectors"
-                                                    (click)="selectSectorRep($event, table,sector)">
+                                                    (click)="selectSectorRep($event, tables[2],sector)">
                                                     {{sector.arName}}
                                                 </li>
                                             </ul>
@@ -381,16 +401,17 @@
                                       width: 100%;
                                       text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let company of companies"
-                                                    (click)="selectCountryRep($event, table,company)">
+                                                    (click)="selectCompanyRep($event, tables[2],company)">
                                                     {{company.arName}}
                                                 </li>
                                             </ul>
                                         </div>
                                         <label for="inputField">الاسم بالكامل</label>
                                     </div>
-                                    <div class="field-container" *ngIf="table.enTableName != 'TablesReport'"
+                                    <div class="field-container"
+                                        *ngIf="tables.length == 3 && table.enTableName !='TablesReport'"
                                         style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                        <div class="field-item" *ngFor="let content of table.fields; let i = index">
+                                        <div class="field-item" *ngFor="let content of tables[2].fields; let i = index">
                                             <!-- Bind field properties to the input element -->
                                             <span style="text-align: left;"
                                                 class="field-text col-2">{{content.name}}</span>

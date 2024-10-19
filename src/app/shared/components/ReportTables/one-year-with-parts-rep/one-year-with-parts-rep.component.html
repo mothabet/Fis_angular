@@ -3,7 +3,7 @@
         <!-- start table -->
         <div class="content companies projection-table">
             <div class="table-responsive company-table">
-                <table class="table table-borderless">
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'Years'">
                     <thead>
                         <tr class="t-header">
                             <th scope="col"></th>
@@ -31,6 +31,108 @@
                             <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
 
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'ActivitiesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">النشاط</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][0].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][8].value !== report.fields[i-1][8].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[8].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[8].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'CompaniesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الشركة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][0].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][8].value !== report.fields[i-1][8].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[8].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[8].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'SectorsRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">القطاع</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][0].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][8].value !== report.fields[i-1][8].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[8].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[8].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
                         </tr>
                     </tbody>
                 </table>
