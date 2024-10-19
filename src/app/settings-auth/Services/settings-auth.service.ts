@@ -20,4 +20,9 @@ export class SettingsAuthService {
      var resopnse = this.http.post(environment.apiUrl+`SettingsAuth/AddSettingsAuth?lang=2`, Model, { headers });
      return resopnse;
    }
+   GetAllSettingsAuths(pageNumber:number , textSearch : string =''){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`SettingsAuth/GetAllSettingsAuths?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     return resopnse;
+   }
 }
