@@ -60,7 +60,6 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
   }
   AddMessage(typeMessage: number): void {
     this.showLoader = true;
-    debugger
     if (this.messageForm.valid) {
       const Model: IAddMessage = {
         arDetails: this.messageForm.value.arDetails,

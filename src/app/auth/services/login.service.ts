@@ -75,6 +75,40 @@ export class LoginService {
     ];
     return adminRoutes.includes(url);
   }
+  isUserRoute(url: string): boolean {
+    const adminRoutes = [
+      'CompanyHome',
+      'Home', 
+      'Forms', 
+      'Companies', 
+      'Researcher', 
+      'Auditing-Rules', 
+      'Codes', 
+      'Messages', 
+      'CopmanyMessages', 
+      'CopmanyGeneralInformation',
+      'Certification', 
+      'WorkData', 
+      'QuarterTable', 
+      'QuarterFormCover', 
+      'TransTable', 
+      'PeriodTable', 
+      'TableWithoutTrans', 
+      'TablePercentageWithoutTrans',
+      'OneYearWithParts', 
+      'TwoYearsWithParts', 
+      'FormDetails',
+      'Companies-Details',
+      'Researcher-Details',
+      'Reports',
+      'ReportContents',
+      'Countries',
+      'Activities',
+      'Sectors',
+      'SettingsAuth'
+    ];
+    return adminRoutes.includes(url);
+  }
   
 
   isCompanyRoute(url: string): boolean {

@@ -17,11 +17,17 @@ export class LoginGuard {
       if(!(this.authService.isTableRoute(url))){
         localStorage.clear();
       }
-      debugger
       if (role === 'Admin' && this.authService.isAdminRoute(url)) {
         return true;
       } 
       else if (role === 'Admin' && !(this.authService.isAdminRoute(url))) {
+        this.router.navigate(['/Home']);
+        return true;
+      } 
+      else if (role === 'User' && this.authService.isAdminRoute(url)) {
+        return true;
+      } 
+      else if (role === 'User' && !(this.authService.isAdminRoute(url))) {
         this.router.navigate(['/Home']);
         return true;
       } 

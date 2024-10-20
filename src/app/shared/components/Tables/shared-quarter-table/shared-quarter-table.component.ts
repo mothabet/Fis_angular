@@ -1,5 +1,8 @@
 import { Component, Input, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
+import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
@@ -10,6 +13,7 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-shared-quarter-table',
@@ -62,9 +66,11 @@ export class SharedQuarterTableComponent {
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
+  auditRules: IAuditRule[] = [];
+
   constructor(private route: ActivatedRoute, private authService: LoginService,
     private formServices: FormService, private sharedServices: SharedService,
-    private sectorsAndActivitiesServices: SectorAndActivitiesService) {
+    private sectorsAndActivitiesServices: SectorAndActivitiesService, private auditRuleHomeService: AuditRuleHomeService) {
 
 
   }
@@ -218,8 +224,13 @@ export class SharedQuarterTableComponent {
   }
   GetFormData() {
     this.Loader = true;
+    forkJoin([
+      this.auditRuleHomeService.GetAllAuditRules(0),
+    ]).subscribe({
+      next: (auditRulesResponse: any) => {
     const observer = {
       next: (res: any) => {
+        this.auditRules = auditRulesResponse[0].Data.getAuditRuleDtos;
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
@@ -252,6 +263,7 @@ export class SharedQuarterTableComponent {
                 const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                 if (tableIndex !== -1) {
                   this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
+
                   if (this.coverForm.tables[tableIndex].Type == "1") {
                     this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
                       formContent.values = formContent.values || [0, 0, 0];
@@ -287,6 +299,27 @@ export class SharedQuarterTableComponent {
                           // Ensure the `values` array has the correct length and initial values
                           subCode.values[0] = subCode.values[0] || 0; // lastYear
                           subCode.values[1] = subCode.values[1] || 0; // nextYear
+                        });
+                      }
+                    });
+                  }
+                  else if (this.coverForm.tables[tableIndex].Type == "6") {
+                    this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
+                      formContent.values = formContent.values || [0, 0,0];
+                      formContent.values[0] = formContent.values[0] || 0;
+                      formContent.values[1] = formContent.values[1] || 0;
+                      formContent.values[2] = formContent.values[2] || 0;
+                      // If there are subCodes, ensure their values are also initialized
+                      if (formContent.code.SubCodes) {
+                        formContent.code.SubCodes.forEach((subCode: any) => {
+                          // Initialize subCode `values` array if it doesn't exist
+                          subCode.values = subCode.values || [0, 0];
+
+                          // Ensure the `values` array has the correct length and initial values
+                          subCode.values[0] = subCode.values[0] || 0; // lastYear
+                          subCode.values[1] = subCode.values[1] || 0; // nextYear
+                          subCode.values[2] = subCode.values[2] || 0; // nextYear
+                          
                         });
                       }
                     });
@@ -385,11 +418,13 @@ export class SharedQuarterTableComponent {
                   }
                 });
               });
+              
               localStorage.removeItem(`coverForm${this.coverForm.id}`);
               localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
             }
           }
           else if (role === 'Admin' || role === 'Researchers') {
+            
             localStorage.removeItem(`coverForm${this.coverForm.id}`);
             // this.modifyInputById(this.coverForm.typeQuarter);
             return;
@@ -402,6 +437,12 @@ export class SharedQuarterTableComponent {
           const tableIndex = this.coverForm.tables.findIndex(t => t.id === +this.tableId);
           if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
             this.table = this.coverForm.tables[tableIndex];
+            for (let index = 0; index < this.table.formContents.length; index++) {
+              const rule = this.auditRules.find(r => r.codeParent == this.table.formContents[index].code.QuestionCode && r.Type == "2")
+              if (rule) {
+                this.table.formContents[index].isRule = true;
+              }
+            }
           }
         }
         // this.modifyInputById(this.coverForm.typeQuarter);
@@ -413,6 +454,8 @@ export class SharedQuarterTableComponent {
       },
     };
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
+  }
+})
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
@@ -520,5 +563,112 @@ restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null || values[index] <= 0) {
         values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
+}
+updateParentValue(subCode: any, formContent: any, index: number): void {
+  // Initialize formContent values if not present
+  if (!formContent.values) {
+    formContent.values = [];
+  }
+
+  // Initialize subCode values if not present
+  if (!subCode.values) {
+    subCode.values = [];
+  }
+
+  // Calculate the sum of all subCode values for the given index
+  let sum = 0;
+  formContent.code.SubCodes.forEach((sub: any) => {
+    if (sub.values && sub.values[index]) {
+      sum += sub.values[index];
+    }
+  });
+
+  // Update the parent formContent value with the sum
+  formContent.values[index] = sum;
+
+  // Optionally, update any other logic or status here if needed
+}
+
+handleParent(formContent: IGetQuestionDto) {
+  this.changeStatus(this.coverForm.status);
+  const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
+  if (rule) {
+    const ruleParts = rule.Rule.split('=');
+    if (ruleParts.length < 2) {
+      Swal.fire({
+        icon: 'error',
+        title: `تنسيق القاعدة غير صحيح: ${rule.Rule}`,
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+    const ruleExpression = ruleParts[1].trim();
+    // Extract numbers and operators
+    const numberPattern = /\d+/g; // Matches numeric values
+    const operatorPattern = /[\+\-]/g; // Matches operators
+    // Extract numbers and operators
+    const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
+    const operators = ruleExpression.match(operatorPattern) || [];
+
+    // Ensure correct length of operators and numbers
+    if (numbers.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
+    let valuesLength = formContent.values.length;
+    let subCodes = formContent.code.SubCodes;
+
+    // Reset sums for current formContent
+    let indexSums = new Array(valuesLength).fill(0);
+    for (let j = 0; j < subCodes.length; j++) {
+      let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
+      if (numbers.includes(subCodeQuestionCode)) {
+        let subCodeValues = subCodes[j].values;
+
+        // Find the operator before the current number
+        let indexOfCode = numbers.indexOf(subCodeQuestionCode);
+        let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
+        // Apply the correct operation based on the operator
+        for (let k = 0; k < subCodeValues.length; k++) {
+          if (k < indexSums.length) {
+            if (operator === '-' || !operator) {
+              indexSums[k] -= subCodeValues[k];
+            } else {
+              indexSums[k] += subCodeValues[k];
+            }
+          }
+        }
+      }
+    }
+    let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+    // Add the accumulated sums to the totalValues
+    for (let l = 0; l < totalValues.length; l++) {
+      if (l < indexSums.length) {
+        totalValues[l] += indexSums[l];
+        formContent.values[l] = totalValues[l]
+      }
+    }
+  }
+  let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
+  if (foundFormContent) {
+      Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
+  }
+  const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
+            if (storedCoverForm) {
+              this.coverForm = JSON.parse(storedCoverForm);
+            }
+              const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
+              if (tableIndex !== -1) {
+              this.coverForm.tables[tableIndex]=this.table;
+              localStorage.removeItem(`coverForm${this.coverForm.id}`);
+              localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+            }
+  console.log(formContent)
 }
 }

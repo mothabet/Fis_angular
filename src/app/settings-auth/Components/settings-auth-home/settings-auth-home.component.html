@@ -24,44 +24,59 @@
         <table class="table table-borderless">
             <thead>
                 <tr class="t-header">
-                    <th style="min-width: 150px;" scope="col">اسم المستخدم</th>
+                    <th class="text-center" scope="col">اسم المستخدم</th>
                     <th class="text-center" scope="col">المستخدم</th>
                     <th class="text-center" scope="col">الصلاحية</th>
-                    <th class="text-center" scope="col">التاريخ</th>
-                    <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
+                    <th class="text-center" scope="col">الحالة</th>
+                    <th style="min-width: 150px;" class="text-center" scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-
-                        <input type="checkbox" name="Name1" id="Name1">
-                        <label class="text-nowrap" for="Name1"></label>
-
-                    </td>
-                    <td class="text-center">حمد العامري</td>
-                    <td class="text-center">
-                        إضافة، حذف، تعديل، إغلاق
-                    </td>
-                    <td class="text-center">
-                        كتابة تفاصيل الإشعار
-                    </td>
-                    <td class="text-center td-actions">
-                        
-                        <button class="icon" >
-                            <img src="../../../../assets/images/trash-can-outline.png" alt="" />
-                        </button>
-                        <button class="icon">
-                            <img src="../../../../assets/images/pencil-outline.png" alt="" />
-                        </button>
-                    </td>
-                </tr>
+                <ng-container *ngFor="let item of getSettingsAuthDto; let i = index">
+                    <tr *ngFor="let permission of item.permissions; let j = index">
+                        <td class="text-center">{{ item.arName }}</td>
+                        <td class="text-center">{{ item.userName }}</td>
+                        <td class="text-center"><span *ngIf="permission.isName">{{permission.arName}},</span><span *ngIf="permission.add && permission.isName">اضافه,</span>
+                            <span *ngIf="permission.delete && permission.isName">حذف,</span><span *ngIf="permission.edit && permission.isName">تعديل,</span>
+                            <span *ngIf="permission.download && permission.isName">تنزيل PDF,</span></td>
+                        <td class="text-center">
+                            <ng-container *ngIf="item.status; else inactive">
+                                <div class="active"> نشط </div>
+                            </ng-container>
+                            <ng-template #inactive>
+                                <div class="notactive"> غير نشط </div>
+                            </ng-template>
+                        </td>
+                        <td class="text-center td-actions">
+                            
+                            <button class="icon">
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+              </button>
+                            <button class="icon">
+                <img src="../../../../assets/images/pencil-outline.png" alt="" />
+              </button>
+                        </td>
+                    </tr>
+                </ng-container>
             </tbody>
+            <tfoot *ngIf="noData">
+                <tr>
+                    <th colspan="7">
+                        <div class="alert alert-warning">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <br />
+                            <span> لا يوجد بيانات </span>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
         </table>
     </div>
-</div>
-<!-- end content -->
+    </div>
+    <!-- end content -->
   </div>
+  <!-- <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination> -->
   <!--start request modal -->
   <div class="modal company-modal fade" id="authModal" tabindex="-1" aria-labelledby="add" aria-hidden="true"
   data-bs-backdrop="static" data-bs-keyboard="false">

@@ -26,13 +26,21 @@
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents">
-                            <tr>
-                                <td style="text-wrap: balance;">{{formContent.code.arName}}
-                                    <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
-                                        style="background-color: #00af9d; border-radius: 5px;float: left;"
-                                        (click)="addSubCodeRow(formContent.code)">
-                                        <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
-                                    </button>
+                            <tr class="parent">
+                                <td style="text-wrap: balance;">
+                                    <div class="content-container">
+                                        <span class="ar-name">
+                                            {{formContent.code.arName}}
+                                        </span>
+                                        <span class="total" data-bs-toggle="tooltip" data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                            اجمالي <i class="fa-solid fa-circle-question"></i>
+                                        </span>
+                                        <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
+                                            class="add-button"
+                                            (click)="addSubCodeRow(formContent.code)">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
                                 </td>
                                 <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="2">
                                     <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true"
@@ -49,14 +57,14 @@
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
                                             <input [(ngModel)]="formContent.values[1]"
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" disabled
                                                 (focus)="clearIfZero(formContent.values, 1)"
                                                 (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
                                                 class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                             <input [(ngModel)]="formContent.values[1]"
-                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" disabled
                                                 (focus)="clearIfZero(formContent.values, 1)"
                                                 (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
                                                 class="tableInputParent" />
@@ -77,14 +85,14 @@
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                                                 (focus)="clearIfZero(formContent.values, 0)"
                                                 (blur)="restoreIfNotPositive(formContent.values, 0)"
-                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
+                                                (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" disabled
                                                 type="number" class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                             <input [(ngModel)]="formContent.values[0]" 
                                             (focus)="clearIfZero(formContent.values, 0)"
                                             (blur)="restoreIfNotPositive(formContent.values, 0)"
-                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" 
+                                            (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)" disabled
                                             type="number" class="tableInputParent" />
                                         </ng-container>
                                     </td>
@@ -92,7 +100,7 @@
                                 <td class="text-center">
                                     <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
                                 </td>
-                                <td class="text-start" style="text-wrap: balance;">{{formContent.code.enName}}</td>
+                                <td class="text-start" style="text-wrap: balance; direction: ltr;">{{formContent.code.enName}}</td>
                             </tr>
                             <ng-container>
                                 <tr *ngFor="let subCode of formContent.code.SubCodes">
@@ -157,7 +165,7 @@
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[1]" (focus)="clearIfZero(subCode.values, 1)"
                                             (blur)="restoreIfNotPositive(subCode.values, 1)"
-                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)"
+                                            (input)="handleParent(subCode, formContent)"
                                             type="number" />
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
@@ -166,14 +174,14 @@
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[0]" (focus)="clearIfZero(subCode.values, 0)"
                                             (blur)="restoreIfNotPositive(subCode.values, 0)"
-                                            (ngModelChange)="calculateTransaction(subCode,coverForm.status)"
+                                            (input)="handleParent(subCode, formContent)"
                                             type="number" />
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />
                                     </td>
                                     <td class="text-start" *ngIf="formContent.code.TypeId == 1"
-                                        style="text-wrap: balance; text-align: center !important; color: #00af9d;">
+                                        style="text-wrap: balance; text-align: center !important; color: #00af9d; direction: ltr;">
                                         {{subCode.enName}}</td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.arName">
@@ -184,24 +192,24 @@
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                         <div style="display: flex;">
-                                            <select class="form-control" [(ngModel)]="subCode.arName"
-                                                (ngModelChange)="onArCountryChange(subCode)"
-                                                style="width: 47% !important; text-align:center;margin: 5px;">
-                                                <option value="">Choose Source of money--</option>
-                                                <option *ngFor="let country of countries" [value]="country.arName">
-                                                    {{country.code}}-{{country.enName}}</option>
-                                            </select>
                                             <select class="form-control" [(ngModel)]="subCode.enName"
-                                                (ngModelChange)="onEnCountryChange(subCode)"
-                                                style="width: 47% !important; text-align:center">
-                                                <option value="">Choose Investor Nationality--</option>
-                                                <option *ngFor="let country of countries" [value]="country.enName">
-                                                    {{country.code}}-{{ country.enName }}
-                                                </option>
-                                            </select>
+                                                        (ngModelChange)="onEnCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center">
+                                                        <option value="">Choose Investor Nationality--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.enName">
+                                                            {{country.code}}-{{ country.enName }}
+                                                        </option>
+                                                    </select>
+                                                    <select class="form-control" [(ngModel)]="subCode.arName"
+                                                        (ngModelChange)="onArCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center;margin: 5px;">
+                                                        <option value="">Choose Source of money--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.arName">
+                                                            {{country.code}}-{{country.enName}}</option>
+                                                    </select>
                                         </div>
                                     </td>
-                                    <td class="text-center" *ngIf="formContent.code.TypeId == 5">
+                                    <td class="text-center" style=" direction: ltr;" *ngIf="formContent.code.TypeId == 5">
                                         <div style="display: flex;justify-content: center;">
                                             <input type="text" style="width: 220px !important;" [(ngModel)]="subCode.enName"/>
                                         </div>
@@ -241,12 +249,14 @@
 
         <!-- start footer -->
         <footer class="projection-notes d-flex flex-wrap my-3 card-box">
-            <p class="ar flex-fill">
-                {{table.arNotes}}
-            </p>
-            <p class="en flex-fill">
-                {{table.enNotes}}
-            </p>
+            <div class="col-sm-6 footer-ar">
+                <p [innerHTML]="table.arNotes"></p>
+
+            </div>
+            <div class="col-sm-6 footer-en">
+                <p [innerHTML]="table.enNotes"></p>
+
+            </div>
         </footer>
         <!-- end footer -->
 

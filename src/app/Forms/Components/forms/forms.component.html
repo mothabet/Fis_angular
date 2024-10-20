@@ -208,15 +208,21 @@
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <textarea formControlName="arNotes" class="form-control input-modal" rows="2"
-                    style="font-size: 12px"></textarea>
+                    <div class="NgxEditor__Wrapper" >
+                      <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                      <ngx-editor [editor]="editor" [ngModel]="arNotes" [disabled]="false"
+                       formControlName="arNotes"  ></ngx-editor>
+                  </div>
                   <label for="user">ملاحظات بالعربى</label>
                 </div>
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <textarea formControlName="enNotes" class="form-control input-modal" rows="2"
-                    style="direction: ltr; font-size: 12px"></textarea>
+                    <div class="NgxEditor__Wrapper" >
+                      <ngx-editor-menu [editor]="editoren"> </ngx-editor-menu>
+                      <ngx-editor [editor]="editoren" [ngModel]="enNotes" [disabled]="false"
+                       formControlName="enNotes"  ></ngx-editor>
+                  </div>
                   <label class="eng">Notes in English</label>
                 </div>
               </div>

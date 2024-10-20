@@ -116,13 +116,14 @@
         </div>
       </div>
       
-    <footer class="projection-notes d-flex flex-wrap my-3 card-box">
+      <footer class="projection-notes d-flex flex-wrap my-3 card-box">
         <div class="col-sm-6 footer-ar">
-            <p>{{coverForm.arNotes}}
-            </p>
+            <p [innerHTML]="table.arNotes"></p>
+
         </div>
         <div class="col-sm-6 footer-en">
-            <p>{{coverForm.enNotes}}</p>
+            <p [innerHTML]="table.enNotes"></p>
+
         </div>
     </footer>
     <!-- end content -->

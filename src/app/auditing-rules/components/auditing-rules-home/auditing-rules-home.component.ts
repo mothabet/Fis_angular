@@ -471,7 +471,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           const rule = res.Data.Rule;
           this.codeParent = res.Data.codeParent;
           const codes = rule.split(/[=+-]/).map((code: any) => code.trim()).filter((code: any) => code);

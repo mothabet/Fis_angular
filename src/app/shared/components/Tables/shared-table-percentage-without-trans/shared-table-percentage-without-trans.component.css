@@ -1,0 +1,39 @@
+.parent td {
+    background-color: #f1f2f4;
+}
+
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ar-name {
+    flex: 1;
+    text-align: right;
+}
+
+.total {
+    text-decoration: underline;
+    color: #41c3b6;
+    margin-left: 10px;
+}
+
+.add-button {
+    background-color: #00af9d;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+}
+
+.add-button i {
+    color: white;
+}
+tr input[type="number"] {
+    width: 115px !important;
+}

@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SettingsAuthService } from '../../Services/settings-auth.service';
 import Swal from 'sweetalert2';
-import { IAddPermissionDto, IAddSettingsAuth, IAddSettingsAuthAndPermissionDto } from '../../Dtos/SettingsAuthHomeDto';
+import { IAddPermissionDto, IAddSettingsAuth, IAddSettingsAuthAndPermissionDto, IGetSettingsAuthDto } from '../../Dtos/SettingsAuthHomeDto';
 
 @Component({
   selector: 'app-settings-auth-home',
@@ -15,7 +15,13 @@ export class SettingsAuthHomeComponent {
   authForm!: FormGroup;
   phoneCode: number = 968;
   add:boolean = true;
-  addPermissionDtoList : IAddPermissionDto[] = []
+  addPermissionDtoList : IAddPermissionDto[] = [];
+  getSettingsAuthDto : IGetSettingsAuthDto[] = [];
+  noData: boolean = false;
+  id: number = 0;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
   constructor(
     private formBuilder: FormBuilder,
     private settingsAuthService : SettingsAuthService,
@@ -41,7 +47,7 @@ export class SettingsAuthHomeComponent {
   
     // Add static permissions
     this.addStaticPermissions();
-  
+  this.GetAllSettingsAuths(1,'')
     this.generateRandomCredentials();
   }
   
@@ -50,7 +56,8 @@ export class SettingsAuthHomeComponent {
   }
   addStaticPermissions() {
     const staticPermissions = [
-      { arName: 'قواعد التدقيق',enName:"Auditing Rules", isName: true, add: false, edit: false, delete: false, download: false },
+      { arName: 'قواعد التدقيق',enName:"Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true },
+      { arName: 'محتوي الاستماره',enName:"Codes", isName: true, add: true, edit: true, delete: true, download: true },
     ];
   
     staticPermissions.forEach(permission => {
@@ -97,12 +104,11 @@ export class SettingsAuthHomeComponent {
     inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
   }
   AddSettingsAuth(): void {
-    debugger
     this.showLoader = true;
     if (this.authForm.valid) {
       this.addPermissionDtoList = [];
       for (let index = 0; index < this.authForm.value.permissions.length; index++) {
-        debugger
+        
         const permission : IAddPermissionDto = {
           add : this.authForm.value.permissions[index].add,
           arName : this.authForm.value.permissions[index].arName,
@@ -134,7 +140,7 @@ export class SettingsAuthHomeComponent {
             button.click();
           }
           this.resetForm();
-          // this.GetAllReseachers(1);
+          this.GetAllSettingsAuths(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -158,6 +164,31 @@ export class SettingsAuthHomeComponent {
       });
       this.showLoader = false;
     }
+  }
+  GetAllSettingsAuths(page: number, textSearch: string = ''): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        debugger
+        this.noData = !res.Data || res.Data.length === 0;
+        if (res.Data) {
+          this.getSettingsAuthDto = res.Data.getSettingsAuthDtos;
+          this.currentPage = page;
+          this.isLastPage = res.Data.LastPage;
+          this.totalPages = res.Data.TotalCount;
+          this.resetForm();
+        }
+        else {
+          this.getSettingsAuthDto = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.settingsAuthService.GetAllSettingsAuths(page, textSearch).subscribe(observer);
   }
   resetForm(): void {
     this.authForm.reset({
