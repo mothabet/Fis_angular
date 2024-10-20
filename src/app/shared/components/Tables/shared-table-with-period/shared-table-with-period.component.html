@@ -27,13 +27,17 @@
               <ng-container *ngFor="let formContent of table.formContents">
                 <tr class="parent">
                   <td style="text-wrap: balance;">
-                      {{formContent.code.arName}} 
-                      <span class="total">اجمالي</span>
-                    <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
-                      style="background-color: #00af9d; border-radius: 5px;float: left;"
-                      (click)="addSubCodeRow(formContent.code)">
-                      <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
-                    </button>
+                      <div class="content-container">
+                          <span class="ar-name">
+                              {{formContent.code.arName}}
+                          </span>
+                          <span class="total">اجمالي</span>
+                          <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
+                              class="add-button"
+                              (click)="addSubCodeRow(formContent.code)">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                          </button>
+                      </div>
                   </td>
                   <td *ngIf="formContent.code.TypeId == 4"
                     [attr.colspan]="getColspan(years.length, 'first')">
