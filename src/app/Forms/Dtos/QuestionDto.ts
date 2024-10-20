@@ -12,4 +12,5 @@ export interface IGetQuestionDto {
   values: number[];
   code:ICodeForm;
   valueCheck:boolean;
+  isRule:boolean;
 }

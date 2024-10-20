@@ -26,8 +26,11 @@
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents">
-                            <tr>
-                                <td style="text-wrap: balance;">{{formContent.code.arName}}
+                            <tr class="parent">
+                                <td style="text-wrap: balance;">
+                                    {{formContent.code.arName}}
+                                    <span class="total">اجمالي</span>
+                                    <button class="rule" *ngIf="formContent.isRule" (click)="handleParent(formContent)">تدقيق</button>
                                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                         style="background-color: #00af9d; border-radius: 5px;float: left;"
                                         (click)="addSubCodeRow(formContent.code)">
@@ -49,13 +52,13 @@
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
                                         <input type="number" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false" class="tableInputParent" [(ngModel)]="formContent.values[0]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 0)"
                                         (blur)="restoreIfNotPositive(formContent.values, 0)"/>
                                     </ng-container>
                                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                         <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[0]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 0)"
                                         (blur)="restoreIfNotPositive(formContent.values, 0)"/>
                                     </ng-container>
@@ -63,13 +66,13 @@
                                 <td class="text-center" *ngIf="formContent.code.TypeId != 4">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
                                         <input type="number" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false" class="tableInputParent" [(ngModel)]="formContent.values[1]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 1)"
                                         (blur)="restoreIfNotPositive(formContent.values, 1)"/>
                                     </ng-container>
                                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                         <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[1]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 1)"
                                         (blur)="restoreIfNotPositive(formContent.values, 1)"/>
                                     </ng-container>
@@ -78,14 +81,14 @@
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
                                         <span *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"> %  </span>
                                         <input type="number" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false" class="tableInputParent" [(ngModel)]="formContent.values[2]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 2)"
                                         (blur)="restoreIfNotPositive(formContent.values, 2)"/>
                                     </ng-container>
                                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                         <span> %  </span>
                                         <input type="number" class="tableInputParent" [(ngModel)]="formContent.values[2]" 
-                                        (input)="changeStatus(coverForm.status)"
+                                        (input)="changeStatus(coverForm.status)" disabled
                                         (focus)="clearIfZero(formContent.values, 2)"
                                         (blur)="restoreIfNotPositive(formContent.values, 2)"/>
                                     </ng-container>
@@ -166,22 +169,25 @@
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <input type="number" [(ngModel)]="subCode.values[0]"
-                                             (input)="changeStatus(coverForm.status)"
+                                             (input)="changeStatus(coverForm.status)" disabled
                                              (focus)="clearIfZero(subCode.values, 0)"
-                                            (blur)="restoreIfNotPositive(subCode.values, 0)"/>
+                                            (blur)="restoreIfNotPositive(subCode.values, 0)"
+                                            (input)="updateParentValue(subCode, formContent, 0)"/>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <input type="number" [(ngModel)]="subCode.values[1]"
-                                             (input)="changeStatus(coverForm.status)"
+                                             (input)="changeStatus(coverForm.status)" disabled
                                              (focus)="clearIfZero(subCode.values, 1)"
-                                            (blur)="restoreIfNotPositive(subCode.values, 1)"/>
+                                            (blur)="restoreIfNotPositive(subCode.values, 1)"
+                                            (input)="updateParentValue(subCode, formContent, 1)"/>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <span> %  </span>
                                         <input type="number" [(ngModel)]="subCode.values[2]"
-                                             (input)="changeStatus(coverForm.status)"
+                                             (input)="changeStatus(coverForm.status)" disabled
                                              (focus)="clearIfZero(subCode.values, 2)"
-                                            (blur)="restoreIfNotPositive(subCode.values, 2)"/>
+                                            (blur)="restoreIfNotPositive(subCode.values, 2)"
+                                            (input)="updateParentValue(subCode, formContent, 2)"/>
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />
@@ -198,21 +204,21 @@
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                             <div style="display: flex;">
-                                                <select class="form-control" [(ngModel)]="subCode.arName"
-                                                    (ngModelChange)="onArCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center;margin: 5px;">
-                                                    <option value="">Choose Source of money--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.arName">
-                                                        {{country.code}}-{{country.enName}}</option>
-                                                </select>
                                                 <select class="form-control" [(ngModel)]="subCode.enName"
-                                                    (ngModelChange)="onEnCountryChange(subCode)"
-                                                    style="width: 47% !important; text-align:center">
-                                                    <option value="">Choose Investor Nationality--</option>
-                                                    <option *ngFor="let country of countries" [value]="country.enName">
-                                                        {{country.code}}-{{ country.enName }}
-                                                    </option>
-                                                </select>
+                                                        (ngModelChange)="onEnCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center">
+                                                        <option value="">Choose Investor Nationality--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.enName">
+                                                            {{country.code}}-{{ country.enName }}
+                                                        </option>
+                                                    </select>
+                                                    <select class="form-control" [(ngModel)]="subCode.arName"
+                                                        (ngModelChange)="onArCountryChange(subCode)"
+                                                        style="width: 47% !important; text-align:center;margin: 5px;">
+                                                        <option value="">Choose Source of money--</option>
+                                                        <option *ngFor="let country of countries" [value]="country.arName">
+                                                            {{country.code}}-{{country.enName}}</option>
+                                                    </select>
                                             </div>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -250,12 +256,16 @@
 
         <!-- start footer -->
         <footer class="projection-notes d-flex flex-wrap my-3 card-box">
-            <p class="ar flex-fill">
-                {{table.arNotes}}
-            </p>
-            <p class="en flex-fill">
-                {{table.enNotes}}
-            </p>
+            <div class="col-sm-6 footer-ar">
+                <p>
+                    {{table.arNotes}}
+                </p>
+            </div>
+            <div class="col-sm-6 footer-en">
+                <p>
+                    {{table.enNotes}}
+                </p>
+            </div>
         </footer>
         <!-- end footer -->
 

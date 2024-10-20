@@ -14,7 +14,6 @@ isAuditingRules : boolean = false;
   constructor(private authService: LoginService) { }
 
   ngOnInit(): void {
-    debugger
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);  
     this.role = res.roles;

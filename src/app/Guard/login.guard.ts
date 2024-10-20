@@ -10,7 +10,6 @@ export class LoginGuard {
 
   canActivate(route: any): boolean {
     const isLoggedIn = this.authService.getToken();
-    debugger
     if (isLoggedIn != "") {
       let res = this.authService.decodedToken(isLoggedIn);  
       const role = res.roles;
