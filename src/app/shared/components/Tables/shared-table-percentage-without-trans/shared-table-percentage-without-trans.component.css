@@ -34,3 +34,6 @@
 .add-button i {
     color: white;
 }
+tr input[type="number"] {
+    width: 115px !important;
+}

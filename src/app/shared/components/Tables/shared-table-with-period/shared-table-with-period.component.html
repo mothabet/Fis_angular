@@ -27,18 +27,20 @@
               <ng-container *ngFor="let formContent of table.formContents">
                 <tr class="parent">
                   <td style="text-wrap: balance;">
-                      <div class="content-container">
-                          <span class="ar-name">
-                              {{formContent.code.arName}}
-                          </span>
-                          <span class="total">اجمالي</span>
-                          <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
-                              class="add-button"
-                              (click)="addSubCodeRow(formContent.code)">
-                              <i class="fa fa-plus" aria-hidden="true"></i>
-                          </button>
-                      </div>
-                  </td>
+                    <div class="content-container">
+                        <span class="ar-name">
+                            {{formContent.code.arName}}
+                        </span>
+                        <span class="total" data-bs-toggle="tooltip" data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                            اجمالي <i class="fa-solid fa-circle-question"></i>
+                        </span>
+                        <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
+                            class="add-button"
+                            (click)="addSubCodeRow(formContent.code)">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </td>
                   <td *ngIf="formContent.code.TypeId == 4"
                     [attr.colspan]="getColspan(years.length, 'first')">
                     <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true" checked name="yesNoOption_{{formContent.code.Id}}"> نعم
@@ -200,14 +202,12 @@
     <!-- start footer -->
     <footer class="projection-notes d-flex flex-wrap my-3 card-box">
       <div class="col-sm-6 footer-ar">
-          <p>
-              {{table.arNotes}}
-          </p>
+          <p [innerHTML]="table.arNotes"></p>
+
       </div>
       <div class="col-sm-6 footer-en">
-          <p>
-              {{table.enNotes}}
-          </p>
+          <p [innerHTML]="table.enNotes"></p>
+
       </div>
   </footer>
     <!-- end footer -->

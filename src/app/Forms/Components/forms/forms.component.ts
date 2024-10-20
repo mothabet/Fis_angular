@@ -16,6 +16,7 @@ import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 import { IAddInstructionsDto, IAddListInstructionsDto } from 'src/app/shared/Dtos/NavigateDto';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
+import { Editor } from 'ngx-editor';
 
 @Component({
   selector: 'app-forms',
@@ -74,6 +75,10 @@ export class FormsComponent implements OnInit {
   showSubCode: string = '';
   Activities: IDropdownList[] = [];
   addInstructions: IAddInstructionsDto[] = [];
+  editor!: Editor;
+  editoren!: Editor;
+  arNotes = '';
+  enNotes = '';
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -119,6 +124,8 @@ export class FormsComponent implements OnInit {
     this.GetAllForms();
     this.years = this.sharedServices.generateYears(2000, 2050);
     this.GetSectorActvities(0);
+    this.editor = new Editor();
+    this.editoren = new Editor();
   }
   resetForm() {
     this.add = true;
