@@ -554,6 +554,5 @@ restoreIfNotPositive(values: number[], index: number): void {
                 localStorage.removeItem(`coverForm${this.coverForm.id}`);
                 localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
               }
-    console.log(formContent)
   }
 }
