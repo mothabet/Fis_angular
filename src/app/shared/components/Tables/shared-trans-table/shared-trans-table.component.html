@@ -30,7 +30,6 @@
                                 <td style="text-wrap: balance;">
                                     {{formContent.code.arName}}
                                     <span class="total">اجمالي</span>
-                                    <button class="rule" *ngIf="formContent.isRule" (click)="handleParent(formContent)">تدقيق</button>
                                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                         style="background-color: #00af9d; border-radius: 5px;float: left;"
                                         (click)="addSubCodeRow(formContent.code)">
@@ -160,7 +159,7 @@
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[1]" (focus)="clearIfZero(subCode.values, 1)"
                                             (blur)="restoreIfNotPositive(subCode.values, 1)"
-                                            (input)="updateParentValue(subCode, formContent, 1)"
+                                            (input)="handleParent(subCode, formContent)"
                                             type="number" />
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
@@ -169,7 +168,7 @@
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[0]" (focus)="clearIfZero(subCode.values, 0)"
                                             (blur)="restoreIfNotPositive(subCode.values, 0)"
-                                            (input)="updateParentValue(subCode, formContent, 0)"
+                                            (input)="handleParent(subCode, formContent)"
                                             type="number" />
                                     </td>
                                     <td class="text-center">

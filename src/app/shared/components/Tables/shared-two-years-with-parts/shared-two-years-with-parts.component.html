@@ -39,7 +39,6 @@
                                 <td style="text-wrap: balance;">
                                     {{formContent.code.arName}}
                                     <span class="total">اجمالي</span>
-                                    <button class="rule" *ngIf="formContent.isRule" (click)="handleParent(formContent)">تدقيق</button>
                                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                         style="background-color: #00af9d; border-radius: 5px;float: left;"
                                         (click)="addSubCodeRow(formContent.code)">
@@ -165,7 +164,7 @@
                                                 <td class="text-center"><input type="number"
                                                     (focus)="clearIfZero(subCode.values, i)"
                                                     (blur)="restoreIfNotPositive(subCode.values, i)" [(ngModel)]="subCode.values[i]"
-                                                    (input)="updateParentValue(subCode, formContent, i)" /></td>
+                                                    (input)="handleParent(formContent)" /></td>
                                             </ng-container>
                                         </ng-container>
 
@@ -177,7 +176,7 @@
                                                     (focus)="clearIfZero(subCode.values, i + table.tableParts.length)"
                                                     (blur)="restoreIfNotPositive(subCode.values, i + table.tableParts.length)" 
                                                         [(ngModel)]="subCode.values[i + table.tableParts.length]"
-                                                        (input)="updateParentValue(subCode, formContent, i + table.tableParts.length)" /></td>
+                                                        (input)="handleParent(formContent)" /></td>
                                             </ng-container>
                                         </ng-container>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4">

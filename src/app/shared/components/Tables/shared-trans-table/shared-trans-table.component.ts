@@ -427,10 +427,10 @@ export class SharedTransTableComponent {
     formContent.values[index] = sum;
   
     // Optionally, update any other logic or status here if needed
-    this.calculateTransaction(subCode,this.coverForm.status);
   }
   
-  handleParent(formContent: IGetQuestionDto) {
+  handleParent(subCode: any,formContent: IGetQuestionDto) {
+    this.calculateTransaction(subCode,this.coverForm.status);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');

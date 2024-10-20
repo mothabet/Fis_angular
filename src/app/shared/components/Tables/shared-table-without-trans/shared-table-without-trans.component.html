@@ -29,7 +29,6 @@
                                 <td style="text-wrap: balance;">
                                     {{formContent.code.arName}}
                                     <span class="total">اجمالي</span>
-                                    <button class="rule" *ngIf="formContent.isRule" (click)="handleParent(formContent)">تدقيق</button>
                                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                         style="background-color: #00af9d; border-radius: 5px;float: left;"
                                         (click)="addSubCodeRow(formContent.code)">
@@ -146,14 +145,14 @@
                                              (input)="changeStatus(coverForm.status)" 
                                              (focus)="clearIfZero(subCode.values, 0)"
                                             (blur)="restoreIfNotPositive(subCode.values, 0)"
-                                            (input)="updateParentValue(subCode, formContent, 0)"/>
+                                            (input)="handleParent(formContent)"/>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <input type="number" [(ngModel)]="subCode.values[1]"
                                              (input)="changeStatus(coverForm.status)" 
                                              (focus)="clearIfZero(subCode.values, 1)"
                                             (blur)="restoreIfNotPositive(subCode.values, 1)"
-                                            (input)="updateParentValue(subCode, formContent, 1)"/>
+                                            (input)="handleParent(formContent)"/>
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />

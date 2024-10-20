@@ -472,10 +472,10 @@ restoreIfNotPositive(values: number[], index: number): void {
     formContent.values[index] = sum;
   
     // Optionally, update any other logic or status here if needed
-    this.changeStatus(this.coverForm.status);
   }
   
   handleParent(formContent: IGetQuestionDto) {
+    this.changeStatus(this.coverForm.status);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');
@@ -495,7 +495,7 @@ restoreIfNotPositive(values: number[], index: number): void {
       // Extract numbers and operators
       const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
       const operators = ruleExpression.match(operatorPattern) || [];
-
+      
       // Ensure correct length of operators and numbers
       if (numbers.length === 0) {
         Swal.fire({
@@ -508,14 +508,14 @@ restoreIfNotPositive(values: number[], index: number): void {
       }
       let valuesLength = formContent.values.length;
       let subCodes = formContent.code.SubCodes;
-
+      
       // Reset sums for current formContent
       let indexSums = new Array(valuesLength).fill(0);
       for (let j = 0; j < subCodes.length; j++) {
         let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
         if (numbers.includes(subCodeQuestionCode)) {
           let subCodeValues = subCodes[j].values;
-
+          
           // Find the operator before the current number
           let indexOfCode = numbers.indexOf(subCodeQuestionCode);
           let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';

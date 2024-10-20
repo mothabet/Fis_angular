@@ -29,7 +29,6 @@
                   <td style="text-wrap: balance;">
                       {{formContent.code.arName}} 
                       <span class="total">اجمالي</span>
-                      <button class="rule" *ngIf="formContent.isRule" (click)="handleParent(formContent)">تدقيق</button>
                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                       style="background-color: #00af9d; border-radius: 5px;float: left;"
                       (click)="addSubCodeRow(formContent.code)">
@@ -133,7 +132,7 @@
                       <input type="number" 
                       (focus)="clearIfZero(subCode.values, i+1)"
                       (blur)="restoreIfNotPositive(subCode.values, i+1)" [(ngModel)]="subCode.values[i+1]" 
-                      (input)="updateParentValue(subCode, formContent, i+1)"
+                      (input)="handleParent(formContent)"
                       />
                     </td>
                   </ng-container>
