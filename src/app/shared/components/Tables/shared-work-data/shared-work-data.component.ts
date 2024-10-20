@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
-import { ICoverFormDetailsDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGeneralDataDto, IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { ICoverFormData } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
 @Component({
@@ -15,7 +16,24 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 })
 export class SharedWorkDataComponent implements OnInit {
   @Input() formId!: string;
-  coverForm!: ICoverFormDetailsDto;
+  coverForm: ICoverFormDetailsDto = {
+    id: 0,
+    typeQuarter: 0,
+    tables: [],
+    arName: '',
+    enName: '',
+    arNotes: '',
+    enNotes: '',
+    reviewYear: '',
+    status: 0,
+    quarterCoverData: {} as IQuarterCoverFormDataDto,  // Initialize with an empty object or default values
+    coverFormData: {} as ICoverFormData,              // Same here
+    certification: {} as ICertificationDto,           // And here
+    codeActivity: '',
+    codeActivityName: '',
+    GeneralData: {} as IGeneralDataDto,               // Initialize GeneralData
+    Type: 0
+  };  
   Loader: boolean = false;
   companyId!: string;
   isWorkDataActive: boolean = false;
@@ -27,7 +45,7 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '' },
     { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '' },
     { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '' },
-    { arName: 'المنطقة : ', enName: ' :  Region', inputValue: '' },
+    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '' },
     { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '' },
     { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '' },
     { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '' },
@@ -69,7 +87,6 @@ export class SharedWorkDataComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
         if (res.Data) {
           this.company = res.Data;
           this.workData.forEach((item) => {
@@ -172,6 +189,7 @@ export class SharedWorkDataComponent implements OnInit {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);
+          debugger
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             this.workData = this.coverForm.GeneralData.CompanyInfo;
@@ -198,7 +216,6 @@ export class SharedWorkDataComponent implements OnInit {
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   ngOnDestroy() {
-    
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {
       localStorage.removeItem(`generalData`);

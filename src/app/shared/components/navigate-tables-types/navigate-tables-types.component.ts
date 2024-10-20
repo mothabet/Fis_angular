@@ -151,7 +151,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   addTableToListInLocalStorage(table: any): void {
     let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
-    var coverForm!: ICoverFormDetailsDto
+    var coverForm!: ICoverFormDetailsDto;
     if (storedTables) {
       coverForm = JSON.parse(storedTables);
       const tableIndex = coverForm.tables.findIndex(t => t.id === table.id);
