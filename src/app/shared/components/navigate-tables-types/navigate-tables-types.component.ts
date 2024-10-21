@@ -97,6 +97,9 @@ export class NavigateTablesTypesComponent implements OnInit {
           case 6:
             navigationPromise = this.router.navigate(['/TablePercentageWithoutTrans', this.formId, id, this.companyId]);
             break;
+            case 7:
+            navigationPromise = this.router.navigate(['/OneYearWithPartsAndTotal', this.formId, id, this.companyId]);
+            break;
           case 0:
             navigationPromise = this.router.navigate(['/QuarterTable', this.formId, id, this.companyId]);
             break;
@@ -147,6 +150,8 @@ export class NavigateTablesTypesComponent implements OnInit {
     else if (this.table.Type == "4")
       this.addTableToListInLocalStorage(this.table);
     else if (this.table.Type == "5")
+      this.addTableToListInLocalStorage(this.table);
+    else if (this.table.Type == "7")
       this.addTableToListInLocalStorage(this.table);
   }
   addTableToListInLocalStorage(table: any): void {

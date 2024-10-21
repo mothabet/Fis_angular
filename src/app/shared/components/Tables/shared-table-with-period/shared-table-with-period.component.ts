@@ -434,7 +434,7 @@ export class SharedTableWithPeriodComponent {
   }
   
   handleParent(formContent: IGetQuestionDto) {
-    this.changeStatus(this.coverForm.status);
+    this.changeStatus(this.coverForm.status,formContent,2);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');
@@ -499,6 +499,21 @@ export class SharedTableWithPeriodComponent {
         }
       }
     }
+    else{
+      if (!formContent.values) {
+        formContent.values = [];
+      }
+    
+    
+      // Calculate the sum of all subCode values for the given index
+      for (let index = 0; index < formContent.values.length; index++) {
+        let sum = 0;
+        for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+          sum+=formContent.code.SubCodes[i].values[index]
+        }
+        formContent.values[index] = sum
+      }
+    }
     let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
     if (foundFormContent) {
         Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
@@ -515,7 +530,18 @@ export class SharedTableWithPeriodComponent {
               }
     console.log(formContent)
   }
-  changeStatus(status: number) {
+  changeStatus(status: number,formContent:IGetQuestionDto,level:number) {
+    if(level == 1){
+
+    }
+    else if(level == 2){
+      for (let index = 0; index < formContent.code.SubCodes.length; index++) {
+        formContent.code.SubCodes[index].values[0] = 0;
+        for (let i = 1; i < formContent.code.SubCodes[index].values.length; i++) {
+          formContent.code.SubCodes[index].values[0] += formContent.code.SubCodes[index].values[i]
+        }
+      }
+    }
     if (status < 3)
       this.BeginningForm();
   }

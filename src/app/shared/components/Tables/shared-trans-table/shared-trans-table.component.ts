@@ -495,6 +495,15 @@ export class SharedTransTableComponent {
         }
       }
     }
+    else{
+     for (let index = 0; index < formContent.values.length; index++) {
+       let sum = 0;
+       for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+         sum+=formContent.code.SubCodes[i].values[index]
+       }
+       formContent.values[index] = sum
+     }
+    }
     let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
     if (foundFormContent) {
         Object.assign(foundFormContent, formContent); // Update the object with new formContent properties

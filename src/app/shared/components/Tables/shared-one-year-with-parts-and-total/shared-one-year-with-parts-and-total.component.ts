@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { LoginService } from 'src/app/auth/services/login.service';
@@ -12,15 +13,14 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-shared-one-year-with-parts',
-  templateUrl: './shared-one-year-with-parts.component.html',
-  styleUrls: ['./shared-one-year-with-parts.component.css']
+  selector: 'app-shared-one-year-with-parts-and-total',
+  templateUrl: './shared-one-year-with-parts-and-total.component.html',
+  styleUrls: ['./shared-one-year-with-parts-and-total.component.css']
 })
-export class SharedOneYearWithPartsComponent {
+export class SharedOneYearWithPartsAndTotalComponent {
   Loader: boolean = false;
   isChecked!: boolean;
   @Input() formId!: string;
@@ -396,7 +396,18 @@ export class SharedOneYearWithPartsComponent {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status: number) {
+  changeStatus(status: number,formContent:IGetQuestionDto,level:number) {
+    if(level == 1){
+
+    }
+    else if(level == 2){
+      for (let index = 0; index < formContent.code.SubCodes.length; index++) {
+        formContent.code.SubCodes[index].values[0] = 0;
+        for (let i = 1; i < formContent.code.SubCodes[index].values.length; i++) {
+          formContent.code.SubCodes[index].values[0] += formContent.code.SubCodes[index].values[i]
+        }
+      }
+    }
     if (status < 3)
       this.BeginningForm();
   }
@@ -475,7 +486,7 @@ export class SharedOneYearWithPartsComponent {
   }
 
   handleParent(formContent: IGetQuestionDto) {
-    this.changeStatus(this.coverForm.status);
+    this.changeStatus(this.coverForm.status,formContent,2);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');

@@ -35,6 +35,7 @@ import { CountriesComponent } from './sectors-and-activities/Components/countrie
 import { CompanyResearcherHomeComponent } from './companies/components/company-researcher-home/company-researcher-home.component';
 import { TablePercentageWithoutTransComponent } from './Forms/Components/table-percentage-without-trans/table-percentage-without-trans.component';
 import { SettingsAuthHomeComponent } from './settings-auth/Components/settings-auth-home/settings-auth-home.component';
+import { OneYearWithPartsAndTotalComponent } from './Forms/Components/one-year-with-parts-and-total/one-year-with-parts-and-total.component';
 
 const routes: Routes = [
   { path: 'Sectors', component: SectorsComponent, canActivate: [LoginGuard] },
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'TableWithoutTrans/:formId/:tableId/:companyId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },
   { path: 'TablePercentageWithoutTrans/:formId/:tableId/:companyId', component: TablePercentageWithoutTransComponent, canActivate: [LoginGuard] },
   { path: 'OneYearWithParts/:formId/:tableId/:companyId', component: OneYearWithPartsComponent, canActivate: [LoginGuard] },
+  { path: 'OneYearWithPartsAndTotal/:formId/:tableId/:companyId', component: OneYearWithPartsAndTotalComponent, canActivate: [LoginGuard] },
   { path: 'TwoYearsWithParts/:formId/:tableId/:companyId', component: TwoYearsWithPartsComponent, canActivate: [LoginGuard] },
   { path: 'FormDetails/:formId/:type/:companyId', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
