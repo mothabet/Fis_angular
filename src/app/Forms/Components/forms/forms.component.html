@@ -262,6 +262,7 @@
                     <option value="2">جدول بدون معاملات</option>
                     <option value="6">جدول بدون معاملات بنسبه</option>
                     <option value="3">جدول سنه مقسمة الى اجزاء</option>
+                    <option value="7">جدول سنه مقسمة الى اجزاء بمجموع</option>
                     <option value="4">جدول سنتين مقسمة الى اجزاء</option>
                     <option value="5">جدول بمدة زمنية</option>
                   </select>
@@ -274,8 +275,8 @@
                   <label class="eng">مده الزمنيه للجدول</label>
                 </div>
               </div>
-              <hr *ngIf="Type == 3 || Type == 4" />
-              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4">
+              <hr *ngIf="Type == 3 || Type == 4 || Type == 7" />
+              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4 || Type == 7">
                 <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
                 <table class="table table-borderless">
                   <thead>

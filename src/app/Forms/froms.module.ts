@@ -14,6 +14,7 @@ import { WorkDataComponent } from './Components/work-data/work-data.component';
 import { CertificationComponent } from './Components/certification/certification.component';
 import { PrevFormComponent } from './Components/prev-form/prev-form.component';
 import { TablePercentageWithoutTransComponent } from './Components/table-percentage-without-trans/table-percentage-without-trans.component';
+import { OneYearWithPartsAndTotalComponent } from './Components/one-year-with-parts-and-total/one-year-with-parts-and-total.component';
 
 
 
@@ -31,7 +32,8 @@ import { TablePercentageWithoutTransComponent } from './Components/table-percent
     WorkDataComponent,
     CertificationComponent,
     PrevFormComponent,
-    TablePercentageWithoutTransComponent
+    TablePercentageWithoutTransComponent,
+    OneYearWithPartsAndTotalComponent
   ],
   imports: [
     CommonModule,

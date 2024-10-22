@@ -28,6 +28,7 @@ import { TwoYearsWithPartsRepComponent } from './components/ReportTables/two-yea
 import { TableWithPeriodsRepComponent } from './components/ReportTables/table-with-periods-rep/table-with-periods-rep.component';
 import { NoRepDataComponent } from './components/ReportTables/no-rep-data/no-rep-data.component';
 import { QuarterTableRepComponent } from './components/ReportTables/quarter-table-rep/quarter-table-rep.component';
+import { SharedOneYearWithPartsAndTotalComponent } from './components/Tables/shared-one-year-with-parts-and-total/shared-one-year-with-parts-and-total.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { QuarterTableRepComponent } from './components/ReportTables/quarter-tabl
     TableWithPeriodsRepComponent,
     NoRepDataComponent,
     QuarterTableRepComponent,
+    SharedOneYearWithPartsAndTotalComponent,
   ],
   imports: [
     CommonModule,
@@ -74,6 +76,7 @@ import { QuarterTableRepComponent } from './components/ReportTables/quarter-tabl
     SharedQuarterTableComponent,
     SharedWorkDataComponent,
     SharedOneYearWithPartsComponent,
+    SharedOneYearWithPartsAndTotalComponent,
     SharedTwoYearsWithPartsComponent,
     NavigateTablesTypesComponent,
     SharedQuarterFormCoverComponent,

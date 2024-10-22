@@ -38,6 +38,7 @@ import { SettingsAuthHomeComponent } from './settings-auth/Components/settings-a
 import { GroupComponent } from './sectors-and-activities/Components/group/group.component';
 import { CategoryComponent } from './sectors-and-activities/Components/category/category.component';
 import { SectionComponent } from './sectors-and-activities/Components/section/section.component';
+import { OneYearWithPartsAndTotalComponent } from './Forms/Components/one-year-with-parts-and-total/one-year-with-parts-and-total.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -58,6 +59,7 @@ const routes: Routes = [
   { path: 'TableWithoutTrans/:formId/:tableId/:companyId', component: TableWithoutTransComponent, canActivate: [LoginGuard] },
   { path: 'TablePercentageWithoutTrans/:formId/:tableId/:companyId', component: TablePercentageWithoutTransComponent, canActivate: [LoginGuard] },
   { path: 'OneYearWithParts/:formId/:tableId/:companyId', component: OneYearWithPartsComponent, canActivate: [LoginGuard] },
+  { path: 'OneYearWithPartsAndTotal/:formId/:tableId/:companyId', component: OneYearWithPartsAndTotalComponent, canActivate: [LoginGuard] },
   { path: 'TwoYearsWithParts/:formId/:tableId/:companyId', component: TwoYearsWithPartsComponent, canActivate: [LoginGuard] },
   { path: 'FormDetails/:formId/:type/:companyId', component: FormDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Forms', component: FormsComponent, canActivate: [LoginGuard] },
