@@ -14,7 +14,16 @@ export interface IAddActivityDto{
     enName:string;
     code:string;
     sectorId:number;
+    categoryId:number;
 }
+
+export interface IAddCategory{
+    arName:string;
+    enName:string;
+    code:string;
+    groupId:number;
+}
+
 export interface IAddSubActivityDto{
     arName:string;
     enName:string;
@@ -29,6 +38,7 @@ export interface IGetSectorDto{
     createdOn:string;
     activityId:number;
     sectorId:number;
+    categoryId:number;
 }
 export interface IGetCountryDto{
     id:number;
@@ -37,4 +47,20 @@ export interface IGetCountryDto{
     code:string;
     createdOn:string;
     countryPhone:string;
+}
+
+export interface IAddGroupDto{
+    arName:string;
+    enName:string;
+    code:string;
+    sectionId:number;
+}
+export interface IGetGroupDto{
+    id:number;
+    arName:string;
+    enName:string;
+    code:string;
+    createdOn:string;
+    activityId:number;
+    sectionId:number;
 }

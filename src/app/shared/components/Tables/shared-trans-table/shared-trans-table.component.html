@@ -110,9 +110,9 @@
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                             <div style="display: flex;">
                                             <select class="form-control" style="text-align:center; width: 95% !important;" [(ngModel)]="subCode.arName">
-                                                <option value="">اختيار نشاط--</option>
-                                                <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                    {{activity.code}}-{{activity.arName}}</option>
+                                                <option value="">اختيار قطاع--</option>
+                                                <option *ngFor="let sector of sectors" value="{{sector.id}}">
+                                                    {{sector.code}}-{{sector.arName}}</option>
                                             </select>
                                             <button  (click)="removeSubCodeRow(formContent.code, subCode)"
                                                         style="background-color: white; border:none;">
@@ -185,9 +185,9 @@
                                         {{subCode.enName}}</td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <select class="form-control" style="width: 100% !important; text-align:center" [(ngModel)]="subCode.arName">
-                                            <option value="">Choose Activity --</option>
-                                            <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                {{activity.code}}-{{activity.enName}}</option>
+                                            <option value="">Choose Sector --</option>
+                                            <option *ngFor="let sector of sectors" value="{{sector.id}}">
+                                                {{sector.code}}-{{sector.enName}}</option>
                                         </select>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 3">

@@ -41,6 +41,7 @@ export class FormsComponent implements OnInit {
   formForm!: FormGroup;
   noData: boolean = false;
   forms: IGetFormDto[] = [];
+  formsTemp: IGetFormDto[] = [];
   form!: IGetFormDto;
   tableForm!: FormGroup;
   formId: number = 0;
@@ -79,6 +80,7 @@ export class FormsComponent implements OnInit {
   editoren!: Editor;
   arNotes = '';
   enNotes = '';
+  yearsFilter: number[] = [];
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -88,10 +90,13 @@ export class FormsComponent implements OnInit {
     private sharedServices: SharedService,
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
-    private instructionsService : InstructionsService,
+    private instructionsService: InstructionsService,
     private sectorsAndActivitiesServices: SectorAndActivitiesService
   ) { }
   ngOnInit(): void {
+    for (let year = 2007; year <= 2024; year++) {
+      this.yearsFilter.push(year);
+    }
     this.formForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -126,6 +131,9 @@ export class FormsComponent implements OnInit {
     this.GetSectorActvities(0);
     this.editor = new Editor();
     this.editoren = new Editor();
+  }
+  ngOnChanges() {
+    this.forms = this.forms;
   }
   resetForm() {
     this.add = true;
@@ -617,22 +625,20 @@ export class FormsComponent implements OnInit {
         this.sharedServices.handleError(err);
       },
     };
-    this.sectorsAndActivitiesServices.GetActivities(0, '',sectorId).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetActivities(0, '', sectorId).subscribe(observer);
   }
   GetAllForms(): void {
     this.Loader = true;
-    
+
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         this.forms = res.Data;
-
+        this.formsTemp = res.Data;
         if (res.Data) {
-
           this.resetForm();
           this.resetTable();
           this.resetQuestion();
-
           if (this.forms.length > 0) {
             const element = document.getElementById('items');
             if (element) {
@@ -679,6 +685,39 @@ export class FormsComponent implements OnInit {
       },
     };
     this.formServices.GetAllForms().subscribe(observer);
+  }
+  onYearChange(event: Event): void {
+    const selectedYear = +(event.target as HTMLSelectElement).value; // Get selected year
+    debugger
+    if (selectedYear != null && selectedYear != undefined && selectedYear != 0)
+      this.forms = this.formsTemp.filter(form => +form.reviewYear === selectedYear);
+    else
+      this.forms = this.formsTemp // Filter forms
+    // Clear and append filtered forms
+    this.clearAppendedForms();
+
+    (this.forms as IGetFormDto[]).forEach((element: IGetFormDto) => {
+      this.AppenHtmlForm(element); // Pass each form to the append method
+      (element.tables as IGetTableDto[]).forEach(
+        (elementTable: IGetTableDto) => {
+
+          this.AppenHtmlTable(elementTable);
+          (elementTable.formContents as IGetQuestionDto[]).forEach(
+            (elementQuestion: IGetQuestionDto) => {
+
+
+              this.AppenHtmlQues(elementQuestion);
+            }
+          );
+        }
+      );
+    });
+  }
+  clearAppendedForms() {
+    const maindiv = document.getElementById('main')!;
+    while (maindiv.firstChild) {
+      maindiv.removeChild(maindiv.firstChild);
+    }
   }
   showAlert(id: number, formId: string): void {
     Swal.fire({
@@ -1363,7 +1402,7 @@ export class FormsComponent implements OnInit {
     };
     this.formServices.GetFormById(id).subscribe(observer);
   }
-  GetAllInstructions(formId:string): void {
+  GetAllInstructions(formId: string): void {
     this.formId = Number(formId);
     this.Loader = true;
     const observer = {
@@ -1371,10 +1410,10 @@ export class FormsComponent implements OnInit {
         if (res.Data) {
           this.addInstructions = res.Data.getInstructionsDtos
           this.add = true;
-            const button = document.getElementById('AddInstructionsBtn');
-            if (button) {
-              button.click();
-            }
+          const button = document.getElementById('AddInstructionsBtn');
+          if (button) {
+            button.click();
+          }
           this.Loader = false;
 
         }
@@ -1394,9 +1433,9 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.instructionsService.GetAllInstructions('',formId, 0).subscribe(observer);
+    this.instructionsService.GetAllInstructions('', formId, 0).subscribe(observer);
   }
-  
+
   saveInstructions() {
     this.Loader = true;
     for (const addInstructions_ of this.addInstructions) {
@@ -1437,7 +1476,7 @@ export class FormsComponent implements OnInit {
     };
     this.instructionsService.AddInstructions(Model).subscribe(observer);
   }
-  
+
   areAllFieldsFilledInstructions(): boolean {
     return this.addInstructions.every(item => item.arName && item.enName);
   }
@@ -1454,7 +1493,7 @@ export class FormsComponent implements OnInit {
   resetFormInstructions(): void {
     this.addInstructions = [];
   }
-  
+
   addRowInstructions() {
     this.addInstructions.push({
       arName: '',

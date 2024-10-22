@@ -164,20 +164,25 @@ label.form-check-label {
   right: 15px;
   transform: translateY(0);
 }
+
 tfoot tr th .alert {
   text-align: center;
-  
+
 }
+
 tfoot tr th .alert i {
   font-size: 100px;
 }
+
 tfoot tr th .alert span {
   font-size: 20px;
 }
-#createTable .modal-content{
+
+#createTable .modal-content {
   width: 180% !important;
 }
-ul.collapsed > li {
+
+ul.collapsed>li {
   display: none;
 }
 
@@ -192,4 +197,19 @@ button {
 button img {
   width: 20px;
   height: 20px;
+}
+
+
+.select-label {
+  position: absolute;
+  top: 0px;
+  left: 80px;
+  background-color: white;
+  padding: 0 5px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.items li a{
+  width: 470px;
 }

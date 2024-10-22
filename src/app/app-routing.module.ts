@@ -35,8 +35,14 @@ import { CountriesComponent } from './sectors-and-activities/Components/countrie
 import { CompanyResearcherHomeComponent } from './companies/components/company-researcher-home/company-researcher-home.component';
 import { TablePercentageWithoutTransComponent } from './Forms/Components/table-percentage-without-trans/table-percentage-without-trans.component';
 import { SettingsAuthHomeComponent } from './settings-auth/Components/settings-auth-home/settings-auth-home.component';
+import { GroupComponent } from './sectors-and-activities/Components/group/group.component';
+import { CategoryComponent } from './sectors-and-activities/Components/category/category.component';
+import { SectionComponent } from './sectors-and-activities/Components/section/section.component';
 
 const routes: Routes = [
+  { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
+  { path: 'Groups', component: GroupComponent, canActivate: [LoginGuard] },
+  { path: 'Categories', component: CategoryComponent, canActivate: [LoginGuard] },
   { path: 'Sectors', component: SectorsComponent, canActivate: [LoginGuard] },
   { path: 'Activities', component: ActivitiesComponent, canActivate: [LoginGuard] },
   { path: 'SubActivities', component: SubActivitiesComponent, canActivate: [LoginGuard] },

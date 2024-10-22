@@ -3,20 +3,19 @@ import { Validators } from 'ngx-editor';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IAddActivityDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddActivityDto, IAddCategory, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
-
 @Component({
-  selector: 'app-activities',
-  templateUrl: './activities.component.html',
-  styleUrls: ['./activities.component.css']
+  selector: 'app-category',
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.css']
 })
-export class ActivitiesComponent implements OnInit {
-  activityForm!: FormGroup;
+export class CategoryComponent implements OnInit {
+  categoryForm!: FormGroup;
   showLoader: boolean = false;
-  activities!: IGetSectorDto[];
-  activity!: IGetSectorDto;
   categories!: IGetSectorDto[];
+  category!: IGetSectorDto;
+  groups!: IGetSectorDto[];
   isUpdate: boolean = false;
   id: number = 0;
   currentPage: number = 1;
@@ -28,33 +27,32 @@ export class ActivitiesComponent implements OnInit {
   private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
 
   ngOnInit(): void {
-    this.activityForm = this.formBuilder.group({
+    this.categoryForm = this.formBuilder.group({
       code: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      categoryId: [0, Validators.required],
+      groupId: [0, Validators.required],
     });
-    this.GetActivities(1, '',)
-    this.GetSectors(1, '',)
+    this.GetCategories(1, '',)
+    this.GetGroups(1, '',)
   }
   onSave() {
-    debugger
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    if (this.categoryForm.value.arName == "" || this.categoryForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الفئة بالعربية');
     }
-    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
-      allErrors.push("Activity Name in English is required.");
+    if (this.categoryForm.value.enName == "" || this.categoryForm.value.enName == null) {
+      allErrors.push("Category Name in English is required.");
     }
-    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز النشاط');
+    if (this.categoryForm.value.code == "" || this.categoryForm.value.code == null) {
+      allErrors.push('يجب اختيار الفئة');
     }
-    else if (this.activityForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز النشاط مكون من 6');
+    else if (this.categoryForm.value.code.length != 6) {
+      allErrors.push('يجب ان يكون رمز الفئة مكون من 6');
     }
-    if (!(this.activityForm.value.categoryId > 0)) {
-      allErrors.push('يجب اختيار اسم الفئة');
+    if (!(this.categoryForm.value.groupId > 0)) {
+      allErrors.push('يجب اختيار اسم المجموعة');
     }
     if (allErrors.length > 0) {
       Swal.fire({
@@ -66,12 +64,11 @@ export class ActivitiesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const activity: IAddActivityDto = {
-        arName: this.activityForm.value.arName,
-        enName: this.activityForm.value.enName,
-        code: this.activityForm.value.code,
-        categoryId: this.activityForm.value.categoryId,
-        sectorId: 0
+      const category: IAddCategory = {
+        arName: this.categoryForm.value.arName,
+        enName: this.categoryForm.value.enName,
+        code: this.categoryForm.value.code,
+        groupId: this.categoryForm.value.groupId,
       }
       const observer = {
         next: (res: any) => {
@@ -80,7 +77,7 @@ export class ActivitiesComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetActivities(1, '');
+          this.GetCategories(1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -94,23 +91,23 @@ export class ActivitiesComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.AddActivity(activity).subscribe(observer);
+      this.sectorsAndActivitiesServices.AddCategory(category).subscribe(observer);
     }
   }
-  GetActivities(page: number, textSearch: string = ''): void {
+  GetCategories(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.activities = res.Data.getActivitiesDtos;
+          this.categories = res.Data.categoryDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.onReset();
         }
         else{
-          this.activities = [];
+          this.categories = [];
         }
         this.showLoader = false;
       },
@@ -119,21 +116,21 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetActivities(page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetCategories(page, textSearch).subscribe(observer);
   }
   onPageChange(page: number) {
     this.currentPage = page;
-    this.GetActivities(page);
+    this.GetCategories(page);
   }
   countriesSearch() {
-    this.GetActivities(this.currentPage, this.searchText);
+    this.GetCategories(this.currentPage, this.searchText);
   }
-  GetSectors(page: number, textSearch: string = ''): void {
+  GetGroups(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.categories = res.Data.categoryDtos;
+          this.groups = res.Data.GroupDtos;
         }
         this.showLoader = false;
       },
@@ -142,9 +139,9 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetCategories(0, '').subscribe(observer);
+    this.sectorsAndActivitiesServices.GetGroups(0, '').subscribe(observer);
   }
-  DeleteActivity(id: number): void {
+  DeleteCategory(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -155,12 +152,11 @@ export class ActivitiesComponent implements OnInit {
       confirmButtonText: 'نعم اريد المسح!',
       cancelButtonText: 'لا'
     }).then((result) => {
-      debugger
       if (result.isConfirmed) {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetActivities(1, '');
+            this.GetCategories(1, '');
             this.showLoader = false;
             Swal.fire({
               icon: 'success',
@@ -174,7 +170,7 @@ export class ActivitiesComponent implements OnInit {
             this.showLoader = false;
           },
         };
-        this.sectorsAndActivitiesServices.DeleteActivity(id).subscribe(observer);
+        this.sectorsAndActivitiesServices.DeleteCategory(id).subscribe(observer);
       }
     });
   }
@@ -183,14 +179,14 @@ export class ActivitiesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.activity = res.Data;
-          this.activityForm.patchValue({
-            arName: this.activity.arName,
-            enName: this.activity.enName,
-            code: this.activity.code,
-            categoryId: this.activity.categoryId
+          this.category = res.Data;
+          this.categoryForm.patchValue({
+            arName: this.category.arName,
+            enName: this.category.enName,
+            code: this.category.code,
+            groupId: res.Data.groupId
           });
-          this.id = this.activity.id;
+          this.id = this.category.id;
         }
         this.isUpdate = true;
         this.showLoader = false;
@@ -200,25 +196,25 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetActivity(id).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetCategory(id).subscribe(observer);
   }
-  updateActivity() {
+  updateCategory() {
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    if (this.categoryForm.value.arName == "" || this.categoryForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الفئة بالعربية');
     }
-    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
-      allErrors.push("Activity Name in English is required.");
+    if (this.categoryForm.value.enName == "" || this.categoryForm.value.enName == null) {
+      allErrors.push("Category Name in English is required.");
     }
-    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز النشاط');
+    if (this.categoryForm.value.code == "" || this.categoryForm.value.code == null) {
+      allErrors.push('يجب اختيار الفئة');
     }
-    else if (this.activityForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز النشاط مكون من 6 ارقام');
+    else if (this.categoryForm.value.code.length != 6) {
+      allErrors.push('يجب ان يكون رمز الفئة مكون من 6 ارقام');
     }
-    if (!(this.activityForm.value.categoryId > 0)) {
-      allErrors.push('يجب اختيار اسم القطاع');
+    if (!(this.categoryForm.value.groupId > 0)) {
+      allErrors.push('يجب اختيار اسم المجموعة');
     }
     if (allErrors.length > 0) {
       Swal.fire({
@@ -230,12 +226,11 @@ export class ActivitiesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const Model: IAddActivityDto = {
-        arName: this.activityForm.value.arName,
-        enName: this.activityForm.value.enName,
-        code: this.activityForm.value.code,
-        categoryId: this.activityForm.value.categoryId,
-        sectorId : 0
+      const Model: IAddCategory = {
+        arName: this.categoryForm.value.arName,
+        enName: this.categoryForm.value.enName,
+        code: this.categoryForm.value.code,
+        groupId: this.categoryForm.value.groupId,
       };
       const observer = {
         next: (res: any) => {
@@ -244,7 +239,7 @@ export class ActivitiesComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetActivities(1);
+          this.GetCategories(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -258,18 +253,17 @@ export class ActivitiesComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.UpdateActivity(this.id, Model).subscribe(observer);
+      this.sectorsAndActivitiesServices.UpdateCategory(this.id, Model).subscribe(observer);
     } 
   }
   getControlErrors(controlName: string): string[] {
-    debugger
-    const control = this.activityForm.get(controlName);
+    const control = this.categoryForm.get(controlName);
     const errors: string[] = [];
     if (control && control.errors) {
-      if (controlName == 'arName') controlName = 'اسم النشاط بالعربية';
-      if (controlName == 'enName') controlName = 'Activity Name in English';
-      if (controlName == 'code') controlName = 'رمز النشاط';
-      if (controlName == 'categoryId') controlName = 'اسم الفئة';
+      if (controlName == 'arName') controlName = 'اسم الفئة بالعربية';
+      if (controlName == 'enName') controlName = 'Category Name in English';
+      if (controlName == 'code') controlName = 'رمز الفئة';
+      if (controlName == 'groupId') controlName = 'اسم المجموعة';
       if (controlName == 'اسم القطاع' && control.errors['required']) {
         errors.push(`يجب اختيار ${controlName}`);
       }
@@ -281,11 +275,11 @@ export class ActivitiesComponent implements OnInit {
   }
   onReset(): void {
     this.isUpdate = false;
-    this.activityForm = this.formBuilder.group({
+    this.categoryForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code : ['', Validators.required],
-      categoryId : 0,
+      groupId : 0,
     });    
   }
   onlyNumber(event: Event): void {

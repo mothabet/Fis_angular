@@ -3,20 +3,19 @@ import { Validators } from 'ngx-editor';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IAddActivityDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddActivityDto, IAddGroupDto, IGetGroupDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
-
 @Component({
-  selector: 'app-activities',
-  templateUrl: './activities.component.html',
-  styleUrls: ['./activities.component.css']
+  selector: 'app-group',
+  templateUrl: './group.component.html',
+  styleUrls: ['./group.component.css']
 })
-export class ActivitiesComponent implements OnInit {
-  activityForm!: FormGroup;
+export class GroupComponent implements OnInit {
+  groupForm!: FormGroup;
   showLoader: boolean = false;
-  activities!: IGetSectorDto[];
-  activity!: IGetSectorDto;
-  categories!: IGetSectorDto[];
+  groups!: IGetSectorDto[];
+  group!: IGetGroupDto;
+  sections!: IGetGroupDto[];
   isUpdate: boolean = false;
   id: number = 0;
   currentPage: number = 1;
@@ -28,33 +27,29 @@ export class ActivitiesComponent implements OnInit {
   private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
 
   ngOnInit(): void {
-    this.activityForm = this.formBuilder.group({
+    this.groupForm = this.formBuilder.group({
       code: ['', Validators.required],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      categoryId: [0, Validators.required],
+      sectionId: [0, Validators.required],
     });
-    this.GetActivities(1, '',)
-    this.GetSectors(1, '',)
+    this.GetGroups(1, '',)
+    this.GetSections(1, '',)
   }
   onSave() {
-    debugger
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    if (this.groupForm.value.arName == "" || this.groupForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم المجموعة بالعربية');
     }
-    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
-      allErrors.push("Activity Name in English is required.");
+    if (this.groupForm.value.enName == "" || this.groupForm.value.enName == null) {
+      allErrors.push("Group Name in English is required.");
     }
-    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز النشاط');
+    if (this.groupForm.value.code == "" || this.groupForm.value.code == null) {
+      allErrors.push('يجب اختيار المجموعة');
     }
-    else if (this.activityForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز النشاط مكون من 6');
-    }
-    if (!(this.activityForm.value.categoryId > 0)) {
-      allErrors.push('يجب اختيار اسم الفئة');
+    if (!(this.groupForm.value.sectionId > 0)) {
+      allErrors.push('يجب اختيار اسم القطاع');
     }
     if (allErrors.length > 0) {
       Swal.fire({
@@ -66,12 +61,11 @@ export class ActivitiesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const activity: IAddActivityDto = {
-        arName: this.activityForm.value.arName,
-        enName: this.activityForm.value.enName,
-        code: this.activityForm.value.code,
-        categoryId: this.activityForm.value.categoryId,
-        sectorId: 0
+      const activity: IAddGroupDto = {
+        arName: this.groupForm.value.arName,
+        enName: this.groupForm.value.enName,
+        code: this.groupForm.value.code,
+        sectionId: this.groupForm.value.sectionId,
       }
       const observer = {
         next: (res: any) => {
@@ -80,7 +74,7 @@ export class ActivitiesComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetActivities(1, '');
+          this.GetGroups(1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -94,23 +88,23 @@ export class ActivitiesComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.AddActivity(activity).subscribe(observer);
+      this.sectorsAndActivitiesServices.AddGroup(activity).subscribe(observer);
     }
   }
-  GetActivities(page: number, textSearch: string = ''): void {
+  GetGroups(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.activities = res.Data.getActivitiesDtos;
+          this.groups = res.Data.GroupDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.onReset();
         }
         else{
-          this.activities = [];
+          this.groups = [];
         }
         this.showLoader = false;
       },
@@ -119,21 +113,21 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetActivities(page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetGroups(page, textSearch).subscribe(observer);
   }
   onPageChange(page: number) {
     this.currentPage = page;
-    this.GetActivities(page);
+    this.GetGroups(page);
   }
   countriesSearch() {
-    this.GetActivities(this.currentPage, this.searchText);
+    this.GetGroups(this.currentPage, this.searchText);
   }
-  GetSectors(page: number, textSearch: string = ''): void {
+  GetSections(page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.categories = res.Data.categoryDtos;
+          this.sections = res.Data.sectionDto;
         }
         this.showLoader = false;
       },
@@ -142,9 +136,9 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetCategories(0, '').subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSections(0, '').subscribe(observer);
   }
-  DeleteActivity(id: number): void {
+  DeleteGroup(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -155,12 +149,11 @@ export class ActivitiesComponent implements OnInit {
       confirmButtonText: 'نعم اريد المسح!',
       cancelButtonText: 'لا'
     }).then((result) => {
-      debugger
       if (result.isConfirmed) {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetActivities(1, '');
+            this.GetGroups(1, '');
             this.showLoader = false;
             Swal.fire({
               icon: 'success',
@@ -174,7 +167,7 @@ export class ActivitiesComponent implements OnInit {
             this.showLoader = false;
           },
         };
-        this.sectorsAndActivitiesServices.DeleteActivity(id).subscribe(observer);
+        this.sectorsAndActivitiesServices.DeleteGroup(id).subscribe(observer);
       }
     });
   }
@@ -183,14 +176,15 @@ export class ActivitiesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.activity = res.Data;
-          this.activityForm.patchValue({
-            arName: this.activity.arName,
-            enName: this.activity.enName,
-            code: this.activity.code,
-            categoryId: this.activity.categoryId
+          debugger
+          this.group = res.Data;
+          this.groupForm.patchValue({
+            arName: this.group.arName,
+            enName: this.group.enName,
+            code: this.group.code,
+            sectionId: this.group.sectionId
           });
-          this.id = this.activity.id;
+          this.id = this.group.id;
         }
         this.isUpdate = true;
         this.showLoader = false;
@@ -200,24 +194,24 @@ export class ActivitiesComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetActivity(id).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetGroup(id).subscribe(observer);
   }
-  updateActivity() {
+  updateGroup() {
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم النشاط بالعربية');
+    if (this.groupForm.value.arName == "" || this.groupForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم المجموعة بالعربية');
     }
-    if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
-      allErrors.push("Activity Name in English is required.");
+    if (this.groupForm.value.enName == "" || this.groupForm.value.enName == null) {
+      allErrors.push("Group Name in English is required.");
     }
-    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز النشاط');
+    if (this.groupForm.value.code == "" || this.groupForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز المجموعة');
     }
-    else if (this.activityForm.value.code.length != 6) {
+    else if (this.groupForm.value.code.length != 6) {
       allErrors.push('يجب ان يكون رمز النشاط مكون من 6 ارقام');
     }
-    if (!(this.activityForm.value.categoryId > 0)) {
+    if (!(this.groupForm.value.sectionId > 0)) {
       allErrors.push('يجب اختيار اسم القطاع');
     }
     if (allErrors.length > 0) {
@@ -230,12 +224,11 @@ export class ActivitiesComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const Model: IAddActivityDto = {
-        arName: this.activityForm.value.arName,
-        enName: this.activityForm.value.enName,
-        code: this.activityForm.value.code,
-        categoryId: this.activityForm.value.categoryId,
-        sectorId : 0
+      const Model: IAddGroupDto = {
+        arName: this.groupForm.value.arName,
+        enName: this.groupForm.value.enName,
+        code: this.groupForm.value.code,
+        sectionId: this.groupForm.value.sectionId,
       };
       const observer = {
         next: (res: any) => {
@@ -244,7 +237,7 @@ export class ActivitiesComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetActivities(1);
+          this.GetGroups(1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -258,18 +251,17 @@ export class ActivitiesComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.UpdateActivity(this.id, Model).subscribe(observer);
+      this.sectorsAndActivitiesServices.UpdateGroup(this.id, Model).subscribe(observer);
     } 
   }
   getControlErrors(controlName: string): string[] {
-    debugger
-    const control = this.activityForm.get(controlName);
+    const control = this.groupForm.get(controlName);
     const errors: string[] = [];
     if (control && control.errors) {
-      if (controlName == 'arName') controlName = 'اسم النشاط بالعربية';
-      if (controlName == 'enName') controlName = 'Activity Name in English';
-      if (controlName == 'code') controlName = 'رمز النشاط';
-      if (controlName == 'categoryId') controlName = 'اسم الفئة';
+      if (controlName == 'arName') controlName = 'اسم المجموعة بالعربية';
+      if (controlName == 'enName') controlName = 'Category Name in English';
+      if (controlName == 'code') controlName = 'رمز المجموعة';
+      if (controlName == 'sectionId') controlName = 'اسم القطاع';
       if (controlName == 'اسم القطاع' && control.errors['required']) {
         errors.push(`يجب اختيار ${controlName}`);
       }
@@ -281,11 +273,11 @@ export class ActivitiesComponent implements OnInit {
   }
   onReset(): void {
     this.isUpdate = false;
-    this.activityForm = this.formBuilder.group({
+    this.groupForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       code : ['', Validators.required],
-      categoryId : 0,
+      sectionId : 0,
     });    
   }
   onlyNumber(event: Event): void {
