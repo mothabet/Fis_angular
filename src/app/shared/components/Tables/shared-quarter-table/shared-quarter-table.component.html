@@ -160,6 +160,10 @@
                             <tr *ngFor="let subCode of formContent.code.SubCodes">
                                 <td *ngIf="formContent.code.TypeId == 1" class="sub-list-item"
                                     style="text-align: center; color: #00af9d; text-wrap: balance;">{{ subCode.arName }}
+                                    <button *ngIf="subCode.IsHdd == true"
+                                            class="add-button" style="display: inline-block; padding: 1px 10px;">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
                                 </td>
                                 <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                     <div style="display: flex;">

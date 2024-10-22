@@ -85,7 +85,8 @@ export class CodeHomeComponent {
       Id: 0,
       id_Level: '',
       connectedWithType: '',
-      IsTrueAndFalse:false
+      IsTrueAndFalse:false,
+      IsHdd: false
     });
   }
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
@@ -93,6 +94,11 @@ export class CodeHomeComponent {
     let value: string | boolean;
     // Handle boolean for the IsTrueAndFalse field
     if (field === 'IsTrueAndFalse') {
+      value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
+    } else {
+      value = inputElement.value; // String for other input/select fields
+    }
+    if (field === 'IsHdd') {
       value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
     } else {
       value = inputElement.value; // String for other input/select fields
@@ -124,8 +130,8 @@ export class CodeHomeComponent {
         });
         return;
       }
-      for (const subCode of this.addSubCode) {
-        if (subCode.connectedWithType && !subCode.id_Level) {
+      for (let index = 0; index < this.addSubCode.length; index++) {
+        if (this.addSubCode[index].connectedWithType && !this.addSubCode[index].id_Level) {
           this.showLoader = false;
           Swal.fire({
             icon: 'error',
@@ -135,7 +141,17 @@ export class CodeHomeComponent {
           });
           return;
         }
-        if (subCode.IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
+        if(this.addSubCode[index].IsHdd == true && this.addSubCode[index].IsTrueAndFalse == true){
+          this.showLoader = false;
+        Swal.fire({
+          icon: 'error',
+          title: `في السطر رقم ${index+1} لا يمكن ان يوم النوع (نعم او لا) وايضا من نوع (حدد)`,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+        }
+        if (this.addSubCode[index].IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
           this.showLoader = false;
           Swal.fire({
             icon: 'error',
@@ -313,6 +329,7 @@ export class CodeHomeComponent {
     this.showLoader = true;
     
     if (this.codeForm.valid && this.searchTerm != "") {
+      debugger
       if ((this.codeForm.value.connectedWith != null && this.codeForm.value.connectedWith != "") && this.codeForm.value.connectedWithType == null) {
         this.showLoader = false;
         Swal.fire({
@@ -323,9 +340,8 @@ export class CodeHomeComponent {
         });
         return;
       }
-      
-      for (const subCode of this.addSubCode) {
-        if (subCode.connectedWithType && !subCode.id_Level) {
+      for (let index = 0; index < this.addSubCode.length; index++) {
+        if (this.addSubCode[index].connectedWithType && !this.addSubCode[index].id_Level) {
           this.showLoader = false;
           Swal.fire({
             icon: 'error',
@@ -335,8 +351,17 @@ export class CodeHomeComponent {
           });
           return;
         }
-        debugger
-        if (subCode.IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
+        if(this.addSubCode[index].IsHdd == true && this.addSubCode[index].IsTrueAndFalse == true){
+          this.showLoader = false;
+        Swal.fire({
+          icon: 'error',
+          title: `في السطر رقم ${index+1} لا يمكن ان يوم النوع (نعم او لا) وايضا من نوع (حدد)`,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+        }
+        if (this.addSubCode[index].IsTrueAndFalse == false && this.addSubCode.some(c => c.IsTrueAndFalse === true)) {
           this.showLoader = false;
           Swal.fire({
             icon: 'error',
@@ -346,6 +371,7 @@ export class CodeHomeComponent {
           });
           return;
         }
+        
       }
       const Model: IAddCode = {
         QuestionCode: this.codeForm.value.QuestionCode,

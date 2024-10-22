@@ -47,7 +47,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   addInstructions: IAddInstructionsDto[] = [];
   add: boolean = true;
   selecteTableIds: Set<number> = new Set<number>();
-  tableSelecte :IGetTableDto[] = [];
+  tableSelecte: IGetTableDto[] = [];
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
     private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService,
@@ -97,7 +97,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           case 6:
             navigationPromise = this.router.navigate(['/TablePercentageWithoutTrans', this.formId, id, this.companyId]);
             break;
-            case 7:
+          case 7:
             navigationPromise = this.router.navigate(['/OneYearWithPartsAndTotal', this.formId, id, this.companyId]);
             break;
           case 0:
@@ -224,32 +224,32 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.formServices.CloseForm(+this.formId, +this.companyId).subscribe(observer);
   }
   OpenForm() {
-    
+
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         this.Loader = false;
         this.coverForm.status = 8;
         const storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
-        
+
         if (storedTables) {
           this.coverForm = JSON.parse(storedTables);
-      this.tableSelecte = this.coverForm.tables;
+          this.tableSelecte = this.coverForm.tables;
 
         }
         for (let index = 0; index < this.coverForm.tables.length; index++) {
-          
+
           this.coverForm.tables[index].IsDisabled = false;
-      }
+        }
         for (let index = 0; index < this.selecteTableIds.size; index++) {
-          
+
           const tableId = Array.from(this.selecteTableIds)[index];  // Convert Set to Array for indexing
           const tableIndex = this.coverForm.tables.findIndex(t => t.id == tableId);
           this.coverForm.tables[tableIndex].IsDisabled = true;
-      }
-      this.coverForm.status = 8;
-      localStorage.removeItem(`coverForm${this.coverForm.id}`);
-      localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+        }
+        this.coverForm.status = 8;
+        localStorage.removeItem(`coverForm${this.coverForm.id}`);
+        localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
         this.SaveData("Open", +this.companyId);
       }
       ,
@@ -275,14 +275,14 @@ export class NavigateTablesTypesComponent implements OnInit {
           if (!storedTables) {
             localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
           }
-          else{
+          else {
             this.coverForm = JSON.parse(storedTables);
           }
-      this.tableSelecte = this.coverForm.tables;
+          this.tableSelecte = this.coverForm.tables;
 
           this.selecteTableIds = new Set<number>();
           for (let index = 0; index < this.coverForm.tables.length; index++) {
-            if(this.coverForm.tables[index].IsDisabled == true){
+            if (this.coverForm.tables[index].IsDisabled == true) {
               this.selecteTableIds.add(this.coverForm.tables[index].id)
             }
           }
@@ -311,7 +311,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         if (storedTables) {
           coverForm = JSON.parse(storedTables);
         }
-      this.tableSelecte = coverForm.tables;
+        this.tableSelecte = coverForm.tables;
 
         let dataDtosList: IDataDto[] = [];
         for (let index = 0; index < coverForm.tables.length; index++) {
@@ -391,9 +391,9 @@ export class NavigateTablesTypesComponent implements OnInit {
                     if (l < indexSums.length) {
                       totalValues[l] += indexSums[l];
                       if (coverForm.tables[index].formContents[i].values[l] !== totalValues[l]) {
-                        
+
                         if (coverForm.tables[index].formContents[i].values[l].toString() != "" && totalValues[l].toString() != "00") {
-                          
+
                           Swal.fire({
                             icon: 'error',
                             title: `في ${coverForm.tables[index].arName} يجب التحقق من القيم المرتبطة بالرمز ${coverForm.tables[index].formContents[i].code.QuestionCode}. حيث ان القيمة المتوقعة: ${totalValues[l]}, ولكن القيمة الحالية: ${coverForm.tables[index].formContents[i].values[l]}`,
@@ -412,7 +412,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
 
               for (let j = 0; j < coverForm.tables[index].formContents[i].values.length; j++) {
-                
+
                 let codes = coverForm.tables[index].formContents[i].values[j];
                 if (codes.toString() === "") {
                   codes = 0; // Replace empty string with 0
@@ -436,6 +436,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 arName: coverForm.tables[index].formContents[i].code.arName,
                 enName: coverForm.tables[index].formContents[i].code.enName,
                 IsDisabled: coverForm.tables[index].IsDisabled,
+                subCodeParentId: 0
               };
               dataDtosList.push(dataDtos);
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
@@ -456,50 +457,92 @@ export class NavigateTablesTypesComponent implements OnInit {
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
                   IsDisabled: coverForm.tables[index].IsDisabled,
-
+                  subCodeParentId: 0
                 };
                 dataDtosList.push(dataDtosSub);
+                for (let z = 0; z < coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes.length; z++) {
+                  let dataDtosSub: IDataDto = {
+                    TableId: coverForm.tables[index].id,
+                    TableArName: coverForm.tables[index].arName,
+                    TableEnName: coverForm.tables[index].enName,
+                    questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
+                    codes: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].values,
+                    level: 3,
+                    codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].Id,
+                    codeType: 0,
+                    valueCheck: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].valueCheck,
+                    parentCodeId: this.coverForm.tables[index].formContents[i].code.Id,
+                    connectedWithId: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithId,
+                    connectedWithLevel: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithLevel,
+                    connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
+                    arName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
+                    enName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    IsDisabled: coverForm.tables[index].IsDisabled,
+                    subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
+                  };
+                  dataDtosList.push(dataDtosSub);
+
+                }
               }
             }
-            else{
-              
+            else {
+
               if (this.coverForm.tables[index].Type == "1") {
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=[0, 0, 0];
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = [0, 0, 0];
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=[0, 0, 0];
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = [0, 0, 0];
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = [0, 0, 0];
                     }
                   }
                 }
               }
               else if (this.coverForm.tables[index].Type == "2") {
-                
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=[0, 0];
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = [0, 0];
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=[0, 0];
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = [0, 0];
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = [0, 0];
                     }
                   }
                 }
               }
               else if (this.coverForm.tables[index].Type == "6") {
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=[0, 0, 0];
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = [0, 0, 0];
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=[0, 0, 0];
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = [0, 0, 0];
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = [0, 0, 0];
                     }
                   }
                 }
               }
               else if (this.coverForm.tables[index].Type == "3") {
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=[0, ...Array(this.coverForm.tables[index].tableParts.length).fill(0)];
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = [0, ...Array(this.coverForm.tables[index].tableParts.length).fill(0)];
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=[0, ...Array(this.coverForm.tables[index].tableParts.length).fill(0)];
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = [0, ...Array(this.coverForm.tables[index].tableParts.length).fill(0)];
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = [0, ...Array(this.coverForm.tables[index].tableParts.length).fill(0)];
                     }
                   }
                 }
@@ -507,26 +550,36 @@ export class NavigateTablesTypesComponent implements OnInit {
               else if (this.coverForm.tables[index].Type == "4") {
                 const totalPartsCount = this.coverForm.tables[index].tableParts.length * 2;
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=Array(totalPartsCount).fill(0);
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = Array(totalPartsCount).fill(0);
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=Array(totalPartsCount).fill(0);
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = Array(totalPartsCount).fill(0);
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = Array(totalPartsCount).fill(0);
                     }
                   }
                 }
               }
               else if (this.coverForm.tables[index].Type == "5") {
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
-                  this.coverForm.tables[index].formContents[i].values=[0, ...Array(this.coverForm.tables[index].period).fill(0)];
-                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length>0) {
+                  this.coverForm.tables[index].formContents[i].values = [0, ...Array(this.coverForm.tables[index].period).fill(0)];
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
                     for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
-                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values=[0, ...Array(this.coverForm.tables[index].period).fill(0)];
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = [0, ...Array(this.coverForm.tables[index].period).fill(0)];
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = [0, ...Array(this.coverForm.tables[index].period).fill(0)];
                     }
                   }
                 }
               }
               for (let j = 0; j < this.coverForm.tables[index].formContents[i].values.length; j++) {
-                
+
                 let codes = this.coverForm.tables[index].formContents[i].values[j];
                 codesList.push(codes);
               }
@@ -547,9 +600,14 @@ export class NavigateTablesTypesComponent implements OnInit {
                 arName: this.coverForm.tables[index].formContents[i].code.arName,
                 enName: this.coverForm.tables[index].formContents[i].code.enName,
                 IsDisabled: this.coverForm.tables[index].IsDisabled,
+                subCodeParentId: 0
               };
               dataDtosList.push(dataDtos);
               for (let r = 0; r < this.coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
+
+                if (index == 0) {
+
+                }
                 let dataDtosSub: IDataDto = {
                   TableId: this.coverForm.tables[index].id,
                   TableArName: this.coverForm.tables[index].arName,
@@ -567,12 +625,36 @@ export class NavigateTablesTypesComponent implements OnInit {
                   arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
                   IsDisabled: this.coverForm.tables[index].IsDisabled,
-
+                  subCodeParentId: 0
                 };
                 dataDtosList.push(dataDtosSub);
+
+                for (let z = 0; z < this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes.length; z++) {
+
+                  let dataDtosSub: IDataDto = {
+                    TableId: this.coverForm.tables[index].id,
+                    TableArName: this.coverForm.tables[index].arName,
+                    TableEnName: this.coverForm.tables[index].enName,
+                    questionId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
+                    codes: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].values,
+                    level: 3,
+                    codeId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].Id,
+                    codeType: 0,
+                    valueCheck: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].valueCheck,
+                    parentCodeId: this.coverForm.tables[index].formContents[i].code.Id,
+                    connectedWithId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithId,
+                    connectedWithLevel: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithLevel,
+                    connectedWithType: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
+                    arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
+                    enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    IsDisabled: this.coverForm.tables[index].IsDisabled,
+                    subCodeParentId:coverForm.tables[index].formContents[i].code.SubCodes[r].Id
+                  };
+                  dataDtosList.push(dataDtosSub);
+                }
               }
             }
-            
+
           }
         }
 
@@ -591,7 +673,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           next: (res: any) => {
             this.GetFormById(this.formId);
             this.Loader = false;
-            if(btnType==="Open"){
+            if (btnType === "Open") {
 
               const button = document.getElementById('btnOpenFormModel');
               if (button) {
@@ -767,7 +849,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.instructionsService.GetAllInstructions(role, this.formId, 0).subscribe(observer);
   }
   onCheckboxChangeCompany(companyId: number, event: Event) {
-    
+
     const inputElement = event.target as HTMLInputElement;
     if (!inputElement.checked) {
       this.selecteTableIds.add(companyId);
@@ -775,5 +857,5 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.selecteTableIds.delete(companyId);
     }
   }
-  
+
 }

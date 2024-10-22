@@ -100,10 +100,17 @@
                                 <td class="text-start" style="text-wrap: balance; direction: ltr;">{{formContent.code.enName}}</td>
                             </tr>
                             <ng-container>
-                                <tr *ngFor="let subCode of formContent.code.SubCodes">
+                                <ng-container *ngFor="let subCode of formContent.code.SubCodes">
+                                <tr>
                                     <td *ngIf="formContent.code.TypeId == 1"
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
-                                        {{subCode.arName}}</td>
+                                        {{subCode.arName}}
+                                        <button *ngIf="subCode.IsHdd == true" class="add-button"
+                                                style="display: inline-block; padding: 1px 10px;"
+                                                (click)="addSubCodeToSubRow(subCode)">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                    </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <div style="display: flex;">
                                             <select class="form-control"
@@ -218,6 +225,40 @@
 
                                     </td>
                                 </tr>
+                                <ng-container *ngFor="let _subCode of subCode.subCodes">
+                                    <tr *ngIf="subCode.IsHdd == true">
+                                        <td class="text-center">
+                                            <div style="display: flex;justify-content: center;">
+                                                <input type="text" style="width: 220px !important;"
+                                                    [(ngModel)]="_subCode.arName" />
+                                                <button (click)="removeSubCodeFromSubRow(subCode, _subCode)"
+                                                    style="background-color: white; border:none;">
+                                                    <img src=".././../../../assets/images/trash-can-outline.png"
+                                                        class="img-fluid">
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="number" [(ngModel)]="_subCode.values[0]" disabled
+                                            />
+                                          </td>
+                                        <ng-container *ngFor="let part of table.tableParts; let i = index">
+                                            <td class="text-center"><input type="number" 
+                                                [(ngModel)]="_subCode.values[i+1]" 
+                                                (focus)="clearIfZero(_subCode.values, i+1)"
+                                                (blur)="restoreIfNotPositive(_subCode.values, i+1)"/></td>
+                                        </ng-container>
+                                            
+                                            <td class="text-center">
+                                                <input disabled type="text" value="{{_subCode.QuestionCode}}" />
+                                            <td class="text-center" style=" direction: ltr;">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <input type="text" style="width: 220px !important;" [(ngModel)]="_subCode.enName" />
+                                                </div>
+                                            </td>
+                                    </tr>
+                                </ng-container>
+                                </ng-container>
                             </ng-container>
                         </ng-container>
                         <tr class="footer" *ngIf="table.IsTotal">
