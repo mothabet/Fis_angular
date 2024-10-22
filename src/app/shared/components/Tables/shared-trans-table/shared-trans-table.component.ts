@@ -31,6 +31,7 @@ export class SharedTransTableComponent {
   transaction = 0;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
+  sectors!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
   checkFormData: boolean = false;
@@ -51,6 +52,7 @@ export class SharedTransTableComponent {
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
+      this.GetSectors();
     });
   }
   GetTableById(id: number): void {
@@ -154,6 +156,21 @@ export class SharedTransTableComponent {
     };
     this.sectorsAndActivitiesServices.GetActivities(0, '').subscribe(observer);
   }
+
+  GetSectors() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.sectors = res.Data.getSectorsDtos;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
+  }
+
   GetCountrites() {
     const observer = {
       next: (res: any) => {

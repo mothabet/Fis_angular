@@ -5,6 +5,9 @@ import { ActivitiesComponent } from './Components/activities/activities.componen
 import { SubActivitiesComponent } from './Components/sub-activities/sub-activities.component';
 import { CountriesComponent } from './Components/countries/countries.component';
 import { SharedModule } from '../shared/shared.module';
+import { CategoryComponent } from './Components/category/category.component';
+import { GroupComponent } from './Components/group/group.component';
+import { SectionComponent } from './Components/section/section.component';
 
 
 
@@ -13,7 +16,10 @@ import { SharedModule } from '../shared/shared.module';
     SectorsComponent,
     ActivitiesComponent,
     SubActivitiesComponent,
-    CountriesComponent
+    CountriesComponent,
+    CategoryComponent,
+    GroupComponent,
+    SectionComponent
   ],
   imports: [
     CommonModule,

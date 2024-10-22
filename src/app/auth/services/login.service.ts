@@ -72,7 +72,10 @@ export class LoginService {
       'Countries',
       'Activities',
       'Sectors',
-      'SettingsAuth'
+      'Groups',
+      'Categories',
+      'SettingsAuth',
+      'Sections'
     ];
     return adminRoutes.includes(url);
   }

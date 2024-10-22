@@ -38,6 +38,7 @@ export class CompaniesHomeComponent implements OnInit {
   Govenorates: string = '';
   sectorId: number = 0;
   sectorName: string = "";
+  sectorCode: string = "";
   activityName: string = "";
   subActivityName:string ="";
   companyForm!: FormGroup;
@@ -53,6 +54,7 @@ export class CompaniesHomeComponent implements OnInit {
   totalPages: number = 0;
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
+  years: number[] = [];
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
   ngOnInit(): void {
@@ -79,6 +81,7 @@ export class CompaniesHomeComponent implements OnInit {
       institutionHeadquarters: [''],
       sectorId: [{value:'',disabled:true}, Validators.required],
       sectorName: [{value:'',disabled:true}, Validators.required],
+      sectorCode: [{value:'',disabled:true}, Validators.required],
       activityId: ['', Validators.required],
       activityName: [{value:'',disabled:true}, Validators.required],
       subActivityId: [0],
@@ -88,7 +91,10 @@ export class CompaniesHomeComponent implements OnInit {
       status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
-
+    const currentYear = new Date().getFullYear();
+    for (let year = 2007; year <= currentYear; year++) {
+      this.years.push(year);
+    }
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
     this.GetSectorActvities(0);
@@ -98,10 +104,13 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         
         if (res.Data) {
+          debugger
           this.sectorId = res.Data.sectorId;
+          this.sectorCode = res.Data.code;
           this.sectorName = res.Data.sectorName;
           this.activityName = res.Data.arName;
           this.companyForm.value.sectorId = this.sectorId;
+          this.companyForm.value.sectorCode = this.sectorCode;
           this.companyForm.value.sectorName = this.sectorName;
           this.companyForm.value.activityName = this.activityName;
         }
@@ -591,6 +600,7 @@ export class CompaniesHomeComponent implements OnInit {
       facilityType:'',
       activityName: '',
       sectorName: '',
+      sectorCode: '',
       subActivityName: '',
     });
     if (this.companyForm.get('emails'))

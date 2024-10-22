@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAddActivityDto, IAddSectorDto, IAddSubActivityDto } from '../Dtos/SectorDtos';
+import { IAddActivityDto, IAddCategory, IAddGroupDto, IAddSectorDto, IAddSubActivityDto } from '../Dtos/SectorDtos';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -113,6 +113,81 @@ export class SectorAndActivitiesService {
   UpdateCountry(id:number,reportDto: IAddSectorDto){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Country/UpdateCountry?id=${id}&lang=2`, reportDto, { headers });
+     return resopnse;
+   }
+   GetGroups(pageNumber:number , textSearch : string ='',sectorId:number = 0){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Group/GetGroups?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&sectorId=${sectorId}`, { headers });
+     return resopnse;
+   }
+   DeleteGroup(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Group/DeleteGroup?id=${id}`, { headers });
+     return response;
+   }
+   GetGroup(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Group/GetGroup?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateGroup(id:number,reportDto: IAddSectorDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Group/UpdateGroup?id=${id}&lang=2`, reportDto, { headers });
+     return resopnse;
+   }
+   AddGroup(Activity: IAddGroupDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Group/AddGroup?lang=2`, Activity, { headers });
+     return resopnse;
+   }
+   AddCategory(Activity: IAddCategory){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Category/AddCategory?lang=2`, Activity, { headers });
+     return resopnse;
+   }
+   GetCategories(pageNumber:number , textSearch : string ='',sectorId:number = 0){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Category/GetCategories?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&sectorId=${sectorId}`, { headers });
+     return resopnse;
+   }
+   DeleteCategory(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Category/DeleteCategory?id=${id}`, { headers });
+     return response;
+   }
+   GetCategory(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Category/GetCategory?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateCategory(id:number,reportDto: IAddSectorDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Category/UpdateCategory?id=${id}&lang=2`, reportDto, { headers });
+     return resopnse;
+   }
+   AddSection(Section: IAddActivityDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Section/AddSection?lang=2`, Section, { headers });
+     return resopnse;
+   }
+   GetSections(pageNumber:number , textSearch : string ='',sectorId:number = 0){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Section/GetSections?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&sectorId=${sectorId}`, { headers });
+     return resopnse;
+   }
+   DeleteSection(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Section/DeleteSection?id=${id}`, { headers });
+     return response;
+   }
+   GetSection(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Section/GetSection?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateSection(id:number,reportDto: IAddSectorDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Section/UpdateSection?id=${id}&lang=2`, reportDto, { headers });
      return resopnse;
    }
 }

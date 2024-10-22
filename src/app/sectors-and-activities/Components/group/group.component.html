@@ -1,7 +1,7 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
     <!-- header -->
-    <app-top-screen [title]="'القطاعات'"></app-top-screen>
+    <app-top-screen [title]="'المجوعات'"></app-top-screen>
     <!-- end-header -->
     <div class="header-nav companies-details">
         <div class="card-box mb-3">
@@ -30,11 +30,12 @@
             </ul>
         </div>
     </div>
+
     <!-- start content -->
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
             <div class="title">
-                قائمة القطاعات
+                قائمة المجموعات
             </div>
             <div class="btns d-flex">
                 <div class="search">
@@ -46,7 +47,7 @@
                     <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal"
                         data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-                        اضافة قطاع
+                        اضافة مجموعة
                     </button>
 
                 </div>
@@ -57,22 +58,22 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">اسم القطاع</th>
-                        <th class="text-center" scope="col">تاريخ انشاءه</th>
+                        <th class="text-center" scope="col">اسم المجموعة</th>
+                        <th class="text-center" scope="col">تاريخ انشاءها</th>
                         <th class="text-center" scope="col">الرمز</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let sector of sectors">
-                        <td class="text-center">{{sector.arName}}</td>
-                        <td class="text-center">{{sector.createdOn | date:'yyyy-MM-dd'}}</td>
-                        <td class="text-center">{{sector.code}}</td>
+                    <tr *ngFor="let group of groups">
+                        <td class="text-center">{{group.arName}}</td>
+                        <td class="text-center">{{group.createdOn | date:'yyyy-MM-dd'}}</td>
+                        <td class="text-center">{{group.code}}</td>
                         <td class="text-center td-actions">
-                            <button class="icon" (click)="DeleteSector(sector.id)">
+                            <button class="icon" (click)="DeleteGroup(group.id)">
                                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
                             </button>
-                            <button class="icon" (click)="openUpdatePopup(sector.id)" data-bs-toggle="modal"
+                            <button class="icon" (click)="openUpdatePopup(group.id)" data-bs-toggle="modal"
                                 data-bs-target="#addSector">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
@@ -101,25 +102,31 @@
     <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
         <div class="modal-content" style="width: 50%;">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة قطاع</h5>
+                <h5 class="modal-title" id="add">إضافة مجموعة</h5>
             </div>
-            <form [formGroup]="sectorForm" (ngSubmit)="onSave()">
+            <form [formGroup]="groupForm">
                 <div class="modal-body pb-1">
                     <div class="row">
                         <div class="form-group col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" formControlName="arName"
-                                name="arName" />
-                            <label for="inputField">اسم القطاع بالعربية</label>
+                            <input class="form-control input-modal" type="text" formControlName="arName" />
+                            <label for="inputField">اسم المجموعة بالعربية</label>
                         </div>
                         <div class="form-group col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" formControlName="enName"
-                                name="enName" />
-                            <label for="inputField">Sector Name in English</label>
+                            <input class="form-control input-modal" type="text" formControlName="enName" />
+                            <label for="inputField">Group Name in English</label>
                         </div>
                         <div class="form-group col-sm-12 mb-2">
-                            <input class="form-control input-modal" type="text" formControlName="code" name="code" />
-                            <label for="inputField">رمز القطاع</label>
+                            <input class="form-control input-modal" type="text" formControlName="code" />
+                            <label for="inputField">رمز المجموعة</label>
                         </div>
+                        <div class="form-group col-sm-12 mb-2">
+                            <select class="form-control input-modal" formControlName="sectionId">
+                                <option value="0">--اختر القسم--</option>
+                                <option *ngFor="let section of sections" [value]="section.id">{{section.arName}}</option>
+                            </select>
+                            <label for="inputField">اسم القسم</label>
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer pt-0">
@@ -127,10 +134,10 @@
                         (click)="onReset()">
                         إلغاء
                     </button>
-                    <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+                    <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="button" (click)="onSave()">
                         حفظ
                     </button>
-                    <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateCountry()" type="button"
+                    <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateGroup()" type="button"
                         class="btn btn-save">
                         تعديل
                     </button>

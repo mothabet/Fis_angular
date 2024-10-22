@@ -1,7 +1,7 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
   <!-- header -->
-  <app-top-screen [title]="'الدول'"></app-top-screen>
+  <app-top-screen [title]="'الأقسام'"></app-top-screen>
   <!-- end-header -->
   <div class="header-nav companies-details">
     <div class="card-box mb-3">
@@ -30,11 +30,12 @@
       </ul>
     </div>
   </div>
+
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
       <div class="title">
-        قائمة الدول
+        قائمة الاقسام
       </div>
       <div class="btns d-flex">
         <div class="search">
@@ -46,7 +47,7 @@
           <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal"
             data-bs-target="#addSector">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-            اضافة دولة
+            اضافة قسم
           </button>
 
         </div>
@@ -57,24 +58,22 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
-            <th class="text-center" scope="col">اسم القطاع</th>
+            <th class="text-center" scope="col">اسم القسم</th>
             <th class="text-center" scope="col">تاريخ انشاءه</th>
             <th class="text-center" scope="col">الرمز</th>
-            <th class="text-center" scope="col">رقم الدوله</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let country of countries">
-            <td class="text-center">{{country.arName}}</td>
-            <td class="text-center">{{country.createdOn | date:'yyyy-MM-dd'}}</td>
-            <td class="text-center">{{country.code}}</td>
-            <td class="text-center">{{country.countryPhone}}</td>
+          <tr *ngFor="let section of sections">
+            <td class="text-center">{{section.arName}}</td>
+            <td class="text-center">{{section.createdOn | date:'yyyy-MM-dd'}}</td>
+            <td class="text-center">{{section.code}}</td>
             <td class="text-center td-actions">
-              <button class="icon" (click)="DeleteCountry(country.id)">
+              <button class="icon" (click)="DeleteSection(section.id)">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
-              <button class="icon" (click)="openUpdatePopup(country.id)" data-bs-toggle="modal"
+              <button class="icon" (click)="openUpdatePopup(section.id)" data-bs-toggle="modal"
                 data-bs-target="#addSector">
                 <img src="../../../../assets/images/pencil-outline.png" alt="">
               </button>
@@ -103,37 +102,41 @@
   <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
     <div class="modal-content" style="width: 50%;">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add">إضافة دولة</h5>
+        <h5 class="modal-title" id="add">إضافة قسم</h5>
       </div>
-      <form [formGroup]="countryForm" (ngSubmit)="onSave()">
+      <form [formGroup]="sectionForm">
         <div class="modal-body pb-1">
           <div class="row">
             <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="arName" name="arName" />
-              <label for="inputField">اسم الدوله بالعربية</label>
+              <input class="form-control input-modal" type="text" formControlName="arName" />
+              <label for="inputField">اسم القسم بالعربية</label>
             </div>
             <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="enName" name="enName" />
-              <label for="inputField">Country Name in English</label>
+              <input class="form-control input-modal" type="text" formControlName="enName" />
+              <label for="inputField">Section Name in English</label>
             </div>
             <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="code" name="code" />
-              <label for="inputField">رمز الدولة</label>
+              <input class="form-control input-modal" type="text" formControlName="code" />
+              <label for="inputField">رمز القسم</label>
             </div>
             <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="countryPhone" name="countryPhone" />
-              <label for="inputField">رقم الدولة</label>
+              <select class="form-control input-modal" formControlName="sectorId">
+                <option value="0">--اختر رمز القطاع--</option>
+                <option *ngFor="let sector of sectors" [value]="sector.id">{{sector.arName}}</option>
+              </select>
+              <label for="inputField">اسم القطاع</label>
             </div>
+
           </div>
         </div>
         <div class="modal-footer pt-0">
           <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
             إلغاء
           </button>
-          <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
+          <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="button" (click)="onSave()">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateCountry()" type="button"
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateSection()" type="button"
             class="btn btn-save">
             تعديل
           </button>

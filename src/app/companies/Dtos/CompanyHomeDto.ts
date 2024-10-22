@@ -36,6 +36,9 @@ export interface ICompany {
     completionAccPeriod:Date,
     dateOfWork:Date,
     institutionVlaue: string,
+    sectorCode: string,
+    activityCode: string,
+    subActivityCode: string,
 }
 export interface ICompaniesPDF {
     activityId: number,
