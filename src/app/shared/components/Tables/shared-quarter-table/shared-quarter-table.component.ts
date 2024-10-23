@@ -25,7 +25,7 @@ export class SharedQuarterTableComponent {
   @Input() formId!: string;
   @Input() tableId!: string;
   isCollapsedColumns: boolean[] = [false, false, false, false];
-    table: IGetTableDto = {
+  table: IGetTableDto = {
     id: 0,
     arName: '',
     enName: '',
@@ -44,22 +44,22 @@ export class SharedQuarterTableComponent {
     IsDisabled:false     // Empty array for tableParts
   };
   coverForm: ICoverFormDetailsDto = {
-    id : 0,
-    typeQuarter : 0,
-    tables : [],
-    arName : '',
-    enName : '',
-    arNotes : '',
-    enNotes : '',
-    reviewYear : '',
-    status : 0,
-    quarterCoverData : null!,
-    coverFormData : null!,
-    certification : null!,
-    codeActivity : '',
-    codeActivityName : '',
-    GeneralData : null!,
-    Type : 0
+    id: 0,
+    typeQuarter: 0,
+    tables: [],
+    arName: '',
+    enName: '',
+    arNotes: '',
+    enNotes: '',
+    reviewYear: '',
+    status: 0,
+    quarterCoverData: null!,
+    coverFormData: null!,
+    certification: null!,
+    codeActivity: '',
+    codeActivityName: '',
+    GeneralData: null!,
+    Type: 0
   };
   tablePartsCount = 0;
   countries!: IGetCountriesDto[];
@@ -84,7 +84,7 @@ export class SharedQuarterTableComponent {
       this.GetCountrites();
     });
   }
-  onCheckboxChange(event: Event,column: number) {
+  onCheckboxChange(event: Event, column: number) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (!isChecked) {
       // Collapse columns
@@ -94,12 +94,12 @@ export class SharedQuarterTableComponent {
       this.toggleExpand(column);  // Adjust the number as needed
     }
   }
-  
+
   toggleCollapse(column: number) {
-      this.isCollapsedColumns[column] = false;
+    this.isCollapsedColumns[column] = false;
   }
   toggleExpand(column: number) {
-      this.isCollapsedColumns[column] = true;
+    this.isCollapsedColumns[column] = true;
     // تبديل حالة العرض/الإخفاء للعمود المحدد
   }
   onArCountryChange(subCode: any) {
@@ -178,13 +178,14 @@ export class SharedQuarterTableComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: [0, 0, 0,0,0],
+      values: [0, 0, 0, 0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:'',
-      IsTrueAndFalse :false,
-      IsHdd:false,
-      valueCheck:false
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsTransaction: false,
+      IsHdd: false,
+      valueCheck: false
     }
     code.SubCodes.push(subCode);
   }
@@ -213,7 +214,7 @@ export class SharedQuarterTableComponent {
         if (res.Data) {
           this.countries = res.Data.getCountryDtos;
         }
-        else{
+        else {
           this.countries = [];
         }
       },
@@ -236,6 +237,7 @@ export class SharedQuarterTableComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsTransaction: false,
       IsHdd: false,
       valueCheck: false
     }
@@ -457,6 +459,7 @@ export class SharedQuarterTableComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -484,6 +487,7 @@ export class SharedQuarterTableComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -636,129 +640,129 @@ export class SharedQuarterTableComponent {
   clearIfZero(values: any[], index: number): void {
     debugger
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
+  }
 
-restoreIfNotPositive(values: number[], index: number): void {
+  restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null || values[index] <= 0) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
-}
-updateParentValue(subCode: any, formContent: any, index: number): void {
-  // Initialize formContent values if not present
-  if (!formContent.values) {
-    formContent.values = [];
+  }
+  updateParentValue(subCode: any, formContent: any, index: number): void {
+    // Initialize formContent values if not present
+    if (!formContent.values) {
+      formContent.values = [];
+    }
+
+    // Initialize subCode values if not present
+    if (!subCode.values) {
+      subCode.values = [];
+    }
+
+    // Calculate the sum of all subCode values for the given index
+    let sum = 0;
+    formContent.code.SubCodes.forEach((sub: any) => {
+      if (sub.values && sub.values[index]) {
+        sum += sub.values[index];
+      }
+    });
+
+    // Update the parent formContent value with the sum
+    formContent.values[index] = sum;
+
+    // Optionally, update any other logic or status here if needed
   }
 
-  // Initialize subCode values if not present
-  if (!subCode.values) {
-    subCode.values = [];
-  }
+  handleParent(formContent: IGetQuestionDto) {
+    this.changeStatus(this.coverForm.status);
+    const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
+    if (rule) {
+      const ruleParts = rule.Rule.split('=');
+      if (ruleParts.length < 2) {
+        Swal.fire({
+          icon: 'error',
+          title: `تنسيق القاعدة غير صحيح: ${rule.Rule}`,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+      const ruleExpression = ruleParts[1].trim();
+      // Extract numbers and operators
+      const numberPattern = /\d+/g; // Matches numeric values
+      const operatorPattern = /[\+\-]/g; // Matches operators
+      // Extract numbers and operators
+      const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
+      const operators = ruleExpression.match(operatorPattern) || [];
 
-  // Calculate the sum of all subCode values for the given index
-  let sum = 0;
-  formContent.code.SubCodes.forEach((sub: any) => {
-    if (sub.values && sub.values[index]) {
-      sum += sub.values[index];
-    }
-  });
+      // Ensure correct length of operators and numbers
+      if (numbers.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+        return;
+      }
+      let valuesLength = formContent.values.length;
+      let subCodes = formContent.code.SubCodes;
 
-  // Update the parent formContent value with the sum
-  formContent.values[index] = sum;
+      // Reset sums for current formContent
+      let indexSums = new Array(valuesLength).fill(0);
+      for (let j = 0; j < subCodes.length; j++) {
+        let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
+        if (numbers.includes(subCodeQuestionCode)) {
+          let subCodeValues = subCodes[j].values;
 
-  // Optionally, update any other logic or status here if needed
-}
-
-handleParent(formContent: IGetQuestionDto) {
-  this.changeStatus(this.coverForm.status);
-  const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
-  if (rule) {
-    const ruleParts = rule.Rule.split('=');
-    if (ruleParts.length < 2) {
-      Swal.fire({
-        icon: 'error',
-        title: `تنسيق القاعدة غير صحيح: ${rule.Rule}`,
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
-      return;
-    }
-    const ruleExpression = ruleParts[1].trim();
-    // Extract numbers and operators
-    const numberPattern = /\d+/g; // Matches numeric values
-    const operatorPattern = /[\+\-]/g; // Matches operators
-    // Extract numbers and operators
-    const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
-    const operators = ruleExpression.match(operatorPattern) || [];
-
-    // Ensure correct length of operators and numbers
-    if (numbers.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
-      return;
-    }
-    let valuesLength = formContent.values.length;
-    let subCodes = formContent.code.SubCodes;
-
-    // Reset sums for current formContent
-    let indexSums = new Array(valuesLength).fill(0);
-    for (let j = 0; j < subCodes.length; j++) {
-      let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
-      if (numbers.includes(subCodeQuestionCode)) {
-        let subCodeValues = subCodes[j].values;
-
-        // Find the operator before the current number
-        let indexOfCode = numbers.indexOf(subCodeQuestionCode);
-        let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
-        // Apply the correct operation based on the operator
-        for (let k = 0; k < subCodeValues.length; k++) {
-          if (k < indexSums.length) {
-            if (operator === '-' || !operator) {
-              indexSums[k] -= subCodeValues[k];
-            } else {
-              indexSums[k] += subCodeValues[k];
+          // Find the operator before the current number
+          let indexOfCode = numbers.indexOf(subCodeQuestionCode);
+          let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
+          // Apply the correct operation based on the operator
+          for (let k = 0; k < subCodeValues.length; k++) {
+            if (k < indexSums.length) {
+              if (operator === '-' || !operator) {
+                indexSums[k] -= subCodeValues[k];
+              } else {
+                indexSums[k] += subCodeValues[k];
+              }
             }
           }
         }
       }
-    }
-    let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
-    // Add the accumulated sums to the totalValues
-    for (let l = 0; l < totalValues.length; l++) {
-      if (l < indexSums.length) {
-        totalValues[l] += indexSums[l];
-        formContent.values[l] = totalValues[l]
+      let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+      // Add the accumulated sums to the totalValues
+      for (let l = 0; l < totalValues.length; l++) {
+        if (l < indexSums.length) {
+          totalValues[l] += indexSums[l];
+          formContent.values[l] = totalValues[l]
+        }
       }
     }
-  }
-  else{
-   for (let index = 0; index < formContent.values.length; index++) {
-     let sum = 0;
-     for (let i = 0; i < formContent.code.SubCodes.length; i++) {
-       sum+=formContent.code.SubCodes[i].values[index]
-     }
-     formContent.values[index] = sum
-   }
-  }
-  let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
-  if (foundFormContent) {
+    else {
+      for (let index = 0; index < formContent.values.length; index++) {
+        let sum = 0;
+        for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+          sum += formContent.code.SubCodes[i].values[index]
+        }
+        formContent.values[index] = sum
+      }
+    }
+    let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
+    if (foundFormContent) {
       Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
+    }
+    const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
+    if (storedCoverForm) {
+      this.coverForm = JSON.parse(storedCoverForm);
+    }
+    const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
+    if (tableIndex !== -1) {
+      this.coverForm.tables[tableIndex] = this.table;
+      localStorage.removeItem(`coverForm${this.coverForm.id}`);
+      localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+    }
+    console.log(formContent)
   }
-  const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
-            if (storedCoverForm) {
-              this.coverForm = JSON.parse(storedCoverForm);
-            }
-              const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
-              if (tableIndex !== -1) {
-              this.coverForm.tables[tableIndex]=this.table;
-              localStorage.removeItem(`coverForm${this.coverForm.id}`);
-              localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
-            }
-  console.log(formContent)
-}
 }
