@@ -11,7 +11,7 @@ export interface IWorkDataChkDto {
 
 export interface IGeneralDataDto {
   CompanyInfo: IWorkDataQuesDto[],
-  ChekInfo: IWorkDataChkDto[],
+  ChekInfo: number,
   dataSource: number,
   from: string,
   to: string,

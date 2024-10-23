@@ -33,7 +33,7 @@ export class SharedWorkDataComponent implements OnInit {
     codeActivityName: '',
     GeneralData: {} as IGeneralDataDto,               // Initialize GeneralData
     Type: 0
-  };  
+  };
   Loader: boolean = false;
   companyId!: string;
   isWorkDataActive: boolean = false;
@@ -65,12 +65,12 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'أخرى (حدد)', enName: 'Other (specify)', selected: false }
   ];
   generalDataDto: IGeneralDataDto = {
-    ChekInfo: this.workDataChk,
+    ChekInfo: 0,
     CompanyInfo: this.workData,
     from: '',
     to: '',
     describeMainActivity: '',
-    dataSource : 0
+    dataSource: 0
   };
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
@@ -161,7 +161,7 @@ export class SharedWorkDataComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           this.coverForm = res.Data;
           this.coverForm.GeneralData = this.generalDataDto;
           this.GetFormData();
@@ -189,17 +189,15 @@ export class SharedWorkDataComponent implements OnInit {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);
-          debugger
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             this.workData = this.coverForm.GeneralData.CompanyInfo;
-            this.workDataChk = this.coverForm.GeneralData.ChekInfo;
           }
-          else if (res.Data.length>0){
-            if (res.Data[0].GeneralData){
-            this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData) ;
-            this.workData = this.coverForm.GeneralData.CompanyInfo;
-            this.workDataChk = this.coverForm.GeneralData.ChekInfo; }
+          else if (res.Data.length > 0) {
+            if (res.Data[0].GeneralData) {
+              this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
+              this.workData = this.coverForm.GeneralData.CompanyInfo;
+            }
           }
           else if (+this.companyId != null || +this.companyId != 0) {
             this.GetCompanyById(+this.companyId);
@@ -220,18 +218,17 @@ export class SharedWorkDataComponent implements OnInit {
     if (generalData) {
       localStorage.removeItem(`generalData`);
     }
+    debugger
     this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
-    this.coverForm.GeneralData.ChekInfo = this.workDataChk as IWorkDataChkDto[];
     localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
   }
   setDataLocalStorage() {
-    
+
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {
       localStorage.removeItem(`generalData`);
     }
     this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
-    this.coverForm.GeneralData.ChekInfo = this.workDataChk as IWorkDataChkDto[];
     localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
   }
 }

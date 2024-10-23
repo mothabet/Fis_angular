@@ -35,6 +35,8 @@
                                 المنشأة)</td>
                             <td class="text-center">
                                 <select class="form-control"
+                                    name="coverForm.GeneralData.ChekInfo"
+                                    [(ngModel)]="coverForm.GeneralData.ChekInfo"
                                     style="width: 50% !important;border: solid 1px;display: inline;">
                                     <option value="0"></option>
                                     <option value="1" *ngFor="let workChk of workDataChk; let i = index">{{workChk.arName}} - {{workChk.enName}}</option>

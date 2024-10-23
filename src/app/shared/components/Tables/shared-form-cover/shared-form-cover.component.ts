@@ -5,9 +5,12 @@ import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
-import { ICoverFormDetailsDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { ICertificationDto, ICoverFormDetailsDto, IGetFormDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
+import { IGeneralDataDto, IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -18,10 +21,62 @@ import { SharedService } from 'src/app/shared/services/shared.service';
   styleUrls: ['./shared-form-cover.component.css']
 })
 export class SharedFormCoverComponent implements OnInit {
+  coverForm: ICoverFormDetailsDto = {
+    id: 0,
+    typeQuarter: 0,
+    tables: [],
+    arName: '',
+    enName: '',
+    arNotes: '',
+    enNotes: '',
+    reviewYear: '',
+    status: 0,
+    quarterCoverData: {} as IQuarterCoverFormDataDto,  // Initialize with an empty object or default values
+    coverFormData: {} as ICoverFormData,              // Same here
+    certification: {} as ICertificationDto,           // And here
+    codeActivity: '',
+    codeActivityName: '',
+    GeneralData: {} as IGeneralDataDto,               // Initialize GeneralData
+    Type: 0
+  };
+  workData: IWorkDataQuesDto[] = [
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '' },
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '' },
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '' },
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '' },
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '' },
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '' },
+    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '' },
+    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '' },
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '' },
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '' },
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '' },
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '' },
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '' },
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '' },
+  ];
+  workDataChk: IWorkDataChkDto[] = [
+    { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
+    { arName: 'تضامنية', enName: 'Simple Partnership', selected: false },
+    { arName: 'توصية', enName: 'Limited Partnership', selected: false },
+    { arName: 'محاصة', enName: 'Shared Limited Partnership', selected: false },
+    { arName: 'مساهمة ( عامه او مقفله )', enName: 'Joint Stock (Public or closed)', selected: false },
+    { arName: 'محدودة المسؤولية', enName: 'Limited Liability', selected: false },
+    { arName: 'فرع شركة اجنبية', enName: 'Branch of Foreign Enterprise', selected: false },
+    { arName: 'أخرى (حدد)', enName: 'Other (specify)', selected: false }
+  ];
+  generalDataDto: IGeneralDataDto = {
+    ChekInfo: 0,
+    CompanyInfo: this.workData,
+    from: '',
+    to: '',
+    describeMainActivity: '',
+    dataSource : 0
+  };
+  company!: ICompany;
   Loader: boolean = false;
   noData: boolean = false;
   forms: IGetFormDto[] = [];
-  coverForm!: ICoverFormDetailsDto;
   noTables = true;
   @Input() formId!: string;
   @Input() companyId!: string;
@@ -37,8 +92,8 @@ export class SharedFormCoverComponent implements OnInit {
   formData!: IDataDto[];
   auditRules: IAuditRule[] = [];
 
-  constructor(private authService: LoginService, private formServices: FormService, 
-    private auditRuleHomeService: AuditRuleHomeService,private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService,
+    private auditRuleHomeService: AuditRuleHomeService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
@@ -49,11 +104,14 @@ export class SharedFormCoverComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
         this.Loader = false;
         if (res.Data) {
-          this.coverForm = res.Data;
-
+          debugger
+          this.coverForm = {
+            ...this.coverForm,  // Spread the current values of coverForm to preserve them
+            ...res.Data,        // Overwrite only the properties from res.Data
+            GeneralData: res.Data.GeneralData || this.coverForm.GeneralData, // Preserve GeneralData if not provided
+          };
           this.GetFormData();
         }
       },
@@ -97,7 +155,13 @@ export class SharedFormCoverComponent implements OnInit {
 
                   const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
                   if (storedCoverForm) {
-                    this.coverForm = JSON.parse(storedCoverForm);
+                    const parsedCoverForm = JSON.parse(storedCoverForm);
+
+                    this.coverForm = {
+                      ...this.coverForm,     // Spread the current default values of coverForm
+                      ...parsedCoverForm,    // Overwrite with the parsed values
+                      GeneralData: parsedCoverForm.GeneralData || this.coverForm.GeneralData,  // Preserve GeneralData if not provided
+                    };
                   }
                   debugger
                   tablesList.forEach((table: any) => {
@@ -274,7 +338,7 @@ export class SharedFormCoverComponent implements OnInit {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -302,7 +366,7 @@ export class SharedFormCoverComponent implements OnInit {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -320,6 +384,20 @@ export class SharedFormCoverComponent implements OnInit {
                   });
                   localStorage.removeItem(`coverForm${this.coverForm.id}`);
                   localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+                  let generalData = localStorage.getItem(`generalData`);
+                  if (generalData) {
+                    this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+                    this.workData = this.coverForm.GeneralData.CompanyInfo;
+                  }
+                  else if (res.Data.length > 0) {
+                    if (res.Data[0].GeneralData) {
+                      this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
+                      this.workData = this.coverForm.GeneralData.CompanyInfo;
+                    }
+                  }
+                }
+                else {
+                  this.GetCompanyById(+this.companyId);
                 }
               }
               else if (role === 'Admin' || role === 'Researchers') {
@@ -330,7 +408,13 @@ export class SharedFormCoverComponent implements OnInit {
               }
               const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
               if (storedCoverForm) {
-                this.coverForm = JSON.parse(storedCoverForm);
+                const parsedCoverForm = JSON.parse(storedCoverForm);
+
+                this.coverForm = {
+                  ...this.coverForm,     // Spread the current default values of coverForm
+                  ...parsedCoverForm,    // Overwrite with the parsed values
+                  GeneralData: parsedCoverForm.GeneralData || this.coverForm.GeneralData,  // Preserve GeneralData if not provided
+                };
               }
 
               const tableIndex = this.coverForm.tables.findIndex(t => t.id === +this.tableId);
@@ -358,11 +442,95 @@ export class SharedFormCoverComponent implements OnInit {
     })
   }
   ngOnDestroy() {
-    
+
     let coverFormData = localStorage.getItem(`coverFormData`);
     if (coverFormData) {
       localStorage.removeItem(`coverFormData`);
     }
     localStorage.setItem(`coverFormData`, JSON.stringify(this.coverForm.coverFormData));
+  }
+  GetCompanyById(id: number) {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.company = res.Data;
+          this.workData.forEach((item) => {
+            if (item.arName.includes('اسم  المنشأة : ')) {
+              item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes('الموقع الإلكتروني : ')) {
+
+              item.inputValue = this.company.webSite;
+            }
+            else if (item.arName.includes('رقم الفاكس : ')) {
+
+              item.inputValue = this.company.fax;
+            }
+            else if (item.arName.includes('البريد الالكترونى : ')) {
+
+              item.inputValue = this.company.email;
+            }
+            else if (item.arName.includes('رقم الهاتف : ')) {
+
+              item.inputValue = this.company.phoneNumber;
+            }
+            else if (item.arName.includes('الرمز البريدى : ')) {
+
+              item.inputValue = this.company.postalCode;
+            }
+            else if (item.arName.includes('رقم صندوق البريد : ')) {
+
+              item.inputValue = this.company.mailBox;
+            }
+            else if (item.arName.includes('الولاية : ')) {
+
+              item.inputValue = this.company.wilayat;
+            }
+            else if (item.arName.includes('المنطقة : ')) {
+
+              item.inputValue = this.company.governorates;
+            }
+            else if (item.arName.includes('عنوان المنشاة : ')) {
+
+              item.inputValue = this.company.address;
+            }
+            else if (item.arName.includes('النشاط الثانوى : ')) {
+
+              item.inputValue = this.company.subActivity;
+            }
+            else if (item.arName.includes('النشاط الاقتصادى الرئيسى : ')) {
+
+              item.inputValue = this.company.activity;
+            }
+            else if (item.arName.includes('رقم الترخيص البلدي : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+            else if (item.arName.includes('رقم السجل التجارى : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+          });
+          debugger
+          let generalData = localStorage.getItem(`generalData`);
+          if (generalData) {
+            this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            this.workData = this.coverForm.GeneralData.CompanyInfo;
+          }
+          else {
+            this.coverForm.GeneralData = this.generalDataDto;
+            this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
+            localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
+          }
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.companyServices.GetCompanyById(id).subscribe(observer);
   }
 }
