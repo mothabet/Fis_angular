@@ -512,7 +512,22 @@ export class SharedTableWithoutTransComponent {
 
     // Optionally, update any other logic or status here if needed
   }
-
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+    // Ensure subCode has subCodes to process
+    if (subCode.subCodes && subCode.subCodes.length > 0) {
+      // Iterate over the values array of the parent subCode
+      for (let i = 0; i < subCode.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
+        subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
+          return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
+        }, 0); // Start the summation from 0
+      }
+      debugger
+      formContent.code.SubCodes[index] = subCode;
+      this.handleParent(formContent);
+    }
+  }
+  
   handleParent(formContent: IGetQuestionDto) {
     this.changeStatus(this.coverForm.status);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")

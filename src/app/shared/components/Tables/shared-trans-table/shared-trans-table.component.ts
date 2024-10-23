@@ -502,6 +502,34 @@ export class SharedTransTableComponent {
       }
     })
   }
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
+    // Ensure subCode has subCodes to process
+    if (subCode.subCodes && subCode.subCodes.length > 0) {
+      // Iterate over the values array of the parent subCode
+      for (let i = 0; i < subCode.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
+        subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
+          return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
+        }, 0); // Start the summation from 0
+      }
+  
+      // Update each _subCode's values[2] as values[0] - values[1]
+      subCode.subCodes.forEach(_subCode => {
+        if (_subCode.values && _subCode.values.length >= 3) { 
+          // Ensure there are at least 3 values to work with
+          _subCode.values[2] = _subCode.values[0] - _subCode.values[1];
+        }
+      });
+  
+      // Assign the modified subCode back to formContent
+      debugger;
+      formContent.code.SubCodes[index] = subCode;
+  
+      // Call the handleParent method with the updated subCode and formContent
+      this.handleParent(formContent.code.SubCodes[index], formContent);
+    }
+  }
+  
   updateParentValue(subCode: any, formContent: any, index: number): void {
     // Initialize formContent values if not present
     if (!formContent.values) {

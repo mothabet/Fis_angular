@@ -91,8 +91,8 @@
                 <td class="text-start" style="text-wrap: balance; direction: ltr;">{{formContent.code.enName}}</td>
               </tr>
               <ng-container>
-              <ng-container *ngFor="let subCode of formContent.code.SubCodes">
-                <tr>
+                <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
+                  <tr>
                   <td *ngIf="formContent.code.TypeId == 1" style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                     {{subCode.arName}}
                     <button *ngIf="subCode.IsHdd == true" class="add-button" style="display: inline-block; padding: 1px 10px;"
@@ -220,7 +220,8 @@
                       </td>
                       <td class="text-center" *ngFor="let year of years; let i = index">
                         <input type="number" (focus)="clearIfZero(_subCode.values, i+1)"
-                          (blur)="restoreIfNotPositive(_subCode.values, i+1)" [(ngModel)]="_subCode.values[i+1]"/>
+                          (blur)="restoreIfNotPositive(_subCode.values, i+1)" [(ngModel)]="_subCode.values[i+1]"
+                          (input)="handelSupParent(formContent,subCode,indexSub)"/>
                       </td>
                           <td class="text-center">
                               <input disabled type="text" value="{{_subCode.QuestionCode}}" />

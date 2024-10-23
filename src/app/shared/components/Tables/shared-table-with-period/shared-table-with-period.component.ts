@@ -489,6 +489,33 @@ export class SharedTableWithPeriodComponent {
       }
     })
   }
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
+    // Ensure subCode has subCodes to process
+    if (subCode.subCodes && subCode.subCodes.length > 0) {
+      // Iterate over each subCode to update the first value
+      subCode.subCodes.forEach(_subCode => {
+        if (_subCode.values && _subCode.values.length > 1) {
+          // Set _subCode.values[0] to the sum of all values except values[0]
+          _subCode.values[0] = _subCode.values.slice(1).reduce((sum, value) => {
+            return sum + value;
+          }, 0);
+        }
+      });
+  
+      // Optionally, you can also update the parent subCode values array if needed
+      for (let i = 0; i < subCode.values.length; i++) {
+        subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
+          return sum + (_subCode.values[i] || 0); // Safely sum the i-th value of each subCode
+        }, 0);
+      }
+  
+      // Assign the modified subCode back to formContent
+      formContent.code.SubCodes[index] = subCode;
+  
+      // Call the parent handler method if needed
+      this.handleParent(formContent);
+    }
+  }
   updateParentValue(subCode: any, formContent: any, index: number): void {
     // Initialize formContent values if not present
     if (!formContent.values) {

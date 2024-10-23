@@ -103,7 +103,7 @@
                                 <td class="text-start" style="text-wrap: balance; direction: ltr;">{{formContent.code.enName}}</td>
                             </tr>
                             <ng-container>
-                                <ng-container *ngFor="let subCode of formContent.code.SubCodes">
+                                <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
 
                                 <tr>
                                     <td *ngIf="formContent.code.TypeId == 1"
@@ -240,14 +240,16 @@
                                         <td class="text-center"><input type="number" 
                                             [(ngModel)]="_subCode.values[1]" 
                                             (focus)="clearIfZero(_subCode.values, 1)"
-                                            (blur)="restoreIfNotPositive(_subCode.values, 1)"/></td>
+                                            (blur)="restoreIfNotPositive(_subCode.values, 1)"
+                                            (input)="handelSupParent(formContent,subCode,indexSub)"/></td>
                                             <td class="text-center">
                                                 <input [(ngModel)]="_subCode.values[2]" type="number" disabled/>
                                             </td>
                                             <td class="text-center"><input type="number" 
                                                 [(ngModel)]="_subCode.values[0]" 
                                                 (focus)="clearIfZero(_subCode.values, 0)"
-                                                (blur)="restoreIfNotPositive(_subCode.values, 0)" /></td>
+                                                (blur)="restoreIfNotPositive(_subCode.values, 0)" 
+                                                (input)="handelSupParent(formContent,subCode,indexSub)"/></td>
                                             <td class="text-center">
                                                 <input disabled type="text" value="{{_subCode.QuestionCode}}" />
                                             <td class="text-center" style=" direction: ltr;">
