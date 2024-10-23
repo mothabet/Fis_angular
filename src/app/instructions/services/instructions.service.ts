@@ -20,4 +20,9 @@ export class InstructionsService {
      var resopnse = this.http.get(environment.apiUrl+`Instructions/GetAllInstructions?role=${role}&formId=${formId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
      return resopnse;
    }
+   GetTableInstructions(role:string,formId:string,tableId:number,pageNumber:number, textSearch : string ='',withNull:boolean = true){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Instructions/GetTableInstructions?role=${role}&formId=${formId}&tableId=${tableId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}&withNull=${withNull}`, { headers });
+     return resopnse;
+   }
 }

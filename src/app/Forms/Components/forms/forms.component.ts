@@ -45,6 +45,7 @@ export class FormsComponent implements OnInit {
   form!: IGetFormDto;
   tableForm!: FormGroup;
   formId: number = 0;
+  tableInstructionId: number = 0;
   formIdScreen: string = '';
   quesIdScreen: string = '';
   addTable!: IAddTableDto;
@@ -81,6 +82,7 @@ export class FormsComponent implements OnInit {
   arNotes = '';
   enNotes = '';
   yearsFilter: number[] = [];
+  tables: IGetTableDto[]=[]
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -1409,6 +1411,7 @@ export class FormsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.addInstructions = res.Data.getInstructionsDtos
+          this.tables = this.forms.find(f => f.id == +formId)?.tables || [];
           this.add = true;
           const button = document.getElementById('AddInstructionsBtn');
           if (button) {
@@ -1452,7 +1455,7 @@ export class FormsComponent implements OnInit {
     }
     const Model: IAddListInstructionsDto = {
       addInstructionsDtos: this.addInstructions,
-      formId: this.formId.toString()
+      formId: this.formId.toString(),
     }
     const observer = {
       next: (res: any) => {
@@ -1498,6 +1501,8 @@ export class FormsComponent implements OnInit {
     this.addInstructions.push({
       arName: '',
       enName: '',
+      tableId:'',
+      id:0
     });
   }
 }

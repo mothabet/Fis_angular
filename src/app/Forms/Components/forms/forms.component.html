@@ -262,7 +262,6 @@
                     <option value="2">جدول بدون معاملات</option>
                     <option value="6">جدول بدون معاملات بنسبه</option>
                     <option value="3">جدول سنه مقسمة الى اجزاء</option>
-                    <option value="7">جدول سنه مقسمة الى اجزاء بمجموع</option>
                     <option value="4">جدول سنتين مقسمة الى اجزاء</option>
                     <option value="5">جدول بمدة زمنية</option>
                   </select>
@@ -275,8 +274,8 @@
                   <label class="eng">مده الزمنيه للجدول</label>
                 </div>
               </div>
-              <hr *ngIf="Type == 3 || Type == 4 || Type == 7" />
-              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4 || Type == 7">
+              <hr *ngIf="Type == 3 || Type == 4" />
+              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4">
                 <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
                 <table class="table table-borderless">
                   <thead>
@@ -445,19 +444,20 @@
                   <textarea type="text" rows="2" class="form-control" [value]="item.enName"
                     (input)="updateInstructions(i, 'enName', $event)"></textarea>
                 </td>
+                <td class="text-center td-actions input-floating-label">
+                  <select class="form-control" [(ngModel)]="item.tableId" name="table" id="table" style="width: 100%;">
+                    <option value="0"></option>
+                    <option *ngFor="let table of tables" [value]="table.id">{{ table.arName }}</option>
+                  </select>
+                  <label style="top: 7px;" for="table">اختر الجدول</label>
+                </td>
                 <td class="text-center td-actions">
                   <button class="icon" (click)="removeItemInstructions(i)"
                     style="border: none; background-color: transparent">
                     <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                   </button>
                 </td>
-                <td class="text-center input-floating-label" style="display: contents;">
-                  <select class="form-control" name="table" id="table" style="width: 100%;">
-                    <option value="">1 </option>
-                    <option value="">2</option>
-                  </select>
-                  <label style="top: 7px;" for="table">اختر الجدول</label>
-                </td>
+                
               </tr>
             </tbody>
           </table>
