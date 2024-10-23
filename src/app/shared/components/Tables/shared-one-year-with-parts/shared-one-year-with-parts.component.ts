@@ -123,6 +123,7 @@ export class SharedOneYearWithPartsComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsHdd:false,
       valueCheck: false
     }
     code.SubCodes.push(subCode);
@@ -186,20 +187,18 @@ export class SharedOneYearWithPartsComponent {
 
                   // Convert the grouped object into an array of tables
                   const tablesList = Object.values(groupedTables);
-                  this.formData = res.Data[0].dataDtos;
 
                   const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
                   if (storedCoverForm) {
                     this.coverForm = JSON.parse(storedCoverForm);
                   }
                   tablesList.forEach((table: any) => {
-
                     const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                     if (tableIndex !== -1) {
                       this.coverForm.tables[tableIndex].IsDisabled = table.items[0].IsDisabled;
 
                       if (this.coverForm.tables[tableIndex].Type == "1") {
-                        this.coverForm.tables[tableIndex].formContents.forEach((formContent: any) => {
+                        this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                           formContent.values = formContent.values || [0, 0, 0];
                           formContent.values[1] = formContent.values[1] || 0;
                           formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
@@ -207,7 +206,7 @@ export class SharedOneYearWithPartsComponent {
 
                           // If there are subCodes, ensure their values are also initialized
                           if (formContent.code.SubCodes) {
-                            formContent.code.SubCodes.forEach((subCode: any) => {
+                            formContent.code.SubCodes.forEach((subCode: ISubCodeForm) => {
                               // Initialize subCode `values` array if it doesn't exist
                               subCode.values = subCode.values || [0, 0, 0];
 
@@ -215,6 +214,17 @@ export class SharedOneYearWithPartsComponent {
                               subCode.values[0] = subCode.values[0] || 0; // lastYear
                               subCode.values[2] = 0; // Set transaction explicitly to 0
                               subCode.values[1] = subCode.values[1] || 0; // nextYear
+                              if (subCode.subCodes) {
+                                subCode.subCodes.forEach((_subCode: any) => {
+                                  // Initialize subCode `values` array if it doesn't exist
+                                  _subCode.values = _subCode.values || [0, 0, 0];
+
+                                  // Ensure the `values` array has the correct length and initial values
+                                  _subCode.values[0] = _subCode.values[0] || 0; // lastYear
+                                  _subCode.values[2] = 0; // Set transaction explicitly to 0
+                                  _subCode.values[1] = _subCode.values[1] || 0; // nextYear
+                                });
+                              }
                             });
                           }
                         });
@@ -227,12 +237,24 @@ export class SharedOneYearWithPartsComponent {
                           // If there are subCodes, ensure their values are also initialized
                           if (formContent.code.SubCodes) {
                             formContent.code.SubCodes.forEach((subCode: any) => {
+
                               // Initialize subCode `values` array if it doesn't exist
                               subCode.values = subCode.values || [0, 0];
 
                               // Ensure the `values` array has the correct length and initial values
                               subCode.values[0] = subCode.values[0] || 0; // lastYear
                               subCode.values[1] = subCode.values[1] || 0; // nextYear
+                              if (subCode.subCodes) {
+                                subCode.subCodes.forEach((_subCode: any) => {
+                                  // Initialize subCode `values` array if it doesn't exist
+                                  _subCode.values = _subCode.values || [0, 0, 0];
+
+                                  // Ensure the `values` array has the correct length and initial values
+                                  _subCode.values[0] = _subCode.values[0] || 0; // lastYear
+                                  _subCode.values[2] = 0; // Set transaction explicitly to 0
+                                  _subCode.values[1] = _subCode.values[1] || 0; // nextYear
+                                });
+                              }
                             });
                           }
                         });
@@ -258,7 +280,7 @@ export class SharedOneYearWithPartsComponent {
                           }
                         });
                       }
-                      else if (this.coverForm.tables[tableIndex].Type == "3") {
+                      else if (this.coverForm.tables[tableIndex].Type == "3" || this.coverForm.tables[tableIndex].Type == "7") {
                         this.coverForm.tables[tableIndex].formContents.forEach((formContent: IGetQuestionDto) => {
                           // Initialize the `values` array with zeroes, ensuring the first value is set to 0
                           formContent.values = [0, ...Array(this.coverForm.tables[tableIndex].tableParts.length).fill(0)];
@@ -317,6 +339,7 @@ export class SharedOneYearWithPartsComponent {
                         }
                       }
                       else if (item.level == 2) {
+
                         // Find the corresponding level 1 item first
                         const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                         if (level1ItemIndex !== -1) {
@@ -343,6 +366,7 @@ export class SharedOneYearWithPartsComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsHdd: false,
                               valueCheck: false
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
@@ -350,9 +374,40 @@ export class SharedOneYearWithPartsComponent {
                           }
                         }
                       }
+                      else if (item.level == 3) {
+                        const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
+                        if (level1ItemIndex !== -1) {
+                          const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
+                          if (subCodeIndex !== -1) {
+                            if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
+                              debugger
+                              const subCode: ISubCodeForm = {
+                                arName: item.arName,
+                                codeId: item.codeId,
+                                enName: item.enName,
+                                Id: 0,
+                                QuestionCode: "",
+                                subCodes: [],
+                                values: item.codes,
+                                connectedWithId: item.connectedWithId,
+                                connectedWithLevel: item.connectedWithLevel,
+                                connectedWithType: item.connectedWithType,
+                                IsTrueAndFalse: false,
+                                IsHdd: false,
+                                valueCheck: item.valueCheck
+                              }
+                              const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
+                                .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
+                                );
+                              if (!subCodeExists)
+                                this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes.push(subCode);
+                            }
+                          }
+                        }
+
+                      }
                     });
                   });
-
                   localStorage.removeItem(`coverForm${this.coverForm.id}`);
                   localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
                 }
@@ -371,6 +426,7 @@ export class SharedOneYearWithPartsComponent {
               const tableIndex = this.coverForm.tables.findIndex(t => t.id === +this.tableId);
               if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
                 this.table = this.coverForm.tables[tableIndex];
+
                 for (let index = 0; index < this.table.formContents.length; index++) {
                   const rule = this.auditRules.find(r => r.codeParent == this.table.formContents[index].code.QuestionCode && r.Type == "1")
                   if (rule) {
@@ -400,7 +456,31 @@ export class SharedOneYearWithPartsComponent {
     if (status < 3)
       this.BeginningForm();
   }
+  addSubCodeToSubRow(SubCode: ISubCodeForm) {
+    const subCode: ISubCodeForm = {
+      arName: '',
+      codeId: 0,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: [],
+      values: Array(this.tablePartsCount * 2).fill(0),
+      connectedWithId: 0,
+      connectedWithLevel: 0,
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsHdd: false,
+      valueCheck: false
+    }
 
+    SubCode.subCodes.push(subCode);
+  }
+  removeSubCodeFromSubRow(SubCode: ISubCodeForm, _subCode: ISubCodeForm): void {
+    const index = SubCode.subCodes.indexOf(_subCode);
+    if (index !== -1) {
+      SubCode.subCodes.splice(index, 1); // Remove the subCode from the array
+    }
+  }
   BeginningForm(): void {
     this.Loader = true;
     const observer = {
