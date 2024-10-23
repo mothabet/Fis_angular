@@ -810,43 +810,85 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   GetAllInstructions(role: string): void {
     this.Loader = true;
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.addInstructions = res.Data.getInstructionsDtos
-          this.add = true;
-          if (role != '') {
-            const button = document.getElementById('ViewInstructionsBtn');
-            if (button) {
-              button.click();
+    if (this.table == undefined) {
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            this.addInstructions = res.Data.getInstructionsDtos
+            this.add = true;
+            if (role != '') {
+              const button = document.getElementById('ViewInstructionsBtn');
+              if (button) {
+                button.click();
+              }
             }
+            else {
+              const button = document.getElementById('AddInstructionsBtn');
+              if (button) {
+                button.click();
+              }
+            }
+            this.Loader = false;
+
           }
           else {
-            const button = document.getElementById('AddInstructionsBtn');
-            if (button) {
-              button.click();
-            }
+            Swal.fire({
+              icon: 'error',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
+            this.Loader = false;
+
           }
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
           this.Loader = false;
+        },
+      };
+      this.instructionsService.GetAllInstructions(role, this.formId, 0).subscribe(observer);
+    }
+    else {
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            debugger
+            this.addInstructions = res.Data.getInstructionsDtos
+            this.add = true;
+            if (role != '') {
+              const button = document.getElementById('ViewInstructionsBtn');
+              if (button) {
+                button.click();
+              }
+            }
+            else {
+              const button = document.getElementById('AddInstructionsBtn');
+              if (button) {
+                button.click();
+              }
+            }
+            this.Loader = false;
 
-        }
-        else {
-          Swal.fire({
-            icon: 'error',
-            title: res.Message,
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
-          });
+          }
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: res.Message,
+              showConfirmButton: true,
+              confirmButtonText: 'اغلاق'
+            });
+            this.Loader = false;
+
+          }
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
           this.Loader = false;
-
-        }
-      },
-      error: (err: any) => {
-        this.sharedServices.handleError(err);
-        this.Loader = false;
-      },
-    };
-    this.instructionsService.GetAllInstructions(role, this.formId, 0).subscribe(observer);
+        },
+      };
+      this.instructionsService.GetTableInstructions(role, this.formId,this.table.id, 0).subscribe(observer);
+    }
   }
   onCheckboxChangeCompany(companyId: number, event: Event) {
 
