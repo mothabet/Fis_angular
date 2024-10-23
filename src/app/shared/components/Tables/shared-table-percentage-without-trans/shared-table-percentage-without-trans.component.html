@@ -32,7 +32,7 @@
                                         <span class="ar-name">
                                             {{formContent.code.arName}}
                                         </span>
-                                        <span class="total" data-bs-toggle="tooltip" data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                        <span *ngIf="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" class="total" data-bs-toggle="tooltip" data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
                                             اجمالي <i class="fa-solid fa-circle-question"></i>
                                         </span>
                                         <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
@@ -170,12 +170,14 @@
                                     </td>
                                     <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length">
                                         <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked
+                                        name="yesNoSubOption_{{subCode.Id}}"
                                             > نعم
                                         <label class="mt-3"></label>
                                     </td>
                                     <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length"></td>
                                     <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length">
-                                        <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"> لا
+                                        <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"
+                                        name="yesNoSubOption_{{subCode.Id}}"> لا
                                         <label class="mt-3"></label>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">

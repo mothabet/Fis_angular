@@ -92,13 +92,9 @@ export class CodeHomeComponent {
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
     const inputElement = event.target as HTMLInputElement | HTMLSelectElement | HTMLInputElement;
     let value: string | boolean;
+    debugger
     // Handle boolean for the IsTrueAndFalse field
-    if (field === 'IsTrueAndFalse') {
-      value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
-    } else {
-      value = inputElement.value; // String for other input/select fields
-    }
-    if (field === 'IsHdd') {
+    if (field === 'IsTrueAndFalse' || field === 'IsHdd') {
       value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
     } else {
       value = inputElement.value; // String for other input/select fields

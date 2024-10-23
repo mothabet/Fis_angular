@@ -34,7 +34,7 @@
                     <span class="ar-name">
                       {{formContent.code.arName}}
                     </span>
-                    <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                    <span *ngIf="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" class="total" data-bs-toggle="tooltip" data-bs-placement="top"
                       title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
                       اجمالي <i class="fa-solid fa-circle-question"></i>
                     </span>
@@ -146,11 +146,13 @@
                     </div>
                   </td>
                   <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="getColspan(years.length, 'first')">
-                    <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked> نعم
+                    <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked
+                    name="yesNoSubOption_{{subCode.Id}}"> نعم
                     <label class="mt-3"></label>
                   </td>
                   <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="getColspan(years.length, 'second')">
-                    <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"> لا
+                    <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"
+                    name="yesNoSubOption_{{subCode.Id}}"> لا
                     <label class="mt-3"></label>
                   </td>
                   <ng-container *ngIf="!subCode.IsTrueAndFalse">
