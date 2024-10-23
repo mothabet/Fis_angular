@@ -49,9 +49,11 @@ export class SharedFormCoverComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         if (res.Data) {
           this.coverForm = res.Data;
+
           this.GetFormData();
         }
       },
@@ -97,6 +99,7 @@ export class SharedFormCoverComponent implements OnInit {
                   if (storedCoverForm) {
                     this.coverForm = JSON.parse(storedCoverForm);
                   }
+                  debugger
                   tablesList.forEach((table: any) => {
                     const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                     if (tableIndex !== -1) {
@@ -271,6 +274,7 @@ export class SharedFormCoverComponent implements OnInit {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsTransaction:false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -298,6 +302,7 @@ export class SharedFormCoverComponent implements OnInit {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
+                                IsTransaction:false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }

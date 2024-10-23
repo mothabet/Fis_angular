@@ -42,7 +42,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
+debugger
           this.coverForm = res.Data
           const quarterCoverFormData: IQuarterCoverFormDataDto = {
             establishmentName: "",
@@ -68,10 +68,12 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         const isLoggedIn = this.authService.getToken();
+        debugger
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           if (res.Data) {
+
             if (res.Data.length > 0) {
 
               if (res.Data[0].coverData || res.Data[0].coverData != '')

@@ -86,6 +86,7 @@ export class CodeHomeComponent {
       id_Level: '',
       connectedWithType: '',
       IsTrueAndFalse:false,
+      IsTransaction:false,
       IsHdd: false
     });
   }
@@ -94,7 +95,7 @@ export class CodeHomeComponent {
     let value: string | boolean;
     debugger
     // Handle boolean for the IsTrueAndFalse field
-    if (field === 'IsTrueAndFalse' || field === 'IsHdd') {
+    if (field === 'IsTrueAndFalse' || field === 'IsHdd' || field === "IsTransaction") {
       value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
     } else {
       value = inputElement.value; // String for other input/select fields

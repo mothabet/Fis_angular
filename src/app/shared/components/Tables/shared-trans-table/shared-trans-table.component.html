@@ -179,7 +179,8 @@
                                             type="number" />
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
-                                        <input [(ngModel)]="subCode.values[2]" type="number" disabled />
+                                        <input [(ngModel)]="subCode.values[2]" type="number" disabled 
+                                        [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}"/>
                                     </td>
                                     <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
                                         <input [(ngModel)]="subCode.values[0]" (focus)="clearIfZero(subCode.values, 0)"

@@ -123,6 +123,7 @@ export class SharedOneYearWithPartsComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsTransaction:false,
       IsHdd:false,
       valueCheck: false
     }
@@ -366,6 +367,7 @@ export class SharedOneYearWithPartsComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsTransaction:false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -393,6 +395,7 @@ export class SharedOneYearWithPartsComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
+                                IsTransaction:false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -469,6 +472,7 @@ export class SharedOneYearWithPartsComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsTransaction:false,
       IsHdd: false,
       valueCheck: false
     }

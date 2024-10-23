@@ -138,6 +138,7 @@ export class SharedTransTableComponent {
       connectedWithLevel: 0,
       connectedWithType:'',
       IsTrueAndFalse :false,
+      IsTransaction:false,
       IsHdd:false,
       valueCheck:false
     }
@@ -200,6 +201,7 @@ export class SharedTransTableComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsTransaction:false,
       IsHdd: false,
       valueCheck: false
     }
@@ -421,6 +423,7 @@ export class SharedTransTableComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsTransaction:false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -448,6 +451,7 @@ export class SharedTransTableComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
+                                IsTransaction:false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }

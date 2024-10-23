@@ -140,6 +140,7 @@ export class SharedTableWithPeriodComponent {
       connectedWithLevel: 0,
       connectedWithType:'',
       IsTrueAndFalse :false,
+      IsTransaction:false,
       IsHdd:false,
       valueCheck:false
     }
@@ -187,6 +188,7 @@ export class SharedTableWithPeriodComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
+      IsTransaction:false,
       IsHdd: false,
       valueCheck: false
     }
@@ -408,6 +410,7 @@ export class SharedTableWithPeriodComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
+                              IsTransaction:false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -435,6 +438,7 @@ export class SharedTableWithPeriodComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
+                                IsTransaction:false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }

@@ -6,6 +6,7 @@ export interface IAddSubCode {
     id_Level: string,
     connectedWithType:string,
     IsTrueAndFalse:boolean,
+    IsTransaction:boolean,
     IsHdd : boolean
 }
 export interface ISubCode{
@@ -28,6 +29,7 @@ export interface ISubCodeForm{
     connectedWithLevel:number|null,
     connectedWithType:string,
     IsTrueAndFalse:boolean,
+    IsTransaction:boolean,
     IsHdd:boolean,
   valueCheck:boolean;
 

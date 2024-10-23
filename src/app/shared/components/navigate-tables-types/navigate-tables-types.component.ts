@@ -286,7 +286,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               this.selecteTableIds.add(this.coverForm.tables[index].id)
             }
           }
-          this.addTableToListInLocalStorage(this.table);
+            this.addTableToListInLocalStorage(this.table);
         }
       },
       error: (err: any) => {
