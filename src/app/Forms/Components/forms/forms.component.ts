@@ -119,6 +119,7 @@ export class FormsComponent implements OnInit {
       enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
       IsTotal: [false],
+      totalTitle: '',
       Type: [0, Validators.required],
       Order: [0, Validators.required],
       formId: [''],
@@ -129,7 +130,7 @@ export class FormsComponent implements OnInit {
       codeId: [0, Validators.required],
     });
     this.GetAllForms();
-    this.years = this.sharedServices.generateYears(2000, 2050);
+    this.years = this.sharedServices.generateYears(2000, 2024);
     this.GetSectorActvities(0);
     this.editor = new Editor();
     this.editoren = new Editor();
@@ -882,7 +883,8 @@ export class FormsComponent implements OnInit {
         IsActive: this.tableForm.value.IsActive,
         IsTotal: this.tableForm.value.IsTotal,
         period: Number(this.tableForm.value.period),
-        tableParts: this.addTableParts
+        tableParts: this.addTableParts,
+        totalTitle: this.tableForm.value.totalTitle,
       };
       const observer = {
         next: (res: any) => {
@@ -954,6 +956,7 @@ export class FormsComponent implements OnInit {
       enName: '',
       arHeading: '',
       enHeading: '',
+      totalTitle: '',
       enNotes: '',
       arNotes: '',
       Type: 0,
@@ -1021,6 +1024,7 @@ export class FormsComponent implements OnInit {
             fromId: this.addTable.formId,
             IsActive: this.addTable.IsActive,
             IsTotal: this.addTable.IsTotal,
+            totalTitle: this.addTable.totalTitle,
             period: this.tableForm.value.period,
           });
           this.addTableParts = res.Data.tableParts;
@@ -1069,7 +1073,8 @@ export class FormsComponent implements OnInit {
         IsActive: this.tableForm.value.IsActive,
         IsTotal: this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
-        tableParts: this.addTableParts
+        tableParts: this.addTableParts,
+        totalTitle:this.tableForm.value.period,
       };
 
       const observer = {

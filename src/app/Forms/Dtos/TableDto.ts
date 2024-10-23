@@ -13,6 +13,7 @@ export interface IAddTableDto {
     formId:number,
     IsActive: boolean,
     IsTotal:boolean,
+    totalTitle:string,
     period: number,
     tableParts : IAddTablePartsDto[]
 }

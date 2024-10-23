@@ -53,7 +53,7 @@
           <option value="" selected></option>
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
-        <label for="search" class="select-label">اختر السنة</label>
+        <label for="search" class="select-label">بحث بالسنة</label>
       </div>
       
     </div>
@@ -250,9 +250,18 @@
               <div class="col-12-12 mb-2">
                 <div class="form-check form-switch d-flex justify-content-between align-items-center">
                   <label class="form-check-label" for="active" style="font-size: 14px">جدول بأجمالي</label>
-                  <input formControlName="IsTotal" class="form-check-input" type="checkbox" id="active" checked />
+                  <input formControlName="IsTotal" class="form-check-input" type="checkbox" id="active" />
                 </div>
               </div>
+              
+              <!-- Conditionally hide this section when the checkbox is not checked -->
+              <div class="col-sm-12 mb-2" *ngIf="tableForm.get('IsTotal')?.value">
+                <div class="input-floating-label mb-0">
+                  <input type="text" class="form-control" style="direction: ltr" formControlName="totalTitle" />
+                  <label class="eng">عنوان الاجمالي</label>
+                </div>
+              </div>
+              
               <div class="col-sm-12 mb-3" *ngIf="!(formType==2)">
                 <div class="input-floating-label mb-0">
                   <select formControlName="Type" class="form-control" style="width: 100%" [(ngModel)]="Type"
@@ -429,7 +438,6 @@
                 <th class="text-center" scope="col">الارشادات</th>
                 <th class="text-center" scope="col">Instructions</th>
                 <th class="text-center" scope="col"></th>
-                <th class="text-center" scope="col"></th>
               </tr>
             </thead>
 
@@ -445,13 +453,11 @@
                     (input)="updateInstructions(i, 'enName', $event)"></textarea>
                 </td>
                 <td class="text-center td-actions input-floating-label">
-                  <select class="form-control" [(ngModel)]="item.tableId" name="table" id="table" style="width: 100%;">
+                  <select class="form-control" [(ngModel)]="item.tableId" name="table" id="table" style="width: 70%;">
                     <option value="0"></option>
                     <option *ngFor="let table of tables" [value]="table.id">{{ table.arName }}</option>
                   </select>
-                  <label style="top: 7px;" for="table">اختر الجدول</label>
-                </td>
-                <td class="text-center td-actions">
+                  <label style="top: 7px;right: 70px;" for="table">اختر الجدول</label>
                   <button class="icon" (click)="removeItemInstructions(i)"
                     style="border: none; background-color: transparent">
                     <img src="../../../../assets/images/trash-can-outline.png" alt="" />

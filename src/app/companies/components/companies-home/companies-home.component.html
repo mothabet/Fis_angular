@@ -81,7 +81,7 @@
               </td>
               <td class="text-center">{{ company.compRegNumber }}</td>
               <td class="text-center">{{ company.id }}</td>
-              <td class="text-center">{{ company.activityId }}</td>
+              <td class="text-center">{{ company.activityCode }}</td>
               <td class="text-center">{{ company.arActivityName }}</td>
               <td class="text-center">{{ company.address }}</td>
               <td class="text-center">{{ company.phoneNumber }}</td>
@@ -187,7 +187,7 @@
               </div>
               <div class="form-group col-4 mb-2">
                 <input formControlName="sectorName" class="form-control input-modal" type="text" [(ngModel)]="sectorName" />
-                <label for="inputField" class="text-danger">القطاع <span>*</span></label>
+                <label for="inputField" class="text-danger">اسم القطاع <span>*</span></label>
               </div>
               <div class="form-group col-6 mb-2">
                 <select required formControlName="activityId" class="form-control" style="width: 100%"
@@ -215,7 +215,7 @@
                     {{activity.code}}
                   </option>
                 </select>
-                <label for="inputField">اختيار النشاط الثانوي</label>
+                <label for="inputField">رمز النشاط الثانوي</label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="subActivityName" class="form-control input-modal" type="text"
@@ -224,12 +224,12 @@
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="municipalityNumber" class="form-control input-modal" type="text" />
-                <label for="inputField">رقم البلدية</label>
+                <label for="inputField">الترخيص البلدي</label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="compRegNumber" class="form-control input-modal" type="text"
                   (keypress)="validateInput($event)" />
-                <label for="inputField" class="text-danger">رقم تسجيل الشركة <span>*</span></label>
+                <label for="inputField" class="text-danger"> السجل التجاري <span>*</span></label>
               </div>
               <div class="form-group col-4 mb-2">
                 <input formControlName="phoneNumber" class="form-control input-modal" type="text"
@@ -311,7 +311,7 @@
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="institutionVlaue" class="form-control input-modal" type="text"
                   (keypress)="validateInput($event)" />
-                <label for="inputField">قيمة المؤسسه</label>
+                <label for="inputField">قيمة رأس المال</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="facilityType" class="form-control input-modal" type="text" />

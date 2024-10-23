@@ -213,3 +213,16 @@ button img {
 .items li a{
   width: 470px;
 }
+
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.show {
+  display: block;
+}
