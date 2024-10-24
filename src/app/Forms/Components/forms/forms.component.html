@@ -74,7 +74,7 @@
   <!--start create form modal -->
   <div class="modal company-modal fade" id="createForm" tabindex="-1" aria-labelledby="add" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="min-width:40%;">
       <div class="modal-content">
         <div class="modal-header pb-1">
           <h5 class="modal-title" id="sendForm" *ngIf="add">إنشاء استمارة</h5>
@@ -188,7 +188,7 @@
   <!--start create table modal -->
   <div class="modal company-modal fade" id="createTable" tabindex="-1" aria-labelledby="add" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="min-width:40%;">
       <div class="modal-content">
         <div class="modal-header pb-1">
           <h5 class="modal-title" id="sendForm" *ngIf="_addTable">إنشاء جدول</h5>
@@ -290,8 +290,8 @@
                   <label class="eng">مده الزمنيه للجدول</label>
                 </div>
               </div>
-              <hr *ngIf="Type == 3 || Type == 4" />
-              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4">
+              <hr *ngIf="Type == 3 || Type == 4 || Type == 7" />
+              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4 || Type == 7">
                 <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
                 <table class="table table-borderless">
                   <thead>
