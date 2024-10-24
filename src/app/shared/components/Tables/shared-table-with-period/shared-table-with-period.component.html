@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngFor="let formContent of table.formContents">
+            <ng-container *ngFor="let formContent of table.formContents; let index = index">
               <tr class="parent">
                 <td style="text-wrap: balance;">
                   <div class="content-container">
@@ -64,7 +64,7 @@
                     </ng-container>
                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                       <input type="number" [(ngModel)]="formContent.values[0]" class="tableInputParent"
-                        [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                        disabled />
                     </ng-container>
 
                   </td>
@@ -73,13 +73,13 @@
                       <input type="number" (focus)="clearIfZero(formContent.values, i+1)"
                         *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                         (blur)="restoreIfNotPositive(formContent.values, i+1)" class="tableInputParent"
-                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1)"
+                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1,index)"
                         [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                     </ng-container>
                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                       <input type="number" (focus)="clearIfZero(formContent.values, i+1)"
                         (blur)="restoreIfNotPositive(formContent.values, i+1)" class="tableInputParent"
-                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1)"
+                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1,index)"
                         [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                     </ng-container>
 

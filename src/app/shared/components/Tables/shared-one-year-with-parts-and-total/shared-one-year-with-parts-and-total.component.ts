@@ -509,9 +509,13 @@ export class SharedOneYearWithPartsAndTotalComponent {
     }
   }
   
-  changeStatus(status: number,formContent:IGetQuestionDto,level:number) {
+  changeStatus(status: number,formContent:IGetQuestionDto,level:number,indexFormContent : number=0) {
     if(level == 1){
-
+      formContent.values[0] = 0;
+      for (let index = 1; index < formContent.values.length; index++) {
+          formContent.values[0] += formContent.values[index]
+      }
+      this.table.formContents[indexFormContent] = formContent;
     }
     else if(level == 2){
       for (let index = 0; index < formContent.code.SubCodes.length; index++) {
