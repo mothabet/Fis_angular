@@ -55,7 +55,7 @@
         </select>
         <label for="search" class="select-label">بحث بالسنة</label>
       </div>
-      
+
     </div>
 
     <div>
@@ -259,15 +259,28 @@
                   <input formControlName="IsTotal" class="form-check-input" type="checkbox" id="active" />
                 </div>
               </div>
-              
+
               <!-- Conditionally hide this section when the checkbox is not checked -->
               <div class="col-sm-12 mb-2" *ngIf="tableForm.get('IsTotal')?.value">
                 <div class="input-floating-label mb-0">
-                  <input type="text" class="form-control" style="direction: ltr" formControlName="totalTitle" />
+                  <input type="text" class="form-control" style="direction: ltr" formControlName="totalTitleAr" />
                   <label class="eng">عنوان الاجمالي</label>
+                  <div *ngIf="totalTitleArReq" class="text-danger">
+                    يجب ادخال عنوان الاجمالي بالعربية
+                  </div>
                 </div>
               </div>
-              
+
+              <div class="col-sm-12 mb-2" *ngIf="tableForm.get('IsTotal')?.value">
+                <div class="input-floating-label mb-0">
+                  <input type="text" class="form-control" style="direction: ltr" formControlName="totalTitleEn" />
+                  <label class="eng">Total Title</label>
+                  <div *ngIf="totalTitleEnReq" class="text-danger">
+                    Enter total title in English
+                  </div>
+                </div>
+              </div>
+
               <div class="col-sm-12 mb-3" *ngIf="!(formType==2)">
                 <div class="input-floating-label mb-0">
                   <select formControlName="Type" class="form-control" style="width: 100%" [(ngModel)]="Type"
@@ -470,7 +483,7 @@
                     <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                   </button>
                 </td>
-                
+
               </tr>
             </tbody>
           </table>

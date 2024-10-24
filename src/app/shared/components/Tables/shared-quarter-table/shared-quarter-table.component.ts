@@ -40,9 +40,10 @@ export class SharedQuarterTableComponent {
     IsActive: false,
     IsTotal: false,
     formContents: [],   // Empty array to avoid 'undefined' error
-    tableParts: [] ,
-    IsDisabled:false,
-    totalTitle:""     // Empty array for tableParts
+    tableParts: [],
+    IsDisabled: false,
+    totalTitleAr: "",
+    totalTitleEn: ""
   };
   coverForm: ICoverFormDetailsDto = {
     id: 0,
@@ -238,7 +239,7 @@ export class SharedQuarterTableComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
+      IsTransaction: false,
       IsHdd: false,
       valueCheck: false
     }
@@ -460,7 +461,7 @@ export class SharedQuarterTableComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -488,7 +489,7 @@ export class SharedQuarterTableComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -674,7 +675,7 @@ export class SharedQuarterTableComponent {
 
     // Optionally, update any other logic or status here if needed
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode

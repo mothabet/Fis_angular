@@ -251,12 +251,12 @@
                             </ng-container>
                         </ng-container>
                         <tr class="footer" *ngIf="table.IsTotal">
-                            <td>{{table.totalTitle}}</td>
-                            <td class="text-center" *ngFor="let year of table.tableParts; let i = index">
-                                <input type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)" />
+                            <td  style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
+                            <td  style="background: #d3fffb33;" class="text-center" *ngFor="let year of table.tableParts; let i = index">
+                                <input  style="background: #d3fffb33;" type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)" />
                             </td>
-                            <td></td>
-                            <td class="text-start">{{table.totalTitle}}</td>
+                            <td  style="background: #d3fffb33;"></td>
+                            <td  style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
                     </tbody>
                 </table>

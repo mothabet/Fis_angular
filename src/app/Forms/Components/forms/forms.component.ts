@@ -24,6 +24,8 @@ import { Editor } from 'ngx-editor';
   styleUrls: ['./forms.component.css'],
 })
 export class FormsComponent implements OnInit {
+  totalTitleArReq: boolean = false;
+  totalTitleEnReq: boolean = false;
   Loader: boolean = false;
   zoomLevel: number = 1;
   isPanning: boolean = false;
@@ -123,7 +125,8 @@ export class FormsComponent implements OnInit {
       enNotes: ['', Validators.required],
       IsActive: [true, Validators.required],
       IsTotal: [false],
-      totalTitle: '',
+      totalTitleAr: '',
+      totalTitleEn: '',
       Type: [0, Validators.required],
       Order: [0, Validators.required],
       formId: [''],
@@ -889,8 +892,21 @@ export class FormsComponent implements OnInit {
         IsTotal: this.tableForm.value.IsTotal,
         period: Number(this.tableForm.value.period),
         tableParts: this.addTableParts,
-        totalTitle: this.tableForm.value.totalTitle,
+        totalTitleEn: this.tableForm.value.totalTitleEn,
+        totalTitleAr: this.tableForm.value.totalTitleAr,
       };
+      if(Model.IsTotal == true){
+        if (Model.totalTitleAr == '' ||Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
+          this.totalTitleArReq = true;
+          this.Loader = false;
+          return;
+        }
+        if (Model.totalTitleEn == '' ||Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
+          this.totalTitleEnReq = true;
+          this.Loader = false;
+          return;
+        }
+      }
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');
@@ -961,7 +977,8 @@ export class FormsComponent implements OnInit {
       enName: '',
       arHeading: '',
       enHeading: '',
-      totalTitle: '',
+      totalTitleAr: '',
+      totalTitleEn: '',
       enNotes: '',
       arNotes: '',
       Type: 0,
@@ -1029,7 +1046,8 @@ export class FormsComponent implements OnInit {
             fromId: this.addTable.formId,
             IsActive: this.addTable.IsActive,
             IsTotal: this.addTable.IsTotal,
-            totalTitle: this.addTable.totalTitle,
+            totalTitleAr: this.addTable.totalTitleAr,
+            totalTitleEn: this.addTable.totalTitleEn,
             period: this.tableForm.value.period,
           });
           this.addTableParts = res.Data.tableParts;
@@ -1079,8 +1097,21 @@ export class FormsComponent implements OnInit {
         IsTotal: this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
         tableParts: this.addTableParts,
-        totalTitle:this.tableForm.value.totalTitle,
+        totalTitleAr:this.tableForm.value.totalTitleAr,
+        totalTitleEn:this.tableForm.value.totalTitleEn,
       };
+      if(Model.IsTotal == true){
+        if (Model.totalTitleAr == '' ||Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
+          this.totalTitleArReq = true;
+          this.Loader = false;
+          return;
+        }
+        if (Model.totalTitleEn == '' ||Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
+          this.totalTitleEnReq = true;
+          this.Loader = false;
+          return;
+        }
+      }
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');

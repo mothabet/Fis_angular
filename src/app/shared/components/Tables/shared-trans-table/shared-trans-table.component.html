@@ -289,26 +289,26 @@
                             </ng-container>
 
                         </ng-container>
-                        <tr class="footer" *ngIf="table.IsTotal">
-                            <td>{{table.totalTitle}}</td>
-                            <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
+                        <tr class="footer" *ngIf="table.IsTotal" style="background: #d3fffb33;">
+                            <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
+                            <td style="background: #d3fffb33;" class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
                                 <input disabled type="number" [value]="getSumOfValues(1)" />
                             </td>
 
                             <!-- Difference between formContent.values[1] and formContent.values[0] -->
-                            <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
+                            <td style="background: #d3fffb33;" class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
                                 <input disabled type="number" [value]="getDifferenceBetweenSums(1, 0)" />
                             </td>
 
                             <!-- Sum of formContent.values[0] -->
-                            <td class="text-center" style="color: black;">
-                                <input disabled type="number" [value]="getSumOfValues(0)" style="color: black;" />
+                            <td style="background: #d3fffb33;color: black;" class="text-center" >
+                                <input style="background: #d3fffb33;color: black;" disabled type="number" [value]="getSumOfValues(0)" />
                             </td>
 
-                            <td class="text-center">
+                            <td style="background: #d3fffb33;" class="text-center">
                             </td>
 
-                            <td class="text-start">{{table.totalTitle}}</td>
+                            <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
                     </tbody>
                 </table>

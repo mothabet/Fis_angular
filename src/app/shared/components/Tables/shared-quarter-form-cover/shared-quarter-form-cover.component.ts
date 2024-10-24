@@ -37,7 +37,9 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     formContents: [],   // Empty array to avoid 'undefined' error
     tableParts: [] ,
     IsDisabled:false  ,
-    totalTitle:""   
+    totalTitleAr:"", 
+    totalTitleEn:""   
+
   };
   years: number[] =[];
   currentYear: number = 0;
