@@ -836,7 +836,6 @@ export class FormsComponent implements OnInit {
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter,
         codeActivity: this.formForm.value.codeActivity,
-
       };
       const observer = {
         next: (res: any) => {
@@ -1080,9 +1079,8 @@ export class FormsComponent implements OnInit {
         IsTotal: this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
         tableParts: this.addTableParts,
-        totalTitle:this.tableForm.value.period,
+        totalTitle:this.tableForm.value.totalTitle,
       };
-
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('tableCancel');
