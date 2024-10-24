@@ -875,6 +875,16 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
+    
+    if((this.tableForm.value.Type == '3'||this.tableForm.value.Type == '4'||this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اضافة اجزاء',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
     this.Loader = true;
     this.tableForm.value.fromId = this.formId;
     if (this.tableForm.valid) {
@@ -1050,6 +1060,7 @@ export class FormsComponent implements OnInit {
             totalTitleEn: this.addTable.totalTitleEn,
             period: this.tableForm.value.period,
           });
+          debugger
           this.addTableParts = res.Data.tableParts;
           this.Loader = false;
           this._addTable = false;
@@ -1080,6 +1091,15 @@ export class FormsComponent implements OnInit {
   }
   updateTable() {
 
+    if((this.tableForm.value.Type == '3'||this.tableForm.value.Type == '4'||this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اضافة اجزاء',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
     this.Loader = true;
     if (!(this.tableForm.value.Type == '5')) this.tableForm.value.period = 0
     if (this.tableForm.valid) {
