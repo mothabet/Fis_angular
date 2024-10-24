@@ -34,13 +34,18 @@
                             <td style="text-wrap: balance;">الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالة
                                 المنشأة)</td>
                             <td class="text-center">
-                                <select class="form-control"
-                                    name="coverForm.GeneralData.ChekInfo"
-                                    [(ngModel)]="coverForm.GeneralData.ChekInfo"
-                                    style="width: 50% !important;border: solid 1px;display: inline;">
-                                    <option value="0"></option>
-                                    <option value="1" *ngFor="let workChk of workDataChk; let i = index">{{workChk.arName}} - {{workChk.enName}}</option>
-                                </select>
+                                <div class="input-floating-label mb-0" style="padding: inherit;">
+                                    <select class="form-control" name="coverForm.GeneralData.ChekInfo"
+                                        [(ngModel)]="coverForm.GeneralData.ChekInfo"
+                                        style="width: 50% !important;border: solid 1px;display: inline;">
+                                        <option value="0"></option>
+                                        <option value="1" *ngFor="let workChk of workDataChk; let i = index">
+                                            {{workChk.arName}} - {{workChk.enName}}</option>
+                                    </select>
+                                    <label for="user"
+                                        style="font-size: larger;margin-right: 76px;margin-top: 5px;">اختيار الكيان
+                                        القانونى للمنشأة</label>
+                                </div>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">The Legal Type of Organization (tick
                                 approprate reponse)</td>
@@ -77,15 +82,20 @@
                         <tr>
                             <td style="text-wrap: balance;">مصدر اليانات</td>
                             <td class="text-center">
-                                <select class="form-control"
-                                    style="width: 50% !important;border: solid 1px;display: inline;"
-                                    name="coverForm.GeneralData.dataSource"
-                                    [(ngModel)]="coverForm.GeneralData.dataSource">
-                                    <option value="0"></option>
-                                    <option value="1">سجلات محاسبية - Statements</option>
-                                    <option value="2">تقديرات - Estimates</option>
-                                    <option value="3">سجلات محاسبية و تقديرات معا - Statements and Estimates</option>
-                                </select>
+                                <div class="input-floating-label mb-0" style="padding: inherit;">
+                                    <select class="form-control"
+                                        style="width: 50% !important;border: solid 1px;display: inline;"
+                                        name="coverForm.GeneralData.dataSource"
+                                        [(ngModel)]="coverForm.GeneralData.dataSource">
+                                        <option value="0"></option>
+                                        <option value="1">سجلات محاسبية - Statements</option>
+                                        <option value="2">تقديرات - Estimates</option>
+                                        <option value="3">سجلات محاسبية و تقديرات معا - Statements and Estimates
+                                        </option>
+                                    </select>
+                                    <label for="user"
+                                        style="font-size: larger;margin-right: 84px;margin-top: 5px;">اختيار مصدر اليانات</label>
+                                </div>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">Source of data</td>
                     </tbody>

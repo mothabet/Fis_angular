@@ -31,6 +31,7 @@ export interface IGetTableDto {
     period:number,
     IsActive: boolean,
     IsTotal:boolean,
+    totalTitle:string,
     IsDisabled:boolean,
     formContents :IGetQuestionDto[]
     tableParts :IGetTableParts[]

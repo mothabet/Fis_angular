@@ -92,7 +92,7 @@ export class CompaniesHomeComponent implements OnInit {
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
     const currentYear = new Date().getFullYear();
-    for (let year = 2007; year <= currentYear; year++) {
+    for (let year = 1990; year <= currentYear; year++) {
       this.years.push(year);
     }
     this.GetCompanies('', 1);

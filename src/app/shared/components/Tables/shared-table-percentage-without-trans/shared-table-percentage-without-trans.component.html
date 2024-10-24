@@ -287,7 +287,7 @@
                             </ng-container>
                         </ng-container>
                         <tr class="footer" *ngIf="table.IsTotal">
-                            <td>الاجمالى</td>
+                            <td>{{table.totalTitle}}</td>
                             <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
                                 <input disabled type="number" [value]="getSumOfValues(0)"/>
                             </td>
@@ -301,7 +301,7 @@
                             <td class="text-center">
                             </td>
                         
-                            <td class="text-start">Total</td>
+                            <td class="text-start">{{table.totalTitle}}</td>
                         </tr>
                     </tbody>
                 </table>

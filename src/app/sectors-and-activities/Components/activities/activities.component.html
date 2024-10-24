@@ -118,6 +118,9 @@
             <div class="form-group col-sm-12 mb-2">
               <input class="form-control input-modal" type="text" formControlName="code" />
               <label for="inputField">رمز النشاط</label>
+              <div *ngIf="codeLengthError" class="text-danger">
+                يجب ان يكون رمز النشاط مكون من 6 ارقام
+              </div>
             </div>
             <div class="form-group col-sm-12 mb-2">
               <select class="form-control input-modal" formControlName="categoryId">

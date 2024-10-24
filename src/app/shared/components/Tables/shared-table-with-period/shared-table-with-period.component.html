@@ -244,12 +244,12 @@
 
             </ng-container>
             <tr class="footer" *ngIf="table.IsTotal">
-              <td>الاجمالى</td>
+              <td>{{table.totalTitle}}</td>
               <td class="text-center" *ngFor="let year of years; let i = index">
                 <input type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)" />
               </td>
               <td></td>
-              <td class="text-start">Total</td>
+              <td class="text-start">{{table.totalTitle}}</td>
 
             </tr>
           </tbody>

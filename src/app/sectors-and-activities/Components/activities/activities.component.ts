@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 })
 export class ActivitiesComponent implements OnInit {
   activityForm!: FormGroup;
+  codeLengthError: boolean = false;
   showLoader: boolean = false;
   activities!: IGetSectorDto[];
   activity!: IGetSectorDto;
@@ -25,11 +26,11 @@ export class ActivitiesComponent implements OnInit {
   searchText: string = '';
   noData: boolean = false;
   constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
-  private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+    private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
 
   ngOnInit(): void {
     this.activityForm = this.formBuilder.group({
-      code: ['', Validators.required],
+      code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       categoryId: [0, Validators.required],
@@ -38,7 +39,6 @@ export class ActivitiesComponent implements OnInit {
     this.GetSectors(1, '',)
   }
   onSave() {
-    debugger
     this.showLoader = true;
     const allErrors: string[] = [];
     if (this.activityForm.value.arName == "" || this.activityForm.value.arName == null) {
@@ -47,11 +47,10 @@ export class ActivitiesComponent implements OnInit {
     if (this.activityForm.value.enName == "" || this.activityForm.value.enName == null) {
       allErrors.push("Activity Name in English is required.");
     }
-    if (this.activityForm.value.code == "" || this.activityForm.value.code == null) {
-      allErrors.push('يجب ادخال رمز النشاط');
-    }
-    else if (this.activityForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز النشاط مكون من 6');
+    if (this.activityForm.value.code.length != 6) {
+      this.codeLengthError = true;
+      this.showLoader = false;
+      return;
     }
     if (!(this.activityForm.value.categoryId > 0)) {
       allErrors.push('يجب اختيار اسم الفئة');
@@ -109,7 +108,7 @@ export class ActivitiesComponent implements OnInit {
           this.totalPages = res.Data.TotalCount;
           this.onReset();
         }
-        else{
+        else {
           this.activities = [];
         }
         this.showLoader = false;
@@ -235,7 +234,7 @@ export class ActivitiesComponent implements OnInit {
         enName: this.activityForm.value.enName,
         code: this.activityForm.value.code,
         categoryId: this.activityForm.value.categoryId,
-        sectorId : 0
+        sectorId: 0
       };
       const observer = {
         next: (res: any) => {
@@ -259,7 +258,7 @@ export class ActivitiesComponent implements OnInit {
         },
       };
       this.sectorsAndActivitiesServices.UpdateActivity(this.id, Model).subscribe(observer);
-    } 
+    }
   }
   getControlErrors(controlName: string): string[] {
     debugger
@@ -284,9 +283,9 @@ export class ActivitiesComponent implements OnInit {
     this.activityForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      code : ['', Validators.required],
-      categoryId : 0,
-    });    
+      code: ['', Validators.required],
+      categoryId: 0,
+    });
   }
   onlyNumber(event: Event): void {
     const inputElement = event.target as HTMLInputElement;

@@ -41,7 +41,8 @@ export class SharedQuarterTableComponent {
     IsTotal: false,
     formContents: [],   // Empty array to avoid 'undefined' error
     tableParts: [] ,
-    IsDisabled:false     // Empty array for tableParts
+    IsDisabled:false,
+    totalTitle:""     // Empty array for tableParts
   };
   coverForm: ICoverFormDetailsDto = {
     id: 0,
