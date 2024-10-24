@@ -82,14 +82,14 @@
                                                     (focus)="clearIfZero(formContent.values, i+1)"
                                                     (blur)="restoreIfNotPositive(formContent.values, i+1)"
                                                     [(ngModel)]="formContent.values[i+1]"
-                                                    (input)="changeStatus(coverForm.status,formContent,1)" disabled />
+                                                    (input)="changeStatus(coverForm.status,formContent,1)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
                                             <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                                 <input type="number" class="tableInputParent"
                                                     (focus)="clearIfZero(formContent.values, i+1)"
                                                     (blur)="restoreIfNotPositive(formContent.values, i+1)"
                                                     [(ngModel)]="formContent.values[i+1]"
-                                                    (input)="changeStatus(coverForm.status,formContent,1)" disabled />
+                                                    (input)="changeStatus(coverForm.status,formContent,1)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
                                         </td>
                                     </ng-container>
@@ -110,6 +110,11 @@
                                                 (click)="addSubCodeToSubRow(subCode)">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
+                                            <span *ngIf="subCode.IsHdd == true" style="float: left;"
+                                            class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                            اجمالي <i class="fa-solid fa-circle-question"></i>
+                                        </span>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <div style="display: flex;">
@@ -183,7 +188,7 @@
                                                     (focus)="clearIfZero(subCode.values, i+1)"
                                                     (blur)="restoreIfNotPositive(subCode.values, i+1)"
                                                     (input)="handleParent(formContent)"
-                                                    [(ngModel)]="subCode.values[i+1]" /></td>
+                                                    [(ngModel)]="subCode.values[i+1]"  [disabled]="subCode.IsHdd"/></td>
                                         </ng-container>
                                     </ng-container>
                                     <td class="text-center"><input disabled type="text"

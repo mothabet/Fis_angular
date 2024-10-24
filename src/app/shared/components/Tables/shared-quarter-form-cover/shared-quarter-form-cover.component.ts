@@ -20,8 +20,25 @@ export class SharedQuarterFormCoverComponent implements OnInit {
   noTables = true;
   @Input() formId!: string;
   @Input() companyId!: string;
-  table!: IGetTableDto;
-  years!: number[];
+  table: IGetTableDto={
+    id: 0,
+    arName: '',
+    enName: '',
+    arHeading: '',
+    enHeading: '',
+    arNotes: '',
+    enNotes: '',
+    Type: '',
+    Order: '',
+    formId: 0,
+    period: 0,
+    IsActive: false,
+    IsTotal: false,
+    formContents: [],   // Empty array to avoid 'undefined' error
+    tableParts: [] ,
+    IsDisabled:false  
+  };
+  years: number[] =[];
   currentYear: number = 0;
   period: number = 0;
   formContent!: IGetQuestionDto[]

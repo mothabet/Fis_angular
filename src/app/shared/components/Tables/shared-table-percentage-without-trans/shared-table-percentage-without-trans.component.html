@@ -115,6 +115,10 @@
                                                 (click)="addSubCodeToSubRow(subCode)">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
+                                            <span *ngIf="subCode.IsHdd == true" style="float: left;"
+                                            class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                            اجمالي <i class="fa-solid fa-circle-question"></i></span>
                                     </td>
                                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                         <div style="display: flex;">
@@ -182,25 +186,25 @@
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <input type="number" [(ngModel)]="subCode.values[0]"
-                                             (input)="changeStatus(coverForm.status)" disabled
+                                             (input)="changeStatus(coverForm.status)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                              (focus)="clearIfZero(subCode.values, 0)"
                                             (blur)="restoreIfNotPositive(subCode.values, 0)"
-                                            (input)="handleParent(formContent)"/>
+                                            (input)="handleParent(formContent)" [disabled]="subCode.IsHdd"/>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <input type="number"  [(ngModel)]="subCode.values[1]"
-                                             (input)="changeStatus(coverForm.status)" disabled
+                                             (input)="changeStatus(coverForm.status)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                              (focus)="clearIfZero(subCode.values, 1)"
                                             (blur)="restoreIfNotPositive(subCode.values, 1)"
-                                            (input)="handleParent(formContent)"/>
+                                            (input)="handleParent(formContent)" [disabled]="subCode.IsHdd"/>
                                     </td>
                                     <td class="text-center" *ngIf="!subCode.IsTrueAndFalse">
                                         <span> %  </span>
                                         <input type="number" [(ngModel)]="subCode.values[2]"
-                                             (input)="changeStatus(coverForm.status)" disabled
+                                             (input)="changeStatus(coverForm.status)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                              (focus)="clearIfZero(subCode.values, 2)"
                                             (blur)="restoreIfNotPositive(subCode.values, 2)"
-                                            (input)="handleParent(formContent)"/>
+                                            (input)="handleParent(formContent)" [disabled]="subCode.IsHdd"/>
                                     </td>
                                     <td class="text-center">
                                         <input type="text" disabled value="{{subCode.QuestionCode}}" />
