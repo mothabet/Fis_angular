@@ -46,7 +46,7 @@ export class GroupComponent implements OnInit {
       allErrors.push("Group Name in English is required.");
     }
     if (this.groupForm.value.code == "" || this.groupForm.value.code == null) {
-      allErrors.push('يجب اختيار المجموعة');
+      allErrors.push('يجب ادخال رمز المجموعة');
     }
     if (!(this.groupForm.value.sectionId > 0)) {
       allErrors.push('يجب اختيار اسم القطاع');

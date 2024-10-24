@@ -48,9 +48,6 @@ export class SectionComponent implements OnInit {
     if (this.sectionForm.value.code == "" || this.sectionForm.value.code == null) {
       allErrors.push('يجب ادخال رمز القسم');
     }
-    else if (this.sectionForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز النشاط مكون من 6');
-    }
     if (!(this.sectionForm.value.sectorId > 0)) {
       allErrors.push('يجب اختيار اسم القطاع');
     }

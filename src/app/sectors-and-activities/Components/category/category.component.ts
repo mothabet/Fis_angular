@@ -48,9 +48,6 @@ export class CategoryComponent implements OnInit {
     if (this.categoryForm.value.code == "" || this.categoryForm.value.code == null) {
       allErrors.push('يجب اختيار الفئة');
     }
-    else if (this.categoryForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز الفئة مكون من 6');
-    }
     if (!(this.categoryForm.value.groupId > 0)) {
       allErrors.push('يجب اختيار اسم المجموعة');
     }
