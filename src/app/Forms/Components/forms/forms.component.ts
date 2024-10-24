@@ -81,6 +81,10 @@ export class FormsComponent implements OnInit {
   editoren!: Editor;
   arNotes = '';
   enNotes = '';
+  editorForm!: Editor;
+  editorenForm!: Editor;
+  arNotesForm = '';
+  enNotesForm = '';
   yearsFilter: number[] = [];
   tables: IGetTableDto[]=[]
   constructor(
@@ -134,6 +138,8 @@ export class FormsComponent implements OnInit {
     this.GetSectorActvities(0);
     this.editor = new Editor();
     this.editoren = new Editor();
+    this.editorForm = new Editor();
+    this.editorenForm = new Editor();
   }
   ngOnChanges() {
     this.forms = this.forms;
