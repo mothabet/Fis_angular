@@ -104,7 +104,7 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         
         if (res.Data) {
-          debugger
+          
           this.sectorId = res.Data.sectorId;
           this.sectorCode = res.Data.code;
           this.sectorName = res.Data.sectorName;
@@ -516,7 +516,7 @@ export class CompaniesHomeComponent implements OnInit {
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
-      debugger
+      
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
       if (Model.legalType.toString() == "")
@@ -712,7 +712,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.company = res.Data;
           this.GetSectorActivities_UpdatePop(this.company.sectorId, this.company.activityId);
@@ -854,7 +854,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      debugger
+      
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -889,7 +889,7 @@ export class CompaniesHomeComponent implements OnInit {
       }
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
-      debugger
+      
       if(Model.legalType == null)
         Model.legalType = 0
       else if (Model.legalType.toString() == "")

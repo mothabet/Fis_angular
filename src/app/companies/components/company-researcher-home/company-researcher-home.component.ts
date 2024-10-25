@@ -477,7 +477,7 @@ export class CompanyResearcherHomeComponent {
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
-      debugger
+      
       if (Model.subActivityId.toString() == "")
         Model.subActivityId = 0
       this.showLoader = true;
@@ -798,7 +798,7 @@ export class CompanyResearcherHomeComponent {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      debugger
+      
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,

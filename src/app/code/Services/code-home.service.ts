@@ -11,7 +11,7 @@ export class CodeHomeService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddCode(Model: IAddCode){
-    debugger
+    
    var headers= this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl+`Code/AddCode?lang=2`, Model, { headers });
     return resopnse;
@@ -32,7 +32,7 @@ export class CodeHomeService {
      return resopnse;
    }
    DeleteCode(id:number,Department:string){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.delete(environment.apiUrl+`Code/DeleteCode?id=${id}&department=${Department}&lang=2`, { headers });
      return resopnse;

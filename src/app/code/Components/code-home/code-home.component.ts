@@ -93,7 +93,7 @@ export class CodeHomeComponent {
   updateSubCode(index: number, field: keyof IAddSubCode, event: Event): void {
     const inputElement = event.target as HTMLInputElement | HTMLSelectElement | HTMLInputElement;
     let value: string | boolean;
-    debugger
+    
     // Handle boolean for the IsTrueAndFalse field
     if (field === 'IsTrueAndFalse' || field === 'IsHdd' || field === "IsTransaction") {
       value = (inputElement as HTMLInputElement).checked; // Boolean for checkbox
@@ -326,7 +326,7 @@ export class CodeHomeComponent {
     this.showLoader = true;
     
     if (this.codeForm.valid && this.searchTerm != "") {
-      debugger
+      
       if ((this.codeForm.value.connectedWith != null && this.codeForm.value.connectedWith != "") && this.codeForm.value.connectedWithType == null) {
         this.showLoader = false;
         Swal.fire({
