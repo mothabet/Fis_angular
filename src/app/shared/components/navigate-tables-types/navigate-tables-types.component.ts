@@ -447,7 +447,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                   questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
                   codes: coverForm.tables[index].formContents[i].code.SubCodes[r].values,
                   level: 2,
-                  codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id,
+                  codeId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id || coverForm.tables[index].formContents[i].code.Id,
                   codeType: 0,
                   valueCheck: coverForm.tables[index].formContents[i].code.SubCodes[r].valueCheck,
                   parentCodeId: coverForm.tables[index].formContents[i].code.Id,
