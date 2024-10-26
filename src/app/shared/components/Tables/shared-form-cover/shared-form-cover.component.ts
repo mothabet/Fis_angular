@@ -106,7 +106,7 @@ export class SharedFormCoverComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
+          
           this.coverForm = {
             ...this.coverForm,  // Spread the current values of coverForm to preserve them
             ...res.Data,        // Overwrite only the properties from res.Data
@@ -163,7 +163,7 @@ export class SharedFormCoverComponent implements OnInit {
                       GeneralData: parsedCoverForm.GeneralData || this.coverForm.GeneralData,  // Preserve GeneralData if not provided
                     };
                   }
-                  debugger
+                  
                   tablesList.forEach((table: any) => {
                     const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                     if (tableIndex !== -1) {
@@ -353,7 +353,7 @@ export class SharedFormCoverComponent implements OnInit {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              debugger
+                              
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -512,7 +512,7 @@ export class SharedFormCoverComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          debugger
+          
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;

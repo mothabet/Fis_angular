@@ -218,7 +218,7 @@ export class SharedWorkDataComponent implements OnInit {
     if (generalData) {
       localStorage.removeItem(`generalData`);
     }
-    debugger
+    
     this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
     localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
   }

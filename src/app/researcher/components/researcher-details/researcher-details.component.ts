@@ -485,7 +485,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.getResearcherMandateDto = res.Data.getResearcherMandateDtos;
           const button = document.getElementById('AllResearcherMandateBtn');
@@ -516,7 +516,8 @@ export class ResearcherDetailsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
+        
         if (res.Data) {
           this.getCompanyResearcherMandateDto = res.Data;
           const button = document.getElementById('CompanyResearcherMandateBtn');

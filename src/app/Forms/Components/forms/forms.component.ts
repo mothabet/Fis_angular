@@ -700,7 +700,7 @@ export class FormsComponent implements OnInit {
   }
   onYearChange(event: Event): void {
     const selectedYear = +(event.target as HTMLSelectElement).value; // Get selected year
-    debugger
+    
     if (selectedYear != null && selectedYear != undefined && selectedYear != 0)
       this.forms = this.formsTemp.filter(form => +form.reviewYear === selectedYear);
     else
@@ -1060,7 +1060,7 @@ export class FormsComponent implements OnInit {
             totalTitleEn: this.addTable.totalTitleEn,
             period: this.tableForm.value.period,
           });
-          debugger
+          
           this.addTableParts = res.Data.tableParts;
           this.Loader = false;
           this._addTable = false;

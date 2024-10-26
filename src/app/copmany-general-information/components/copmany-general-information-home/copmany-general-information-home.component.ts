@@ -95,7 +95,7 @@ export class CopmanyGeneralInformationHomeComponent {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -111,7 +111,7 @@ export class CopmanyGeneralInformationHomeComponent {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -138,7 +138,7 @@ export class CopmanyGeneralInformationHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.companyGeneralInformations = res.Data.companyGeneralInformationDtos;
@@ -233,7 +233,7 @@ export class CopmanyGeneralInformationHomeComponent {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();

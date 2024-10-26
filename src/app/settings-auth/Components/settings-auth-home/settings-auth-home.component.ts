@@ -169,7 +169,7 @@ export class SettingsAuthHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.getSettingsAuthDto = res.Data.getSettingsAuthDtos;

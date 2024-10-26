@@ -36,14 +36,14 @@ export class ResearcherHomeService {
      return resopnse;
    }
    GetResearcherByIdWithCompaniesAndCompaniesMandate(id:number,pageNumber:number , textSearch : string =''){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.get(environment.apiUrl+`Researcher/GetResearcherByIdWithCompaniesAndCompaniesMandate?id=${id}&lang=2&pageNumber=${pageNumber}&textSearch=${textSearch}`, { headers });
      return resopnse;
    }
    GetFormsStatistics(id: number = 0, fromDate: Date | null = null, toDate: Date | null = null) {
     var headers = this.sharedService.getHeaders();
-debugger
+
     // بناء رابط الـ API مع تجاهل معلمات null
     let url = `${environment.apiUrl}Form/FormsStatistics?researcherId=${id}&lang=2`;
     

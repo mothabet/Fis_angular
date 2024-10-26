@@ -72,7 +72,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -113,7 +113,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.messages = [];
@@ -202,7 +202,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
             arSubject: this.message.arSubject,
             enSubject: this.message.enSubject,
           });
-          debugger
+          
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addMessageBtn');
@@ -233,7 +233,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
       };
       const observer = {
         next: (res: any) => {
-          debugger
+          
           const button = document.getElementById('btnCancel');
           if (button) {
             button.click();
@@ -249,7 +249,7 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
           });
         },
         error: (err: any) => {
-          debugger
+          
           this.sharedService.handleError(err);
           this.showLoader = false;
         },
@@ -301,7 +301,8 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
     
   }
   onPageChange(page: number) {
-    debugger
+    
+    
     this.currentPage = page;
     this.GetAllMessages(page);
   }

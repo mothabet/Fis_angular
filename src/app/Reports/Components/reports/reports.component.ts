@@ -110,13 +110,14 @@ export class ReportsComponent implements OnInit {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            debugger
+            
             this.GetReports(1, '');
             this.showLoader = false;
 
           },
           error: (err: any) => {
-            debugger
+            
+            
             this.sharedService.handleError(err);
             this.showLoader = false;
           },

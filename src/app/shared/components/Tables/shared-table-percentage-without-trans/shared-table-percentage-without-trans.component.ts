@@ -427,7 +427,7 @@ export class SharedTablePercentageWithoutTransComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              debugger
+                              
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -505,7 +505,7 @@ export class SharedTablePercentageWithoutTransComponent {
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      debugger
+      
       formContent.code.SubCodes[index] = subCode;
       this.handleParent(formContent);
     }
@@ -639,7 +639,7 @@ export class SharedTablePercentageWithoutTransComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {

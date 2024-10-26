@@ -24,7 +24,7 @@ export class CertificationComponent implements OnInit{
     this.GetFormById(+this.formId);
     this.isCertificationActive = true;const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);  
-    debugger
+    
     this.role = result.roles;
   }
   GetFormById(id: number): void {

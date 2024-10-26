@@ -154,7 +154,7 @@ export class ActivitiesComponent implements OnInit {
       confirmButtonText: 'نعم اريد المسح!',
       cancelButtonText: 'لا'
     }).then((result) => {
-      debugger
+      
       if (result.isConfirmed) {
         this.showLoader = true;
         const observer = {
@@ -261,7 +261,8 @@ export class ActivitiesComponent implements OnInit {
     }
   }
   getControlErrors(controlName: string): string[] {
-    debugger
+    
+    
     const control = this.activityForm.get(controlName);
     const errors: string[] = [];
     if (control && control.errors) {

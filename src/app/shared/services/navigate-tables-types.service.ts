@@ -11,7 +11,7 @@ export class NavigateTablesTypesService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
   AddFormData(Model: IAddFormDataDto,btnTpe:string = "", companyId:number = 0) {
-    debugger
+    
     var headers = this.sharedService.getHeaders();
     var resopnse = this.http.post(environment.apiUrl + `FormData/AddFormData?lang=2&btnTpe=${btnTpe}&companyId=${companyId}`, Model, { headers });
     return resopnse;

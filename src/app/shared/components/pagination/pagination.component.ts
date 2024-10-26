@@ -12,7 +12,7 @@ export class PaginationComponent {
   @Input() pagesCount!: number;
   @Output() pageChange = new EventEmitter();
   Pagination(pageNumber: number){
-    debugger
+    
     if (pageNumber > 0 && pageNumber <= this.pagesCount) {
       this.pageChange.emit(pageNumber);
     }

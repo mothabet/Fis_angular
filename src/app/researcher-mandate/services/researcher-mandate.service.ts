@@ -11,7 +11,7 @@ export class ResearcherMandateService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddResearcherMandate(Model: IAddResearcherMandateDto){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`ResearcherMandate/AddResearcherMandate?lang=2`, Model, { headers });
      return resopnse;

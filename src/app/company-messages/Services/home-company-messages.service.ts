@@ -11,7 +11,7 @@ export class HomeCompanyMessagesService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddCompanyMessage(Model: IAddCompanyMessage){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`CompanyMessage/AddCompanyMessage?lang=2`, Model, { headers });
      return resopnse;

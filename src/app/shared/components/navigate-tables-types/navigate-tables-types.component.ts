@@ -853,7 +853,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
-            debugger
+            
             this.addInstructions = res.Data.getInstructionsDtos
             this.add = true;
             if (role != '') {

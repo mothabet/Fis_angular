@@ -30,14 +30,14 @@ export class SharedCertificationComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           const certificationData: ICertificationDto = {
             companiesDetails: '',
             completedBy: '',
             telephoneNo: '',
             dateOfCompletion: '',
           };
-          debugger
+          
           this.coverForm = res.Data;
           this.coverForm.certification = certificationData
           this.GetFormData();
@@ -61,7 +61,7 @@ export class SharedCertificationComponent {
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           if (res.Data) {
-            debugger
+            
             let certification = localStorage.getItem(`certification`);
             if (certification) {
               this.coverForm.certification = JSON.parse(certification) as ICertificationDto;
@@ -82,7 +82,7 @@ export class SharedCertificationComponent {
   }
 
   ngOnDestroy() {
-    debugger
+    
     let certification = localStorage.getItem(`certification`);
     if (certification) {
       localStorage.removeItem(`certification`);

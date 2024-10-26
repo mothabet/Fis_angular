@@ -121,7 +121,7 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -150,7 +150,7 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -476,7 +476,7 @@ export class SharedQuarterTableComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              debugger
+                              
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -557,7 +557,7 @@ export class SharedQuarterTableComponent {
   getSumOfParentChildes(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       // Add the value of formContent at the specified index
-      debugger
+      
       sum += formContent.values[index] || 0;
 
       // Check if formContent has SubCodes and sum only those where subCode.codeId matches formContent.code.id
@@ -579,7 +579,7 @@ export class SharedQuarterTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
@@ -640,7 +640,7 @@ export class SharedQuarterTableComponent {
     }
   }
   clearIfZero(values: any[], index: number): void {
-    debugger
+    
     if (values[index] === 0) {
       values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
@@ -685,7 +685,7 @@ export class SharedQuarterTableComponent {
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      debugger
+      
       formContent.code.SubCodes[index] = subCode;
       this.handleParent(formContent);
     }

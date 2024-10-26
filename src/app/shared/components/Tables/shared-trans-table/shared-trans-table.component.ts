@@ -438,7 +438,7 @@ export class SharedTransTableComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              debugger
+                              
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -526,7 +526,7 @@ export class SharedTransTableComponent {
       });
   
       // Assign the modified subCode back to formContent
-      debugger;
+      ;
       formContent.code.SubCodes[index] = subCode;
   
       // Call the handleParent method with the updated subCode and formContent
@@ -677,7 +677,7 @@ export class SharedTransTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {

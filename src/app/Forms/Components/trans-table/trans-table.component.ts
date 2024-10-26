@@ -45,7 +45,7 @@ export class TransTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -54,7 +54,7 @@ export class TransTableComponent {
         }
       },
       error: (err: any) => {
-        debugger
+        
         this.sharedServices.handleError(err);
         this.Loader = false;
       },

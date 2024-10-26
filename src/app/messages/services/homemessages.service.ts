@@ -11,7 +11,7 @@ export class HomemessagesService {
 
   constructor(private sharedService:SharedService,private http:HttpClient) { }
   AddMessage(Model: IAddMessage){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`Message/AddMessage?lang=2`, Model, { headers });
      return resopnse;
@@ -28,7 +28,8 @@ export class HomemessagesService {
       return resopnse;
     }
     UpdateMessage(id:number,Model: IAddMessage){
-     debugger
+     
+      
      var headers= this.sharedService.getHeaders();
       var resopnse = this.http.put(environment.apiUrl+`Message/UpdateMessage?id=${id}&lang=2`, Model, { headers });
       return resopnse;

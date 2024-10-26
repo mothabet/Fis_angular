@@ -44,7 +44,7 @@ export class CompanyHomeService {
     return response;
   }
   AddCompanyByExcel(Model: IAddCompanyByExcel[]) {
-    debugger
+    
     var headers = this.sharedService.getHeaders();
     var response = this.http.post(environment.apiUrl + `Company/AddCompanyByExcel`, Model, { headers });
     return response;
@@ -79,7 +79,7 @@ export class CompanyHomeService {
      return response;
    }
    UpdateCompany(id:number,Model: IAddCompany){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var response = this.http.put(environment.apiUrl+`Company/UpdateCompany?id=${id}`, Model, { headers });
      return response;
@@ -90,7 +90,7 @@ export class CompanyHomeService {
      return response;
    }
    GetCompaniesByResearcherId(id:number=0,textSearch : string ='',pageNumber:number=0){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var response = this.http.get(environment.apiUrl+`Company/GetCompaniesByResearcherId?researcherId=${id}&textSearch=''&pageNumber=0&textSearch=${textSearch}&pageNumber=${pageNumber}`, { headers });
      return response;
@@ -119,7 +119,7 @@ export class CompanyHomeService {
   }
 
   saveFile(path: string) {
-    debugger
+    
     this.downloadFile(path).subscribe(response => {
       if (response.body) {
         const blob = new Blob([response.body], { type: response.headers.get('Content-Type') || 'application/octet-stream' });

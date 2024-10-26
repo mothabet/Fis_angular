@@ -187,7 +187,8 @@ export class SubActivitiesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
+          
           this.subActivity = res.Data;
           this.subActivityForm.patchValue({
             arName: this.subActivity.arName,

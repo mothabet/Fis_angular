@@ -150,7 +150,7 @@ export class SectionComponent implements OnInit {
       confirmButtonText: 'نعم اريد المسح!',
       cancelButtonText: 'لا'
     }).then((result) => {
-      debugger
+      
       if (result.isConfirmed) {
         this.showLoader = true;
         const observer = {
@@ -257,7 +257,8 @@ export class SectionComponent implements OnInit {
     } 
   }
   getControlErrors(controlName: string): string[] {
-    debugger
+    
+    
     const control = this.sectionForm.get(controlName);
     const errors: string[] = [];
     if (control && control.errors) {

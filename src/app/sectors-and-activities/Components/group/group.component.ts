@@ -176,7 +176,8 @@ export class GroupComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
+          
           this.group = res.Data;
           this.groupForm.patchValue({
             arName: this.group.arName,
