@@ -41,20 +41,20 @@ export class SharedFormCoverComponent implements OnInit {
     Type: 0
   };
   workData: IWorkDataQuesDto[] = [
-    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '' },
-    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '' },
-    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '' },
-    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '' },
-    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '' },
-    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '' },
-    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '' },
-    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '' },
-    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '' },
-    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '' },
-    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '' },
-    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '' },
-    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '' },
-    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '' },
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise',inputValue: '' , isSelect:false},
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No',inputValue: '' , isSelect:false},
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number',inputValue: '' , isSelect:false},
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity',inputValue: '' , isSelect:false},
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location',inputValue: '' , isSelect:false},
+    { arName: 'المحافظة : ', enName: ' :  Region',inputValue: '' , isSelect:false},
+    { arName: 'الولاية : ', enName: ' :  Wilayat',inputValue: '' , isSelect:false},
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box',inputValue: '' , isSelect:false},
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code',inputValue: '' , isSelect:false},
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No',inputValue: '' , isSelect:false},
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
   ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
@@ -116,6 +116,7 @@ export class SharedFormCoverComponent implements OnInit {
             ...res.Data,        // Overwrite only the properties from res.Data
             GeneralData: res.Data.GeneralData || this.coverForm.GeneralData, // Preserve GeneralData if not provided
           };
+          
           this.GetFormData();
         }
       },
@@ -392,15 +393,18 @@ export class SharedFormCoverComponent implements OnInit {
                   if (generalData) {
                     this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
                     this.workData = this.coverForm.GeneralData.CompanyInfo;
+                    
                   }
                   else if (res.Data.length > 0) {
                     if (res.Data[0].GeneralData) {
                       this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
                       this.workData = this.coverForm.GeneralData.CompanyInfo;
+                      
                     }
                   }
                 }
                 else {
+                  
                   this.GetCompanyById(+this.companyId);
                 }
               }
@@ -488,12 +492,14 @@ export class SharedFormCoverComponent implements OnInit {
               item.inputValue = this.company.mailBox;
             }
             else if (item.arName.includes('الولاية : ')) {
+              item.inputValue = this.company.wilayatId.toString();
+              item.isSelect = true;
 
-              item.inputValue = this.company.wilayat;
             }
-            else if (item.arName.includes('المنطقة : ')) {
+            else if (item.arName.includes('المحافظة : ')) {
 
-              item.inputValue = this.company.governorates;
+              item.inputValue = this.company.governoratesId.toString();
+              item.isSelect = true;
             }
             else if (item.arName.includes('عنوان المنشاة : ')) {
 

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICertificationDto, ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGeneralDataDto, IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
@@ -39,20 +40,20 @@ export class SharedWorkDataComponent implements OnInit {
   isWorkDataActive: boolean = false;
   company!: ICompany;
   workData: IWorkDataQuesDto[] = [
-    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '' },
-    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '' },
-    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '' },
-    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '' },
-    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '' },
-    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '' },
-    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '' },
-    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '' },
-    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '' },
-    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '' },
-    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '' },
-    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '' },
-    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '' },
-    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '' },
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '' , isSelect:false},
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No',inputValue: '' , isSelect:false},
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number',inputValue: '' , isSelect:false},
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity',inputValue: '' , isSelect:false},
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location',inputValue: '' , isSelect:false},
+    { arName: 'المحافظة : ', enName: ' :  Region',inputValue: '0' , isSelect:true},
+    { arName: 'الولاية : ', enName: ' :  Wilayat',inputValue: '0' , isSelect:true},
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box',inputValue: '' , isSelect:false},
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code',inputValue: '' , isSelect:false},
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No',inputValue: '' , isSelect:false},
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
   ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
@@ -72,6 +73,9 @@ export class SharedWorkDataComponent implements OnInit {
     describeMainActivity: '',
     dataSource: 0
   };
+  Governorates: IDropdownList[] = []
+  Wilayat: IDropdownList[] = []
+
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
@@ -79,6 +83,40 @@ export class SharedWorkDataComponent implements OnInit {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetFormById(+this.formId)
     this.isWorkDataActive = true;
+    this.GetGovernorates();
+  }
+  GetGovernorates() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.Governorates = res.Data;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.companyServices.GetGovernorates().subscribe(observer);
+  }
+  GetWilayat(govId: number) {
+    if (govId > 0) {
+      const observer = {
+        next: (res: any) => {
+          
+          if (res.Data) {
+            this.Wilayat = res.Data;
+          }
+          const checkWilaya = this.Wilayat.find(r=>r.id == +this.workData[7].inputValue);
+          if(!checkWilaya){
+            this.workData[7].inputValue = '0';
+          }
+        },
+        error: (err: any) => {
+          this.sharedServices.handleError(err);
+        },
+      };
+      this.companyServices.GetWilayat(govId).subscribe(observer);
+    }
   }
   onDataSourceCheckboxChange(value: number) {
     this.coverForm.GeneralData.dataSource = value; // Set the selected value
@@ -120,10 +158,13 @@ export class SharedWorkDataComponent implements OnInit {
             else if (item.arName.includes('الولاية : ')) {
 
               item.inputValue = this.company.wilayat;
+              item.isSelect = true;
             }
-            else if (item.arName.includes('المنطقة : ')) {
+            else if (item.arName.includes('المحافظة : ')) {
 
-              item.inputValue = this.company.governorates;
+              item.inputValue = this.company.governoratesId.toString();
+              item.isSelect = true;
+              this.GetWilayat(+item.inputValue)
             }
             else if (item.arName.includes('عنوان المنشاة : ')) {
 
@@ -191,15 +232,22 @@ export class SharedWorkDataComponent implements OnInit {
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            
             this.workData = this.coverForm.GeneralData.CompanyInfo;
+            this.GetWilayat(+this.workData[6].inputValue);
+            
           }
           else if (res.Data.length > 0) {
             if (res.Data[0].GeneralData) {
               this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
+              
               this.workData = this.coverForm.GeneralData.CompanyInfo;
+              this.GetWilayat(+this.workData[6].inputValue);
+
             }
           }
           else if (+this.companyId != null || +this.companyId != 0) {
+            
             this.GetCompanyById(+this.companyId);
           }
           this.Loader = false;
@@ -214,6 +262,7 @@ export class SharedWorkDataComponent implements OnInit {
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   ngOnDestroy() {
+    
     let generalData = localStorage.getItem(`generalData`);
     if (generalData) {
       localStorage.removeItem(`generalData`);

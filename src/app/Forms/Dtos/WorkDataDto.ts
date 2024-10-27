@@ -2,6 +2,7 @@ export interface IWorkDataQuesDto {
   arName: string;
   enName: string;
   inputValue: string;
+  isSelect:boolean
 }
 export interface IWorkDataChkDto {
   arName: string;

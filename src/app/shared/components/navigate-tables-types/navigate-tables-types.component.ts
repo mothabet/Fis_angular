@@ -70,8 +70,21 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     this.tableId = tableIdParam ? +tableIdParam : null;
-    const tableIndex = this.coverForm.tables.findIndex(t=>t.id == this.tableId);
-    this.activeTabIndex = tableIndex +2;
+    const currentRoutePath = this.activeRouter.snapshot.routeConfig?.path;
+    if (currentRoutePath?.includes('WorkData')) {
+      this.activeTabIndex = 1;
+    } else if (currentRoutePath?.includes('FormDetails')) {
+      this.activeTabIndex = 0;
+    }
+    else if (currentRoutePath?.includes('Certification')){
+      this.activeTabIndex  = this.coverForm.tables.length + 2
+    }
+    else{
+
+      const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.tableId);
+      if (tableIndex != -1)
+        this.activeTabIndex = tableIndex + 2;
+    }
     this.scrollToActiveTab();
   }
   // Check if a tab is active
@@ -97,7 +110,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.scrollToActiveTab();
   }
 
-  
+
 
   // Move to the previous tab and update active content
   movePrevious() {
@@ -119,7 +132,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
   // Update active content based on the active tab index
   updateActiveContent() {
-    
+
     if (this.activeTabIndex === 0) {
       this.activateCover(this.activeTabIndex);
     } else if (this.activeTabIndex === 1) {
@@ -138,7 +151,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const activeTab = this.tabContainer.nativeElement.querySelector('.arrow.active');
     if (activeTab) {
       activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-  
+
       // Set a timeout to wait until scrolling animation is complete
       setTimeout(() => {
         this.Loader = false;
@@ -147,11 +160,11 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.Loader = false;
     }
   }
-  
+
 
   // Check if a tab is active
   isTabActive(index: number): boolean {
-    
+
     return index === this.activeTabIndex;
   }
 
@@ -160,7 +173,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.displayFormContents();
   }
   GetTableById(id: number): void {
-    
+
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -168,7 +181,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.tableType = res.Data.Type;
         this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
         let navigationPromise;
-        
+
         switch (this.tableType) {
           case 1:
             navigationPromise = this.router.navigate(['/TransTable', this.formId, id, this.companyId]);
@@ -646,6 +659,22 @@ export class NavigateTablesTypesComponent implements OnInit {
                   }
                 }
               }
+              else if (this.coverForm.tables[index].Type == "7") {
+                const totalPartsCount = this.coverForm.tables[index].tableParts.length * 2;
+                for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
+                  this.coverForm.tables[index].formContents[i].values = Array(totalPartsCount).fill(0);
+                  if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                    for (let j = 0; j < this.coverForm.tables[index].formContents[i].code.SubCodes.length; j++) {
+                      if (this.coverForm.tables[index].formContents[i].code.SubCodes.length > 0) {
+                        for (let w = 0; w < this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes.length; w++) {
+                          this.coverForm.tables[index].formContents[i].code.SubCodes[j].subCodes[w].values = Array(totalPartsCount).fill(0);
+                        }
+                      }
+                      this.coverForm.tables[index].formContents[i].code.SubCodes[j].values = Array(totalPartsCount).fill(0);
+                    }
+                  }
+                }
+              }
               else if (this.coverForm.tables[index].Type == "5") {
                 for (let i = 0; i < this.coverForm.tables[index].formContents.length; i++) {
                   this.coverForm.tables[index].formContents[i].values = [0, ...Array(this.coverForm.tables[index].period).fill(0)];
@@ -661,6 +690,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                   }
                 }
               }
+              
               for (let j = 0; j < this.coverForm.tables[index].formContents[i].values.length; j++) {
 
                 let codes = this.coverForm.tables[index].formContents[i].values[j];

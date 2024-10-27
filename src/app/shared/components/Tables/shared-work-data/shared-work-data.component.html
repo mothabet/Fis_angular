@@ -25,8 +25,38 @@
                     <tbody>
                         <tr *ngFor="let workQues of workData">
                             <td style="text-wrap: balance;">{{workQues.arName}}</td>
-                            <td class="text-center">
+                            <td class="text-center" *ngIf="!workQues.isSelect">
                                 <input type="text" style="width: 100%;" [(ngModel)]="workQues.inputValue" />
+                            </td>
+                            <td class="text-center" *ngIf="workQues.isSelect && workQues.arName === 'المحافظة : '">
+                                <select style="width: 100% !important; 
+                                border-color: #c9cdd0;
+                                border-width: 1px;
+                                border-style: solid;
+                                border-radius: 6px;
+                                text-align: center;
+                                padding: 1px 7px;
+                                color: #7b7890;" (change)="GetWilayat(+workQues.inputValue)" [(ngModel)]="workQues.inputValue">
+                                    <option selected value="0">--اختر المحافظه--</option>
+                                    <option *ngFor="let governorate of Governorates" value="{{ governorate.id }}">
+                                      {{ governorate.arName }}
+                                    </option>
+                                  </select>
+                            </td>
+                            <td class="text-center" *ngIf="workQues.isSelect && workQues.arName === 'الولاية : '">
+                                <select style="width: 100% !important;
+                                border-color: #c9cdd0;
+                                border-width: 1px;
+                                border-style: solid;
+                                border-radius: 6px;
+                                text-align: center;
+                                padding: 1px 7px;
+                                color: #7b7890;"  [(ngModel)]="workQues.inputValue">
+                                    <option selected value="0">--اختر الولاية--</option>
+                                    <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
+                                      {{ wilaya.arName }}
+                                    </option>
+                                  </select>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">{{workQues.enName}}</td>
                         </tr>
