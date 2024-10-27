@@ -7,27 +7,37 @@
                 <div class="title flex-fill">
                     {{table.arName}}
                 </div>
-                <div>
-                    <input class="mx-1" type="checkbox" (change)="onCheckboxChange($event,1)">
-                    <span>اخفاء الربع الاول</span>
+                <div class="form-group">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" style="background: #fff !important; border: none;" type="button" id="dropdownMenuButton" (click)="toggleDropdown()" aria-expanded="dropdownOpen">
+                            اخفاء الربع
+                        </button>
+                        <ul class="dropdown-menu p-2" style="min-width: 200px;" [ngStyle]="{'display': dropdownOpen ? 'block' : 'none'}" aria-labelledby="dropdownMenuButton">
+                            <li class="dropdown-item">
+                                <input type="checkbox" class="form-check-input me-2" id="quarter1" (change)="onCheckboxChange($event, 1)">
+                                <label class="form-check-label" style="top:15px" for="quarter1">اخفاء الربع الاول</label>
+                            </li>
+                            <li class="dropdown-item">
+                                <input type="checkbox" class="form-check-input me-2" id="quarter2" (change)="onCheckboxChange($event, 2)">
+                                <label class="form-check-label" style="top:15px" for="quarter2">اخفاء الربع الثاني</label>
+                            </li>
+                            <li class="dropdown-item">
+                                <input type="checkbox" class="form-check-input me-2" id="quarter3" (change)="onCheckboxChange($event, 3)">
+                                <label class="form-check-label" style="top:15px" for="quarter3">اخفاء الربع الثالث</label>
+                            </li>
+                            <li class="dropdown-item">
+                                <input type="checkbox" class="form-check-input me-2" id="quarter4" (change)="onCheckboxChange($event, 4)">
+                                <label class="form-check-label" style="top:15px" for="quarter4">اخفاء الربع الرابع</label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div>
-                    <input class="mx-1" type="checkbox" (change)="onCheckboxChange($event,2)">
-                    <span>اخفاء الربع الثاني</span>
-                </div>
-                <div>
-                    <input class="mx-1" type="checkbox" (change)="onCheckboxChange($event,3)">
-                    <span>اخفاء الربع الثالث</span>
-                </div>
-                <div>
-                    <input class="mx-1" type="checkbox" (change)="onCheckboxChange($event,4)">
-                    <span>اخفاء الربع الرابع</span>
-                </div>
+                
                 <div class="title flex-fill en">
                     {{table.enName}}
                 </div>
             </div>
-
+            
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>

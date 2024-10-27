@@ -1,4 +1,4 @@
-import { Component, Input, Renderer2 } from '@angular/core';
+import { Component, HostListener, Input, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
@@ -70,7 +70,7 @@ export class SharedQuarterTableComponent {
   companyId!: string;
   formData!: IDataDto[];
   auditRules: IAuditRule[] = [];
-
+  dropdownOpen = false;
   constructor(private route: ActivatedRoute, private authService: LoginService,
     private formServices: FormService, private sharedServices: SharedService,
     private sectorsAndActivitiesServices: SectorAndActivitiesService, private auditRuleHomeService: AuditRuleHomeService) {
@@ -87,6 +87,18 @@ export class SharedQuarterTableComponent {
       this.GetCountrites();
     });
   }
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+}
+
+// Optionally close the dropdown when clicking outside
+@HostListener('document:click', ['$event'])
+closeDropdown(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+        this.dropdownOpen = false;
+    }
+}
   onCheckboxChange(event: Event, column: number) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (!isChecked) {
