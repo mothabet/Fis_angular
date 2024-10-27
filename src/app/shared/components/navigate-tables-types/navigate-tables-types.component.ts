@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SharedService } from '../../services/shared.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -48,6 +48,9 @@ export class NavigateTablesTypesComponent implements OnInit {
   add: boolean = true;
   selecteTableIds: Set<number> = new Set<number>();
   tableSelecte: IGetTableDto[] = [];
+  activeTabIndex: number = 0;
+  @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
+
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
     private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService,
@@ -63,14 +66,101 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.GetFormById(this.formId ?? "0")
   }
   ngOnChanges() {
+    
+    this.Loader = true;
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     this.tableId = tableIdParam ? +tableIdParam : null;
+    const tableIndex = this.coverForm.tables.findIndex(t=>t.id == this.tableId);
+    this.activeTabIndex = tableIndex +2;
+    this.scrollToActiveTab();
   }
+  // Check if a tab is active
+  // Set the active tab index based on click
+  activateCover(index: number) {
+    this.activeTabIndex = index;
+    this.coverActivated.emit();
+    this.tableId = null;
+    this.scrollToActiveTab();
+  }
+
+  activateWorkData(index: number) {
+    this.activeTabIndex = index;
+    this.workDataActivated.emit();
+    this.tableId = null;
+    this.scrollToActiveTab();
+  }
+
+  activateTable(index: number, tableId: number) {
+    this.activeTabIndex = index;
+    this.tableId = tableId;
+    this.TablesNavigation(tableId);
+    this.scrollToActiveTab();
+  }
+
+  
+
+  // Move to the previous tab and update active content
+  movePrevious() {
+    if (this.activeTabIndex > 0) {
+      this.activeTabIndex--;
+      this.updateActiveContent();
+      this.scrollToActiveTab();
+    }
+  }
+
+  // Move to the next tab and update active content
+  moveNext() {
+    if (this.activeTabIndex < this.coverForm.tables.length + 2) { // +2 for the two static tabs
+      this.activeTabIndex++;
+      this.updateActiveContent();
+      this.scrollToActiveTab();
+    }
+  }
+
+  // Update active content based on the active tab index
+  updateActiveContent() {
+    
+    if (this.activeTabIndex === 0) {
+      this.activateCover(this.activeTabIndex);
+    } else if (this.activeTabIndex === 1) {
+      this.activateWorkData(this.activeTabIndex);
+    } else if (this.activeTabIndex === this.coverForm.tables.length + 2) {
+      this.activateWorkData(this.activeTabIndex);
+    } else {
+      const tableIndex = this.activeTabIndex - 2;
+      const tableId = this.coverForm.tables[tableIndex].id;
+      this.activateTable(this.activeTabIndex, tableId);
+    }
+  }
+
+  // Scroll to the active tab
+  scrollToActiveTab() {
+    const activeTab = this.tabContainer.nativeElement.querySelector('.arrow.active');
+    if (activeTab) {
+      activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+  
+      // Set a timeout to wait until scrolling animation is complete
+      setTimeout(() => {
+        this.Loader = false;
+      }, 1000); // Adjust the delay (in milliseconds) to match the smooth scroll duration
+    } else {
+      this.Loader = false;
+    }
+  }
+  
+
+  // Check if a tab is active
+  isTabActive(index: number): boolean {
+    
+    return index === this.activeTabIndex;
+  }
+
   TablesNavigation(id: number) {
     this.GetTableById(id);
     this.displayFormContents();
   }
   GetTableById(id: number): void {
+    
     this.Loader = true;
     const observer = {
       next: (res: any) => {
@@ -78,6 +168,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         this.tableType = res.Data.Type;
         this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
         let navigationPromise;
+        
         switch (this.tableType) {
           case 1:
             navigationPromise = this.router.navigate(['/TransTable', this.formId, id, this.companyId]);
@@ -121,14 +212,6 @@ export class NavigateTablesTypesComponent implements OnInit {
       },
     };
     this.formServices.GetTableById(id).subscribe(observer);
-  }
-  activateCover() {
-    this.coverActivated.emit();
-    this.tableId = null;
-  }
-  activateWorkData() {
-    this.workDataActivated.emit();
-    this.tableId = null;
   }
   certificationWorkData() {
     this.certificationActivated.emit();
@@ -286,7 +369,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               this.selecteTableIds.add(this.coverForm.tables[index].id)
             }
           }
-            this.addTableToListInLocalStorage(this.table);
+          this.addTableToListInLocalStorage(this.table);
         }
       },
       error: (err: any) => {
@@ -648,7 +731,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                     arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
                     enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
                     IsDisabled: this.coverForm.tables[index].IsDisabled,
-                    subCodeParentId:coverForm.tables[index].formContents[i].code.SubCodes[r].Id
+                    subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
                   };
                   dataDtosList.push(dataDtosSub);
                 }
@@ -853,7 +936,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       const observer = {
         next: (res: any) => {
           if (res.Data) {
-            
+
             this.addInstructions = res.Data.getInstructionsDtos
             this.add = true;
             if (role != '') {
@@ -887,7 +970,7 @@ export class NavigateTablesTypesComponent implements OnInit {
           this.Loader = false;
         },
       };
-      this.instructionsService.GetTableInstructions(role, this.formId,this.table.id, 0).subscribe(observer);
+      this.instructionsService.GetTableInstructions(role, this.formId, this.table.id, 0).subscribe(observer);
     }
   }
   onCheckboxChangeCompany(companyId: number, event: Event) {

@@ -57,8 +57,7 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
-            <th class="text-center" scope="col">اسم القطاع</th>
-            <th class="text-center" scope="col">تاريخ انشاءه</th>
+            <th class="text-center" scope="col">اسم الدوله</th>
             <th class="text-center" scope="col">الرمز</th>
             <th class="text-center" scope="col">رقم الدوله</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
@@ -67,7 +66,6 @@
         <tbody>
           <tr *ngFor="let country of countries">
             <td class="text-center">{{country.arName}}</td>
-            <td class="text-center">{{country.createdOn | date:'yyyy-MM-dd'}}</td>
             <td class="text-center">{{country.code}}</td>
             <td class="text-center">{{country.countryPhone}}</td>
             <td class="text-center td-actions">

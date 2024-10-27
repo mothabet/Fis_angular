@@ -6,6 +6,7 @@ import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICertificationDto, ICoverFormDetailsDto, IGetFormDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
@@ -91,9 +92,12 @@ export class SharedFormCoverComponent implements OnInit {
   coverFormData!: ICoverFormData;
   formData!: IDataDto[];
   auditRules: IAuditRule[] = [];
+  Governorates: IDropdownList[] = []
+  Wilayat: IDropdownList[] = []
 
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService,
-    private auditRuleHomeService: AuditRuleHomeService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+    private auditRuleHomeService: AuditRuleHomeService, private companyHomeServices: CompanyHomeService
+    , private sharedService: SharedService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
@@ -532,5 +536,34 @@ export class SharedFormCoverComponent implements OnInit {
       },
     };
     this.companyServices.GetCompanyById(id).subscribe(observer);
+  }
+  GetWilayat(govId: number) {
+    if (govId > 0) {
+      const observer = {
+        next: (res: any) => {
+          if (res.Data) {
+            this.Wilayat = res.Data;
+          }
+          this.GetGovernorates();
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+        },
+      };
+      this.companyHomeServices.GetWilayat(govId).subscribe(observer);
+    }
+  }
+  GetGovernorates() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.Governorates = res.Data;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.companyHomeServices.GetGovernorates().subscribe(observer);
   }
 }

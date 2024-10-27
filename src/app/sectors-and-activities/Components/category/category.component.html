@@ -59,7 +59,6 @@
         <thead>
           <tr class="t-header">
             <th class="text-center" scope="col">اسم الفئة</th>
-            <th class="text-center" scope="col">تاريخ انشاءها</th>
             <th class="text-center" scope="col">الرمز</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
@@ -67,7 +66,6 @@
         <tbody>
           <tr *ngFor="let category of categories">
             <td class="text-center">{{category.arName}}</td>
-            <td class="text-center">{{category.createdOn | date:'yyyy-MM-dd'}}</td>
             <td class="text-center">{{category.code}}</td>
             <td class="text-center td-actions">
               <button class="icon" (click)="DeleteCategory(category.id)">

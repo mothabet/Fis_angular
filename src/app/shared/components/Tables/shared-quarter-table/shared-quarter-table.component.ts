@@ -25,6 +25,7 @@ export class SharedQuarterTableComponent {
   @Input() formId!: string;
   @Input() tableId!: string;
   isCollapsedColumns: boolean[] = [false, false, false, false];
+  tdcolspan:number=4;
   table: IGetTableDto = {
     id: 0,
     arName: '',
@@ -98,9 +99,13 @@ export class SharedQuarterTableComponent {
   }
 
   toggleCollapse(column: number) {
+    
+    this.tdcolspan +=1;
     this.isCollapsedColumns[column] = false;
   }
   toggleExpand(column: number) {
+    
+    this.tdcolspan -=1;
     this.isCollapsedColumns[column] = true;
     // تبديل حالة العرض/الإخفاء للعمود المحدد
   }

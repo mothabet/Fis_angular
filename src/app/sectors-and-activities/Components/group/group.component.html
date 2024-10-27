@@ -59,7 +59,6 @@
                 <thead>
                     <tr class="t-header">
                         <th class="text-center" scope="col">اسم المجموعة</th>
-                        <th class="text-center" scope="col">تاريخ انشاءها</th>
                         <th class="text-center" scope="col">الرمز</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
@@ -67,7 +66,6 @@
                 <tbody>
                     <tr *ngFor="let group of groups">
                         <td class="text-center">{{group.arName}}</td>
-                        <td class="text-center">{{group.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{group.code}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteGroup(group.id)">

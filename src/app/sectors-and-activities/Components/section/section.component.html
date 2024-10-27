@@ -59,7 +59,6 @@
         <thead>
           <tr class="t-header">
             <th class="text-center" scope="col">اسم القسم</th>
-            <th class="text-center" scope="col">تاريخ انشاءه</th>
             <th class="text-center" scope="col">الرمز</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
@@ -67,7 +66,6 @@
         <tbody>
           <tr *ngFor="let section of sections">
             <td class="text-center">{{section.arName}}</td>
-            <td class="text-center">{{section.createdOn | date:'yyyy-MM-dd'}}</td>
             <td class="text-center">{{section.code}}</td>
             <td class="text-center td-actions">
               <button class="icon" (click)="DeleteSection(section.id)">

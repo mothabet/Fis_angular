@@ -58,7 +58,6 @@
                 <thead>
                     <tr class="t-header">
                         <th class="text-center" scope="col">اسم القطاع</th>
-                        <th class="text-center" scope="col">تاريخ انشاءه</th>
                         <th class="text-center" scope="col">الرمز</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
@@ -66,7 +65,6 @@
                 <tbody>
                     <tr *ngFor="let sector of sectors">
                         <td class="text-center">{{sector.arName}}</td>
-                        <td class="text-center">{{sector.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center">{{sector.code}}</td>
                         <td class="text-center td-actions">
                             <button class="icon" (click)="DeleteSector(sector.id)">

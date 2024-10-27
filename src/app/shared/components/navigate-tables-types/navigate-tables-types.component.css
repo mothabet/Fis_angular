@@ -8,3 +8,24 @@ tfoot tr th .alert {
   tfoot tr th .alert span {
     font-size: 20px;
   }
+  .arrow-navigation {
+    display: flex;
+    align-items: center;
+  }
+  
+  .arrow-button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1px 8px;
+    background: #00af9d;
+    color: #ffffff;
+    border-radius: 50%;
+  }
+  
+  .arrow-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  

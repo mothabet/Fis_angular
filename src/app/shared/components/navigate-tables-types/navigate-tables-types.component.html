@@ -157,25 +157,42 @@
             </div>
         </div>
     </div>
-    <div class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
-        <div class="clipped-element-first arrow" [ngClass]="{'active': isCoverActive}" (click)="activateCover()">
-            <a *ngIf="!coverForm.typeQuarter" [routerLink]="['/FormDetails',formId, null,companyId]">الغلاف</a>
-            <a *ngIf="coverForm.typeQuarter" [routerLink]="['/QuarterFormCover',formId, null,companyId]">الغلاف</a>
+    <div class="arrow-navigation">
+      <!-- Left Arrow -->
+      <button class="arrow-button" (click)="movePrevious()" [disabled]="activeTabIndex === 0">←</button>
+    
+      <!-- Tabs Container -->
+      <div #tabContainer class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
+        <!-- First static tab -->
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isTabActive(0)}" (click)="activateCover(0)">
+          <a *ngIf="!coverForm.typeQuarter" [routerLink]="['/FormDetails', formId, null, companyId]">الغلاف</a>
+          <a *ngIf="coverForm.typeQuarter" [routerLink]="['/QuarterFormCover', formId, null, companyId]">الغلاف</a>
         </div>
-        <div class="clipped-element-first arrow" [ngClass]="{'active': isWorkDataActive}" (click)="activateWorkData()">
-            <a [routerLink]="['/WorkData',formId,companyId]">معلومات عامة</a>
+    
+        <!-- Second static tab -->
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isTabActive(1)}" (click)="activateWorkData(1)">
+          <a [routerLink]="['/WorkData', formId, companyId]">معلومات عامة</a>
         </div>
-        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables" 
-        [ngClass]="{'active': table.id == tableId, 'disabled': table.IsDisabled}"
-        [ngStyle]="{'cursor': (table.IsDisabled && role == 'Company' && (coverForm.status < 6 || coverForm.status == 8)) ? 'not-allowed' : 'pointer'}"
-        (click)="!(table.IsDisabled && role == 'Company'&& (coverForm.status < 6 || coverForm.status == 8)) && TablesNavigation(table.id)">
-        <a [ngStyle]="{'cursor': (table.IsDisabled && role == 'Company'&& (coverForm.status < 6 || coverForm.status == 8)) ? 'not-allowed' : 'pointer'}">{{table.arName}}</a>
+    
+        <!-- Dynamic tabs -->
+        <div class="clipped-element-first arrow" *ngFor="let table of coverForm.tables; let i = index"
+             [ngClass]="{'active': isTabActive(i + 2), 'disabled': table.IsDisabled}"
+             [ngStyle]="{'cursor': (table.IsDisabled && role === 'Company' && (coverForm.status < 6 || coverForm.status === 8)) ? 'not-allowed' : 'pointer'}"
+             (click)="!(table.IsDisabled && role === 'Company' && (coverForm.status < 6 || coverForm.status === 8)) && activateTable(i + 2, table.id)">
+          <a>{{ table.arName }}</a>
+        </div>
+    
+        <!-- Last static tab -->
+        <div class="clipped-element-first arrow" [ngClass]="{'active': isTabActive(coverForm.tables.length + 2)}" (click)="activateWorkData(coverForm.tables.length + 2)">
+          <a [routerLink]="['/Certification', formId, companyId]">الشهادة</a>
+        </div>
+      </div>
+    
+      <!-- Right Arrow -->
+      <button class="arrow-button" (click)="moveNext()" [disabled]="activeTabIndex === coverForm.tables.length + 2">→</button>
     </div>
-        <div class="clipped-element-first arrow" [ngClass]="{'active': isCertificationActive}"
-            (click)="activateWorkData()">
-            <a [routerLink]="['/Certification',formId,companyId]">الشهادة</a>
-        </div>
-    </div>
+    
+    
     <!--start linked company modal -->
 <div class="modal company-modal fade" id="AddFormNotes" tabindex="-1" aria-labelledby="add" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">

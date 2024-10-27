@@ -27,6 +27,7 @@
                     {{table.enName}}
                 </div>
             </div>
+
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>
@@ -85,207 +86,206 @@
                                         <span class="ar-name">
                                             {{formContent.code.arName}}
                                         </span>
-                                        <span
-                                            *ngIf="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            class="total" data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
-                                            اجمالي <i class="fa-solid fa-circle-question"></i>
-                                        </span>
+                                        <ng-container
+                                            *ngIf="!(formContent.code.SubCodes.length === 0 && (formContent.code.TypeId === 1 || formContent.code.TypeId === 4)) 
+                                                            && !(formContent.code.SubCodes.length > 0 && formContent.code.SubCodes[0].IsTrueAndFalse === true)">
+                                            <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                                اجمالي <i class="fa-solid fa-circle-question"></i>
+                                            </span>
+                                        </ng-container>
                                         <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                             class="add-button" (click)="addSubCodeRow(formContent.code)">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
                                     </div>
                                 </td>
-                                <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="4">
+                                <td *ngIf="formContent.code.TypeId == 4 && tdcolspan>0" [attr.colspan]="tdcolspan">
                                     <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="true"
                                         name="yesNoOption_{{formContent.code.Id}}"> نعم
                                     <label class="mt-3"></label>
                                 </td>
-                                <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="5">
+                                <td *ngIf="formContent.code.TypeId == 4 && tdcolspan>0" [attr.colspan]="tdcolspan">
                                     <input type="radio" [(ngModel)]="formContent.valueCheck" [value]="false"
                                         name="yesNoOption_{{formContent.code.Id}}"> لا
                                     <label class="mt-3"></label>
+                                </td>
+                                <td *ngIf="formContent.code.TypeId == 4">
                                 </td>
                                 <ng-container *ngIf="!isCollapsedColumns[4]">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
 
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                            [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input  type="number"
+                                            [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input type="number"
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                                                 [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"
                                                 [disabled]="coverForm.typeQuarter < 4|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                                 [(ngModel)]="formContent.values[4]"
                                                 (focus)="clearIfZero(formContent.values, 4)"
                                                 (blur)="restoreIfNotPositive(formContent.values, 4)"
-                                                (input)="changeStatus(coverForm.status)"
-                                                 />
+                                                (input)="changeStatus(coverForm.status)" />
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                            [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input  type="number"
+                                            [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input
+                                                type="number"
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                                                 [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''" disabled
                                                 [value]="formContent.values[4] - formContent.values[3]" /></td>
                                     </ng-container>
                                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                            [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input  type="number"
+                                            [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"><input type="number"
                                                 [ngClass]="coverForm.typeQuarter == 4?'quarter' : ''"
                                                 [disabled]="coverForm.typeQuarter < 4|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                                 [(ngModel)]="formContent.values[4]"
                                                 (focus)="clearIfZero(formContent.values, 4)"
                                                 (blur)="restoreIfNotPositive(formContent.values, 4)"
-                                                (input)="changeStatus(coverForm.status)"
-                                                 />
+                                                (input)="changeStatus(coverForm.status)" />
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                            [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input  type="number"
-                                                [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''" disabled
-                                                [value]="formContent.values[4] - formContent.values[3]" /></td>
+                                            [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"><input
+                                                type="number" [ngClass]="coverForm.typeQuarter == 4?'transaction' : ''"
+                                                disabled [value]="formContent.values[4] - formContent.values[3]" /></td>
                                     </ng-container>
 
 
                                 </ng-container>
                                 <ng-container *ngIf="!isCollapsedColumns[3]">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                            [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 3|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            [(ngModel)]="formContent.values[3]"
-                                            (focus)="clearIfZero(formContent.values, 3)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 3)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 3|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[3]"
+                                                (focus)="clearIfZero(formContent.values, 3)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 3)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
 
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input
+                                                type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''" disabled
+                                                [value]="formContent.values[3] - formContent.values[2]" /></td>
+                                    </ng-container>
+                                    <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input type="number"
+                                                [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 3|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[3]"
+                                                (focus)="clearIfZero(formContent.values, 3)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 3)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
 
-                                            [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''" disabled
-                                            [value]="formContent.values[3] - formContent.values[2]" /></td>
-                                        </ng-container>
-                                        <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                            <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"><input  type="number"
-                                            [ngClass]="coverForm.typeQuarter == 3?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 3|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            [(ngModel)]="formContent.values[3]"
-                                            (focus)="clearIfZero(formContent.values, 3)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 3)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
-
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input  type="number"
-                                            [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''" disabled
-                                            [value]="formContent.values[3] - formContent.values[2]" /></td>
-                                        </ng-container>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"><input
+                                                type="number" [ngClass]="coverForm.typeQuarter == 3?'transaction' : ''"
+                                                disabled [value]="formContent.values[3] - formContent.values[2]" /></td>
+                                    </ng-container>
                                 </ng-container>
                                 <ng-container *ngIf="!isCollapsedColumns[2]">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
 
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                        [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 2|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            [(ngModel)]="formContent.values[2]"
-                                            (focus)="clearIfZero(formContent.values, 2)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 2)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 2|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[2]"
+                                                (focus)="clearIfZero(formContent.values, 2)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 2)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
 
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                        [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''" disabled
-                                            [value]="formContent.values[2] - formContent.values[1]" /></td>
-                                        </ng-container>
-                                        <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                            <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input  type="number"
-                                            [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 2|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            [(ngModel)]="formContent.values[2]"
-                                            (focus)="clearIfZero(formContent.values, 2)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 2)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input
+                                                type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''" disabled
+                                                [value]="formContent.values[2] - formContent.values[1]" /></td>
+                                    </ng-container>
+                                    <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"><input type="number"
+                                                [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 2|| !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[2]"
+                                                (focus)="clearIfZero(formContent.values, 2)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 2)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
 
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input  type="number"
-                                            [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''" disabled
-                                            [value]="formContent.values[2] - formContent.values[1]" /></td>
-                                        </ng-container>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"><input
+                                                type="number" [ngClass]="coverForm.typeQuarter == 2?'transaction' : ''"
+                                                disabled [value]="formContent.values[2] - formContent.values[1]" /></td>
+                                    </ng-container>
                                 </ng-container>
                                 <ng-container *ngIf="!isCollapsedColumns[1]">
                                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
 
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                            [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 1 || !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            
-                                            [(ngModel)]="formContent.values[1]"
-                                            (focus)="clearIfZero(formContent.values, 1)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 1)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
-                                    <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
-                                        <input  type="number"
-                                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                         [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''" disabled
-                                            [value]="formContent.values[1] - formContent.values[0]" />
-                                    </td>
-                                </ng-container>
-                                <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                    <td class="text-center" *ngIf="formContent.code.TypeId != 4"
-                                        [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input  type="number"
-                                            [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"
-                                            [disabled]="coverForm.typeQuarter < 1 || !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                            
-                                            [(ngModel)]="formContent.values[1]"
-                                            (focus)="clearIfZero(formContent.values, 1)"
-                                            (blur)="restoreIfNotPositive(formContent.values, 1)"
-                                            (input)="changeStatus(coverForm.status)"
-                                             />
-                                    </td>
-                                    <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
-                                        <input  type="number" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''" disabled
-                                            [value]="formContent.values[1] - formContent.values[0]" />
-                                    </td>
-                                </ng-container>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 1 || !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[1]"
+                                                (focus)="clearIfZero(formContent.values, 1)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
+                                            <input type="number"
+                                                *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                                [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''" disabled
+                                                [value]="formContent.values[1] - formContent.values[0]" />
+                                        </td>
+                                    </ng-container>
+                                    <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"><input type="number"
+                                                [ngClass]="coverForm.typeQuarter == 1?'quarter' : ''"
+                                                [disabled]="coverForm.typeQuarter < 1 || !(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
+                                                [(ngModel)]="formContent.values[1]"
+                                                (focus)="clearIfZero(formContent.values, 1)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)"
+                                                (input)="changeStatus(coverForm.status)" />
+                                        </td>
+                                        <td class="text-center" *ngIf="formContent.code.TypeId != 4"
+                                            [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
+                                            <input type="number"
+                                                [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''" disabled
+                                                [value]="formContent.values[1] - formContent.values[0]" />
+                                        </td>
+                                    </ng-container>
                                 </ng-container>
                                 <ng-container *ngIf="formContent.code.SubCodes.length>0">
 
-                                <td style="color: black;" *ngIf="formContent.code.TypeId != 4" class="text-center">
-                                    <input  type="number"
-                                    *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                     style="color: black;" [(ngModel)]="formContent.values[0]"
-                                        (focus)="clearIfZero(formContent.values, 0)"
-                                        (blur)="restoreIfNotPositive(formContent.values, 0)"
-                                        (input)="changeStatus(coverForm.status)"
-                                        [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
-                                </td>
-                            </ng-container>
-                            <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                <td style="color: black;" *ngIf="formContent.code.TypeId != 4" class="text-center">
-                                    <input  type="number" style="color: black;" [(ngModel)]="formContent.values[0]"
-                                        (focus)="clearIfZero(formContent.values, 0)"
-                                        (blur)="restoreIfNotPositive(formContent.values, 0)"
-                                        (input)="changeStatus(coverForm.status)"
-                                        [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
-                                </td>
-                            </ng-container>
-                                <td class="text-center" *ngIf="formContent.code.TypeId != 4">
+                                    <td style="color: black;" *ngIf="formContent.code.TypeId != 4" class="text-center">
+                                        <input type="number"
+                                            *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                                            style="color: black;" [(ngModel)]="formContent.values[0]"
+                                            (focus)="clearIfZero(formContent.values, 0)"
+                                            (blur)="restoreIfNotPositive(formContent.values, 0)"
+                                            (input)="changeStatus(coverForm.status)"
+                                            [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                                    </td>
+                                </ng-container>
+                                <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
+                                    <td style="color: black;" *ngIf="formContent.code.TypeId != 4" class="text-center">
+                                        <input type="number" style="color: black;" [(ngModel)]="formContent.values[0]"
+                                            (focus)="clearIfZero(formContent.values, 0)"
+                                            (blur)="restoreIfNotPositive(formContent.values, 0)"
+                                            (input)="changeStatus(coverForm.status)"
+                                            [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                                    </td>
+                                </ng-container>
+                                <td class="text-center">
                                     <input type="text" disabled value="{{formContent.code.QuestionCode}}" />
                                 </td>
                                 <td class="text-start" style="text-wrap: balance;min-width: 250px; direction: ltr;">
@@ -359,20 +359,22 @@
                                         </div>
 
                                     </td>
-                                    <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="4">
+                                    <td *ngIf="subCode.IsTrueAndFalse && tdcolspan>0" [attr.colspan]="tdcolspan">
                                         <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked
                                             name="yesNoSubOption_{{subCode.Id}}">
                                         نعم
                                         <label class="mt-3"></label>
                                     </td>
-                                    <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="5">
+                                    <td *ngIf="subCode.IsTrueAndFalse && tdcolspan>0" [attr.colspan]="tdcolspan">
                                         <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"
                                             name="yesNoSubOption_{{subCode.Id}}"> لا
                                         <label class="mt-3"></label>
                                     </td>
+                                    <td *ngIf="subCode.IsTrueAndFalse">
+                                    </td>
                                     <ng-container *ngIf="!isCollapsedColumns[4] && !subCode.IsTrueAndFalse">
                                         <td class="text-center" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''">
-                                            <input  type="number" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''"
+                                            <input type="number" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''"
                                                 [disabled]="coverForm.typeQuarter < 4 || subCode.IsHdd"
                                                 [(ngModel)]="subCode.values[4]" (focus)="clearIfZero(subCode.values, 4)"
                                                 (blur)="restoreIfNotPositive(subCode.values, 4)" />
@@ -380,14 +382,15 @@
 
                                         <td class="text-center"
                                             [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''">
-                                            <input  type="number" [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''" disabled
-                                                [value]="subCode.values[4] - subCode.values[3]" 
-                                                [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}"/>
+                                            <input type="number"
+                                                [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''" disabled
+                                                [value]="subCode.values[4] - subCode.values[3]"
+                                                [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}" />
                                         </td>
                                     </ng-container>
                                     <ng-container *ngIf="!isCollapsedColumns[3] && !subCode.IsTrueAndFalse">
                                         <td class="text-center" [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''">
-                                            <input  type="number" [disabled]="coverForm.typeQuarter < 3 || subCode.IsHdd"
+                                            <input type="number" [disabled]="coverForm.typeQuarter < 3 || subCode.IsHdd"
                                                 [(ngModel)]="subCode.values[3]"
                                                 [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''"
                                                 (focus)="clearIfZero(subCode.values, 3)"
@@ -397,14 +400,14 @@
 
                                         <td class="text-center"
                                             [ngClass]="coverForm.typeQuarter == 3 ? 'transaction' : ''">
-                                            <input  type="number" disabled
-                                                [value]="subCode.values[3] - subCode.values[2]" 
+                                            <input type="number" disabled
+                                                [value]="subCode.values[3] - subCode.values[2]"
                                                 [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}" />
                                         </td>
                                     </ng-container>
                                     <ng-container *ngIf="!isCollapsedColumns[2] && !subCode.IsTrueAndFalse">
                                         <td class="text-center" [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''">
-                                            <input  type="number" [disabled]="coverForm.typeQuarter < 2 || subCode.IsHdd"
+                                            <input type="number" [disabled]="coverForm.typeQuarter < 2 || subCode.IsHdd"
                                                 [(ngModel)]="subCode.values[2]"
                                                 [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
                                                 (focus)="clearIfZero(subCode.values, 2)"
@@ -414,14 +417,14 @@
 
                                         <td class="text-center"
                                             [ngClass]="coverForm.typeQuarter == 2 ? 'transaction' : ''">
-                                            <input  type="number" disabled
-                                                [value]="subCode.values[2] - subCode.values[1]" 
+                                            <input type="number" disabled
+                                                [value]="subCode.values[2] - subCode.values[1]"
                                                 [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}" />
                                         </td>
                                     </ng-container>
                                     <ng-container *ngIf="!isCollapsedColumns[1] && !subCode.IsTrueAndFalse">
                                         <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
-                                            <input  type="number" [disabled]="coverForm.typeQuarter < 1 || subCode.IsHdd"
+                                            <input type="number" [disabled]="coverForm.typeQuarter < 1 || subCode.IsHdd"
                                                 [(ngModel)]="subCode.values[1]"
                                                 [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''"
                                                 (focus)="clearIfZero(subCode.values, 1)"
@@ -430,13 +433,13 @@
                                         </td>
                                         <td class="text-center"
                                             [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
-                                            <input  type="number" disabled
-                                                [value]="subCode.values[1] - subCode.values[0]" 
+                                            <input type="number" disabled
+                                                [value]="subCode.values[1] - subCode.values[0]"
                                                 [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}" />
                                         </td>
                                     </ng-container>
                                     <td class="text-center" style="color: black;" *ngIf="!subCode.IsTrueAndFalse">
-                                        <input  type="number" [(ngModel)]="subCode.values[0]"
+                                        <input type="number" [(ngModel)]="subCode.values[0]"
                                             (focus)="clearIfZero(subCode.values, 0)"
                                             (blur)="restoreIfNotPositive(subCode.values, 0)"
                                             (input)="handleParent(formContent)" [disabled]="subCode.IsHdd"
@@ -501,7 +504,8 @@
                                         <ng-container *ngIf="!isCollapsedColumns[4]">
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''">
-                                                <input  type="number" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''"
+                                                <input type="number"
+                                                    [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''"
                                                     [disabled]="coverForm.typeQuarter < 4 "
                                                     [(ngModel)]="_subCode.values[4]"
                                                     (focus)="clearIfZero(_subCode.values, 4)"
@@ -511,15 +515,15 @@
 
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''">
-                                                <input  type="number" [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''"
-                                                    disabled
+                                                <input type="number"
+                                                    [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''" disabled
                                                     [value]="_subCode.values[4] - _subCode.values[3]" />
                                             </td>
                                         </ng-container>
                                         <ng-container *ngIf="!isCollapsedColumns[3]">
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''">
-                                                <input  type="number" [disabled]="coverForm.typeQuarter < 3"
+                                                <input type="number" [disabled]="coverForm.typeQuarter < 3"
                                                     [(ngModel)]="_subCode.values[3]"
                                                     [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''"
                                                     (focus)="clearIfZero(_subCode.values, 3)"
@@ -529,14 +533,14 @@
 
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 3 ? 'transaction' : ''">
-                                                <input  type="number" disabled
+                                                <input type="number" disabled
                                                     [value]="_subCode.values[3] - _subCode.values[2]" />
                                             </td>
                                         </ng-container>
                                         <ng-container *ngIf="!isCollapsedColumns[2]">
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''">
-                                                <input  type="number" [disabled]="coverForm.typeQuarter < 2"
+                                                <input type="number" [disabled]="coverForm.typeQuarter < 2"
                                                     [(ngModel)]="_subCode.values[2]"
                                                     [ngClass]="coverForm.typeQuarter == 2?'quarter' : ''"
                                                     (focus)="clearIfZero(_subCode.values, 2)"
@@ -546,14 +550,14 @@
 
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 2 ? 'transaction' : ''">
-                                                <input  type="number" disabled
+                                                <input type="number" disabled
                                                     [value]="_subCode.values[2] - _subCode.values[1]" />
                                             </td>
                                         </ng-container>
                                         <ng-container *ngIf="!isCollapsedColumns[1]">
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
-                                                <input  type="number" [disabled]="coverForm.typeQuarter < 1"
+                                                <input type="number" [disabled]="coverForm.typeQuarter < 1"
                                                     [(ngModel)]="_subCode.values[1]"
                                                     [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''"
                                                     (focus)="clearIfZero(_subCode.values, 1)"
@@ -562,12 +566,12 @@
                                             </td>
                                             <td class="text-center"
                                                 [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
-                                                <input  type="number" disabled
+                                                <input type="number" disabled
                                                     [value]="_subCode.values[1] - _subCode.values[0]" />
                                             </td>
                                         </ng-container>
                                         <td class="text-center" style="color: black;">
-                                            <input  type="number" [(ngModel)]="_subCode.values[0]"
+                                            <input type="number" [(ngModel)]="_subCode.values[0]"
                                                 (focus)="clearIfZero(_subCode.values, 0)"
                                                 (blur)="restoreIfNotPositive(_subCode.values, 0)"
                                                 (input)="handelSupParent(formContent,subCode,indexSub)"
@@ -586,61 +590,60 @@
                             </ng-container>
                         </ng-container>
                         <tr class="footer" *ngIf="table.IsTotal" style="background: #d3fffb33;">
-                            <td  style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
+                            <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
 
                             <!-- Sum of formContent.values[4] -->
                             <ng-container *ngIf="!isCollapsedColumns[4]">
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 4 ? 'quarter' : ''">
-                                    <input  type="number" disabled [value]="getSumOfValues(4)" />
+                                    <input type="number" disabled [value]="getSumOfValues(4)" />
                                 </td>
 
                                 <!-- Difference between formContent.values[4] and formContent.values[3] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 4 ? 'transaction' : ''">
-                                    <input  type="number" disabled [value]="getDifferenceBetweenSums(4, 3)" />
+                                    <input type="number" disabled [value]="getDifferenceBetweenSums(4, 3)" />
                                 </td>
 
                             </ng-container>
                             <ng-container *ngIf="!isCollapsedColumns[3]">
                                 <!-- Sum of formContent.values[3] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 3 ? 'quarter' : ''">
-                                    <input  type="number" disabled [value]="getSumOfValues(3)" />
+                                    <input type="number" disabled [value]="getSumOfValues(3)" />
                                 </td>
 
                                 <!-- Difference between formContent.values[3] and formContent.values[2] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 3 ? 'transaction' : ''">
-                                    <input  type="number" disabled [value]="getDifferenceBetweenSums(3, 2)" />
+                                    <input type="number" disabled [value]="getDifferenceBetweenSums(3, 2)" />
                                 </td>
                             </ng-container>
                             <ng-container *ngIf="!isCollapsedColumns[2]">
 
                                 <!-- Sum of formContent.values[2] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 2 ? 'quarter' : ''">
-                                    <input  type="number" disabled [value]="getSumOfValues(2)" />
+                                    <input type="number" disabled [value]="getSumOfValues(2)" />
                                 </td>
 
                                 <!-- Difference between formContent.values[2] and formContent.values[1] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 2 ? 'transaction' : ''">
-                                    <input  type="number" disabled [value]="getDifferenceBetweenSums(2, 1)" />
+                                    <input type="number" disabled [value]="getDifferenceBetweenSums(2, 1)" />
                                 </td>
                             </ng-container>
                             <ng-container *ngIf="!isCollapsedColumns[1]">
 
                                 <!-- Sum of formContent.values[1] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
-                                    <input  type="number" disabled [value]="getSumOfValues(1)" />
+                                    <input type="number" disabled [value]="getSumOfValues(1)" />
                                 </td>
                                 <!-- Difference between formContent.values[1] and formContent.values[0] -->
                                 <td class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'transaction' : ''">
-                                    <input  type="number" disabled [value]="getDifferenceBetweenSums(1, 0)" />
+                                    <input type="number" disabled [value]="getDifferenceBetweenSums(1, 0)" />
                                 </td>
                             </ng-container>
 
                             <!-- Sum of formContent.values[0] -->
                             <td class="text-center" style="color: black;">
-                                <input  type="number" disabled [value]="getSumOfValues(0)" style="color: black;" />
+                                <input type="number" disabled [value]="getSumOfValues(0)" style="color: black;" />
                             </td>
                             <td class="text-center" style="color: black;">
-                                <input  type="number" disabled [value]="getSumOfValues(0)" style="color: black;" />
                             </td>
                             <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>

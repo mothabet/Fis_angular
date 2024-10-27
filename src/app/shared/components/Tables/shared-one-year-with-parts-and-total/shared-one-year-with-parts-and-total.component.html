@@ -41,9 +41,14 @@
                                         <span class="ar-name">
                                             {{formContent.code.arName}}
                                         </span>
-                                        <span *ngIf="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" class="total" data-bs-toggle="tooltip" data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
-                                            اجمالي <i class="fa-solid fa-circle-question"></i>
-                                        </span>
+                                        <ng-container
+                                            *ngIf="!(formContent.code.SubCodes.length === 0 && (formContent.code.TypeId === 1 || formContent.code.TypeId === 4)) 
+                                                            && !(formContent.code.SubCodes.length > 0 && formContent.code.SubCodes[0].IsTrueAndFalse === true)">
+                                            <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                                اجمالي <i class="fa-solid fa-circle-question"></i>
+                                            </span>
+                                        </ng-container>
                                         <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
                                             class="add-button"
                                             (click)="addSubCodeRow(formContent.code)">
