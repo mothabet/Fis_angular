@@ -67,7 +67,6 @@ export class NavigateTablesTypesComponent implements OnInit {
   }
   ngOnChanges() {
     
-    this.Loader = true;
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     this.tableId = tableIdParam ? +tableIdParam : null;
     const currentRoutePath = this.activeRouter.snapshot.routeConfig?.path;

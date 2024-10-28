@@ -159,7 +159,7 @@
     </div>
     <div class="arrow-navigation">
       <!-- Left Arrow -->
-      <button class="arrow-button" (click)="movePrevious()" [disabled]="activeTabIndex === 0">←</button>
+      <button class="arrow-button" (click)="movePrevious()" *ngIf="coverForm.tables.length>3" [disabled]="activeTabIndex === 0">→</button>
     
       <!-- Tabs Container -->
       <div #tabContainer class="arrow-group table-responsive d-flex form-tabs" style="gap:15px;">
@@ -189,7 +189,7 @@
       </div>
     
       <!-- Right Arrow -->
-      <button class="arrow-button" (click)="moveNext()" [disabled]="activeTabIndex === coverForm.tables.length + 2">→</button>
+      <button class="arrow-button" (click)="moveNext()" *ngIf="coverForm.tables.length>3" [disabled]="activeTabIndex === coverForm.tables.length + 2">←</button>
     </div>
     
     
