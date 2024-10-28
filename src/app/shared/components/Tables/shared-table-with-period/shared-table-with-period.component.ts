@@ -195,10 +195,19 @@ export class SharedTableWithPeriodComponent {
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(SubCode: ISubCodeForm, _subCode: ISubCodeForm): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
-      SubCode.subCodes.splice(index, 1); // Remove the subCode from the array
+      // طرح القيم المقابلة في مصفوفة `value`
+      for (let i = 0; i < SubCode.values.length; i++) {
+        if (i < _subCode.values.length) {
+          SubCode.values[i] -= _subCode.values[i];
+        }
+      }
+      
+      // إزالة الـsubCode من المصفوفة
+      SubCode.subCodes.splice(index, 1);
+      this.handelSupParent(formContent,SubCode,indexSub);
     }
   }
   GetFormData() {
@@ -493,32 +502,26 @@ export class SharedTableWithPeriodComponent {
       }
     })
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
-      // Iterate over each subCode to update the first value
-      subCode.subCodes.forEach(_subCode => {
-        if (_subCode.values && _subCode.values.length > 1) {
-          // Set _subCode.values[0] to the sum of all values except values[0]
-          _subCode.values[0] = _subCode.values.slice(1).reduce((sum, value) => {
-            return sum + value;
-          }, 0);
-        }
-      });
-  
-      // Optionally, you can also update the parent subCode values array if needed
+      // Iterate over the values array of the parent subCode
       for (let i = 0; i < subCode.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
         subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
-          return sum + (_subCode.values[i] || 0); // Safely sum the i-th value of each subCode
-        }, 0);
+          return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
+        }, 0); // Start the summation from 0
       }
-  
-      // Assign the modified subCode back to formContent
+      
       formContent.code.SubCodes[index] = subCode;
-  
-      // Call the parent handler method if needed
-      this.handleParent(formContent);
     }
+    else{
+      for (let i = 0; i < formContent.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
+        formContent.values[i] = 0;
+      }
+    }
+    this.handleParent(formContent);
   }
   updateParentValue(subCode: any, formContent: any, index: number): void {
     // Initialize formContent values if not present
@@ -710,10 +713,15 @@ restoreIfNotPositive(values: number[], index: number): void {
         values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
 }
-  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
-    const index = code.SubCodes.indexOf(subCode);
-    if (index !== -1) {
-      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
+  const index = formContent.code.SubCodes.indexOf(subCode);
+  if (index !== -1) {
+    for (let i = 0; i < formContent.values.length; i++) {
+      if (i < subCode.values.length) {
+        formContent.values[i] -= subCode.values[i];
+      }
     }
+    formContent.code.SubCodes.splice(index, 1); // Remove the subCode from the array
   }
+}
 }

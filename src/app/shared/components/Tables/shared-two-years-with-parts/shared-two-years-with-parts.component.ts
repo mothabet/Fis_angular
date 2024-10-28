@@ -130,10 +130,15 @@ export class SharedTwoYearsWithPartsComponent {
     }
     code.SubCodes.push(subCode);
   }
-  removeSubCodeRow(code: ICode, subCode: ISubCode) {
-    const index = code.SubCodes.indexOf(subCode);
-    if (index > -1) {
-      code.SubCodes.splice(index, 1);
+  removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
+    const index = formContent.code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      for (let i = 0; i < formContent.values.length; i++) {
+        if (i < subCode.values.length) {
+          formContent.values[i] -= subCode.values[i];
+        }
+      }
+      formContent.code.SubCodes.splice(index, 1); // Remove the subCode from the array
     }
   }
 
@@ -199,10 +204,19 @@ export class SharedTwoYearsWithPartsComponent {
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(SubCode: ISubCodeForm, _subCode: ISubCodeForm): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
-      SubCode.subCodes.splice(index, 1); // Remove the subCode from the array
+      // طرح القيم المقابلة في مصفوفة `value`
+      for (let i = 0; i < SubCode.values.length; i++) {
+        if (i < _subCode.values.length) {
+          SubCode.values[i] -= _subCode.values[i];
+        }
+      }
+      
+      // إزالة الـsubCode من المصفوفة
+      SubCode.subCodes.splice(index, 1);
+      this.handelSupParent(formContent,SubCode,indexSub);
     }
   }
   GetFormData() {
@@ -509,8 +523,14 @@ export class SharedTwoYearsWithPartsComponent {
       }
       
       formContent.code.SubCodes[index] = subCode;
-      this.handleParent(formContent);
     }
+    else{
+      for (let i = 0; i < formContent.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
+        formContent.values[i] = 0;
+      }
+    }
+    this.handleParent(formContent);
   }
   updateParentValue(subCode: any, formContent: any, index: number): void {
     // Initialize formContent values if not present

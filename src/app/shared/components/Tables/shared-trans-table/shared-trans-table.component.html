@@ -138,7 +138,7 @@
                                                     <option *ngFor="let sector of sectors" value="{{sector.id}}">
                                                         {{sector.code}}-{{sector.arName}}</option>
                                                 </select>
-                                                <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                <button (click)="removeSubCodeRow(formContent, subCode)"
                                                     style="background-color: white; border:none;">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
@@ -162,7 +162,7 @@
                                                         {{country.code}}-{{ country.arName }}
                                                     </option>
                                                 </select>
-                                                <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                <button (click)="removeSubCodeRow(formContent, subCode)"
                                                     style="background-color: white; border:none;">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
@@ -173,7 +173,7 @@
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 220px !important;"
                                                     [(ngModel)]="subCode.arName" />
-                                                <button (click)="removeSubCodeRow(formContent.code, subCode)"
+                                                <button (click)="removeSubCodeRow(formContent, subCode)"
                                                     style="background-color: white; border:none;">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">
@@ -257,7 +257,7 @@
                                                 <div style="display: flex;justify-content: center;">
                                                     <input type="text" style="width: 220px !important;"
                                                         [(ngModel)]="_subCode.arName" />
-                                                    <button (click)="removeSubCodeFromSubRow(subCode, _subCode)"
+                                                    <button (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
                                                         style="background-color: white; border:none;">
                                                         <img src=".././../../../assets/images/trash-can-outline.png"
                                                             class="img-fluid">

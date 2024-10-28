@@ -149,18 +149,24 @@ export class NavigateTablesTypesComponent implements OnInit {
   scrollToActiveTab() {
     const activeTab = this.tabContainer.nativeElement.querySelector('.arrow.active');
     if (activeTab) {
-      activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-
-      // Set a timeout to wait until scrolling animation is complete
+      const container = this.tabContainer.nativeElement;
+      const tabOffsetLeft = activeTab.offsetLeft;
+      const tabWidth = activeTab.offsetWidth;
+      const containerWidth = container.clientWidth;
+  
+      // حساب الموضع المطلوب للتمرير لضبط التبويب في المنتصف
+      const scrollPosition = tabOffsetLeft - (containerWidth / 2) + (tabWidth / 2);
+      container.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+  
+      // تعيين مؤقت للانتظار حتى انتهاء التمرير
       setTimeout(() => {
         this.Loader = false;
-      }, 1000); // Adjust the delay (in milliseconds) to match the smooth scroll duration
+      }, 1000); // تعديل التأخير ليناسب مدة التمرير السلس
     } else {
       this.Loader = false;
     }
   }
-
-
+  
   // Check if a tab is active
   isTabActive(index: number): boolean {
 

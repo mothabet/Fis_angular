@@ -208,10 +208,15 @@ closeDropdown(event: Event) {
     }
     code.SubCodes.push(subCode);
   }
-  removeSubCodeRow(code: ICode, subCode: ISubCodeForm): void {
-    const index = code.SubCodes.indexOf(subCode);
+  removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
+    const index = formContent.code.SubCodes.indexOf(subCode);
     if (index !== -1) {
-      code.SubCodes.splice(index, 1); // Remove the subCode from the array
+      for (let i = 0; i < formContent.values.length; i++) {
+        if (i < subCode.values.length) {
+          formContent.values[i] -= subCode.values[i];
+        }
+      }
+      formContent.code.SubCodes.splice(index, 1); // Remove the subCode from the array
     }
   }
   GetActivites() {
@@ -263,10 +268,20 @@ closeDropdown(event: Event) {
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(SubCode: ISubCodeForm, _subCode: ISubCodeForm): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
+    debugger
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
-      SubCode.subCodes.splice(index, 1); // Remove the subCode from the array
+      // طرح القيم المقابلة في مصفوفة `value`
+      for (let i = 0; i < SubCode.values.length; i++) {
+        if (i < _subCode.values.length) {
+          SubCode.values[i] -= _subCode.values[i];
+        }
+      }
+      
+      // إزالة الـsubCode من المصفوفة
+      SubCode.subCodes.splice(index, 1);
+      this.handelSupParent(formContent,SubCode,indexSub);
     }
   }
   GetFormData() {
@@ -692,7 +707,7 @@ closeDropdown(event: Event) {
 
     // Optionally, update any other logic or status here if needed
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
@@ -704,8 +719,14 @@ closeDropdown(event: Event) {
       }
       
       formContent.code.SubCodes[index] = subCode;
-      this.handleParent(formContent);
     }
+    else{
+      for (let i = 0; i < formContent.values.length; i++) {
+        // Sum up the corresponding values from the subCodes
+        formContent.values[i] = 0;
+      }
+    }
+    this.handleParent(formContent);
   }
   handleParent(formContent: IGetQuestionDto) {
     this.changeStatus(this.coverForm.status);
