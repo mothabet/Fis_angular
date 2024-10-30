@@ -12,9 +12,9 @@
                 </div>
             </div>
             <div class="table-responsive company-table">
-                <table class="table table-borderless">
+                <table class="table table-border">
                     <thead>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th scope="col" colspan="" style="min-width: 250px;">{{table.arHeading}}</th>
                             <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">خلال During
                                 {{coverForm.reviewYear}}</th>
@@ -24,7 +24,7 @@
                             <th class="text-start" scope="col" colspan="" style="min-width: 250px;">{{table.enHeading}}
                             </th>
                         </tr>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th class="text-center" scope="col"></th>
                             <th *ngFor="let part of table.tableParts" class="text-center" scope="col">
                                 {{part.arName}}{{part.enName}}</th>
@@ -36,7 +36,7 @@
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents">
-                            <tr class="parent">
+                            <tr class="parent boldBorderRow">
                                 <td style="text-wrap: balance;">
                                     <div class="content-container">
                                         <span class="ar-name">
@@ -120,7 +120,7 @@
                             </tr>
                             <ng-container>
                                 <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
-                                    <tr>
+                                    <tr class=" boldBorderRow">
                                         <td *ngIf="formContent.code.TypeId == 1"
                                             style="text-wrap: balance; text-align: right !important;color: #133c8b; padding-right: 25px !important;">
                                             - {{subCode.arName}}
@@ -261,7 +261,7 @@
                                         </td>
                                     </tr>
                                     <ng-container *ngFor="let _subCode of subCode.subCodes">
-                                        <tr *ngIf="subCode.IsHdd == true">
+                                        <tr *ngIf="subCode.IsHdd == true" class=" boldBorderRow">
                                             <td class="text-center">
                                                 <div style="display: flex;justify-content: center;">
                                                     <input type="text" style="width: 220px !important;"
@@ -296,7 +296,7 @@
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        <tr class="footer" *ngIf="table.IsTotal">
+                        <tr class="footer boldBorderRow" *ngIf="table.IsTotal">
                             <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
                             <td style="background: #d3fffb33;" class="text-center" *ngFor="let year of table.tableParts; let i = index">
                                 <input type="number" disabled placeholder="0" [value]="getSumOfValues(i)" />
@@ -305,7 +305,7 @@
                                 <input style="background: #d3fffb33;" type="number" disabled placeholder="0"
                                     [value]="getSumOfValues(table.tableParts.length + i)" />
                             </td>
-                            <td style="background: #d3fffb33;"></td>
+                            <td style="background: #d3fffb33;">9999</td>
                             <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
                     </tbody>

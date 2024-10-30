@@ -60,7 +60,7 @@ export class SharedQuarterTableComponent {
     coverFormData: null!,
     certification: null!,
     codeActivity: '',
-    codeActivityName: '',
+    codeSectorName: '',
     GeneralData: null!,
     Type: 0
   };

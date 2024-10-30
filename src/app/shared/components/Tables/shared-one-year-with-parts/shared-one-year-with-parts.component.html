@@ -14,7 +14,7 @@
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th scope="col" colspan="" style="min-width: 250px;">{{table.arHeading}}</th>
                             <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end
                                 {{coverForm.reviewYear}}</th>
@@ -22,7 +22,7 @@
                             <th class="text-start" scope="col" colspan="" style="min-width: 250px;">{{table.enHeading}}
                             </th>
                         </tr>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th class="text-center" scope="col"></th>
                             <th class="text-center" scope="col" *ngFor="let part of table.tableParts">
                                 {{part.arName}}{{part.enName}}</th>
@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents; let index = index">
-                            <tr class="parent">
+                            <tr class="parent boldBorderRow">
                                 <td style="text-wrap: balance;">
                                     <div class="content-container">
                                         <span class="ar-name">
@@ -73,14 +73,16 @@
                                                     (focus)="clearIfZero(formContent.values, i+1)"
                                                     (blur)="restoreIfNotPositive(formContent.values, i+1)"
                                                     [(ngModel)]="formContent.values[i+1]"
-                                                    (input)="changeStatus(coverForm.status)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                                                    (input)="changeStatus(coverForm.status)"
+                                                    [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
                                             <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                                 <input type="number" class="tableInputParent"
                                                     (focus)="clearIfZero(formContent.values, i+1)"
                                                     (blur)="restoreIfNotPositive(formContent.values, i+1)"
                                                     [(ngModel)]="formContent.values[i+1]"
-                                                    (input)="changeStatus(coverForm.status)"  [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                                                    (input)="changeStatus(coverForm.status)"
+                                                    [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
                                         </td>
                                     </ng-container>
@@ -93,7 +95,7 @@
                             </tr>
                             <ng-container>
                                 <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
-                                    <tr>
+                                    <tr class=" boldBorderRow">
                                         <td *ngIf="formContent.code.TypeId == 1"
                                             style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                                             {{subCode.arName}}
@@ -102,11 +104,11 @@
                                                 (click)="addSubCodeToSubRow(subCode)">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
-                                            <span *ngIf="subCode.IsHdd == true" style="float: left;"
-                                            class="total" data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
-                                            اجمالي <i class="fa-solid fa-circle-question"></i>
-                                        </span>
+                                            <span *ngIf="subCode.IsHdd == true" style="float: left;" class="total"
+                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                                                اجمالي <i class="fa-solid fa-circle-question"></i>
+                                            </span>
                                         </td>
                                         <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                             <div style="display: flex;">
@@ -162,13 +164,13 @@
                                         </td>
                                         <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length/2">
                                             <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="true" checked
-                                            name="yesNoSubOption_{{subCode.Id}}">
+                                                name="yesNoSubOption_{{subCode.Id}}">
                                             نعم
                                             <label class="mt-3"></label>
                                         </td>
                                         <td *ngIf="subCode.IsTrueAndFalse" [attr.colspan]="table.tableParts.length/2">
                                             <input type="radio" [(ngModel)]="subCode.valueCheck" [value]="false"
-                                            name="yesNoSubOption_{{subCode.Id}}"> لا
+                                                name="yesNoSubOption_{{subCode.Id}}"> لا
                                             <label class="mt-3"></label>
                                         </td>
                                         <ng-container *ngIf="!subCode.IsTrueAndFalse">
@@ -177,7 +179,8 @@
                                                         (focus)="clearIfZero(subCode.values, i+1)"
                                                         (blur)="restoreIfNotPositive(subCode.values, i+1)"
                                                         (input)="handleParent(formContent)"
-                                                        [(ngModel)]="subCode.values[i+1]" [disabled]="subCode.IsHdd"/></td>
+                                                        [(ngModel)]="subCode.values[i+1]" [disabled]="subCode.IsHdd" />
+                                                </td>
                                             </ng-container>
                                         </ng-container>
                                         <td class="text-center"><input disabled type="text"
@@ -224,12 +227,13 @@
                                         </td>
                                     </tr>
                                     <ng-container *ngFor="let _subCode of subCode.subCodes">
-                                        <tr *ngIf="subCode.IsHdd == true">
+                                        <tr *ngIf="subCode.IsHdd == true" class=" boldBorderRow">
                                             <td class="text-center">
                                                 <div style="display: flex;justify-content: center;">
                                                     <input type="text" style="width: 220px !important;"
                                                         [(ngModel)]="_subCode.arName" />
-                                                    <button (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
+                                                    <button
+                                                        (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
                                                         style="background-color: white; border:none;">
                                                         <img src=".././../../../assets/images/trash-can-outline.png"
                                                             class="img-fluid">
@@ -237,31 +241,34 @@
                                                 </div>
                                             </td>
                                             <ng-container *ngFor="let part of table.tableParts; let j = index">
-                                            <td class="text-center"><input type="number" 
-                                                [(ngModel)]="_subCode.values[j+1]" 
-                                                (focus)="clearIfZero(_subCode.values, j+1)"
-                                                (blur)="restoreIfNotPositive(_subCode.values, j+1)"
-                                                (input)="handelSupParent(formContent,subCode,indexSub)"/></td>
+                                                <td class="text-center"><input type="number"
+                                                        [(ngModel)]="_subCode.values[j+1]"
+                                                        (focus)="clearIfZero(_subCode.values, j+1)"
+                                                        (blur)="restoreIfNotPositive(_subCode.values, j+1)"
+                                                        (input)="handelSupParent(formContent,subCode,indexSub)" /></td>
                                             </ng-container>
-                                                <td class="text-center">
-                                                    <input disabled type="text" value="{{_subCode.QuestionCode}}" />
-                                                <td class="text-center" style=" direction: ltr;">
-                                                    <div style="display: flex;justify-content: center;">
-                                                        <input type="text" style="width: 220px !important;" [(ngModel)]="_subCode.enName" />
-                                                    </div>
-                                                </td>
+                                            <td class="text-center">
+                                                <input disabled type="text" value="{{_subCode.QuestionCode}}" />
+                                            <td class="text-center" style=" direction: ltr;">
+                                                <div style="display: flex;justify-content: center;">
+                                                    <input type="text" style="width: 220px !important;"
+                                                        [(ngModel)]="_subCode.enName" />
+                                                </div>
+                                            </td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        <tr class="footer" *ngIf="table.IsTotal">
-                            <td  style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
-                            <td  style="background: #d3fffb33;" class="text-center" *ngFor="let year of table.tableParts; let i = index">
-                                <input  style="background: #d3fffb33;" type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)" />
+                        <tr class="footer boldBorderRow" *ngIf="table.IsTotal">
+                            <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
+                            <td style="background: #d3fffb33;" class="text-center"
+                                *ngFor="let year of table.tableParts; let i = index">
+                                <input style="background: #d3fffb33;" type="number" disabled placeholder="0"
+                                    [value]="getSumOfValues(i+1)" />
                             </td>
-                            <td  style="background: #d3fffb33;"></td>
-                            <td  style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
+                            <td style="background: #d3fffb33;">9999</td>
+                            <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
                     </tbody>
                 </table>

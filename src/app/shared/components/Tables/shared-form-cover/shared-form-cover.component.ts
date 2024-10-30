@@ -36,7 +36,7 @@ export class SharedFormCoverComponent implements OnInit {
     coverFormData: {} as ICoverFormData,              // Same here
     certification: {} as ICertificationDto,           // And here
     codeActivity: '',
-    codeActivityName: '',
+    codeSectorName: '',
     GeneralData: {} as IGeneralDataDto,               // Initialize GeneralData
     Type: 0
   };

@@ -45,3 +45,7 @@ td{
 .tableInputParent{
   border-color: #00AF9D !important;
 }
+
+.boldBorderRow {
+  border-bottom: .1rem solid #c2c4c0 !important; /* Change the color and thickness as needed */
+}

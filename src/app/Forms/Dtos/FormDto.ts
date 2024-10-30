@@ -12,7 +12,7 @@ export interface IAddForm {
     Type : string,
     reviewYear:number,
     typeQuarter:string,
-    codeActivity:string
+    codeSector:string
 }
 
 export interface IGetFormDto {
@@ -42,7 +42,7 @@ export interface ICoverFormDetailsDto{
     coverFormData : ICoverFormData,
     certification : ICertificationDto,
     codeActivity:string,
-    codeActivityName:string,
+    codeSectorName:string,
     GeneralData : IGeneralDataDto
     Type : number,
 

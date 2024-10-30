@@ -72,7 +72,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const currentRoutePath = this.activeRouter.snapshot.routeConfig?.path;
     if (currentRoutePath?.includes('WorkData')) {
       this.activeTabIndex = 1;
-    } else if (currentRoutePath?.includes('FormDetails')) {
+    } else if (currentRoutePath?.includes('FormDetails') || currentRoutePath?.includes('QuarterFormCover')) {
       this.activeTabIndex = 0;
     }
     else if (currentRoutePath?.includes('Certification')){

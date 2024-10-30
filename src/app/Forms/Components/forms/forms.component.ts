@@ -77,7 +77,7 @@ export class FormsComponent implements OnInit {
   reviewYear: string = '';
   addTableParts: IAddTablePartsDto[] = [];
   showSubCode: string = '';
-  Activities: IDropdownList[] = [];
+  Sectors: IDropdownList[] = [];
   addInstructions: IAddInstructionsDto[] = [];
   editor!: Editor;
   editoren!: Editor;
@@ -114,7 +114,7 @@ export class FormsComponent implements OnInit {
       type: ['', Validators.required],
       reviewYear: ['', Validators.required],
       typeQuarter: [''],
-      codeActivity: ['']
+      codeSector: ['']
     });
     this.tableForm = this.formBuilder.group({
       arName: ['', Validators.required],
@@ -138,7 +138,7 @@ export class FormsComponent implements OnInit {
     });
     this.GetAllForms();
     this.years = this.sharedServices.generateYears(2000, 2024);
-    this.GetSectorActvities(0);
+    this.GetSectors();
     this.editor = new Editor();
     this.editoren = new Editor();
     this.editorForm = new Editor();
@@ -573,7 +573,7 @@ export class FormsComponent implements OnInit {
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter,
-        codeActivity: this.formForm.value.codeActivity,
+        codeSector: this.formForm.value.codeSector,
       };
 
       this.Loader = true;
@@ -626,18 +626,18 @@ export class FormsComponent implements OnInit {
       this.Loader = false;
     }
   }
-  GetSectorActvities(sectorId: number) {
+  GetSectors(): void {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Activities = res.Data.getActivitiesDtos;
+          this.Sectors = res.Data.getSectorsDtos;
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
       },
     };
-    this.sectorsAndActivitiesServices.GetActivities(0, '', sectorId).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   GetAllForms(): void {
     this.Loader = true;
@@ -803,7 +803,7 @@ export class FormsComponent implements OnInit {
             type: this.addForm.Type,
             reviewYear: this.addForm.reviewYear,
             typeQuarter: this.addForm.typeQuarter,
-            codeActivity: this.addForm.codeActivity
+            codeSector: this.addForm.codeSector
           });
 
           this.reviewYear = this.formForm.value.reviewYear;
@@ -838,7 +838,7 @@ export class FormsComponent implements OnInit {
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter,
-        codeActivity: this.formForm.value.codeActivity,
+        codeSector: this.formForm.value.codeSector,
       };
       const observer = {
         next: (res: any) => {

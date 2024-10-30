@@ -133,15 +133,15 @@
               </div>
               <div class="col-sm-12 mb-3">
                 <div class="input-floating-label mb-0">
-                  <select formControlName="codeActivity" class="form-control">
+                  <select formControlName="codeSector" class="form-control">
                     <option selected value="0" disabled>
-                      اختيار رمز النشاط
+                      اختيار رمز القطاع
                     </option>
-                    <option *ngFor="let activity of Activities" value="{{ activity.id }}">
+                    <option *ngFor="let activity of Sectors" value="{{ activity.id }}">
                       {{activity.code}}_{{ activity.arName }}
                     </option>
                   </select>
-                  <label>رمز النشاط</label>
+                  <label>رمز القطاع</label>
                 </div>
               </div>
 

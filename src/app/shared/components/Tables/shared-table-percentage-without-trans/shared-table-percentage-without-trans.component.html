@@ -14,19 +14,19 @@
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th class="text-end" scope="col" style="min-width: 240px;">{{table.arHeading}}</th>
                             <th class="text-center" scope="col">نهاية عام Year-end {{coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col">نهاية عام Year-end {{+coverForm.reviewYear - 1}}
                             </th>
-                            <th class="text-center">ملكية رأس المال في نهاية Percentage of ownership {{+coverForm.reviewYear - 1}}</th>
+                            <th class="text-center">ملكية رأس المال في نهاية Percentage of ownership {{+coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-start" scope="col" style="min-width: 240px;">{{table.enHeading}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents; let index = index">
-                            <tr class="parent">
+                            <tr class="parent boldBorderRow">
                                 <td style="text-wrap: balance;">
                                     <div class="content-container">
                                         <span class="ar-name">
@@ -111,7 +111,7 @@
                             <ng-container>
                                 <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
 
-                                <tr>
+                                <tr class=" boldBorderRow">
                                     <td *ngIf="formContent.code.TypeId == 1"
                                         style="text-wrap: balance; text-align: center !important;color: #00af9d;">
                                         {{subCode.arName}}
@@ -245,7 +245,7 @@
                                         </td>
                                 </tr>
                                 <ng-container *ngFor="let _subCode of subCode.subCodes">
-                                    <tr *ngIf="subCode.IsHdd == true">
+                                    <tr *ngIf="subCode.IsHdd == true" class=" boldBorderRow">
                                         <td class="text-center">
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 220px !important;"
@@ -285,7 +285,7 @@
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        <tr class="footer" *ngIf="table.IsTotal" style="background: #d3fffb33;">
+                        <tr class="footer boldBorderRow" *ngIf="table.IsTotal" style="background: #d3fffb33;">
                             <td  style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
                             <td  style="background: #d3fffb33;" class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
                                 <input disabled type="number" [value]="getSumOfValues(0)"/>
@@ -298,6 +298,7 @@
                             <td  style="background: #d3fffb33;" class="text-center">
                             </td>
                             <td  style="background: #d3fffb33;" class="text-center">
+                                9999
                             </td>
                         
                             <td  style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>

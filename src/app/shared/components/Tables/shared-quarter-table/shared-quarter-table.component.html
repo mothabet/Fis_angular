@@ -41,7 +41,7 @@
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>
-                        <tr class="t-header">
+                        <tr class="t-header boldBorderRow">
                             <th scope="col" style="min-width: 250px;">{{table.arHeading}}</th>
                             <th class="text-center quarter4" scope="col" *ngIf="!isCollapsedColumns[4]">
                                 30.012.{{+coverForm.reviewYear + 1}} Position
@@ -90,7 +90,7 @@
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let formContent of table.formContents">
-                            <tr class="parent">
+                            <tr class="parent boldBorderRow">
                                 <td style="text-wrap: balance;">
                                     <div class="content-container">
                                         <span class="ar-name">
@@ -302,7 +302,7 @@
                                     {{formContent.code.enName}}</td>
                             </tr>
                             <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
-                                <tr>
+                                <tr class=" boldBorderRow">
                                     <td *ngIf="formContent.code.TypeId == 1" class="sub-list-item"
                                         style="text-align: center; color: #00af9d; text-wrap: balance;">{{
                                         subCode.arName }}
@@ -499,7 +499,7 @@
                                     </td>
                                 </tr>
                                 <ng-container *ngFor="let _subCode of subCode.subCodes">
-                                    <tr *ngIf="subCode.IsHdd == true">
+                                    <tr *ngIf="subCode.IsHdd == true" class=" boldBorderRow">
                                         <td class="text-center">
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 220px !important;"
@@ -599,7 +599,7 @@
                                 </ng-container>
                             </ng-container>
                         </ng-container>
-                        <tr class="footer" *ngIf="table.IsTotal" style="background: #d3fffb33;">
+                        <tr class="footer boldBorderRow" *ngIf="table.IsTotal" style="background: #d3fffb33;">
                             <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
 
                             <!-- Sum of formContent.values[4] -->
@@ -654,6 +654,7 @@
                                 <input type="number" disabled [value]="getSumOfValues(0)" style="color: black;" />
                             </td>
                             <td class="text-center" style="color: black;">
+                                9999
                             </td>
                             <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
