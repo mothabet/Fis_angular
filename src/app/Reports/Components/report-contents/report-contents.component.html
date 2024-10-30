@@ -55,29 +55,48 @@
                 <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
                 <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات
                 </div>
-                <div class="mb-2">اسم المحتوى / {{report.part}}</div>
-                <div class="mb-2">الجدول / {{ (report.fields[0][1]).value }}</div>
-                <div class="mb-2">السنة / {{ (report.fields[0][0]).value }}</div>
+                <div class="mb-2">{{report.part}}</div>
+                <div class="mb-2" *ngIf="report.seconedTable != 'Years' && report.reportType == 'FormContent'">
+                    ({{(report.fields[0][3]).value }})
+                </div>
+                <div class="mb-2" *ngIf="report.fields.length >0 && report.reportType != 'FormContent'">جدول ({{
+                    (report.fields[0][1]).value }})</div>
+                <div class="mb-2" *ngIf="report.fields.length >0">السنة ({{ (report.fields[0][0]).value }})</div>
+                <div class="mb-2" *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
+                    بحث بالسنة
+                </div>
 
-                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep'">
+                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep' && report.reportType != 'FormContent'">
                     الانشطة /
                     <ng-container *ngFor="let field of getUniqueActivities(report.fields); let isLast = last">
                         {{ field.value }}<span *ngIf="!isLast"> - </span>
                     </ng-container>
                 </div>
 
-                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep'">
+                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep' && report.reportType == 'FormContent'">
+                    بحث بالانشطة
+                </div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep' && report.reportType != 'FormContent'">
                     الشركات /
                     <ng-container *ngFor="let field of getUniqueCompanies(report.fields); let isLast = last">
                         {{ field.value }}<span *ngIf="!isLast"> - </span>
                     </ng-container>
                 </div>
 
-                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep'">
+                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep' && report.reportType == 'FormContent'">
+                    بحث بالشركات
+                </div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep' && report.reportType != 'FormContent'">
                     القطاعات /
                     <ng-container *ngFor="let field of getUniqueSectors(report.fields); let isLast = last">
                         {{ field.value }}<span *ngIf="!isLast"> - </span>
                     </ng-container>
+                </div>
+
+                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep' && report.reportType == 'FormContent'">
+                    بحث بالقطاعات
                 </div>
             </div>
 
@@ -92,7 +111,8 @@
         </div>
         <div>
             <div class="table-responsive company-table" style="max-height: 300px; overflow-y: auto;">
-                <table class="table table-borderless scrollable-table" *ngIf="report.reportType != 'TablesReport'">
+                <table class="table table-borderless scrollable-table"
+                    *ngIf="report.reportType != 'TablesReport' && report.reportType != 'FormContent'">
                     <thead>
                         <tr class="t-header">
                             <th style="text-align: center;" scope="col">#</th>
@@ -120,7 +140,62 @@
                 <app-table-with-periods-rep [report]="report"
                     *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][5]?.value == 5"></app-table-with-periods-rep>
                 <app-no-rep-data [report]="report" *ngIf="report.fields.length == 0"></app-no-rep-data>
-
+                <table class="table table-borderless scrollable-table"
+                    *ngIf="report.reportType == 'FormContent' && report.fields.length > 0">
+                    <thead>
+                        <tr class="t-header">
+                            <th style="text-align: center;" scope="col">#</th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'Years'">
+                                المؤشر</th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'ActivitiesRep'">
+                                كود النشاط </th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'SectorsRep'">
+                                كود القطاع </th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'ActivitiesRep'">
+                                النشاط</th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'SectorsRep'">
+                                القطاع</th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'CompaniesRep'">
+                                اسم الشركة</th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable != 'Years' && report.seconedTable == 'CompaniesRep'">
+                                النشاط </th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'CompaniesRep'">
+                                كود النشاط</th>
+                            <th style="text-align: center;" scope="col">
+                                {{report.fields[0][0].value}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of report.fields;let i = index ">
+                            <td style="text-align: center;" scope="col">{{i+1}}</td>
+                            <td style="text-align: center;"
+                                *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">
+                                {{row[4].value}}</td>
+                            <td style="text-align: center;">{{row[1].value}}</td>
+                            <td style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                                {{row[4].value}}</td>
+                            <td style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                                {{row[5].value}}</td>
+                            <td style="text-align: center;">{{row[2].value}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: center;"
+                                *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
+                            </td>
+                            <td colspan="2" style="text-align: center;" *ngIf="report.seconedTable == 'Years' ">الإجمالي
+                            </td>
+                            <td colspan="4" style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                                الإجمالي
+                            </td>
+                            <td style="text-align: center;">{{ getTotal(report) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
 
         </div>
@@ -290,16 +365,45 @@
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'FormContent'">
                                             <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                                placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm"
-                                                (click)="toggleDropdown()" (input)="filterSubCodes()" />
-                                            <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; max-height: 120px;
-                                      width: 100%;
-                                      text-align: right;">
+                                                placeholder="Search..." [(ngModel)]="searchFormContentTerm"
+                                                name="searchFormContentTerm" (click)="toggleFormContentDropdown()"
+                                                (input)="filterSubCodes()" />
+                                            <ul class="dropdown-menu" [class.show]="isFormContentDropdownOpen"
+                                                style="padding: 0 9px; max-height: 120px;width: 100%;text-align: right;">
                                                 <li class="dropdown-item" *ngFor="let code of filteredCodes"
-                                                    (click)="selectCode($event, tables[2],code)">
+                                                    (click)="selectCode($event, tables[0],code)">
                                                     {{code.arName}}
                                                 </li>
                                             </ul>
+                                            <div class="field-container"
+                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
+                                                <div class="field-item"
+                                                    *ngFor="let content of tables[0].fields; let i = index">
+                                                    <!-- Bind field properties to the input element -->
+                                                    <span style="text-align: left;"
+                                                        class="field-text col-2">{{content.name}}</span>
+                                                </div>
+                                            </div>
+                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                                placeholder="Search..." [(ngModel)]="searchYearTerm"
+                                                name="searchYearTerm" (click)="toggleYearsDropdown()"
+                                                (input)="filterYearsRep()" />
+                                            <ul class="dropdown-menu" [class.show]="isYearsDropdownOpen"
+                                                style="padding: 0 9px; max-height: 120px;width: 100%;text-align: right;">
+                                                <li class="dropdown-item" *ngFor="let year of years"
+                                                    (click)="selectYearRep($event, tables[1],year)">
+                                                    {{year.arName}}
+                                                </li>
+                                            </ul>
+                                            <div class="field-container"
+                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
+                                                <div class="field-item"
+                                                    *ngFor="let content of tables[1].fields; let i = index">
+                                                    <!-- Bind field properties to the input element -->
+                                                    <span style="text-align: left;"
+                                                        class="field-text col-2">{{content.name}}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'TablesReport'">
@@ -375,7 +479,6 @@
                                                 </li>
                                             </ul>
                                         </div>
-
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'SectorsRep'">
                                             <input type="text" id="searchableDropdown" class="form-control input-modal"
@@ -409,7 +512,7 @@
                                         <label for="inputField">الاسم بالكامل</label>
                                     </div>
                                     <div class="field-container"
-                                        *ngIf="tables.length == 3 && table.enTableName !='TablesReport'"
+                                        *ngIf="tables.length == 3 && table.enTableName !='TablesReport' && table.enTableName !='FormContent'"
                                         style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
                                         <div class="field-item" *ngFor="let content of tables[2].fields; let i = index">
                                             <!-- Bind field properties to the input element -->
@@ -476,7 +579,7 @@
                             <option *ngFor="let table of researcherTables" [ngValue]="table">{{table.arName}}</option>
                         </ng-container>
                         <ng-container *ngIf="tableType==4">
-                            <option *ngFor="let table of formContentTables" [ngValue]="table">{{table.arName}}</option>
+                            <option *ngFor="let table of tableRepTables" [ngValue]="table">{{table.arName}}</option>
                         </ng-container>
                         <ng-container *ngIf="tableType==5">
                             <option *ngFor="let table of tableRepTables" [ngValue]="table">{{table.arName}}</option>
