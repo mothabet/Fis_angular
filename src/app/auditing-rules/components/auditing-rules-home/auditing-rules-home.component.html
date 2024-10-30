@@ -13,11 +13,11 @@
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode" *ngIf="permission.add">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addAuditRulesBtn" />
             إضافة قاعدة تدقيق
           </button>
-          <button type="button" class="btn btn-download" (click)="printPdf()">
+          <button type="button" class="btn btn-download" (click)="printPdf()" *ngIf="permission.download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
@@ -43,14 +43,14 @@
             </td>
             <td class="text-center">{{ item.Rule }}</td>
             <td class="text-center">{{getDateOnly(item.CreatedOn) }}</td>
-            <td class="text-center td-actions">
+            <td class="text-center">
               <!-- <a routerLink="/Code-Details" class="icon">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a> -->
-              <button class="icon" (click)="showAlert(item.Id)">
+              <button class="icon" (click)="showAlert(item.Id)" *ngIf="permission.delete">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="" />
               </button>
-              <button class="icon" (click)="editAuditRules(item.Id)">
+              <button class="icon" (click)="editAuditRules(item.Id)" *ngIf="permission.edit">
                 <img src="../../../../assets/images/pencil-outline.png" alt="" />
               </button>
             </td>

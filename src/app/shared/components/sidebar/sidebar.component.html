@@ -25,7 +25,7 @@
               </div>
           </li> -->
 
-      <li class="sidebar-item" routerLink="/Home" routerLinkActive="active" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" routerLink="/Home" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Home'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
           <span class="">الرئيسية</span>
@@ -44,7 +44,7 @@
           <span class="">الاستمارات الحاليه</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Researcher'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
           <span>الباحثين او المشرف</span>
@@ -57,7 +57,7 @@
           <span>الباحث او المشرف</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Companies'))">
         <a class="sidebar-link" routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
           <span>الشركات</span>
@@ -70,13 +70,13 @@
           <span>شركات الباحث</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Reports'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-chart-line icon"></i>
           <span>التقارير</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('none'))">
         <a href="#" class="sidebar-link">
           <i class="fa-solid fa-chart-simple icon"></i>
           <span>تكبير البيانات</span>
@@ -90,7 +90,7 @@
       </li>
       <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'">
         <div class="has-dropdown">
-          <a routerLink="Forms" href="./forms.html" class="sidebar-link" *ngIf="role === 'Admin' || role === 'User'">
+          <a routerLink="Forms" class="sidebar-link" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Forms'))">
             <i class="fa-solid fa-file-lines icon"></i>
             <span>تصميم الاستمارات</span>
           </a>
@@ -112,7 +112,7 @@
           </li>
         </ul>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Auditing-Rules'))">
         <a routerLink="Auditing-Rules" class="sidebar-link">
           <i class="fa-solid fa-database icon"></i>
           <span>قواعد التدقيق</span>
@@ -128,38 +128,38 @@
           <!-- <span class="drop-dowm-icon fa-solid fa-caret-down collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting"></span> -->
         </div>
         <ul id="setting" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-          <li class="sidebar-item">
+          <li class="sidebar-item" *ngIf="checkPermission('Codes')">
             <a routerLink="/Codes" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>
               <span>محتوي الاستماره</span>
             </a>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" *ngIf="checkPermission('none')">
             <a href="./settings-requesting.html" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>
               <span>الطلبات</span>
             </a>
           </li>
-          <li class="sidebar-item">
+          <li class="sidebar-item" *ngIf="checkPermission('Messages')">
             <a routerLink="/Messages" class="sidebar-link inactive">
               <i class="fa-solid fa-envelope icon inactive"></i>
               <span>الرسائل</span>
             </a>
           </li>
-          <li class="sidebar-item" routerLink="/SettingsAuth" routerLinkActive="active" *ngIf="role === 'Admin' || role === 'User'">
+          <li class="sidebar-item" *ngIf="checkPermission('SettingsAuth')" routerLink="/SettingsAuth" routerLinkActive="active">
             <a class="sidebar-link inactive">
               <i class="fa-solid fa-address-card icon inactive"></i>
               <span>الصلاحيات</span>
             </a>
           </li>
           <li class="sidebar-item">
-            <a routerLink="/Sectors" class="sidebar-link inactive">
+            <a routerLink="/Sectors" *ngIf="checkPermission('Sectors')" class="sidebar-link inactive">
               <i class="fa-solid fa-address-card icon inactive"></i>
               <span>الانشطة و القطاعات</span>
             </a>
           </li>
           <li class="sidebar-item">
-            <a href="./settings-home.html" class="sidebar-link inactive">
+            <a href="./settings-home.html" *ngIf="checkPermission('none')" class="sidebar-link inactive">
               <i class="fa-solid fa-file-pen icon inactive"></i>
               <span>الصفحة الرئيسية</span>
             </a>

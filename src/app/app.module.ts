@@ -17,6 +17,7 @@ import { CopmanyGeneralInformationModule } from './copmany-general-information/c
 import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and-activities.module';
 import { ReportsModule } from './Reports/reports.module';
 import { SettingsAuthModule } from './settings-auth/settings-auth.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { SettingsAuthModule } from './settings-auth/settings-auth.module';
     MessagesModule,
     CompanyMessagesModule,
     SettingsAuthModule,
+    PermissionsModule,
     CopmanyGeneralInformationModule,
     BrowserModule,
     AppRoutingModule,

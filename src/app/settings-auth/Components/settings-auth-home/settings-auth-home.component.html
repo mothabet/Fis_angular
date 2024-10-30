@@ -1,99 +1,97 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
 <div class="p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'إعدادات&nbsp; > &nbsp;الصلاحيات'"></app-top-screen>
-  <!-- start content -->
-  <div class="content companies auth">
-    <div class="header d-flex">
-        <div class="title">
-            قائمة الصلاحيات
-        </div>
-        <div class="btns d-flex">
-            <div class="search">
-                <input class="form-control" type="text" name="search" placeholder="البحث">
-                <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+    <app-top-screen [title]="'إعدادات&nbsp; > &nbsp;الصلاحيات'"></app-top-screen>
+    <!-- start content -->
+    <div class="content companies auth">
+        <div class="header d-flex">
+            <div class="title">
+                قائمة الصلاحيات
             </div>
-            <button class="btn" data-bs-toggle="modal" data-bs-target="#authModal">
-                <i class="fa-solid fa-plus"></i>
-                إضافة صلاحية
-            </button>
+            <div class="btns d-flex">
+                <div class="search">
+                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#authModal" id="addAuthModalBtn">
+                    <i class="fa-solid fa-plus"></i>
+                    إضافة صلاحية
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="table-responsive company-table">
-        <table class="table table-borderless">
-            <thead>
-                <tr class="t-header">
-                    <th class="text-center" scope="col">اسم المستخدم</th>
-                    <th class="text-center" scope="col">المستخدم</th>
-                    <th class="text-center" scope="col">الصلاحية</th>
-                    <th class="text-center" scope="col">الحالة</th>
-                    <th style="min-width: 150px;" class="text-center" scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let item of getSettingsAuthDto; let i = index">
-                    <tr *ngFor="let permission of item.permissions; let j = index">
-                        <td class="text-center">{{ item.arName }}</td>
-                        <td class="text-center">{{ item.userName }}</td>
-                        <td class="text-center"><span *ngIf="permission.isName">{{permission.arName}},</span><span *ngIf="permission.add && permission.isName">اضافه,</span>
-                            <span *ngIf="permission.delete && permission.isName">حذف,</span><span *ngIf="permission.edit && permission.isName">تعديل,</span>
-                            <span *ngIf="permission.download && permission.isName">تنزيل PDF,</span></td>
-                        <td class="text-center">
-                            <ng-container *ngIf="item.status; else inactive">
-                                <div class="active"> نشط </div>
-                            </ng-container>
-                            <ng-template #inactive>
-                                <div class="notactive"> غير نشط </div>
-                            </ng-template>
-                        </td>
-                        <td class="text-center td-actions">
-                            
-                            <button class="icon">
-                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
-              </button>
-                            <button class="icon">
-                <img src="../../../../assets/images/pencil-outline.png" alt="" />
-              </button>
-                        </td>
+        <div class="table-responsive company-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">اسم المستخدم</th>
+                        <th class="text-center" scope="col">المستخدم</th>
+                        <th class="text-center" scope="col">الحالة</th>
+                        <th style="min-width: 150px;" class="text-center" scope="col"></th>
                     </tr>
-                </ng-container>
-            </tbody>
-            <tfoot *ngIf="noData">
-                <tr>
-                    <th colspan="7">
-                        <div class="alert alert-warning">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <br />
-                            <span> لا يوجد بيانات </span>
-                        </div>
-                    </th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let item of getSettingsAuthDto; let i = index">
+
+                        <tr>
+                            <td class="text-center">{{ item.arName }}</td>
+                            <td class="text-center">{{ item.userName }}</td>
+                            <td class="text-center">
+                                <ng-container *ngIf="item.status; else inactive">
+                                    <div class="active"> نشط </div>
+                                </ng-container>
+                                <ng-template #inactive>
+                                    <div class="notactive"> غير نشط </div>
+                                </ng-template>
+                            </td>
+                            <td class="text-center td-actions">
+
+                                <button class="icon">
+                                    <img src="../../../../assets/images/trash-can-outline.png" alt=""
+                                        (click)="showAlert(item.id)" />
+                                </button>
+                                <button class="icon" (click)="GetSettingsAuthById(item.id)">
+                                    <img src="../../../../assets/images/pencil-outline.png" alt="" />
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <tfoot *ngIf="noData">
+                    <tr>
+                        <th colspan="7">
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <br />
+                                <span> لا يوجد بيانات </span>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
     <!-- end content -->
-  </div>
-  <!-- <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+</div>
+<!-- <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
     (pageChange)="onPageChange($event)"></app-pagination> -->
-  <!--start request modal -->
-  <div class="modal company-modal fade" id="authModal" tabindex="-1" aria-labelledby="add" aria-hidden="true"
-  data-bs-backdrop="static" data-bs-keyboard="false">
+<!--start request modal -->
+<div class="modal company-modal fade" id="authModal" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 60%;">
         <div class="modal-content">
 
             <div class="modal-header">
                 <h5 class="modal-title" id="auth">أضف صلاحية</h5>
             </div>
-            <form [formGroup]="authForm">
+            <form [formGroup]="settingsAuthForm">
                 <div class="modal-body">
                     <div class="row">
                         <div class="modal-body pb-1">
                             <div class="row">
                                 <div class="form-group col-sm-6 mb-2">
                                     <input class="form-control input-modal" type="text" formControlName="userName"
-                                        name="username" />
+                                        name="username" [disabled]="true"/>
                                     <label for="inputField">اسم المستخدم</label>
                                 </div>
                                 <div class="form-group col-sm-6 mb-2" id="researcherPass">
@@ -101,11 +99,11 @@
                                         formControlName="password" name="password" />
                                     <label for="inputField">كلمة المرور</label>
                                     <div *ngIf="
-                                                          authForm.controls['password'].invalid &&
-                                                            (authForm.controls['password'].dirty ||
-                                                            authForm.controls['password'].touched)
+                                                          settingsAuthForm.controls['password'].invalid &&
+                                                            (settingsAuthForm.controls['password'].dirty ||
+                                                            settingsAuthForm.controls['password'].touched)
                                                           ">
-                                        <small *ngIf="authForm.controls['password'].errors?.['required']"
+                                        <small *ngIf="settingsAuthForm.controls['password'].errors?.['required']"
                                             class="text-danger">
                                             يجب ادخال الرقم السري
                                         </small>
@@ -116,13 +114,13 @@
                                 </div>
                                 <div class="form-group col-sm-6 mb-2">
                                     <input class="form-control input-modal" type="text"
-                                        [(ngModel)]="authForm.value.arName" formControlName="arName" />
+                                        [(ngModel)]="settingsAuthForm.value.arName" formControlName="arName" />
                                     <label for="inputField">الاسم بالكامل</label>
 
-                                    <div *ngIf="authForm.controls['arName'].invalid &&
-                                                            (authForm.controls['arName'].dirty ||
-                                                            authForm.controls['arName'].touched)">
-                                        <small *ngIf="authForm.controls['arName'].errors?.['required']"
+                                    <div *ngIf="settingsAuthForm.controls['arName'].invalid &&
+                                                            (settingsAuthForm.controls['arName'].dirty ||
+                                                            settingsAuthForm.controls['arName'].touched)">
+                                        <small *ngIf="settingsAuthForm.controls['arName'].errors?.['required']"
                                             class="text-danger">
                                             يجب ادخال الاسم بالكامل.
                                         </small>
@@ -132,10 +130,10 @@
                                     <input class="form-control input-modal" type="text" formControlName="enName" />
                                     <label for="inputField">English Full Name</label>
 
-                                    <div *ngIf="authForm.controls['enName'].invalid &&
-                                                            (authForm.controls['enName'].dirty ||
-                                                            authForm.controls['enName'].touched)">
-                                        <small *ngIf="authForm.controls['enName'].errors?.['required']"
+                                    <div *ngIf="settingsAuthForm.controls['enName'].invalid &&
+                                                            (settingsAuthForm.controls['enName'].dirty ||
+                                                            settingsAuthForm.controls['enName'].touched)">
+                                        <small *ngIf="settingsAuthForm.controls['enName'].errors?.['required']"
                                             class="text-danger">
                                             English full name is required.
                                         </small>
@@ -143,52 +141,53 @@
                                 </div>
                                 <div class="form-group col-sm-6 mb-2">
                                     <select class="form-control" style="width: 100%" formControlName="status"
-                                        [(ngModel)]="authForm.value.status">
+                                        [(ngModel)]="settingsAuthForm.value.status">
                                         <option [ngValue]="true">نشط</option>
                                         <option [ngValue]="false">غير نشط</option>
                                     </select>
                                     <label for="inputField">الحاله</label>
-                                    <div *ngIf="authForm.controls['status'].invalid &&
-                                                            (authForm.controls['status'].dirty ||
-                                                            authForm.controls['status'].touched)">
-                                        <small *ngIf="authForm.controls['status'].errors?.['required']"
+                                    <div *ngIf="settingsAuthForm.controls['status'].invalid &&
+                                                            (settingsAuthForm.controls['status'].dirty ||
+                                                            settingsAuthForm.controls['status'].touched)">
+                                        <small *ngIf="settingsAuthForm.controls['status'].errors?.['required']"
                                             class="text-danger">
                                             Status is required.
                                         </small>
                                     </div>
                                 </div>
                                 <div class="form-group col-10 col-sm-4 mb-2">
-                                    <input class="form-control input-modal" type="text" formControlName="phone" maxlength="8" minlength="8"
-                                        pattern="[0-9]*" (input)="onlyNumber($event)" />
+                                    <input class="form-control input-modal" type="text" formControlName="phone"
+                                        maxlength="8" minlength="8" pattern="[0-9]*" (input)="onlyNumber($event)" />
                                     <label for="inputField">رقم الهاتف</label>
-                        
-                                    <div style="text-align: right;" *ngIf="authForm.controls['phone'].touched &&
-                                                            authForm.controls['phone'].dirty &&
-                                                            authForm.controls['phone'].value !== '' &&
-                                                            authForm.controls['phone'].invalid">
-                                        <small *ngIf="authForm.controls['phone'].errors?.['minlength']"
+
+                                    <div style="text-align: right;" *ngIf="settingsAuthForm.controls['phone'].touched &&
+                                                            settingsAuthForm.controls['phone'].dirty &&
+                                                            settingsAuthForm.controls['phone'].value !== '' &&
+                                                            settingsAuthForm.controls['phone'].invalid">
+                                        <small *ngIf="settingsAuthForm.controls['phone'].errors?.['minlength']"
                                             class="text-danger">
                                             يجب ان يكون رقم الهاتف 8 ارقام.
                                         </small>
                                     </div>
                                 </div>
                                 <div class="form-group col-2 mb-2">
-                                    <input class="form-control input-modal input-disabled" type="text" value="{{ phoneCode }}" />
+                                    <input class="form-control input-modal input-disabled" type="text"
+                                        value="{{ phoneCode }}" />
                                     <label for="inputField">كود الهاتف</label>
-                        
+
                                 </div>
                                 <div class="form-group col-sm-6 mb-2">
                                     <input class="form-control input-modal" type="email"
-                                        [(ngModel)]="authForm.value.email" formControlName="email" />
+                                        [(ngModel)]="settingsAuthForm.value.email" formControlName="email" />
                                     <label for="inputField">عنوان البريد الاليكتروني</label>
-                                    <div *ngIf="authForm.controls['email'].invalid &&
-                                                            (authForm.controls['email'].dirty ||
-                                                            authForm.controls['email'].touched)">
-                                        <small *ngIf="authForm.controls['email'].errors?.['required']"
+                                    <div *ngIf="settingsAuthForm.controls['email'].invalid &&
+                                                            (settingsAuthForm.controls['email'].dirty ||
+                                                            settingsAuthForm.controls['email'].touched)">
+                                        <small *ngIf="settingsAuthForm.controls['email'].errors?.['required']"
                                             class="text-danger">
                                             يجب ادخال البريد الاليكتروني.
                                         </small>
-                                        <small *ngIf="authForm.controls['email'].errors?.['email']" class="text-danger">
+                                        <small *ngIf="settingsAuthForm.controls['email'].errors?.['email']" class="text-danger">
                                             البريد الاليكتروني غير صحيح.
                                         </small>
                                     </div>
@@ -196,40 +195,43 @@
                             </div>
                         </div>
                         <h5 class="modal-title my-2" id="auth">الصلاحيات</h5>
-                        <div formArrayName="permissions">
-                            <!-- Loop through each permission form group in the form array -->
-                            <div *ngFor="let permission of permissions.controls; let i = index" [formGroupName]="i">
-                              <div class="col-sm-12 d-flex align-items-center mb-2">
-                                <input type="checkbox" formControlName="isName" id="permission_{{i}}">
-                                <label for="permission_{{i}}" class="mt-3" style="position: static;">{{ permission.get('arName')?.value }}</label>
-                              </div>
-                    
-                              <div class="col-sm-12 d-flex justify-content-between mb-3">
-                                <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
-                                  <input type="checkbox" formControlName="add" id="add_{{i}}">
-                                  <label class="text-nowrap mt-3" style="position: static;" for="add_{{i}}">إضافة</label>
+                        <div class="scrollable-container">
+                            <div formArrayName="permissions">
+                              <div *ngFor="let permission of permissions.controls; let i = index" [formGroupName]="i">
+                                <div class="col-sm-12 d-flex align-items-center mb-2">
+                                  <input type="checkbox" formControlName="isName" id="permission_{{ i }}">
+                                  <label for="permission_{{ i }}" class="mt-3" style="position: static;">
+                                    {{ staticPermissions[i].arName }}
+                                  </label>
                                 </div>
-                                <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
-                                  <input type="checkbox" formControlName="edit" id="edit_{{i}}">
-                                  <label class="text-nowrap mt-3" style="position: static;" for="edit_{{i}}">تعديل</label>
-                                </div>
-                                <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
-                                  <input type="checkbox" formControlName="delete" id="delete_{{i}}">
-                                  <label class="text-nowrap mt-3" style="position: static;" for="delete_{{i}}">حذف</label>
-                                </div>
-                                <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
-                                  <input type="checkbox" formControlName="download" id="download_{{i}}">
-                                  <label class="text-nowrap mt-3" style="position: static;" for="download_{{i}}">تنزيل PDF</label>
+                                <div class="col-sm-12 d-flex justify-content-between mb-3">
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
+                                    <input type="checkbox" formControlName="add" id="add_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="add_{{ i }}">إضافة</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
+                                    <input type="checkbox" formControlName="edit" id="edit_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="edit_{{ i }}">تعديل</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
+                                    <input type="checkbox" formControlName="delete" id="delete_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="delete_{{ i }}">حذف</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1">
+                                    <input type="checkbox" formControlName="download" id="download_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="download_{{ i }}">تنزيل PDF</label>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        
+                          
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">إلغاء</button>
                     <button type="button" class="btn btn-reset" (click)="AddSettingsAuth()" *ngIf="add">ارسال</button>
+                    <button type="button" class="btn btn-reset" (click)="UpdateSettingsAuth()" *ngIf="!add">تعديل</button>
                 </div>
             </form>
         </div>

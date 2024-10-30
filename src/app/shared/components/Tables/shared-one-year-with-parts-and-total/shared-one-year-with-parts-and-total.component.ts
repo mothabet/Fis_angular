@@ -179,7 +179,7 @@ export class SharedOneYearWithPartsAndTotalComponent {
     SubCode.subCodes.push(subCode);
   }
   removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
-    debugger
+    
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`

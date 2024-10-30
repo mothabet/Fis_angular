@@ -1,6 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { CodeHomeService } from 'src/app/code/Services/code-home.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
@@ -11,7 +10,8 @@ import { arabicFont } from 'src/app/shared/services/arabic-font';
 import jsPDF from 'jspdf';
 import { ISubCode } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { SubCodeHomeService } from 'src/app/code/Services/sub-code-home.service';
-import { catchError, concat, finalize, Observable, of, switchMap } from 'rxjs';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-auditing-rules-home',
@@ -35,26 +35,38 @@ export class AuditingRulesHomeComponent implements OnInit {
   isEditing: boolean = false;
   add: boolean = true;
   codeParent: string = "";
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+  };
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private subCodeHomeService: SubCodeHomeService,
-    private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService) { }
+    private sharedService: SharedService, private auditRuleHomeService: AuditRuleHomeService,
+    private permissionsService: PermissionsService) { }
 
-    ngOnInit() {
-      this.auditForm = this.fb.group({
-        Rule: [''],
-        Type: [1],
-      });
-    
-      this.showLoader = true; // Show loader before starting requests
-      this.GetAllCodes(1);
-      this.GetAuditRules(1);
-    
-      this.auditForm.get('Rule')?.valueChanges.subscribe(value => {
-        const isValid = this.isValidEquation(value);
-        this.auditForm.get('Rule')?.setErrors(isValid ? null : { invalidEquation: true });
-      });
-    }
-    
+  ngOnInit() {
+    this.auditForm = this.fb.group({
+      Rule: [''],
+      Type: [1],
+    });
+
+    this.showLoader = true; // Show loader before starting requests
+    this.GetAllCodes(1);
+    this.GetAuditRules(1);
+    this.GetPermissionByUserId();
+    this.auditForm.get('Rule')?.valueChanges.subscribe(value => {
+      const isValid = this.isValidEquation(value);
+      this.auditForm.get('Rule')?.setErrors(isValid ? null : { invalidEquation: true });
+    });
+  }
+
   onPageChange(page: number) {
     this.currentPage = page;
   }
@@ -89,16 +101,16 @@ export class AuditingRulesHomeComponent implements OnInit {
   removeSelect(index: number) {
     const selectElement = document.querySelectorAll('select')[index] as HTMLSelectElement;
     const removedValue = selectElement.value;
-  
+
     // Remove the select element
     this.selects.splice(index, 1);
-  
+
     // Remove the value from usedOptions
     this.usedOptions.delete(removedValue);
-  
+
     // Get current value of the Rule input
     let currentValue = this.auditForm.get('Rule')?.value || '';
-  
+
     if (this.selects.length > 0) {
       // Re-add the removed value to the available options of the previous select
       if (index > 0) {
@@ -107,27 +119,27 @@ export class AuditingRulesHomeComponent implements OnInit {
           // Add other properties of ICode if necessary
         } as ISubCode);
       }
-  
+
       // Regex to remove the removed value and the operator before it
       const regex = new RegExp(`(\\+|\\-)?\\s*${removedValue}(\\+|\\-)?`, 'g');
-      currentValue = currentValue.replace(regex, (match:any, p1:any, p2:any) => {
+      currentValue = currentValue.replace(regex, (match: any, p1: any, p2: any) => {
         if (p1 && p2) {
           return p2; // If there's an operator before and after, just keep the latter
         } else {
           return ''; // Otherwise, remove the whole match
         }
       }).trim();
-  
+
       // Clean up any extra operators or spaces
       currentValue = currentValue.replace(/^\s*(\+|\-)/, ''); // Remove leading + or -
       currentValue = currentValue.replace(/(\+|\-)\s*$/, ''); // Remove trailing + or -
-      currentValue = currentValue.replace(/\+\s*\+|\-\s*\-|\+\s*\-|\-\s*\+/g, (match:any) => match[0]); // Keep only one operator
+      currentValue = currentValue.replace(/\+\s*\+|\-\s*\-|\+\s*\-|\-\s*\+/g, (match: any) => match[0]); // Keep only one operator
       currentValue = currentValue.replace(/\=\s*(\+|\-)/, '='); // Ensure the equation doesn't start with + or - after =
-  
+
     } else {
       currentValue = '';
     }
-  
+
     // Update the rule in the form
     this.auditForm.patchValue({ Rule: currentValue });
   }
@@ -174,7 +186,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     if (currentValue === '') {
 
     } else if (currentValue.endsWith('=')) {
-    } 
+    }
     else if (currentValue.endsWith('+') || currentValue.endsWith('-')) {
       currentValue = `${currentValue.slice(0, -1)}`
       currentValue = `${currentValue}+`;
@@ -196,7 +208,7 @@ export class AuditingRulesHomeComponent implements OnInit {
     } else if (currentValue.endsWith('+') || currentValue.endsWith('-')) {
       currentValue = `${currentValue.slice(0, -1)}`
       currentValue = `${currentValue}-`;
-    }else {
+    } else {
       currentValue = `${currentValue}-`;
     }
     this.auditForm.patchValue({ Rule: currentValue });
@@ -208,71 +220,71 @@ export class AuditingRulesHomeComponent implements OnInit {
     if (equationParts.length !== 2) {
       return false;
     }
-  
+
     const leftSide = equationParts[0].trim();
     const rightSide = equationParts[1].trim();
-  
+
     // تحقق من أن الجانب الأيسر يحتوي على رقم واحد فقط
     // if (/^\d+$/.test(rightSide)) {
     //   return false;
     // }
-  
+
     // تحقق من أن الجانب الأيمن يحتوي على أرقام وعمليات حسابية صحيحة
     // وتأكد من أن الجانب الأيمن يحتوي على أكثر من رقم واحد مفصول بعلامات العمليات
     const rightSideMatches = rightSide.match(/\d+/g);
     if (!rightSideMatches || rightSideMatches.length < 2) {
       return false;
     }
-  
+
     return /^\d+([+-]\d+)*$/.test(rightSide);
-  }  
+  }
   isSaveDisabled(): boolean {
     const ruleValue = this.auditForm.get('Rule')?.value || '';
-  
+
     // // تحقق من أن المعادلة تحتوي على رقم واحد فقط في الطرف الأيسر
     // const leftSideMatch = ruleValue.match(/^(\d+)\s*=/);
     // const hasSingleNumberOnLeftSide = leftSideMatch && leftSideMatch[1].trim().split(/\s*[+-]\s*/).length === 1;
-  
+
     // تحقق من صحة المعادلة كاملة
     const isValid = this.isValidEquation(ruleValue);
-  
+
     // تمكين الأزرار إذا كانت المعادلة صحيحة وتحتوي على أكثر من رقم واحد في الجزء الأيمن
-    return !isValid ;
-  }  
+    return !isValid;
+  }
   isLastCharacterValid(): boolean {
     const currentValue = this.auditForm.get('Rule')?.value || '';
-    
+
     if (!currentValue.trim()) {
       return true; // Allow adding if input is empty
     }
-  
+
     const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
     return lastChar === '=' || lastChar === '+' || lastChar === '-';
   }
   isLastCharacterValidPlus(): boolean {
     const currentValue = this.auditForm.get('Rule')?.value || '';
-    
+
     if (!currentValue.trim()) {
       return true; // Allow adding if input is empty
     }
-  
+
     const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
     return lastChar === '=' || lastChar === '-';
   }
   isLastCharacterValidNegative(): boolean {
     const currentValue = this.auditForm.get('Rule')?.value || '';
-    
+
     if (!currentValue.trim()) {
       return true; // Allow adding if input is empty
     }
-  
+
     const lastChar = currentValue.trim().slice(-1); // Get the last non-whitespace character
     return lastChar === '=' || lastChar === '+';
   }
   resetAuditRules() {
     this.selects = []; // إزالة جميع الـ <select>ات
     this.usedOptions.clear(); // مسح جميع الخيارات المستخدمة
-    this.auditForm.patchValue({ Rule: '' , Type:1}); // إفراغ حقل النص
+    this.auditForm.patchValue({ Rule: '', Type: 1 }); // إفراغ حقل النص
     this.id = 0;
     this.add = true;
   }
@@ -291,7 +303,7 @@ export class AuditingRulesHomeComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.codeHomeService.GetAllCodes(0,'',false).subscribe(observer);
+    this.codeHomeService.GetAllCodes(0, '', false).subscribe(observer);
   }
   GetAllSubCodes(page: number, questionCode: string) {
     const observer = {
@@ -465,13 +477,13 @@ export class AuditingRulesHomeComponent implements OnInit {
     const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
     return `${year}-${month}-${day}`;
   }
-  
+
   editAuditRules(id: number): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           const rule = res.Data.Rule;
           this.codeParent = res.Data.codeParent;
           const codes = rule.split(/[=+-]/).map((code: any) => code.trim()).filter((code: any) => code);
@@ -508,7 +520,7 @@ export class AuditingRulesHomeComponent implements OnInit {
               });
 
               // Update form controls with the values
-              this.auditForm.patchValue({ Rule: rule ,Type:res.Data.Type});
+              this.auditForm.patchValue({ Rule: rule, Type: res.Data.Type });
 
               // Set the value of each select element based on codes[i]
               setTimeout(() => {
@@ -592,5 +604,10 @@ export class AuditingRulesHomeComponent implements OnInit {
       },
     };
     this.auditRuleHomeService.UpdateAuditRules(this.id, Model).subscribe(observer);
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Auditing-Rules").then(permissions => {
+      this.permission = permissions;
+    });
   }
 }

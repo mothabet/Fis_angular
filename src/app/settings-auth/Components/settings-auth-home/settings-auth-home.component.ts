@@ -3,7 +3,8 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { SettingsAuthService } from '../../Services/settings-auth.service';
 import Swal from 'sweetalert2';
-import { IAddPermissionDto, IAddSettingsAuth, IAddSettingsAuthAndPermissionDto, IGetSettingsAuthDto } from '../../Dtos/SettingsAuthHomeDto';
+import { IAddSettingsAuth, IAddSettingsAuthAndPermissionDto, IGetSettingsAuthDto } from '../../Dtos/SettingsAuthHomeDto';
+import { IAddPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-settings-auth-home',
@@ -12,23 +13,83 @@ import { IAddPermissionDto, IAddSettingsAuth, IAddSettingsAuthAndPermissionDto, 
 })
 export class SettingsAuthHomeComponent {
   showLoader: boolean = false;
-  authForm!: FormGroup;
+  settingsAuthForm!: FormGroup;
   phoneCode: number = 968;
-  add:boolean = true;
-  addPermissionDtoList : IAddPermissionDto[] = [];
-  getSettingsAuthDto : IGetSettingsAuthDto[] = [];
+  add: boolean = true;
+  addPermissionDtoList: IAddPermissionDto[] = [];
+  getSettingsAuthDto: IGetSettingsAuthDto[] = [];
+  settingsAuthDto: IGetSettingsAuthDto = {
+    arName: "",
+    email: "",
+    enName: "",
+    id: 0,
+    password: "",
+    permissions: [],
+    phone: "",
+    status: "",
+    UserId: 0,
+    userName: ""
+  };
   noData: boolean = false;
   id: number = 0;
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
+  staticPermissions = [
+    { arName: 'الرئيسيه', enName: "Home", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الباحثين او المشرف', enName: "Researcher", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الشركات', enName: "Companies", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'التقارير', enName: "Reports", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'تصميم الاستمارات', enName: "Forms", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'قواعد التدقيق', enName: "Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'محتوي الاستماره', enName: "Codes", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الرسائل', enName: "Messages", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الصلاحيات', enName: "SettingsAuth", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الانشطة و القطاعات', enName: "Sectors", isName: true, add: true, edit: true, delete: true, download: true },
+  ];
   constructor(
     private formBuilder: FormBuilder,
-    private settingsAuthService : SettingsAuthService,
+    private settingsAuthService: SettingsAuthService,
     private sharedService: SharedService,
   ) { }
   ngOnInit(): void {
-    this.authForm = this.formBuilder.group({
+    this.initializeForm();
+    this.GetAllSettingsAuths(1, '');
+    this.generateRandomCredentials();
+
+    // Listen for changes in each isName checkbox
+
+  }
+  ngAfterViewInit() {
+    // After the view is initialized, loop through the permissions and set up the subscriptions
+    this.permissions.controls.forEach((group, index) => {
+      group.get('isName')?.valueChanges.subscribe((isChecked: boolean) => {
+        group.patchValue(
+          {
+            add: isChecked,
+            edit: isChecked,
+            delete: isChecked,
+            download: isChecked,
+          },
+          { emitEvent: false } // Prevents recursion from re-triggering value changes
+        );
+      });
+    });
+  }
+  private initializeForm(): void {
+    const permissionsFormGroups = this.staticPermissions.map(permission =>
+      this.formBuilder.group({
+        arName: [permission.arName, Validators.required],
+        enName: [permission.enName, Validators.required],
+        isName: [true],
+        add: [true],
+        edit: [true],
+        delete: [true],
+        download: [true],
+      })
+    );
+
+    this.settingsAuthForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
       arName: ['', Validators.required],
@@ -42,41 +103,18 @@ export class SettingsAuthHomeComponent {
         ]
       ],
       email: ['', [Validators.required, Validators.email]],
-      permissions: this.formBuilder.array([])  // Initialize the FormArray for permissions
+      permissions: this.formBuilder.array(permissionsFormGroups),
     });
-  
-    // Add static permissions
-    this.addStaticPermissions();
-  this.GetAllSettingsAuths(1,'')
-    this.generateRandomCredentials();
   }
-  
+
   get permissions(): FormArray {
-    return this.authForm.get('permissions') as FormArray;
+    return this.settingsAuthForm.get('permissions') as FormArray;
   }
-  addStaticPermissions() {
-    const staticPermissions = [
-      { arName: 'قواعد التدقيق',enName:"Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true },
-      { arName: 'محتوي الاستماره',enName:"Codes", isName: true, add: true, edit: true, delete: true, download: true },
-    ];
-  
-    staticPermissions.forEach(permission => {
-      this.permissions.push(this.formBuilder.group({
-        arName: [permission.arName, Validators.required],
-        enName: [permission.enName, Validators.required],
-        isName: [permission.isName],
-        add: [permission.add],
-        edit: [permission.edit],
-        delete: [permission.delete],
-        download: [permission.download]
-      }));
-    });
-  }
-  
+
   generateRandomCredentials(): void {
     this.showLoader = true;
     this.GetSettingsAuthCode();
-    this.authForm.patchValue({
+    this.settingsAuthForm.patchValue({
       password: this.sharedService.generateRandomString(12) // Generate a 12 character password
     });
     this.showLoader = false;
@@ -86,7 +124,7 @@ export class SettingsAuthHomeComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.authForm.patchValue({
+          this.settingsAuthForm.patchValue({
             userName: `FIS_U0${res.Data}`
           });
           this.showLoader = false;
@@ -105,33 +143,34 @@ export class SettingsAuthHomeComponent {
   }
   AddSettingsAuth(): void {
     this.showLoader = true;
-    if (this.authForm.valid) {
+    debugger
+    if (this.settingsAuthForm.valid) {
       this.addPermissionDtoList = [];
-      for (let index = 0; index < this.authForm.value.permissions.length; index++) {
-        
-        const permission : IAddPermissionDto = {
-          add : this.authForm.value.permissions[index].add,
-          arName : this.authForm.value.permissions[index].arName,
-          delete : this.authForm.value.permissions[index].delete,
-          download : this.authForm.value.permissions[index].download,
-          edit : this.authForm.value.permissions[index].edit,
-          enName : this.authForm.value.permissions[index].enName,
-          isName : this.authForm.value.permissions[index].isName
+      for (let index = 0; index < this.settingsAuthForm.value.permissions.length; index++) {
+
+        const permission: IAddPermissionDto = {
+          add: this.settingsAuthForm.value.permissions[index].add,
+          arName: this.settingsAuthForm.value.permissions[index].arName,
+          delete: this.settingsAuthForm.value.permissions[index].delete,
+          download: this.settingsAuthForm.value.permissions[index].download,
+          edit: this.settingsAuthForm.value.permissions[index].edit,
+          enName: this.settingsAuthForm.value.permissions[index].enName,
+          isName: this.settingsAuthForm.value.permissions[index].isName
         }
         this.addPermissionDtoList.push(permission);
       }
       const addSettingAuth: IAddSettingsAuth = {
-        userName: this.authForm.value.userName,
-        password: this.authForm.value.password,
-        arName: this.authForm.value.arName,
-        enName: this.authForm.value.enName,
-        status: this.authForm.value.status,
-        phone: this.phoneCode + this.authForm.value.phone,
-        email: this.authForm.value.email,
+        userName: this.settingsAuthForm.value.userName,
+        password: this.settingsAuthForm.value.password,
+        arName: this.settingsAuthForm.value.arName,
+        enName: this.settingsAuthForm.value.enName,
+        status: this.settingsAuthForm.value.status,
+        phone: this.phoneCode + this.settingsAuthForm.value.phone,
+        email: this.settingsAuthForm.value.email,
       };
-      const Model : IAddSettingsAuthAndPermissionDto  = {
+      const Model: IAddSettingsAuthAndPermissionDto = {
         addPermissionDto: this.addPermissionDtoList,
-        addSettingsAuthDto : addSettingAuth
+        addSettingsAuthDto: addSettingAuth
       }
       const observer = {
         next: (res: any) => {
@@ -157,7 +196,7 @@ export class SettingsAuthHomeComponent {
       this.settingsAuthService.AddSettingsAuth(Model).subscribe(observer);
     } else {
       Swal.fire({
-        icon: 'success',
+        icon: 'error',
         title: 'يجب ادخال البيانات بشكل صحيح',
         showConfirmButton: false,
         timer: 2000
@@ -167,16 +206,16 @@ export class SettingsAuthHomeComponent {
   }
   GetAllSettingsAuths(page: number, textSearch: string = ''): void {
     this.showLoader = true;
+    debugger
     const observer = {
       next: (res: any) => {
-        
+
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
           this.getSettingsAuthDto = res.Data.getSettingsAuthDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
-          this.resetForm();
         }
         else {
           this.getSettingsAuthDto = [];
@@ -191,7 +230,7 @@ export class SettingsAuthHomeComponent {
     this.settingsAuthService.GetAllSettingsAuths(page, textSearch).subscribe(observer);
   }
   resetForm(): void {
-    this.authForm.reset({
+    this.settingsAuthForm.reset({
       userName: '',
       password: '',
       arName: '',
@@ -200,6 +239,188 @@ export class SettingsAuthHomeComponent {
       phone: '',
       email: ''
     });
+
+    // Reset permissions, but maintain the relationship and arName, enName
+    this.permissions.controls.forEach((group) => {
+      group.patchValue({
+        isName: true, // Reset to false or the initial value
+        add: true,
+        edit: true,
+        delete: true,
+        download: true,
+        arName: group.get('arName')?.value, // Keep the existing value
+        enName: group.get('enName')?.value, // Keep the existing value
+      });
+    });
+    this.add = true;
     this.generateRandomCredentials();
+  }
+  showAlert(id: number): void {
+    Swal.fire({
+      title: 'هل انت متأكد؟',
+      text: 'لا يمكن التراجع عن هذا',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'rgb(46, 97, 158)',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'نعم اريد المسح!',
+      cancelButtonText: 'لا'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DeleteSettingsAuth(id);
+      }
+    });
+  }
+
+  DeleteSettingsAuth(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetAllSettingsAuths(1);
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.settingsAuthService.DeleteSettingsAuth(id).subscribe(observer);
+  }
+  GetSettingsAuthById(id: number): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.settingsAuthDto = res.Data;
+          this.settingsAuthDto.phone = this.settingsAuthDto.phone.replace(this.phoneCode.toString(), '');
+
+          // Create the FormArray for permissions
+          const permissionsFormGroups = this.settingsAuthDto.permissions.map(permission => {
+            const group = this.formBuilder.group({
+              arName: [permission.arName, Validators.required],
+              enName: [permission.enName, Validators.required],
+              isName: [permission.isName],
+              add: [permission.add],
+              edit: [permission.edit],
+              delete: [permission.delete],
+              download: [permission.download],
+            });
+
+            // Subscribe to isName value changes to toggle other checkboxes
+            group.get('isName')?.valueChanges.subscribe((isChecked: boolean | null) => {
+              group.patchValue(
+                {
+                  add: isChecked,
+                  edit: isChecked,
+                  delete: isChecked,
+                  download: isChecked,
+                },
+                { emitEvent: false } // Prevents recursion from re-triggering value changes
+              );
+            });
+
+            return group;
+          });
+
+
+          // Clear existing FormArray items before repopulating
+          const permissionsArray = this.settingsAuthForm.get('permissions') as FormArray;
+          permissionsArray.clear();
+          permissionsFormGroups.forEach(group => permissionsArray.push(group));
+
+          // Patch the rest of the form fields
+          this.settingsAuthForm.patchValue({
+            userName: this.settingsAuthDto.userName,
+            password: this.settingsAuthDto.password,
+            arName: this.settingsAuthDto.arName,
+            enName: this.settingsAuthDto.enName,
+            status: this.settingsAuthDto.status,
+            phone: this.settingsAuthDto.phone,
+            email: this.settingsAuthDto.email,
+          });
+
+          this.showLoader = false;
+          this.add = false;
+          const button = document.getElementById('addAuthModalBtn');
+          if (button) {
+            button.click();
+          }
+          this.id = id;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.settingsAuthService.GetSettingsAuthById(id).subscribe(observer);
+  }
+  UpdateSettingsAuth(): void {
+    this.showLoader = true;
+    if (this.settingsAuthForm.valid) {
+      this.addPermissionDtoList = [];
+      for (let index = 0; index < this.settingsAuthForm.value.permissions.length; index++) {
+
+        const permission: IAddPermissionDto = {
+          add: this.settingsAuthForm.value.permissions[index].add,
+          arName: this.settingsAuthForm.value.permissions[index].arName,
+          delete: this.settingsAuthForm.value.permissions[index].delete,
+          download: this.settingsAuthForm.value.permissions[index].download,
+          edit: this.settingsAuthForm.value.permissions[index].edit,
+          enName: this.settingsAuthForm.value.permissions[index].enName,
+          isName: this.settingsAuthForm.value.permissions[index].isName
+        }
+        this.addPermissionDtoList.push(permission);
+      }
+      const addSettingAuth: IAddSettingsAuth = {
+        userName: this.settingsAuthForm.value.userName,
+        password: this.settingsAuthForm.value.password,
+        arName: this.settingsAuthForm.value.arName,
+        enName: this.settingsAuthForm.value.enName,
+        status: this.settingsAuthForm.value.status,
+        phone: this.phoneCode + this.settingsAuthForm.value.phone,
+        email: this.settingsAuthForm.value.email,
+      };
+      const Model: IAddSettingsAuthAndPermissionDto = {
+        addPermissionDto: this.addPermissionDtoList,
+        addSettingsAuthDto: addSettingAuth
+      }
+      const observer = {
+        next: (res: any) => {
+          const button = document.getElementById('btnCancel');
+          if (button) {
+            button.click();
+          }
+          this.resetForm();
+          this.GetAllSettingsAuths(1);
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.settingsAuthService.UpdateSettingsAuth(this.id, Model).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+    }
   }
 }

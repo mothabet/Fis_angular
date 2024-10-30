@@ -10,6 +10,8 @@ import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-researcher-home',
@@ -48,12 +50,24 @@ export class ResearcherHomeComponent {
   filteredFormStatics: any[] = []; // البيانات المصفاة
   fromDate: Date | null = null;
   toDate: Date | null = null;
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+  };
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private researcherService: ResearcherHomeService,
     private sharedService: SharedService,
-    private companyService: CompanyHomeService
+    private companyService: CompanyHomeService,
+    private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
     this.researcherForm = this.formBuilder.group({
@@ -71,7 +85,7 @@ export class ResearcherHomeComponent {
       ],
       email: ['', [Validators.required, Validators.email]],
     });
-
+    this.GetPermissionByUserId();
     this.generateRandomCredentials();
     this.GetAllReseachers(this.currentPage);
     this.GetCompanies('', 0);
@@ -485,8 +499,8 @@ export class ResearcherHomeComponent {
     this.GetCompanies(this.searchText, 1);
   }
   GetFormsStatistics() {
-    
-    
+
+
     if (this.fromDate && this.toDate && this.fromDate > this.toDate) {
       Swal.fire({
         icon: 'error',
@@ -496,14 +510,14 @@ export class ResearcherHomeComponent {
       });
       return;
     }
-  
+
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
           this.formStatics = res.Data;
-          this.filteredFormStatics = this.formStatics; 
+          this.filteredFormStatics = this.formStatics;
         }
       },
       error: (err: any) => {
@@ -511,7 +525,7 @@ export class ResearcherHomeComponent {
         this.showLoader = false;
       },
     };
-    this.researcherService.GetFormsStatistics(0,this.fromDate,this.toDate).subscribe(observer);
+    this.researcherService.GetFormsStatistics(0, this.fromDate, this.toDate).subscribe(observer);
   }
   GetFormsByStatus(status: number) {
     this.showLoader = true;
@@ -529,5 +543,9 @@ export class ResearcherHomeComponent {
     };
     this.researcherService.GetFormsByStatus(0, status).subscribe(observer);
   }
-
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Researcher").then(permissions => {
+      this.permission = permissions;
+    });
+  }
 }
