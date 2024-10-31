@@ -25,7 +25,7 @@ export class SharedQuarterTableComponent {
   @Input() formId!: string;
   @Input() tableId!: string;
   isCollapsedColumns: boolean[] = [false, false, false, false];
-  tdcolspan:number=4;
+  tdcolspan: number = 4;
   table: IGetTableDto = {
     id: 0,
     arName: '',
@@ -44,7 +44,7 @@ export class SharedQuarterTableComponent {
     tableParts: [],
     IsDisabled: false,
     totalTitleAr: "",
-    totalTitleEn: ""
+    totalTitleEn: "",
   };
   coverForm: ICoverFormDetailsDto = {
     id: 0,
@@ -89,16 +89,16 @@ export class SharedQuarterTableComponent {
   }
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
-}
+  }
 
-// Optionally close the dropdown when clicking outside
-@HostListener('document:click', ['$event'])
-closeDropdown(event: Event) {
+  // Optionally close the dropdown when clicking outside
+  @HostListener('document:click', ['$event'])
+  closeDropdown(event: Event) {
     const target = event.target as HTMLElement;
     if (!target.closest('.dropdown')) {
-        this.dropdownOpen = false;
+      this.dropdownOpen = false;
     }
-}
+  }
   onCheckboxChange(event: Event, column: number) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (!isChecked) {
@@ -111,13 +111,13 @@ closeDropdown(event: Event) {
   }
 
   toggleCollapse(column: number) {
-    
-    this.tdcolspan +=1;
+
+    this.tdcolspan += 1;
     this.isCollapsedColumns[column] = false;
   }
   toggleExpand(column: number) {
-    
-    this.tdcolspan -=1;
+
+    this.tdcolspan -= 1;
     this.isCollapsedColumns[column] = true;
     // تبديل حالة العرض/الإخفاء للعمود المحدد
   }
@@ -134,11 +134,17 @@ closeDropdown(event: Event) {
       subCode.arCountry = selectedCountry.arName;
     }
   }
+  hideSub(formContent: IGetQuestionDto) {
+    formContent.IsHideSub = false;
+  }
+  showSub(formContent: IGetQuestionDto) {
+    formContent.IsHideSub = true;
+  }
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -167,7 +173,7 @@ closeDropdown(event: Event) {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
@@ -268,8 +274,8 @@ closeDropdown(event: Event) {
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
-    
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm, _subCode: ISubCodeForm, indexSub: number): void {
+
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`
@@ -278,10 +284,10 @@ closeDropdown(event: Event) {
           SubCode.values[i] -= _subCode.values[i];
         }
       }
-      
+
       // إزالة الـsubCode من المصفوفة
       SubCode.subCodes.splice(index, 1);
-      this.handelSupParent(formContent,SubCode,indexSub);
+      this.handelSupParent(formContent, SubCode, indexSub);
     }
   }
   GetFormData() {
@@ -508,7 +514,7 @@ closeDropdown(event: Event) {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -589,7 +595,7 @@ closeDropdown(event: Event) {
   getSumOfParentChildes(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       // Add the value of formContent at the specified index
-      
+
       sum += formContent.values[index] || 0;
 
       // Check if formContent has SubCodes and sum only those where subCode.codeId matches formContent.code.id
@@ -611,7 +617,7 @@ closeDropdown(event: Event) {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
@@ -672,7 +678,7 @@ closeDropdown(event: Event) {
     }
   }
   clearIfZero(values: any[], index: number): void {
-    
+
     if (values[index] === 0) {
       values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
@@ -707,7 +713,7 @@ closeDropdown(event: Event) {
 
     // Optionally, update any other logic or status here if needed
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
@@ -717,10 +723,10 @@ closeDropdown(event: Event) {
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      
+
       formContent.code.SubCodes[index] = subCode;
     }
-    else{
+    else {
       for (let i = 0; i < formContent.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         formContent.values[i] = 0;

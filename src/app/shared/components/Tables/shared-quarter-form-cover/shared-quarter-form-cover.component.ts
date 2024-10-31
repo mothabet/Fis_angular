@@ -38,8 +38,7 @@ export class SharedQuarterFormCoverComponent implements OnInit {
     tableParts: [] ,
     IsDisabled:false  ,
     totalTitleAr:"", 
-    totalTitleEn:""   
-
+    totalTitleEn:"",
   };
   years: number[] =[];
   currentYear: number = 0;

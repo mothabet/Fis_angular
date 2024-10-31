@@ -9,40 +9,51 @@
                 </div>
                 <div class="form-group">
                     <div class="dropdown">
-                        <button class="dropdown-toggle" style="background: #fff !important; border: none;" type="button" id="dropdownMenuButton" (click)="toggleDropdown()" aria-expanded="dropdownOpen">
+                        <button class="dropdown-toggle" style="background: #fff !important; border: none;" type="button"
+                            id="dropdownMenuButton" (click)="toggleDropdown()" aria-expanded="dropdownOpen">
                             اخفاء الارباع
                         </button>
-                        <ul class="dropdown-menu p-2" style="min-width: 200px;" [ngStyle]="{'display': dropdownOpen ? 'block' : 'none'}" aria-labelledby="dropdownMenuButton">
+                        <ul class="dropdown-menu p-2" style="min-width: 200px;"
+                            [ngStyle]="{'display': dropdownOpen ? 'block' : 'none'}"
+                            aria-labelledby="dropdownMenuButton">
                             <li class="dropdown-item">
-                                <input type="checkbox" class="form-check-input me-2" id="quarter1" (change)="onCheckboxChange($event, 1)">
-                                <label class="form-check-label" style="top:15px" for="quarter1">اخفاء الربع الاول</label>
+                                <input type="checkbox" class="form-check-input me-2" id="quarter1"
+                                    (change)="onCheckboxChange($event, 1)">
+                                <label class="form-check-label" style="top:15px" for="quarter1">اخفاء الربع
+                                    الاول</label>
                             </li>
                             <li class="dropdown-item">
-                                <input type="checkbox" class="form-check-input me-2" id="quarter2" (change)="onCheckboxChange($event, 2)">
-                                <label class="form-check-label" style="top:15px" for="quarter2">اخفاء الربع الثاني</label>
+                                <input type="checkbox" class="form-check-input me-2" id="quarter2"
+                                    (change)="onCheckboxChange($event, 2)">
+                                <label class="form-check-label" style="top:15px" for="quarter2">اخفاء الربع
+                                    الثاني</label>
                             </li>
                             <li class="dropdown-item">
-                                <input type="checkbox" class="form-check-input me-2" id="quarter3" (change)="onCheckboxChange($event, 3)">
-                                <label class="form-check-label" style="top:15px" for="quarter3">اخفاء الربع الثالث</label>
+                                <input type="checkbox" class="form-check-input me-2" id="quarter3"
+                                    (change)="onCheckboxChange($event, 3)">
+                                <label class="form-check-label" style="top:15px" for="quarter3">اخفاء الربع
+                                    الثالث</label>
                             </li>
                             <li class="dropdown-item">
-                                <input type="checkbox" class="form-check-input me-2" id="quarter4" (change)="onCheckboxChange($event, 4)">
-                                <label class="form-check-label" style="top:15px" for="quarter4">اخفاء الربع الرابع</label>
+                                <input type="checkbox" class="form-check-input me-2" id="quarter4"
+                                    (change)="onCheckboxChange($event, 4)">
+                                <label class="form-check-label" style="top:15px" for="quarter4">اخفاء الربع
+                                    الرابع</label>
                             </li>
                         </ul>
                     </div>
                 </div>
-                
+
                 <div class="title flex-fill en">
                     {{table.enName}}
                 </div>
             </div>
-            
+
             <div class="table-responsive company-table">
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header boldBorderRow">
-                            <th scope="col" style="min-width: 250px;">{{table.arHeading}}</th>
+                            <th scope="col" style="min-width: 350px;">{{table.arHeading}}</th>
                             <th class="text-center quarter4" scope="col" *ngIf="!isCollapsedColumns[4]">
                                 30.012.{{+coverForm.reviewYear + 1}} Position
                             </th>
@@ -96,6 +107,30 @@
                                         <span class="ar-name">
                                             {{formContent.code.arName}}
                                         </span>
+                                        <ng-container
+                                            *ngIf="!(formContent.code.SubCodes.length === 0 ) && formContent.IsHideSub">
+                                            <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="اظهار المؤشرات الفرعيه الخاصه بهذا المؤشر"
+                                                (click)="hideSub(formContent)" style="border: #41c3b6 .1rem solid;
+                                                padding: 0px 2px;
+                                                border-radius: 50%;
+                                                cursor: pointer;
+                                                font-size: 10px;">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="!(formContent.code.SubCodes.length === 0) && !formContent.IsHideSub">
+                                            <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="اخفاء المؤشرات الفرعيه الخاصه بهذا المؤشر"
+                                                (click)="showSub(formContent)" style="border: #41c3b6 .1rem solid;
+                                                padding: 0px 2px;
+                                                border-radius: 50%;
+                                                cursor: pointer;
+                                                font-size: 10px;">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </span>
+                                        </ng-container>
                                         <ng-container
                                             *ngIf="!(formContent.code.SubCodes.length === 0 && (formContent.code.TypeId === 1 || formContent.code.TypeId === 4)) 
                                                             && !(formContent.code.SubCodes.length > 0 && formContent.code.SubCodes[0].IsTrueAndFalse === true)">
@@ -302,7 +337,7 @@
                                     {{formContent.code.enName}}</td>
                             </tr>
                             <ng-container *ngFor="let subCode of formContent.code.SubCodes; let indexSub = index">
-                                <tr class=" boldBorderRow">
+                                <tr class=" boldBorderRow" *ngIf="!formContent.IsHideSub">
                                     <td *ngIf="formContent.code.TypeId == 1" class="sub-list-item"
                                         style="text-align: center; color: #00af9d; text-wrap: balance;">{{
                                         subCode.arName }}
@@ -499,12 +534,13 @@
                                     </td>
                                 </tr>
                                 <ng-container *ngFor="let _subCode of subCode.subCodes">
-                                    <tr *ngIf="subCode.IsHdd == true" class=" boldBorderRow">
+                                    <tr *ngIf="subCode.IsHdd == true && !formContent.IsHideSub" class=" boldBorderRow">
                                         <td class="text-center">
                                             <div style="display: flex;justify-content: center;">
                                                 <input type="text" style="width: 220px !important;"
                                                     [(ngModel)]="_subCode.arName" />
-                                                <button (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
+                                                <button
+                                                    (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
                                                     style="background-color: white; border:none;">
                                                     <img src=".././../../../assets/images/trash-can-outline.png"
                                                         class="img-fluid">

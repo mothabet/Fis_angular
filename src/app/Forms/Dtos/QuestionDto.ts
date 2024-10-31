@@ -13,4 +13,5 @@ export interface IGetQuestionDto {
   code:ICodeForm;
   valueCheck:boolean;
   isRule:boolean;
+  IsHideSub:boolean,
 }
