@@ -112,7 +112,7 @@
                                             <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="اظهار المؤشرات الفرعيه الخاصه بهذا المؤشر"
                                                 (click)="hideSub(formContent)" style="border: #41c3b6 .1rem solid;
-                                                padding: 0px 2px;
+                                                padding: 0px 3px;
                                                 border-radius: 50%;
                                                 cursor: pointer;
                                                 font-size: 10px;">
@@ -124,7 +124,7 @@
                                             <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="اخفاء المؤشرات الفرعيه الخاصه بهذا المؤشر"
                                                 (click)="showSub(formContent)" style="border: #41c3b6 .1rem solid;
-                                                padding: 0px 2px;
+                                                padding: 0px 3px;
                                                 border-radius: 50%;
                                                 cursor: pointer;
                                                 font-size: 10px;">
@@ -690,7 +690,8 @@
                                 <input type="number" disabled [value]="getSumOfValues(0)" style="color: black;" />
                             </td>
                             <td class="text-center" style="color: black;">
-                                9999
+                                <input style="background: #d3fffb33;" type="number" disabled placeholder="0"
+                                [value]="9999" />
                             </td>
                             <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
                         </tr>
