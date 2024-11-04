@@ -22,6 +22,9 @@ export class PermissionsService {
     id:0,
     isName:true,
     settingsAuthId:0,
+    addCompaniesGroup:true,
+    connectWithCompany:true,
+    copy:true
   };
    GetPermissionByUserId(UserId:number){
     var headers= this.sharedService.getHeaders();

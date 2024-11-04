@@ -30,6 +30,7 @@
             data-bs-toggle="modal"
             (click)="popAddCompany()"
             data-bs-target="#addCompany"
+            *ngIf="permission.add"
           >
             <img
               id="addCompanyBtn"
@@ -38,11 +39,11 @@
             />
             إضافة شركة
           </button>
-          <button (click)="printPdf()" type="button" class="btn btn-download">
+          <button (click)="printPdf()" type="button" class="btn btn-download" *ngIf="permission.download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             تنزيل PDF
           </button>
-          <button type="button" class="btn btn-download" (click)="triggerFileInput()">
+          <button type="button" class="btn btn-download" (click)="triggerFileInput()" *ngIf="permission.addCompaniesGroup">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
             اضافة مجموعة شركات
           </button>
@@ -93,13 +94,13 @@
                 <a routerLink="/Companies-Details/{{company.id}}" class="icon">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
-                <button class="icon" (click)="showAlert(company.id)">
+                <button class="icon" (click)="showAlert(company.id)" *ngIf="permission.delete">
                   <img
                     src="../../../../assets/images/trash-can-outline.png"
                     alt=""
                   />
                 </button>
-                <button
+                <button *ngIf="permission.edit"
                   class="icon"
                   (click)="editCompany(company.id)"
                   data-bs-toggle="modal"

@@ -59,20 +59,20 @@
                                 <ng-container *ngIf="formContent.code.TypeId != 4">
                                     <td class="text-center">
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                            <input [(ngModel)]="formContent.values[1]"
+                                            <input [(ngModel)]="formContent.values[0]"
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                                                 (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
                                                 [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                                (focus)="clearIfZero(formContent.values, 1)"
-                                                (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
+                                                (focus)="clearIfZero(formContent.values, 0)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 0)" type="number"
                                                 class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                            <input [(ngModel)]="formContent.values[1]"
+                                            <input [(ngModel)]="formContent.values[0]"
                                                 (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
                                                 [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
-                                                (focus)="clearIfZero(formContent.values, 1)"
-                                                (blur)="restoreIfNotPositive(formContent.values, 1)" type="number"
+                                                (focus)="clearIfZero(formContent.values, 0)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 0)" type="number"
                                                 class="tableInputParent" />
                                         </ng-container>
                                     </td>
@@ -87,18 +87,18 @@
                                     </td>
                                     <td class="text-center">
                                         <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                                            <input [(ngModel)]="formContent.values[0]"
+                                            <input [(ngModel)]="formContent.values[1]"
                                                 *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                                                (focus)="clearIfZero(formContent.values, 0)"
-                                                (blur)="restoreIfNotPositive(formContent.values, 0)"
+                                                (focus)="clearIfZero(formContent.values, 1)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)"
                                                 (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
                                                 [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                                 type="number" class="tableInputParent" />
                                         </ng-container>
                                         <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                                            <input [(ngModel)]="formContent.values[0]"
-                                                (focus)="clearIfZero(formContent.values, 0)"
-                                                (blur)="restoreIfNotPositive(formContent.values, 0)"
+                                            <input [(ngModel)]="formContent.values[1]"
+                                                (focus)="clearIfZero(formContent.values, 1)"
+                                                (blur)="restoreIfNotPositive(formContent.values, 1)"
                                                 (ngModelChange)="calculateTransactionFormContent(formContent,coverForm.status)"
                                                 [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)"
                                                 type="number" class="tableInputParent" />

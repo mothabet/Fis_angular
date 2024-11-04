@@ -116,7 +116,7 @@
               </ng-template>
             </td>
             <td class="text-center td-actions">
-              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)">
+              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)" *ngIf="permission.connectWithCompany">
                 <img src="../../../../assets/images/link.png" alt="" />
               </a>
               <a routerLink="/Researcher-Details/{{item.id}}" class="icon">

@@ -10,6 +10,8 @@ import autoTable from 'jspdf-autotable';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import * as XLSX from 'xlsx';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-companies-home',
@@ -55,8 +57,23 @@ export class CompaniesHomeComponent implements OnInit {
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
   years: number[] = [];
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true
+  };  
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+    , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private permissionsService: PermissionsService) { }
   ngOnInit(): void {
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
@@ -91,6 +108,7 @@ export class CompaniesHomeComponent implements OnInit {
       status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
+    this.GetPermissionByUserId();
     const currentYear = new Date().getFullYear();
     for (let year = 1990; year <= currentYear; year++) {
       this.years.push(year);
@@ -98,6 +116,11 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetCompanies('', 1);
     this.username = this.companyForm.value.username;
     this.GetSectorActvities(0);
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Auditing-Rules").then(permissions => {
+      this.permission = permissions;
+    });
   }
   getActivityByActivityId(activityId: number) {
     const observer = {

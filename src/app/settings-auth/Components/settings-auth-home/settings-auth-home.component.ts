@@ -36,16 +36,17 @@ export class SettingsAuthHomeComponent {
   isLastPage: boolean = false;
   totalPages: number = 0;
   staticPermissions = [
-    { arName: 'الرئيسيه', enName: "Home", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'الباحثين او المشرف', enName: "Researcher", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'الشركات', enName: "Companies", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'التقارير', enName: "Reports", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'تصميم الاستمارات', enName: "Forms", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'قواعد التدقيق', enName: "Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'محتوي الاستماره', enName: "Codes", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'الرسائل', enName: "Messages", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'الصلاحيات', enName: "SettingsAuth", isName: true, add: true, edit: true, delete: true, download: true },
-    { arName: 'الانشطة و القطاعات', enName: "Sectors", isName: true, add: true, edit: true, delete: true, download: true },
+    { arName: 'الباحثين او المشرف', enName: "Researcher", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true },
+    { arName: 'الشركات', enName: "Companies", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true },
+    { arName: 'التقارير', enName: "Reports", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'تصميم الاستمارات', enName: "Forms", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'إضافة جدول', enName: "Table", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true},
+    { arName: 'إضافة سؤال', enName: "Question", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true},
+    { arName: 'قواعد التدقيق', enName: "Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'محتوي الاستماره', enName: "Codes", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'الرسائل', enName: "Messages", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'الصلاحيات', enName: "SettingsAuth", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'الانشطة و القطاعات', enName: "Sectors", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
   ];
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +71,9 @@ export class SettingsAuthHomeComponent {
             edit: isChecked,
             delete: isChecked,
             download: isChecked,
+            connectWithCompany:isChecked,
+            addCompaniesGroup:isChecked,
+            copy:isChecked,
           },
           { emitEvent: false } // Prevents recursion from re-triggering value changes
         );
@@ -86,6 +90,9 @@ export class SettingsAuthHomeComponent {
         edit: [true],
         delete: [true],
         download: [true],
+        connectWithCompany:[true],
+        addCompaniesGroup:[true],
+        copy:[true],
       })
     );
 
@@ -152,10 +159,13 @@ export class SettingsAuthHomeComponent {
           add: this.settingsAuthForm.value.permissions[index].add,
           arName: this.settingsAuthForm.value.permissions[index].arName,
           delete: this.settingsAuthForm.value.permissions[index].delete,
+          connectWithCompany: this.settingsAuthForm.value.permissions[index].connectWithCompany,
+          addCompaniesGroup: this.settingsAuthForm.value.permissions[index].addCompaniesGroup,
           download: this.settingsAuthForm.value.permissions[index].download,
           edit: this.settingsAuthForm.value.permissions[index].edit,
           enName: this.settingsAuthForm.value.permissions[index].enName,
-          isName: this.settingsAuthForm.value.permissions[index].isName
+          isName: this.settingsAuthForm.value.permissions[index].isName,
+          copy: this.settingsAuthForm.value.permissions[index].copy,
         }
         this.addPermissionDtoList.push(permission);
       }
@@ -248,6 +258,9 @@ export class SettingsAuthHomeComponent {
         edit: true,
         delete: true,
         download: true,
+        connectWithCompany:true,
+        addCompaniesGroup:true,
+        copy:true,
         arName: group.get('arName')?.value, // Keep the existing value
         enName: group.get('enName')?.value, // Keep the existing value
       });
@@ -309,6 +322,9 @@ export class SettingsAuthHomeComponent {
               add: [permission.add],
               edit: [permission.edit],
               delete: [permission.delete],
+              connectWithCompany: [permission.connectWithCompany],
+              addCompaniesGroup: [permission.addCompaniesGroup],
+              copy: [permission.copy],
               download: [permission.download],
             });
 
@@ -319,6 +335,9 @@ export class SettingsAuthHomeComponent {
                   add: isChecked,
                   edit: isChecked,
                   delete: isChecked,
+                  connectWithCompany: isChecked,
+                  addCompaniesGroup: isChecked,
+                  copy:isChecked,
                   download: isChecked,
                 },
                 { emitEvent: false } // Prevents recursion from re-triggering value changes
@@ -371,6 +390,9 @@ export class SettingsAuthHomeComponent {
           add: this.settingsAuthForm.value.permissions[index].add,
           arName: this.settingsAuthForm.value.permissions[index].arName,
           delete: this.settingsAuthForm.value.permissions[index].delete,
+          connectWithCompany: this.settingsAuthForm.value.permissions[index].connectWithCompany,
+          addCompaniesGroup: this.settingsAuthForm.value.permissions[index].addCompaniesGroup,
+          copy: this.settingsAuthForm.value.permissions[index].copy,
           download: this.settingsAuthForm.value.permissions[index].download,
           edit: this.settingsAuthForm.value.permissions[index].edit,
           enName: this.settingsAuthForm.value.permissions[index].enName,
@@ -422,5 +444,85 @@ export class SettingsAuthHomeComponent {
       });
       this.showLoader = false;
     }
+  }
+  isAddPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Researcher',
+      'Companies',
+      'Reports',
+      'Forms',
+      'Table',
+      'Question',
+      'Auditing-Rules',
+      'Codes',
+      'Messages',
+      'SettingsAuth',
+      'Sectors',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isEditPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Researcher',
+      'Companies',
+      'Reports',
+      'Forms',
+      'Table',
+      'Question',
+      'Auditing-Rules',
+      'Codes',
+      'Messages',
+      'SettingsAuth',
+      'Sectors',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isDeletePermission(enName: string): boolean {
+    const enNamePermission = [
+      'Researcher',
+      'Companies',
+      'Reports',
+      'Forms',
+      'Table',
+      'Question',
+      'Auditing-Rules',
+      'Codes',
+      'Messages',
+      'SettingsAuth',
+      'Sectors',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isDownloadPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Researcher',
+      'Companies',
+      'Reports',
+      'Forms',
+      'Auditing-Rules',
+      'Codes',
+      'Messages',
+      'SettingsAuth',
+      'Sectors',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isConnectWithCompanyPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Researcher',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isAddCompaniesGroupPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Companies',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isCopyPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Forms',
+    ];
+    return enNamePermission.includes(enName);
   }
 }

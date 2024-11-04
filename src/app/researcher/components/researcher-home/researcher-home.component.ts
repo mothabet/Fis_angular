@@ -60,6 +60,9 @@ export class ResearcherHomeComponent {
     id: 0,
     isName: true,
     settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true
   };
   constructor(
     private formBuilder: FormBuilder,
