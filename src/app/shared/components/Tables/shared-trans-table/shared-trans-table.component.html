@@ -193,9 +193,9 @@
                                         </td>
 
                                         <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
-                                            <input [(ngModel)]="subCode.values[1]"
-                                                (focus)="clearIfZero(subCode.values, 1)"
-                                                (blur)="restoreIfNotPositive(subCode.values, 1)"
+                                            <input [(ngModel)]="subCode.values[0]"
+                                                (focus)="clearIfZero(subCode.values, 0)"
+                                                (blur)="restoreIfNotPositive(subCode.values, 0)"
                                                 (input)="handleParent(subCode, formContent)" [disabled]="subCode.IsHdd" type="number" />
                                         </td>
                                         <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
@@ -203,9 +203,9 @@
                                                 [ngStyle]="{'background-color': subCode.IsTransaction ? '#FFFFC0' : 'transparent'}" />
                                         </td>
                                         <td *ngIf="!subCode.IsTrueAndFalse" class="text-center">
-                                            <input [(ngModel)]="subCode.values[0]"
-                                                (focus)="clearIfZero(subCode.values, 0)"
-                                                (blur)="restoreIfNotPositive(subCode.values, 0)"
+                                            <input [(ngModel)]="subCode.values[1]"
+                                                (focus)="clearIfZero(subCode.values, 1)"
+                                                (blur)="restoreIfNotPositive(subCode.values, 1)"
                                                 (input)="handleParent(subCode, formContent)" [disabled]="subCode.IsHdd" type="number" />
                                         </td>
                                         <td class="text-center">
@@ -265,17 +265,17 @@
                                                 </div>
                                             </td>
                                             <td class="text-center"><input type="number"
-                                                    [(ngModel)]="_subCode.values[1]"
-                                                    (focus)="clearIfZero(_subCode.values, 1)"
-                                                    (blur)="restoreIfNotPositive(_subCode.values, 1)"
+                                                    [(ngModel)]="_subCode.values[0]"
+                                                    (focus)="clearIfZero(_subCode.values, 0)"
+                                                    (blur)="restoreIfNotPositive(_subCode.values, 0)"
                                                     (input)="handelSupParent(formContent,subCode,indexSub)" /></td>
                                             <td class="text-center">
                                                 <input [(ngModel)]="_subCode.values[2]" type="number" disabled />
                                             </td>
                                             <td class="text-center"><input type="number"
-                                                    [(ngModel)]="_subCode.values[0]"
-                                                    (focus)="clearIfZero(_subCode.values, 0)"
-                                                    (blur)="restoreIfNotPositive(_subCode.values, 0)"
+                                                    [(ngModel)]="_subCode.values[1]"
+                                                    (focus)="clearIfZero(_subCode.values, 1)"
+                                                    (blur)="restoreIfNotPositive(_subCode.values, 1)"
                                                     (input)="handelSupParent(formContent,subCode,indexSub)" /></td>
                                             <td class="text-center">
                                                 <input disabled type="text" value="{{_subCode.QuestionCode}}" />
