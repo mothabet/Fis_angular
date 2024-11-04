@@ -35,13 +35,13 @@
                       {{formContent.code.arName}}
                     </span>
                     <ng-container
-                                            *ngIf="!(formContent.code.SubCodes.length === 0 && (formContent.code.TypeId === 1 || formContent.code.TypeId === 4)) 
+                      *ngIf="!(formContent.code.SubCodes.length === 0 && (formContent.code.TypeId === 1 || formContent.code.TypeId === 4)) 
                                                             && !(formContent.code.SubCodes.length > 0 && formContent.code.SubCodes[0].IsTrueAndFalse === true)">
-                                            <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
-                                                اجمالي <i class="fa-solid fa-circle-question"></i>
-                                            </span>
-                                        </ng-container>
+                      <span class="total" data-bs-toggle="tooltip" data-bs-placement="top"
+                        title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                        اجمالي <i class="fa-solid fa-circle-question"></i>
+                      </span>
+                    </ng-container>
                     <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4" class="add-button"
                       (click)="addSubCodeRow(formContent.code)">
                       <i class="fa fa-plus" aria-hidden="true"></i>
@@ -63,31 +63,34 @@
                   <td class="text-center">
                     <ng-container *ngIf="formContent.code.SubCodes.length>0">
                       <input type="number" *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                        class="tableInputParent" [(ngModel)]="formContent.values[0]" disabled />
+                        class="tableInputParent" [(ngModel)]="formContent.values[years.length]" disabled />
                     </ng-container>
                     <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                      <input type="number" [(ngModel)]="formContent.values[0]" class="tableInputParent"
-                        disabled />
+                      <input type="number" [(ngModel)]="formContent.values[years.length]" class="tableInputParent" disabled />
                     </ng-container>
 
                   </td>
                   <td class="text-center" *ngFor="let year of years; let i = index">
-                    <ng-container *ngIf="formContent.code.SubCodes.length>0">
-                      <input type="number" (focus)="clearIfZero(formContent.values, i+1)"
-                        *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
-                        (blur)="restoreIfNotPositive(formContent.values, i+1)" class="tableInputParent"
-                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1,index)"
-                        [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                    <ng-container *ngIf="formContent.code.SubCodes.length > 0">
+                      <input type="number" 
+                             (focus)="clearIfZero(formContent.values, years.length - 1 - i)"
+                             *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
+                             (blur)="restoreIfNotPositive(formContent.values, years.length - 1 - i)" 
+                             class="tableInputParent"
+                             [(ngModel)]="formContent.values[years.length - 1 - i]"
+                             (input)="changeStatus(coverForm.status, formContent, 1, index)"
+                             [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                     </ng-container>
-                    <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
-                      <input type="number" (focus)="clearIfZero(formContent.values, i+1)"
-                        (blur)="restoreIfNotPositive(formContent.values, i+1)" class="tableInputParent"
-                        [(ngModel)]="formContent.values[i+1]" (input)="changeStatus(coverForm.status,formContent,1,index)"
-                        [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
+                    <ng-container *ngIf="!(formContent.code.SubCodes.length > 0)">
+                      <input type="number" 
+                             (focus)="clearIfZero(formContent.values, years.length - 1 - i)"
+                             (blur)="restoreIfNotPositive(formContent.values, years.length - 1 - i)" 
+                             class="tableInputParent"
+                             [(ngModel)]="formContent.values[years.length - 1 - i]"
+                             (input)="changeStatus(coverForm.status, formContent, 1, index)"
+                             [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                     </ng-container>
-
-                  </td>
-
+                  </td>          
                 </ng-container>
 
                 <td class="text-center">
@@ -105,10 +108,9 @@
                         style="display: inline-block; padding: 1px 10px;" (click)="addSubCodeToSubRow(subCode)">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                       </button>
-                      <span *ngIf="subCode.IsHdd == true" style="float: left;"
-                      class="total" data-bs-toggle="tooltip" data-bs-placement="top"
-                      title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
-                      اجمالي <i class="fa-solid fa-circle-question"></i></span>
+                      <span *ngIf="subCode.IsHdd == true" style="float: left;" class="total" data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
+                        اجمالي <i class="fa-solid fa-circle-question"></i></span>
                     </td>
                     <td class="text-center" *ngIf="formContent.code.TypeId == 2">
                       <div style="display: flex;">
@@ -167,11 +169,11 @@
                     </td>
                     <ng-container *ngIf="!subCode.IsTrueAndFalse">
                       <td class="text-center">
-                        <input type="number" [(ngModel)]="subCode.values[0]" disabled />
+                        <input type="number" [(ngModel)]="subCode.values[years.length]" disabled />
                       </td>
                       <td class="text-center" *ngFor="let year of years; let i = index">
-                        <input type="number" (focus)="clearIfZero(subCode.values, i+1)"
-                          (blur)="restoreIfNotPositive(subCode.values, i+1)" [(ngModel)]="subCode.values[i+1]"
+                        <input type="number" (focus)="clearIfZero(subCode.values, years.length - 1 - i)"
+                          (blur)="restoreIfNotPositive(subCode.values, years.length - 1 - i)" [(ngModel)]="subCode.values[years.length - 1 - i]"
                           (input)="handleParent(formContent)" [disabled]="subCode.IsHdd" />
                       </td>
                     </ng-container>
@@ -226,11 +228,11 @@
                         </div>
                       </td>
                       <td class="text-center">
-                        <input type="number" [(ngModel)]="_subCode.values[0]" disabled />
+                        <input type="number" [(ngModel)]="_subCode.values[years.length]" disabled />
                       </td>
                       <td class="text-center" *ngFor="let year of years; let i = index">
-                        <input type="number" (focus)="clearIfZero(_subCode.values, i+1)"
-                          (blur)="restoreIfNotPositive(_subCode.values, i+1)" [(ngModel)]="_subCode.values[i+1]"
+                        <input type="number" (focus)="clearIfZero(_subCode.values, years.length - 1 - i)"
+                          (blur)="restoreIfNotPositive(_subCode.values, years.length - 1 - i)" [(ngModel)]="_subCode.values[years.length - 1 - i]"
                           (input)="handelSupParent(formContent,subCode,indexSub)" />
                       </td>
                       <td class="text-center">
@@ -247,14 +249,16 @@
 
             </ng-container>
             <tr class="footer boldBorderRow" *ngIf="table.IsTotal">
-              <td  style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
-              <td  style="background: #d3fffb33;">                <input style="background: #d3fffb33;" type="number" disabled placeholder="0" [value]="getSumOfValues(0)" />
+              <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
+              <td style="background: #d3fffb33;"> <input style="background: #d3fffb33;" type="number" disabled
+                  placeholder="0" [value]="getSumOfValues(years.length+1)" />
               </td>
               <td style="background: #d3fffb33;" class="text-center" *ngFor="let year of years; let i = index">
-                <input style="background: #d3fffb33;" type="number" disabled placeholder="0" [value]="getSumOfValues(i+1)" />
+                <input style="background: #d3fffb33;" type="number" disabled placeholder="0"
+                  [value]="getSumOfValues(i)" />
               </td>
-              <td style="background: #d3fffb33;"><input style="background: #d3fffb33;" type="number" disabled placeholder="0"
-                [value]="9999" /></td>
+              <td style="background: #d3fffb33;"><input style="background: #d3fffb33;" type="number" disabled
+                  placeholder="0" [value]="9999" /></td>
               <td style="background: #d3fffb33;" class="text-start">{{table.totalTitleEn}}</td>
 
             </tr>

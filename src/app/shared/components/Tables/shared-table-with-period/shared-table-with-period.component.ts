@@ -36,10 +36,10 @@ export class SharedTableWithPeriodComponent {
   checkFormData: boolean = false;
   auditRules: IAuditRule[] = [];
 
-  constructor(private route: ActivatedRoute, private authService: LoginService, 
+  constructor(private route: ActivatedRoute, private authService: LoginService,
     private formServices: FormService, private sharedServices: SharedService,
     private sectorsAndActivitiesServices: SectorAndActivitiesService,
-  private auditRuleHomeService : AuditRuleHomeService) {
+    private auditRuleHomeService: AuditRuleHomeService) {
 
 
   }
@@ -138,11 +138,11 @@ export class SharedTableWithPeriodComponent {
       values: [0, ...Array(this.years.length).fill(0)],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:'',
-      IsTrueAndFalse :false,
-      IsTransaction:false,
-      IsHdd:false,
-      valueCheck:false
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsTransaction: false,
+      IsHdd: false,
+      valueCheck: false
     }
     code.SubCodes.push(subCode);
   }
@@ -165,7 +165,7 @@ export class SharedTableWithPeriodComponent {
         if (res.Data) {
           this.countries = res.Data.getCountryDtos;
         }
-        else{
+        else {
           this.countries = [];
         }
       },
@@ -188,14 +188,14 @@ export class SharedTableWithPeriodComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
+      IsTransaction: false,
       IsHdd: false,
       valueCheck: false
     }
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm, _subCode: ISubCodeForm, indexSub: number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`
@@ -204,10 +204,10 @@ export class SharedTableWithPeriodComponent {
           SubCode.values[i] -= _subCode.values[i];
         }
       }
-      
+
       // إزالة الـsubCode من المصفوفة
       SubCode.subCodes.splice(index, 1);
-      this.handelSupParent(formContent,SubCode,indexSub);
+      this.handelSupParent(formContent, SubCode, indexSub);
     }
   }
   GetFormData() {
@@ -419,7 +419,7 @@ export class SharedTableWithPeriodComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -434,7 +434,7 @@ export class SharedTableWithPeriodComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -447,7 +447,7 @@ export class SharedTableWithPeriodComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -502,20 +502,25 @@ export class SharedTableWithPeriodComponent {
       }
     })
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
       for (let i = 0; i < subCode.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
+          debugger
+          _subCode.values[_subCode.values.length - 1] = 0
+          for (let index = 0; index < _subCode.values.length - 1; index++) {
+            _subCode.values[_subCode.values.length - 1] += _subCode.values[index]
+          }
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      
+
       formContent.code.SubCodes[index] = subCode;
     }
-    else{
+    else {
       for (let i = 0; i < formContent.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         formContent.values[i] = 0;
@@ -528,12 +533,12 @@ export class SharedTableWithPeriodComponent {
     if (!formContent.values) {
       formContent.values = [];
     }
-  
+
     // Initialize subCode values if not present
     if (!subCode.values) {
       subCode.values = [];
     }
-  
+
     // Calculate the sum of all subCode values for the given index
     let sum = 0;
     formContent.code.SubCodes.forEach((sub: any) => {
@@ -541,15 +546,15 @@ export class SharedTableWithPeriodComponent {
         sum += sub.values[index];
       }
     });
-  
+
     // Update the parent formContent value with the sum
     formContent.values[index] = sum;
-  
+
     // Optionally, update any other logic or status here if needed
   }
-  
+
   handleParent(formContent: IGetQuestionDto) {
-    this.changeStatus(this.coverForm.status,formContent,2);
+    this.changeStatus(this.coverForm.status, formContent, 2);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');
@@ -614,50 +619,51 @@ export class SharedTableWithPeriodComponent {
         }
       }
     }
-    else{
+    else {
       if (!formContent.values) {
         formContent.values = [];
       }
-    
-    
+
+
       // Calculate the sum of all subCode values for the given index
       for (let index = 0; index < formContent.values.length; index++) {
         let sum = 0;
         for (let i = 0; i < formContent.code.SubCodes.length; i++) {
-          sum+=formContent.code.SubCodes[i].values[index]
+          sum += formContent.code.SubCodes[i].values[index]
         }
         formContent.values[index] = sum
       }
     }
     let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
     if (foundFormContent) {
-        Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
+      Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
     }
     const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
-              if (storedCoverForm) {
-                this.coverForm = JSON.parse(storedCoverForm);
-              }
-                const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
-                if (tableIndex !== -1) {
-                this.coverForm.tables[tableIndex]=this.table;
-                localStorage.removeItem(`coverForm${this.coverForm.id}`);
-                localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
-              }
+    if (storedCoverForm) {
+      this.coverForm = JSON.parse(storedCoverForm);
+    }
+    const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
+    if (tableIndex !== -1) {
+      this.coverForm.tables[tableIndex] = this.table;
+      localStorage.removeItem(`coverForm${this.coverForm.id}`);
+      localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+    }
     console.log(formContent)
   }
-  changeStatus(status: number,formContent:IGetQuestionDto,level:number,indexFormContent : number=0) {
-    if(level == 1){
-      formContent.values[0] = 0;
-      for (let index = 1; index < formContent.values.length; index++) {
-          formContent.values[0] += formContent.values[index]
+  changeStatus(status: number, formContent: IGetQuestionDto, level: number, indexFormContent: number = 0) {
+    debugger
+    if (level == 1) {
+      formContent.values[formContent.values.length-1] = 0;
+      for (let index = 0; index < formContent.values.length-1; index++) {
+        formContent.values[formContent.values.length-1] += formContent.values[index]
       }
       this.table.formContents[indexFormContent] = formContent;
     }
-    else if(level == 2){
+    else if (level == 2) {
       for (let index = 0; index < formContent.code.SubCodes.length; index++) {
-        formContent.code.SubCodes[index].values[0] = 0;
-        for (let i = 1; i < formContent.code.SubCodes[index].values.length; i++) {
-          formContent.code.SubCodes[index].values[0] += formContent.code.SubCodes[index].values[i]
+        formContent.code.SubCodes[index].values[formContent.code.SubCodes[index].values.length - 1] = 0;
+        for (let i = 0; i < formContent.code.SubCodes[index].values.length - 1; i++) {
+          formContent.code.SubCodes[index].values[formContent.code.SubCodes[index].values.length - 1] += formContent.code.SubCodes[index].values[i]
         }
       }
     }
@@ -673,7 +679,7 @@ export class SharedTableWithPeriodComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
@@ -701,27 +707,27 @@ export class SharedTableWithPeriodComponent {
     }
 
   }
-  
+
   clearIfZero(values: any[], index: number): void {
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
-
-restoreIfNotPositive(values: number[], index: number): void {
-    if (values[index] === null || values[index] <= 0) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
-    }
-}
-removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
-  const index = formContent.code.SubCodes.indexOf(subCode);
-  if (index !== -1) {
-    for (let i = 0; i < formContent.values.length; i++) {
-      if (i < subCode.values.length) {
-        formContent.values[i] -= subCode.values[i];
-      }
-    }
-    formContent.code.SubCodes.splice(index, 1); // Remove the subCode from the array
   }
-}
+
+  restoreIfNotPositive(values: number[], index: number): void {
+    if (values[index] === null || values[index] <= 0) {
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+    }
+  }
+  removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
+    const index = formContent.code.SubCodes.indexOf(subCode);
+    if (index !== -1) {
+      for (let i = 0; i < formContent.values.length; i++) {
+        if (i < subCode.values.length) {
+          formContent.values[i] -= subCode.values[i];
+        }
+      }
+      formContent.code.SubCodes.splice(index, 1); // Remove the subCode from the array
+    }
+  }
 }

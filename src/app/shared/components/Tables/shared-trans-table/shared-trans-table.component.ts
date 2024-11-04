@@ -116,7 +116,7 @@ export class SharedTransTableComponent {
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
   calculateTransaction(item: any, status: number) {
-    item.values[2] = item.values[1] - item.values[0];
+    item.values[2] = item.values[0] - item.values[1];
     if (status < 3)
       this.BeginningForm();
   }
@@ -522,7 +522,9 @@ export class SharedTransTableComponent {
       for (let i = 0; i < subCode.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
+          _subCode.values[2] = _subCode.values[0] - _subCode.values[1];
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
+
         }, 0); // Start the summation from 0
       }
       

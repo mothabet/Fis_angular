@@ -70,17 +70,17 @@
                                                 <input type="number"
                                                     *ngIf="formContent.code.SubCodes[0].IsTrueAndFalse == false"
                                                     class="tableInputParent"
-                                                    (focus)="clearIfZero(formContent.values, i+1)"
-                                                    (blur)="restoreIfNotPositive(formContent.values, i+1)"
-                                                    [(ngModel)]="formContent.values[i+1]"
+                                                    (focus)="clearIfZero(formContent.values, i)"
+                                                    (blur)="restoreIfNotPositive(formContent.values, i)"
+                                                    [(ngModel)]="formContent.values[i]"
                                                     (input)="changeStatus(coverForm.status)"
                                                     [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
                                             <ng-container *ngIf="!(formContent.code.SubCodes.length>0)">
                                                 <input type="number" class="tableInputParent"
-                                                    (focus)="clearIfZero(formContent.values, i+1)"
-                                                    (blur)="restoreIfNotPositive(formContent.values, i+1)"
-                                                    [(ngModel)]="formContent.values[i+1]"
+                                                    (focus)="clearIfZero(formContent.values, i)"
+                                                    (blur)="restoreIfNotPositive(formContent.values, i)"
+                                                    [(ngModel)]="formContent.values[i]"
                                                     (input)="changeStatus(coverForm.status)"
                                                     [disabled]="!(!(formContent.code.SubCodes.length > 0) && formContent.code.TypeId == 1)" />
                                             </ng-container>
@@ -176,10 +176,10 @@
                                         <ng-container *ngIf="!subCode.IsTrueAndFalse">
                                             <ng-container *ngFor="let part of table.tableParts; let i = index">
                                                 <td class="text-center"><input type="number"
-                                                        (focus)="clearIfZero(subCode.values, i+1)"
-                                                        (blur)="restoreIfNotPositive(subCode.values, i+1)"
+                                                        (focus)="clearIfZero(subCode.values, i)"
+                                                        (blur)="restoreIfNotPositive(subCode.values, i)"
                                                         (input)="handleParent(formContent)"
-                                                        [(ngModel)]="subCode.values[i+1]" [disabled]="subCode.IsHdd" />
+                                                        [(ngModel)]="subCode.values[i]" [disabled]="subCode.IsHdd" />
                                                 </td>
                                             </ng-container>
                                         </ng-container>
@@ -242,9 +242,9 @@
                                             </td>
                                             <ng-container *ngFor="let part of table.tableParts; let j = index">
                                                 <td class="text-center"><input type="number"
-                                                        [(ngModel)]="_subCode.values[j+1]"
-                                                        (focus)="clearIfZero(_subCode.values, j+1)"
-                                                        (blur)="restoreIfNotPositive(_subCode.values, j+1)"
+                                                        [(ngModel)]="_subCode.values[j]"
+                                                        (focus)="clearIfZero(_subCode.values, j)"
+                                                        (blur)="restoreIfNotPositive(_subCode.values, j)"
                                                         (input)="handelSupParent(formContent,subCode,indexSub)" /></td>
                                             </ng-container>
                                             <td class="text-center">
