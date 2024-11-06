@@ -10,7 +10,6 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col">نهاية عام {{report.fields[0][7].value}} Year-end</th>
-                            <th class="text-center" scope="col">التعاملات خلال Transactions during</th>
                             <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][7].value)-1}} Year-end</th>
                         </tr>
                     </thead>
@@ -20,7 +19,6 @@
                             <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[3].value}}</td>
                             <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
                             <td style="text-align: center;">{{field[1].value}}</td>
                         </tr>
                     </tbody>
@@ -32,24 +30,24 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col">نهاية عام {{report.fields[0][8].value}} Year-end</th>
-                            <th class="text-center" scope="col">التعاملات خلال Transactions during</th>
-                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end
-                            </th>
+                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
-                                style="vertical-align: middle; text-align: center;">
+                        <ng-container *ngFor="let field of report.fields; let i = index">
+                            <tr>
+                              <!-- Display the activity name only once with rowspan, and vertically center the text -->
+                              <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value" 
+                                  [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
+                                  style="vertical-align: middle; text-align: center;">
                                 {{field[5].value}}
-                            </th>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                        </tr>
+                              </th>
+                              <td style="text-align: center;">{{field[4].value}}</td>
+                              <td style="text-align: center;">{{field[3].value}}</td>
+                              <td style="text-align: center;">{{field[0].value}}</td>
+                              <td style="text-align: center;">{{field[1].value}}</td>
+                            </tr>
+                          </ng-container>                   
                     </tbody>
                 </table>
                 <table class="table table-borderless" *ngIf="report.seconedTable == 'CompaniesRep'">
@@ -59,24 +57,24 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col">نهاية عام {{report.fields[0][8].value}} Year-end</th>
-                            <th class="text-center" scope="col">التعاملات خلال Transactions during</th>
-                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end
-                            </th>
+                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
-                                style="vertical-align: middle; text-align: center;">
+                        <ng-container *ngFor="let field of report.fields; let i = index">
+                            <tr>
+                              <!-- Display the activity name only once with rowspan, and vertically center the text -->
+                              <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value" 
+                                  [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
+                                  style="vertical-align: middle; text-align: center;">
                                 {{field[5].value}}
-                            </th>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                        </tr>
+                              </th>
+                              <td style="text-align: center;">{{field[4].value}}</td>
+                              <td style="text-align: center;">{{field[3].value}}</td>
+                              <td style="text-align: center;">{{field[0].value}}</td>
+                              <td style="text-align: center;">{{field[1].value}}</td>
+                            </tr>
+                          </ng-container>                   
                     </tbody>
                 </table>
                 <table class="table table-borderless" *ngIf="report.seconedTable == 'SectorsRep'">
@@ -86,24 +84,24 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col">نهاية عام {{report.fields[0][8].value}} Year-end</th>
-                            <th class="text-center" scope="col">التعاملات خلال Transactions during</th>
-                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end
-                            </th>
+                            <th class="text-center" scope="col">نهاية عام {{(+report.fields[0][8].value)-1}} Year-end</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
-                                style="vertical-align: middle; text-align: center;">
+                        <ng-container *ngFor="let field of report.fields; let i = index">
+                            <tr>
+                              <!-- Display the activity name only once with rowspan, and vertically center the text -->
+                              <th *ngIf="i === 0 || report.fields[i][5].value !== report.fields[i-1][5].value" 
+                                  [attr.rowspan]="getRowSpan(report.fields, field[5].value)"
+                                  style="vertical-align: middle; text-align: center;">
                                 {{field[5].value}}
-                            </th>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                        </tr>
+                              </th>
+                              <td style="text-align: center;">{{field[4].value}}</td>
+                              <td style="text-align: center;">{{field[3].value}}</td>
+                              <td style="text-align: center;">{{field[0].value}}</td>
+                              <td style="text-align: center;">{{field[1].value}}</td>
+                            </tr>
+                          </ng-container>                   
                     </tbody>
                 </table>
             </div>

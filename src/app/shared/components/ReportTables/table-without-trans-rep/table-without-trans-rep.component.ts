@@ -11,6 +11,6 @@ export class TableWithoutTransRepComponent implements OnInit{
   }
   getRowSpan(fields: any[], activityName: string): number {
     // Count how many times the activity (field[8].value) appears in the fields array
-    return fields.filter(field => field[8].value === activityName).length;
+    return fields.filter(field => field[4].value === activityName).length;
   }
 }
