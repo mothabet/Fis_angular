@@ -10,19 +10,19 @@
         <div class="card-box mb-3 d-flex justify-content-between align-items-center flex-wrap">
             <ul>
                 <li>
-                    <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
+                    <a routerLink="/Companies-Details/{{companyId}}" *ngIf="permission.isName">التفاصيل</a>
                 </li>
-                <li>
-                    <a routerLink="/CompanyHome/{{companyId}}">الإستمارات</a>
+                <li *ngIf="permissionForms.isName">
+                    <a routerLink="/CompanyHome/{{companyId}}">الاستمارات</a>
                 </li>
                 <li class="active">
                     <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
                 </li>
-                <li>
+                <li *ngIf="permissionCopmanyGeneralInformation.isName">
                     <a routerLink="/CopmanyGeneralInformation/{{companyId}}">المعنيين</a>
                 </li>
             </ul>
-            <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMail" id="addCompanyMessageBtn">
+            <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMail" id="addCompanyMessageBtn" *ngIf="permissionCopmanyMessages.add">
                 <img src="../../../../assets/images/calendar-alert.png" alt="">
                 إنشاء مراسلة
             </button>
@@ -48,17 +48,7 @@
                     <tr *ngFor="let message of companyMessages ; let i = index">
                         <th >{{i+1}}</th>
                         <td class="text-center">{{message.arName}}</td>
-                        <td class="text-center td-actions">
-                            <!-- <a href="#" class="icon">
-        <img src="../../../../assets/images/paperclip.png" alt="">
-    </a> -->
-                            <!-- <button class="icon" data-bs-toggle="modal"
-                                data-bs-target="#addCompany" (click)="editMessage(message.id)">
-                                <img src="../../../../assets/images/pencil-outline.png" alt="">
-                            </button>
-                            <button class="icon" (click)="showAlert(message.id)">
-                                <img src="../../../../assets/images/trash-can-outline.png" alt="">
-                            </button> -->
+                        <td class="text-center">
                             تم الارسال
                         </td>
                     </tr>

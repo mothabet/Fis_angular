@@ -3,8 +3,10 @@ import { Validators } from 'ngx-editor';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { IAddActivityDto, IAddGroupDto, IGetGroupDto, IGetSectorDto } from '../../Dtos/SectorDtos';
+import { IAddGroupDto, IGetGroupDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
@@ -23,8 +25,135 @@ export class GroupComponent implements OnInit {
   totalPages: number = 0;
   searchText: string = '';
   noData: boolean = false;
+  permissionSectors: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionSections: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionGroups: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCategories: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionActivities: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCountries: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
-  private sectorsAndActivitiesServices: SectorAndActivitiesService) { }
+  private sectorsAndActivitiesServices: SectorAndActivitiesService,
+  private permissionsService: PermissionsService) { }
 
   ngOnInit(): void {
     this.groupForm = this.formBuilder.group({
@@ -34,8 +163,45 @@ export class GroupComponent implements OnInit {
       sectionId: [0, Validators.required],
     });
     this.GetGroups(1, '',)
-    this.GetSections(1, '',)
+    this.GetSections(1, '',);
+    this.GetPermissionByUserIdSectors();
+    this.GetPermissionByUserIdSections();
+    this.GetPermissionByUserIdGroups();
+    this.GetPermissionByUserIdCategories();
+    this.GetPermissionByUserIdActivities();
+    this.GetPermissionByUserIdCountries();
   }
+  GetPermissionByUserIdSectors() {
+    this.permissionsService.FunctionGetPermissionByUserId("Sectors").then(permissions => {
+      this.permissionSectors = permissions;
+    });
+  }
+  GetPermissionByUserIdSections() {
+    this.permissionsService.FunctionGetPermissionByUserId("Sections").then(permissions => {
+      this.permissionSections = permissions;
+    });
+  }
+  GetPermissionByUserIdGroups() {
+    this.permissionsService.FunctionGetPermissionByUserId("Groups").then(permissions => {
+      this.permissionGroups = permissions;
+    });
+  }
+  GetPermissionByUserIdCategories() {
+    this.permissionsService.FunctionGetPermissionByUserId("Categories").then(permissions => {
+      this.permissionCategories = permissions;
+    });
+  }
+  GetPermissionByUserIdActivities() {
+    this.permissionsService.FunctionGetPermissionByUserId("Activities").then(permissions => {
+      this.permissionActivities = permissions;
+    });
+  }
+  GetPermissionByUserIdCountries() {
+    this.permissionsService.FunctionGetPermissionByUserId("Countries").then(permissions => {
+      this.permissionCountries = permissions;
+    });
+  }
+
   onSave() {
     this.showLoader = true;
     const allErrors: string[] = [];

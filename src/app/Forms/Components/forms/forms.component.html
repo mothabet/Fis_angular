@@ -10,7 +10,7 @@
     <div class="content companies">
       <div class="header d-flex justify-content-end">
         <div class="btns d-flex">
-          <button style="padding: 6px" type="button" class="btn-download" data-bs-toggle="modal"
+          <button style="padding: 6px" type="button" class="btn-download" data-bs-toggle="modal" *ngIf="permission.add"
             data-bs-target="#createForm">
             <img src=".././../../../assets/images/list-box-outline.png" alt="" />
             إنشاء إستمارة
@@ -326,7 +326,7 @@
                         <input type="text" [(ngModel)]="item.enName" (input)="updateTableParts(i, 'enName', $event)"
                           value="{{ item.enName }}" />
                       </td>
-                      <td class="text-center td-actions">
+                      <td class="text-center">
                         <button class="icon" (click)="removeItem(i)"
                           style="border: none; background-color: transparent">
                           <img src="../../../../assets/images/trash-can-outline.png" alt="" />
@@ -472,7 +472,7 @@
                   <textarea type="text" rows="2" class="form-control" [value]="item.enName"
                     (input)="updateInstructions(i, 'enName', $event)"></textarea>
                 </td>
-                <td class="text-center td-actions input-floating-label">
+                <td class="text-center input-floating-label">
                   <select class="form-control" [(ngModel)]="item.tableId" name="table" id="table" style="width: 70%;">
                     <option value="0"></option>
                     <option *ngFor="let table of tables" [value]="table.id">{{ table.arName }}</option>

@@ -70,7 +70,7 @@
           <span>شركات الباحث</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Reports'))">
+      <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link">
           <i class="fa-solid fa-chart-line icon"></i>
           <span>التقارير</span>

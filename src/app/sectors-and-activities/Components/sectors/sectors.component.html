@@ -6,25 +6,22 @@
     <div class="header-nav companies-details">
         <div class="card-box mb-3">
             <ul>
-                <li routerLinkActive="active">
+                <li routerLinkActive="active" *ngIf="permissionSectors.isName">
                     <a routerLink="/Sectors">القطاعات</a>
                   </li>
-                  <li routerLinkActive="active">
+                  <li routerLinkActive="active" *ngIf="permissionSections.isName">
                     <a routerLink="/Sections">القسم</a>
                   </li>
-                  <li routerLinkActive="active">
+                  <li routerLinkActive="active" *ngIf="permissionGroups.isName">
                     <a routerLink="/Groups">المجموعات</a>
                   </li>
-                  <li routerLinkActive="active">
+                  <li routerLinkActive="active" *ngIf="permissionCategories.isName">
                     <a routerLink="/Categories">الفئات</a>
                   </li>
-                  <li routerLinkActive="active">
+                  <li routerLinkActive="active" *ngIf="permissionActivities.isName">
                     <a routerLink="/Activities">الأنشطة</a>
                   </li>
-                  <!-- <li routerLinkActive="active">
-                              <a routerLink="/SubActivities">الأنشطة الفرعية</a>
-                          </li> -->
-                  <li routerLinkActive="active">
+                  <li routerLinkActive="active" *ngIf="permissionCountries.isName">
                     <a routerLink="/Countries">الدول</a>
                   </li>
             </ul>
@@ -43,7 +40,7 @@
                     <i (click)="countriesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-                    <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal"
+                    <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" *ngIf="permissionSectors.add"
                         data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
                         اضافة قطاع
@@ -66,11 +63,11 @@
                     <tr *ngFor="let sector of sectors">
                         <td class="text-center">{{sector.arName}}</td>
                         <td class="text-center">{{sector.code}}</td>
-                        <td class="text-center td-actions">
-                            <button class="icon" (click)="DeleteSector(sector.id)">
+                        <td class="text-center">
+                            <button class="icon" (click)="DeleteSector(sector.id)" *ngIf="permissionSectors.delete">
                                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
                             </button>
-                            <button class="icon" (click)="openUpdatePopup(sector.id)" data-bs-toggle="modal"
+                            <button class="icon" (click)="openUpdatePopup(sector.id)" *ngIf="permissionSectors.edit" data-bs-toggle="modal"
                                 data-bs-target="#addSector">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>

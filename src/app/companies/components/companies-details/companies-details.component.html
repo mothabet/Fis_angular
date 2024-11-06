@@ -7,19 +7,19 @@
 
     <!-- start content -->
     <div class="companies-details" >
-        <div class="header-nav" *ngIf="role == 'Admin'">
+        <div class="header-nav" *ngIf="role == 'Admin' || role==='User'">
             <div class="card-box mb-3">
                 <ul>
                     <li class="active">
                         <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
                     </li>
-                    <li class="">
+                    <li *ngIf="permissionForms.isName">
                         <a routerLink="/CompanyHome/{{companyId}}">الاستمارات</a>
                     </li>
-                    <li>
+                    <li *ngIf="permissionCopmanyMessages.isName">
                         <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
                     </li>
-                    <li>
+                    <li *ngIf="permissionCopmanyGeneralInformation.isName">
                         <a routerLink="/CopmanyGeneralInformation/{{companyId}}">المعنيين</a>
                     </li>
                 </ul>
@@ -256,8 +256,8 @@
                 <div class="card-box file">
                     <div class="header">
                         <h4 class="title">المرفقات</h4>
-                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput" >
-                        <button class="btn upload-btn" (click)="triggerFileInput()" >
+                        <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput" *ngIf="permission.download" >
+                        <button class="btn upload-btn" (click)="triggerFileInput()"  *ngIf="permission.download">
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
                           </button>
                     </div>
@@ -277,20 +277,20 @@
                                         {{ i + 1 }}
                                     </td>
                                     <td class="text-center">{{ pdf.arName }}</td>
-                                    <td class="text-center td-actions">
+                                    <td class="text-center">
                                         <a class="btn btn-danger" style='border-radius: 6px;
                                         font-family: "SST Arabic";
                                         font-size: 15px;
                                         font-weight: bold;
                                         font-style: normal;
-                                        width: 70px;'(click)="showAlert(pdf.id)"><span>حذف</span></a>
+                                        width: 70px;'(click)="showAlert(pdf.id)" *ngIf="permission.download"><span>حذف</span></a>
                                         <a class="btn btn-download" style='border-radius: 6px;
                                         background: #133b8b44;
                                         font-family: "SST Arabic";
                                         font-size: 15px;
                                         font-weight: bold;
                                         font-style: normal;
-                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)">تحميل</a>
+                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)" *ngIf="permission.download">تحميل</a>
                                     </td>
                                 </tr>
                             </tbody>

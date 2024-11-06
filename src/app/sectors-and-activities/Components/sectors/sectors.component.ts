@@ -5,6 +5,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddSectorDto, IGetSectorDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-sectors',
@@ -14,17 +16,144 @@ import { SectorAndActivitiesService } from '../../Services/sector-and-activities
 export class SectorsComponent implements OnInit {
   sectorForm!: FormGroup;
   showLoader: boolean = false;
-  sectors!:IGetSectorDto[];
-  sector!:IGetSectorDto;
+  sectors!: IGetSectorDto[];
+  sector!: IGetSectorDto;
   isUpdate: boolean = false;
-  id:number=0;
+  id: number = 0;
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
   searchText: string = '';
   noData: boolean = false;
-  constructor(private sharedService: SharedService,private fb: FormBuilder,
-    private sectorsAndActivitiesServices:SectorAndActivitiesService) {}
+  permissionSectors: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionSections: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionGroups: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCategories: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionActivities: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCountries: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  constructor(private sharedService: SharedService, private fb: FormBuilder,
+    private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private permissionsService: PermissionsService) { }
 
   ngOnInit(): void {
     this.sectorForm = this.fb.group({
@@ -32,8 +161,45 @@ export class SectorsComponent implements OnInit {
       enName: ['', Validators.required],
       code: ['', Validators.required]
     });
-    this.GetSectors(1,'',)
+    this.GetSectors(1, '',);
+    this.GetPermissionByUserIdSectors();
+    this.GetPermissionByUserIdSections();
+    this.GetPermissionByUserIdGroups();
+    this.GetPermissionByUserIdCategories();
+    this.GetPermissionByUserIdActivities();
+    this.GetPermissionByUserIdCountries();
   }
+  GetPermissionByUserIdSectors() {
+    this.permissionsService.FunctionGetPermissionByUserId("Sectors").then(permissions => {
+      this.permissionSectors = permissions;
+    });
+  }
+  GetPermissionByUserIdSections() {
+    this.permissionsService.FunctionGetPermissionByUserId("Sections").then(permissions => {
+      this.permissionSections = permissions;
+    });
+  }
+  GetPermissionByUserIdGroups() {
+    this.permissionsService.FunctionGetPermissionByUserId("Groups").then(permissions => {
+      this.permissionGroups = permissions;
+    });
+  }
+  GetPermissionByUserIdCategories() {
+    this.permissionsService.FunctionGetPermissionByUserId("Categories").then(permissions => {
+      this.permissionCategories = permissions;
+    });
+  }
+  GetPermissionByUserIdActivities() {
+    this.permissionsService.FunctionGetPermissionByUserId("Activities").then(permissions => {
+      this.permissionActivities = permissions;
+    });
+  }
+  GetPermissionByUserIdCountries() {
+    this.permissionsService.FunctionGetPermissionByUserId("Countries").then(permissions => {
+      this.permissionCountries = permissions;
+    });
+  }
+
   onSave(): void {
     this.showLoader = true;
     const allErrors: string[] = [];
@@ -56,10 +222,10 @@ export class SectorsComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const sector : IAddSectorDto = {
-        arName : this.sectorForm.value.arName,
-        enName : this.sectorForm.value.enName,
-        code : this.sectorForm.value.code,
+      const sector: IAddSectorDto = {
+        arName: this.sectorForm.value.arName,
+        enName: this.sectorForm.value.enName,
+        code: this.sectorForm.value.code,
       }
       const observer = {
         next: (res: any) => {
@@ -68,7 +234,7 @@ export class SectorsComponent implements OnInit {
             button.click();
           }
           this.sectorForm.reset();
-          this.GetSectors(1,'');
+          this.GetSectors(1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -97,7 +263,7 @@ export class SectorsComponent implements OnInit {
           this.totalPages = res.Data.TotalCount;
           this.onReset();
         }
-        else{
+        else {
           this.sectors = [];
         }
         this.showLoader = false;
@@ -139,7 +305,7 @@ export class SectorsComponent implements OnInit {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetSectors(1,'');
+            this.GetSectors(1, '');
             this.showLoader = false;
             Swal.fire({
               icon: 'success',

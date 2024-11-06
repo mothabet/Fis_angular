@@ -9,20 +9,21 @@
     <div class="header-nav">
         <div class="card-box mb-3 d-flex justify-content-between align-items-center flex-wrap">
             <ul>
-                <li>
-                    <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
-                </li>
-                <li>
-                    <a routerLink="/CompanyHome/{{companyId}}">الإستمارات</a>
-                </li>
-                <li>
-                    <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
-                </li>
-                <li  class="active">
-                    <a routerLink="/CopmanyGeneralInformation/{{companyId}}">المعنيين</a>
-                </li>
+              <li *ngIf="permission.isName">
+                <a routerLink="/Companies-Details/{{companyId}}">التفاصيل</a>
+            </li>
+            <li *ngIf="permissionForms.isName">
+                <a routerLink="/CompanyHome/{{companyId}}">الاستمارات</a>
+            </li>
+            <li *ngIf="permissionCopmanyMessages.isName">
+                <a routerLink="/CopmanyMessages/{{companyId}}">المراسلات</a>
+            </li>
+            <li class="active" >
+                <a routerLink="/CopmanyGeneralInformation/{{companyId}}">المعنيين</a>
+            </li>
             </ul>
-            <button type="button" class="btn btn-create" data-bs-toggle="modal" data-bs-target="#addCopmanyGeneralInformation" id="addCompanyMessageBtn">
+            <button type="button" class="btn btn-create" data-bs-toggle="modal" 
+            data-bs-target="#addCopmanyGeneralInformation" id="addCompanyMessageBtn" *ngIf="permissionCopmanyGeneralInformation.add">
                 اضافة معنيين
             </button>
         </div>
@@ -51,15 +52,12 @@
                         <td class="text-center">{{generalInformations.arName}}</td>
                         <td class="text-center">{{generalInformations.phone}}</td>
                         <td class="text-center">{{generalInformations.email}}</td>
-                        <td class="text-center td-actions">
-                            <!-- <a href="#" class="icon">
-        <img src="../../../../assets/images/paperclip.png" alt="">
-    </a> -->
-                            <button class="icon" data-bs-toggle="modal"
+                        <td class="text-center">
+                            <button class="icon" data-bs-toggle="modal" *ngIf="permissionCopmanyGeneralInformation.edit"
                                 data-bs-target="#addCompany" (click)="editCopmanyGeneralInformation(generalInformations.id)">
                                 <img src="../../../../assets/images/pencil-outline.png" alt="">
                             </button>
-                            <button class="icon" (click)="showAlert(generalInformations.id)">
+                            <button class="icon" (click)="showAlert(generalInformations.id)" *ngIf="permissionCopmanyGeneralInformation.delete">
                                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
                             </button>
                         </td>

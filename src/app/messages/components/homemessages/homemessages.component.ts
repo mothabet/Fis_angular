@@ -6,6 +6,8 @@ import { HomemessagesService } from '../../services/homemessages.service';
 import { IAddMessage, IMessage } from '../../Dtos/MessageDto';
 import Swal from 'sweetalert2';
 import { Editor } from 'ngx-editor';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-homemessages',
@@ -34,11 +36,33 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
   editoren!: Editor;
   emailEn = '';
   emailAr = '';
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private messageService: HomemessagesService,
     private sharedService: SharedService,
+    private permissionsService: PermissionsService
   ) { }
   ngOnDestroy(): void {
     this.editor.destroy();
@@ -57,6 +81,12 @@ export class HomemessagesComponent implements OnInit,OnDestroy {
     this.GetAllMessages(1);
     this.editor = new Editor();
     this.editoren = new Editor();
+    this.GetPermissionByUserId();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Messages").then(permissions => {
+      this.permission = permissions;
+    });
   }
   AddMessage(typeMessage: number): void {
     this.showLoader = true;

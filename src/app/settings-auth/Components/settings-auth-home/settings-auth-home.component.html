@@ -13,7 +13,7 @@
                     <input class="form-control" type="text" name="search" placeholder="البحث">
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
-                <button class="btn" data-bs-toggle="modal" data-bs-target="#authModal" id="addAuthModalBtn">
+                <button class="btn" data-bs-toggle="modal" data-bs-target="#authModal" id="addAuthModalBtn" *ngIf="permission.add">
                     <i class="fa-solid fa-plus"></i>
                     إضافة صلاحية
                 </button>
@@ -44,13 +44,13 @@
                                     <div class="notactive"> غير نشط </div>
                                 </ng-template>
                             </td>
-                            <td class="text-center td-actions">
+                            <td class="text-center">
 
-                                <button class="icon">
+                                <button class="icon" *ngIf="permission.delete">
                                     <img src="../../../../assets/images/trash-can-outline.png" alt=""
                                         (click)="showAlert(item.id)" />
                                 </button>
-                                <button class="icon" (click)="GetSettingsAuthById(item.id)">
+                                <button class="icon" (click)="GetSettingsAuthById(item.id)" *ngIf="permission.edit">
                                     <img src="../../../../assets/images/pencil-outline.png" alt="" />
                                 </button>
                             </td>
@@ -208,12 +208,14 @@
                                     <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
                                     *ngIf="isDownloadPermission(staticPermissions[i].enName)">
                                       <input type="checkbox" formControlName="download" id="download_{{ i }}">
-                                      <label class="text-nowrap mt-3" style="position: static;" for="download_{{ i }}">تنزيل PDF</label>
+                                      <label *ngIf="staticPermissions[i].enName !== 'Companies-Details'" class="text-nowrap mt-3" style="position: static;" for="download_{{ i }}">تنزيل PDF</label>
+                                      <label *ngIf="staticPermissions[i].enName === 'Companies-Details'" class="text-nowrap mt-3" style="position: static;" for="download_{{ i }}">المرفقات</label>
                                     </div>
                                   <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
                                   *ngIf="isAddPermission(staticPermissions[i].enName)">
                                     <input type="checkbox" formControlName="add" id="add_{{ i }}">
-                                    <label class="text-nowrap mt-3" style="position: static;" for="add_{{ i }}">إضافة</label>
+                                    <label *ngIf="staticPermissions[i].enName !== 'FormDetails'" class="text-nowrap mt-3" style="position: static;" for="add_{{ i }}">إضافة</label>
+                                    <label *ngIf="staticPermissions[i].enName === 'FormDetails'" class="text-nowrap mt-3" style="position: static;" for="add_{{ i }}">حفظ</label>
                                   </div>
                                   <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
                                   *ngIf="isEditPermission(staticPermissions[i].enName)">
@@ -239,6 +241,41 @@
                                   *ngIf="isCopyPermission(staticPermissions[i].enName)">
                                     <input type="checkbox" formControlName="copy" id="copy_{{ i }}">
                                     <label class="text-nowrap mt-3" style="position: static;" for="copy_{{ i }}">نسخ</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isInstructionsPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="Instructions" id="Instructions_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="Instructions_{{ i }}">الارشادات</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="Open" id="Open_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="Open_{{ i }}">اعادة فتح الاستماره</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="Close" id="Close_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="Close_{{ i }}">إغلاق</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="Complete" id="Complete_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="Complete_{{ i }}">إكتمال</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="Approve" id="Approve_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="Approve_{{ i }}">موافقة</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="FormNotes" id="FormNotes_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="FormNotes_{{ i }}">ملاحظه</label>
+                                  </div>
+                                  <div class="form-check d-flex justify-content-center align-items-center flex-nowrap" style="flex:1"
+                                  *ngIf="isButtonFormPermission(staticPermissions[i].enName)">
+                                    <input type="checkbox" formControlName="AddFormNotes" id="AddFormNotes_{{ i }}">
+                                    <label class="text-nowrap mt-3" style="position: static;" for="AddFormNotes_{{ i }}">اضافة ملاحظه</label>
                                   </div>
                                 </div>
                               </div>

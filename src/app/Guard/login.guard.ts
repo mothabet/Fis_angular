@@ -19,15 +19,18 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);
       const role = res.roles;
       const url: string = route.url[0].path;
-      
+      debugger
       if (role === "User" && this.authService.isUserRoute(url)) {
         const observer = {
           next: (_res: any) => {
-            
+            debugger
             if (_res.Data) {
               this.permissions = _res.Data;
               const permissionCheck = this.permissions.find(r => r.enName === url);
               if (permissionCheck && permissionCheck.isName) {
+                return true;
+              }
+              else if (!permissionCheck && this.authService.isTableRoute(url)){
                 return true;
               }
               else {

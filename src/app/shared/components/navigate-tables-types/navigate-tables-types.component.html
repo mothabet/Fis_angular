@@ -64,7 +64,7 @@
         </div>
 
     </div>
-    <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers'">
+    <div class="companies user-home" *ngIf="role == 'Company' || role == 'Researchers' || role==='User'">
         <div class="header d-flex card-box">
             <div class="title">
                 {{coverForm.arName}} </div>
@@ -101,20 +101,20 @@
                     data-bs-target="#sendFormCompany">
                     حالة الإستمارة : تم اعادة فتح الاستمارة
                 </button>
-                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" *ngIf="role == 'Researchers'">
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" *ngIf="role == 'Researchers' || (role==='User' && permission.AddFormNotes)">
                     <img src="./images/list-box-outline.png" alt="">
                     اضافة ملاحظه
                 </button>
-                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Admin')" *ngIf="role == 'Researchers'">
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Admin')" *ngIf="role == 'Researchers' || (role==='User' && permission.FormNotes)">
                     <img src="./images/list-box-outline.png" alt="">
                     عرض ملاحظات الاداره
                 </button>
-                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Researchers')" *ngIf="role == 'Company'">
+                <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Researchers')" *ngIf="role == 'Company'  ">
                     <img src="./images/list-box-outline.png" alt="">
                     عرض ملاحظات
                 </button>
                 
-                <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)">
+                <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)" *ngIf="(role==='User' && permission.Instructions)">
                     <img src="./images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
@@ -134,24 +134,24 @@
                     حفظ
                 </button>
                 <button
-                    *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)"
+                    *ngIf="(role == 'Researchers' || (role==='User' && permission.add)) && (coverForm.status <= 6 || coverForm.status == 8)"
                     type="button" class="btn btn-save" (click)="SaveData('Save',+companyId)">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
                 </button>
-                <button *ngIf="role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"
+                <button *ngIf="(role == 'Company' || (role==='User' && permission.Approve)) && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="SaveData('Approve',0)">
                     موافقة
                 </button>
-                <button *ngIf="role == 'Researchers' && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
+                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Complete)) && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="CompleteForm()">
                     إكتمال
                 </button>
-                <button *ngIf="role == 'Researchers' && (coverForm.status <= 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
+                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Close)) && (coverForm.status <= 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
                     (click)="CloseForm()">
                     إغلاق
                 </button>
-                <button *ngIf="role == 'Researchers' && coverForm.status == 6" type="button" class="btn btn-exit" data-bs-toggle="modal" data-bs-target="#OpenFormModel">
+                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Open)) && coverForm.status == 6" type="button" class="btn btn-exit" data-bs-toggle="modal" data-bs-target="#OpenFormModel">
                     اعادة فتح الاستماره
                 </button>
             </div>
@@ -179,7 +179,7 @@
              [ngClass]="{'active': isTabActive(i + 2), 'disabled': table.IsDisabled}"
              [ngStyle]="{'cursor': (table.IsDisabled && role === 'Company' && (coverForm.status < 6 || coverForm.status === 8)) ? 'not-allowed' : 'pointer'}"
              (click)="!(table.IsDisabled && role === 'Company' && (coverForm.status < 6 || coverForm.status === 8)) && activateTable(i + 2, table.id)">
-          <a>{{ table.arName }}</a>
+          <a [ngStyle]="{'cursor': (table.IsDisabled && role === 'Company' && (coverForm.status < 6 || coverForm.status === 8)) ? 'not-allowed' : 'pointer'}">{{ table.arName }}</a>
         </div>
     
         <!-- Last static tab -->
@@ -227,7 +227,7 @@
                   <td class="text-center">
                     <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
                   </td>
-                  <td class="text-center td-actions">
+                  <td class="text-center">
                     <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
                       <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                     </button>

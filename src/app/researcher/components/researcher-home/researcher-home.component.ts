@@ -62,7 +62,35 @@ export class ResearcherHomeComponent {
     settingsAuthId: 0,
     connectWithCompany:true,
     addCompaniesGroup:true,
-    copy:true
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    AddFormNotes:true, 
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionResearcherDetails: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
   };
   constructor(
     private formBuilder: FormBuilder,
@@ -89,6 +117,7 @@ export class ResearcherHomeComponent {
       email: ['', [Validators.required, Validators.email]],
     });
     this.GetPermissionByUserId();
+    this.GetPermissionResearcherDetailsByUserId();
     this.generateRandomCredentials();
     this.GetAllReseachers(this.currentPage);
     this.GetCompanies('', 0);
@@ -549,6 +578,12 @@ export class ResearcherHomeComponent {
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("Researcher").then(permissions => {
       this.permission = permissions;
+    });
+  }
+  GetPermissionResearcherDetailsByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Researcher-Details").then(permissions => {
+      debugger
+      this.permissionResearcherDetails = permissions;
     });
   }
 }

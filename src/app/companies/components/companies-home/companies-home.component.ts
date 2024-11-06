@@ -68,8 +68,36 @@ export class CompaniesHomeComponent implements OnInit {
     isName: true,
     settingsAuthId: 0,
     connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true
+    addCompaniesGroup:true, 
+    AddFormNotes:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCompaniesDetails: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true, 
+    AddFormNotes:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
   };  
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
@@ -109,6 +137,7 @@ export class CompaniesHomeComponent implements OnInit {
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
     this.GetPermissionByUserId();
+    this.GetPermissionByUserIdCompaniesDetails();
     const currentYear = new Date().getFullYear();
     for (let year = 1990; year <= currentYear; year++) {
       this.years.push(year);
@@ -118,8 +147,13 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetSectorActvities(0);
   }
   GetPermissionByUserId() {
-    this.permissionsService.FunctionGetPermissionByUserId("Auditing-Rules").then(permissions => {
+    this.permissionsService.FunctionGetPermissionByUserId("Companies").then(permissions => {
       this.permission = permissions;
+    });
+  }
+  GetPermissionByUserIdCompaniesDetails() {
+    this.permissionsService.FunctionGetPermissionByUserId("Companies-Details").then(permissions => {
+      this.permissionCompaniesDetails = permissions;
     });
   }
   getActivityByActivityId(activityId: number) {
