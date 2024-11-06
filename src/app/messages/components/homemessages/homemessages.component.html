@@ -50,7 +50,7 @@
                                 (click)="setButtonText('اشعار','Notifications',3)">الإشعارات</a>
                         </li>
                     </ul>
-                    <button class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMessage"
+                    <button class="btn btn-create" data-bs-toggle="modal" data-bs-target="#createMessage" *ngIf="permission.add"
                         id="addMessageBtn">
                         <img src="../../../../assets/images/email-outline-white.png" alt="">
                         <span>انشاء {{buttonText}}</span>
@@ -91,14 +91,11 @@
                                             <td>{{message.arName}}</td>
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
-                                                <!-- <a href="#" class="icon">
-                            <img src="../../../../assets/images/paperclip.png" alt="">
-                        </a> -->
                                                 <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
-                                                    (click)="editMessage(message.Id)">
+                                                    (click)="editMessage(message.Id)" *ngIf="permission.edit">
                                                     <img src="../../../../assets/images/pencil-outline.png" alt="">
                                                 </button>
-                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                <button class="icon" (click)="showAlert(message.Id)" *ngIf="permission.delete">
                                                     <img src="../../../../assets/images/trash-can-outline.png" alt="">
                                                 </button>
                                             </td>
@@ -145,14 +142,11 @@
                                             <td>{{message.arName}}</td>
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
-                                                <!-- <a href="#" class="icon">
-                            <img src="../../../../assets/images/paperclip.png" alt="">
-                        </a> -->
                                                 <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
-                                                    (click)="editMessage(message.Id)">
+                                                    (click)="editMessage(message.Id)" *ngIf="permission.edit">
                                                     <img src="../../../../assets/images/pencil-outline.png" alt="">
                                                 </button>
-                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                <button class="icon" (click)="showAlert(message.Id)" *ngIf="permission.delete">
                                                     <img src="../../../../assets/images/trash-can-outline.png" alt="">
                                                 </button>
                                             </td>
@@ -200,14 +194,11 @@
                                             
                                             <td class="text-center">{{message.arSubject}}</td>
                                             <td class="text-center">
-                                                <!-- <a href="#" class="icon">
-                        <img src="../../../../assets/images/paperclip.png" alt="">
-                    </a> -->
                                                 <button class="icon" data-bs-toggle="modal" data-bs-target="#addCompany"
-                                                    (click)="editMessage(message.Id)">
+                                                    (click)="editMessage(message.Id)" *ngIf="permission.edit">
                                                     <img src="../../../../assets/images/pencil-outline.png" alt="">
                                                 </button>
-                                                <button class="icon" (click)="showAlert(message.Id)">
+                                                <button class="icon" (click)="showAlert(message.Id)" *ngIf="permission.delete">
                                                     <img src="../../../../assets/images/trash-can-outline.png" alt="">
                                                 </button>
                                             </td>

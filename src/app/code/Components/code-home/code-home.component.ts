@@ -9,6 +9,8 @@ import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { arabicFont } from 'src/app/shared/services/arabic-font';
 import { SubCodeHomeService } from '../../Services/sub-code-home.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-code-home',
@@ -39,12 +41,34 @@ export class CodeHomeComponent {
   filteredSubCodes: ISubCode[] = [];
   QuestionCode: string = '';
   enName: string = '';
-  skipOld: number = 0
+  skipOld: number = 0;
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(
     private formBuilder: FormBuilder,
     private codeHomeService: CodeHomeService,
     private subCodeHomeService: SubCodeHomeService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private permissionsService: PermissionsService
   ) { }
 
   ngOnInit(): void {
@@ -57,10 +81,15 @@ export class CodeHomeComponent {
       connectedWith: [''],
       connectedWithType: ['']
     });
-
+    this.GetPermissionByUserId();
     this.GetAllCodes(this.currentPage, this.searchText);
     this.GetAllSubCodes();
     this.GetAllCodesAndSubCodesAndSubSubCodes();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Codes").then(permissions => {
+      this.permission = permissions;
+    });
   }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;

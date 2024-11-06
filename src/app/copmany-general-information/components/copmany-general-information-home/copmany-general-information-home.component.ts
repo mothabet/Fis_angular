@@ -5,6 +5,8 @@ import { CopmanyGeneralInformationService } from '../../services/copmany-general
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-copmany-general-information-home',
@@ -24,11 +26,96 @@ export class CopmanyGeneralInformationHomeComponent {
   totalPages: number = 0;
   noData: boolean = false;
   phoneCode: number = 968;
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyMessages: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyGeneralInformation: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionForms: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(
     private formBuilder: FormBuilder,
     private companyGeneralInformationService: CopmanyGeneralInformationService,
     private sharedService: SharedService,
     private activeRouter: ActivatedRoute,
+    private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
     this.copmanyGeneralInformationForm = this.formBuilder.group({
@@ -45,6 +132,30 @@ export class CopmanyGeneralInformationHomeComponent {
     });
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetAllCopmanyGeneralInformations(this.currentPage);
+    this.GetPermissionByUserId();
+    this.GetPermissionByUserIdForms();
+    this.GetPermissionByUserIdCopmanyMessages();
+    this.GetPermissionByUserIdCopmanyGeneralInformation();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Companies-Details").then(permissions => {
+      this.permission = permissions;
+    });
+  }
+  GetPermissionByUserIdForms() {
+    this.permissionsService.FunctionGetPermissionByUserId("CompanyHome").then(permissions => {
+      this.permissionForms = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyMessages() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyMessages").then(permissions => {
+      this.permissionCopmanyMessages = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyGeneralInformation() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyGeneralInformation").then(permissions => {
+      this.permissionCopmanyGeneralInformation = permissions;
+    });
   }
   onPageChange(page: number) {
     this.currentPage = page;

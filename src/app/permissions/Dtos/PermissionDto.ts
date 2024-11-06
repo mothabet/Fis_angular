@@ -8,8 +8,15 @@ export interface IAddPermissionDto {
     delete: boolean,
     connectWithCompany: boolean,
     addCompaniesGroup: boolean,
+    Instructions:boolean,
     copy: boolean,
-    download: boolean
+    download: boolean,
+    FormNotes: boolean,  
+    AddFormNotes:boolean,
+    Approve: boolean, 
+    Complete: boolean, 
+    Close: boolean, 
+    Open: boolean
 }
 export interface IGetPermissionDto {
     id: number,
@@ -21,7 +28,14 @@ export interface IGetPermissionDto {
     delete: boolean,
     connectWithCompany: boolean,
     addCompaniesGroup: boolean,
+    Instructions:boolean,
     copy: boolean,
     download: boolean,
-    settingsAuthId: number
+    settingsAuthId: number,
+    FormNotes: boolean,  
+    AddFormNotes:boolean,
+    Approve: boolean, 
+    Complete: boolean, 
+    Close: boolean, 
+    Open: boolean
 }

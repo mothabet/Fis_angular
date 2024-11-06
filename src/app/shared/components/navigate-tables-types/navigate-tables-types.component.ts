@@ -14,6 +14,8 @@ import { forkJoin } from 'rxjs';
 import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
 import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -50,11 +52,32 @@ export class NavigateTablesTypesComponent implements OnInit {
   tableSelecte: IGetTableDto[] = [];
   activeTabIndex: number = 0;
   @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
-
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
     private sharedServices: SharedService, private formServices: FormService, private router: Router,
     private navigateTablesTypesService: NavigateTablesTypesService, private formNotesService: FormNotesService,
-    private auditRuleHomeService: AuditRuleHomeService, private instructionsService: InstructionsService) { }
+    private auditRuleHomeService: AuditRuleHomeService, private instructionsService: InstructionsService,
+    private permissionsService: PermissionsService) { }
   ngOnInit(): void {
     this.formId = this.activeRouter.snapshot.paramMap.get('formId')!;
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
@@ -64,6 +87,12 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.role = result.roles;
     this.tableId = tableIdParam ? +tableIdParam : null;
     this.GetFormById(this.formId ?? "0")
+    this.GetPermissionByUserId();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("FormDetails").then(permissions => {
+      this.permission = permissions;
+    });
   }
   ngOnChanges() {
     

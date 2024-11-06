@@ -115,11 +115,11 @@
                 <div class="notactive"> غير نشط </div>
               </ng-template>
             </td>
-            <td class="text-center td-actions">
+            <td class="text-center">
               <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)" *ngIf="permission.connectWithCompany">
                 <img src="../../../../assets/images/link.png" alt="" />
               </a>
-              <a routerLink="/Researcher-Details/{{item.id}}" class="icon">
+              <a routerLink="/Researcher-Details/{{item.id}}" class="icon" *ngIf="permissionResearcherDetails.isName">
                 <img src="../../../../assets/images/eye-outline.png" alt="" />
               </a>
               <button class="icon" (click)="showAlert(item.id)" *ngIf="permission.delete">

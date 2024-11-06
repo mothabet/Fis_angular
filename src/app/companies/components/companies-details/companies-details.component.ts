@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment.development';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TopScreenService } from 'src/app/shared/services/top-screen.service';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 
 @Component({
   selector: 'app-companies-details',
@@ -29,8 +31,93 @@ export class CompaniesDetailsComponent implements OnInit {
   sanitizedEmbededContent: SafeHtml = '';
   companyEmails:string = '';
   legalTypeName:string = '';
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyMessages: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyGeneralInformation: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionForms: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(private topScreenServices: TopScreenService, private activeRouter: ActivatedRoute, private companyServices: CompanyHomeService
-    , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer) {
+    , private sharedServices: SharedService, private authService: LoginService,private sanitizer: DomSanitizer,
+    private permissionsService: PermissionsService) {
 
   }
   ngOnInit(): void {
@@ -40,6 +127,30 @@ export class CompaniesDetailsComponent implements OnInit {
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);  
     this.role = res.roles;
+    this.GetPermissionByUserId();
+    this.GetPermissionByUserIdForms();
+    this.GetPermissionByUserIdCopmanyMessages();
+    this.GetPermissionByUserIdCopmanyGeneralInformation();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Companies-Details").then(permissions => {
+      this.permission = permissions;
+    });
+  }
+  GetPermissionByUserIdForms() {
+    this.permissionsService.FunctionGetPermissionByUserId("CompanyHome").then(permissions => {
+      this.permissionForms = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyMessages() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyMessages").then(permissions => {
+      this.permissionCopmanyMessages = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyGeneralInformation() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyGeneralInformation").then(permissions => {
+      this.permissionCopmanyGeneralInformation = permissions;
+    });
   }
   ngAfterViewInit(): void {
 

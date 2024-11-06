@@ -91,7 +91,7 @@
             </td>
             <td class="text-center" *ngIf="!company.status"><div class="Gnotactive"> غير نشط </div></td>
             <td class="text-center">
-                <a routerLink="/Companies-Details/{{company.id}}" class="icon">
+                <a routerLink="/Companies-Details/{{company.id}}" class="icon" *ngIf="permissionCompaniesDetails.isName">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
                 <button class="icon" (click)="showAlert(company.id)" *ngIf="permission.delete">

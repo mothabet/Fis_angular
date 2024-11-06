@@ -4,7 +4,8 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { SettingsAuthService } from '../../Services/settings-auth.service';
 import Swal from 'sweetalert2';
 import { IAddSettingsAuth, IAddSettingsAuthAndPermissionDto, IGetSettingsAuthDto } from '../../Dtos/SettingsAuthHomeDto';
-import { IAddPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { IAddPermissionDto, IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-settings-auth-home',
@@ -35,31 +36,69 @@ export class SettingsAuthHomeComponent {
   currentPage: number = 1;
   isLastPage: boolean = false;
   totalPages: number = 0;
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
+    Open: true
+  };
   staticPermissions = [
-    { arName: 'الباحثين او المشرف', enName: "Researcher", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true },
-    { arName: 'الشركات', enName: "Companies", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true },
-    { arName: 'التقارير', enName: "Reports", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'تصميم الاستمارات', enName: "Forms", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'إضافة جدول', enName: "Table", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true},
-    { arName: 'إضافة سؤال', enName: "Question", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true, copy:true},
-    { arName: 'قواعد التدقيق', enName: "Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'محتوي الاستماره', enName: "Codes", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'الرسائل', enName: "Messages", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'الصلاحيات', enName: "SettingsAuth", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
-    { arName: 'الانشطة و القطاعات', enName: "Sectors", isName: true, add: true, edit: true, delete: true, download: true,connectWithCompany:true ,addCompaniesGroup:true , copy:true},
+    { arName: 'الباحثين او المشرف', enName: "Researcher", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'عرض تفاصيل الباحث', enName: "Researcher-Details", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الشركات', enName: "Companies", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'عرض تفاصيل الشركة', enName: "Companies-Details", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الاستمارات الحالية للشركة', enName: "CompanyHome", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'المراسلات', enName: "CopmanyMessages", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'المعنيين', enName: "CopmanyGeneralInformation", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    // { arName: 'التقارير', enName: "Reports", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'تصميم الاستمارات', enName: "Forms", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'عرض الاستمارة', enName: "FormDetails", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'إضافة جدول', enName: "Table", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'إضافة سؤال', enName: "Question", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'قواعد التدقيق', enName: "Auditing-Rules", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'محتوي الاستماره', enName: "Codes", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الرسائل والايميلات والاشعارات', enName: "Messages", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الصلاحيات', enName: "SettingsAuth", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'القطاعات', enName: "Sectors", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'القسم', enName: "Sections", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'المجموعات', enName: "Groups", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الفئات', enName: "Categories", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الأنشطة', enName: "Activities", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الدول', enName: "Countries", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
   ];
   constructor(
     private formBuilder: FormBuilder,
     private settingsAuthService: SettingsAuthService,
     private sharedService: SharedService,
+    private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
     this.initializeForm();
     this.GetAllSettingsAuths(1, '');
     this.generateRandomCredentials();
-
+    this.GetPermissionByUserId();
     // Listen for changes in each isName checkbox
 
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("SettingsAuth").then(permissions => {
+      this.permission = permissions;
+    });
   }
   ngAfterViewInit() {
     // After the view is initialized, loop through the permissions and set up the subscriptions
@@ -71,9 +110,16 @@ export class SettingsAuthHomeComponent {
             edit: isChecked,
             delete: isChecked,
             download: isChecked,
-            connectWithCompany:isChecked,
-            addCompaniesGroup:isChecked,
-            copy:isChecked,
+            connectWithCompany: isChecked,
+            addCompaniesGroup: isChecked,
+            copy: isChecked,
+            Instructions: isChecked,
+            FormNotes: isChecked,
+            AddFormNotes: isChecked,
+            Approve: isChecked,
+            Complete: isChecked,
+            Close: isChecked,
+            Open: isChecked
           },
           { emitEvent: false } // Prevents recursion from re-triggering value changes
         );
@@ -90,9 +136,16 @@ export class SettingsAuthHomeComponent {
         edit: [true],
         delete: [true],
         download: [true],
-        connectWithCompany:[true],
-        addCompaniesGroup:[true],
-        copy:[true],
+        connectWithCompany: [true],
+        addCompaniesGroup: [true],
+        copy: [true],
+        Instructions: [true],
+        FormNotes: [true],
+        AddFormNotes: [true],
+        Approve: [true],
+        Complete: [true],
+        Close: [true],
+        Open: [true]
       })
     );
 
@@ -150,10 +203,10 @@ export class SettingsAuthHomeComponent {
   }
   AddSettingsAuth(): void {
     this.showLoader = true;
-    debugger
     if (this.settingsAuthForm.valid) {
       this.addPermissionDtoList = [];
       for (let index = 0; index < this.settingsAuthForm.value.permissions.length; index++) {
+        
 
         const permission: IAddPermissionDto = {
           add: this.settingsAuthForm.value.permissions[index].add,
@@ -166,6 +219,13 @@ export class SettingsAuthHomeComponent {
           enName: this.settingsAuthForm.value.permissions[index].enName,
           isName: this.settingsAuthForm.value.permissions[index].isName,
           copy: this.settingsAuthForm.value.permissions[index].copy,
+          Instructions: this.settingsAuthForm.value.permissions[index].Instructions,
+          AddFormNotes: this.settingsAuthForm.value.permissions[index].AddFormNotes,
+          FormNotes: this.settingsAuthForm.value.permissions[index].FormNotes,
+          Approve: this.settingsAuthForm.value.permissions[index].Approve,
+          Complete: this.settingsAuthForm.value.permissions[index].Complete,
+          Close: this.settingsAuthForm.value.permissions[index].Close,
+          Open: this.settingsAuthForm.value.permissions[index].Open
         }
         this.addPermissionDtoList.push(permission);
       }
@@ -216,7 +276,7 @@ export class SettingsAuthHomeComponent {
   }
   GetAllSettingsAuths(page: number, textSearch: string = ''): void {
     this.showLoader = true;
-    debugger
+    
     const observer = {
       next: (res: any) => {
 
@@ -258,9 +318,16 @@ export class SettingsAuthHomeComponent {
         edit: true,
         delete: true,
         download: true,
-        connectWithCompany:true,
-        addCompaniesGroup:true,
-        copy:true,
+        connectWithCompany: true,
+        addCompaniesGroup: true,
+        copy: true,
+        Instructions: true,
+        FormNotes: true,
+        AddFormNotes: true,
+        Approve: true,
+        Complete: true,
+        Close: true,
+        Open: true,
         arName: group.get('arName')?.value, // Keep the existing value
         enName: group.get('enName')?.value, // Keep the existing value
       });
@@ -324,8 +391,15 @@ export class SettingsAuthHomeComponent {
               delete: [permission.delete],
               connectWithCompany: [permission.connectWithCompany],
               addCompaniesGroup: [permission.addCompaniesGroup],
+              AddFormNotes: [permission.AddFormNotes],
               copy: [permission.copy],
               download: [permission.download],
+              Instructions: [permission.Instructions],
+              FormNotes: [permission.FormNotes],
+              Approve: [permission.Approve],
+              Complete: [permission.Complete],
+              Close: [permission.Close],
+              Open: [permission.Open],
             });
 
             // Subscribe to isName value changes to toggle other checkboxes
@@ -337,8 +411,15 @@ export class SettingsAuthHomeComponent {
                   delete: isChecked,
                   connectWithCompany: isChecked,
                   addCompaniesGroup: isChecked,
-                  copy:isChecked,
+                  copy: isChecked,
                   download: isChecked,
+                  Instructions: isChecked,
+                  FormNotes: isChecked,
+                  AddFormNotes: isChecked,
+                  Approve: isChecked,
+                  Complete: isChecked,
+                  Close: isChecked,
+                  Open: isChecked
                 },
                 { emitEvent: false } // Prevents recursion from re-triggering value changes
               );
@@ -393,6 +474,13 @@ export class SettingsAuthHomeComponent {
           connectWithCompany: this.settingsAuthForm.value.permissions[index].connectWithCompany,
           addCompaniesGroup: this.settingsAuthForm.value.permissions[index].addCompaniesGroup,
           copy: this.settingsAuthForm.value.permissions[index].copy,
+          Instructions: this.settingsAuthForm.value.permissions[index].Instructions,
+          FormNotes: this.settingsAuthForm.value.permissions[index].FormNotes,
+          AddFormNotes: this.settingsAuthForm.value.permissions[index].AddFormNotes,
+          Approve: this.settingsAuthForm.value.permissions[index].Approve,
+          Complete: this.settingsAuthForm.value.permissions[index].Complete,
+          Close: this.settingsAuthForm.value.permissions[index].Close,
+          Open: this.settingsAuthForm.value.permissions[index].Open,
           download: this.settingsAuthForm.value.permissions[index].download,
           edit: this.settingsAuthForm.value.permissions[index].edit,
           enName: this.settingsAuthForm.value.permissions[index].enName,
@@ -451,13 +539,21 @@ export class SettingsAuthHomeComponent {
       'Companies',
       'Reports',
       'Forms',
+      'FormDetails',
       'Table',
       'Question',
       'Auditing-Rules',
       'Codes',
       'Messages',
       'SettingsAuth',
+      'CopmanyMessages',
+      'CopmanyGeneralInformation',
       'Sectors',
+      'Sections',
+      'Groups',
+      'Categories',
+      'Activities',
+      'Countries'
     ];
     return enNamePermission.includes(enName);
   }
@@ -474,6 +570,12 @@ export class SettingsAuthHomeComponent {
       'Messages',
       'SettingsAuth',
       'Sectors',
+      'CopmanyGeneralInformation',
+      'Sections',
+      'Groups',
+      'Categories',
+      'Activities',
+      'Countries'
     ];
     return enNamePermission.includes(enName);
   }
@@ -489,7 +591,13 @@ export class SettingsAuthHomeComponent {
       'Codes',
       'Messages',
       'SettingsAuth',
+      'CopmanyGeneralInformation',
       'Sectors',
+      'Sections',
+      'Groups',
+      'Categories',
+      'Activities',
+      'Countries'
     ];
     return enNamePermission.includes(enName);
   }
@@ -498,12 +606,10 @@ export class SettingsAuthHomeComponent {
       'Researcher',
       'Companies',
       'Reports',
-      'Forms',
       'Auditing-Rules',
       'Codes',
-      'Messages',
-      'SettingsAuth',
-      'Sectors',
+      'Researcher-Details',
+      'Companies-Details'
     ];
     return enNamePermission.includes(enName);
   }
@@ -522,6 +628,19 @@ export class SettingsAuthHomeComponent {
   isCopyPermission(enName: string): boolean {
     const enNamePermission = [
       'Forms',
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isInstructionsPermission(enName: string): boolean {
+    const enNamePermission = [
+      'Forms',
+      'FormDetails'
+    ];
+    return enNamePermission.includes(enName);
+  }
+  isButtonFormPermission(enName: string): boolean {
+    const enNamePermission = [
+      'FormDetails',
     ];
     return enNamePermission.includes(enName);
   }

@@ -19,6 +19,8 @@ import { IAdminDataDto } from '../../Dtos/ResearcherDetailsDto';
 import { ResearcherMandateService } from 'src/app/researcher-mandate/services/researcher-mandate.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IAddResearcherMandateDto, IGetResearcherMandateDto } from 'src/app/researcher-mandate/Dtos/ResearcherMandateDto';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-researcher-details',
@@ -29,7 +31,21 @@ export class ResearcherDetailsComponent implements OnInit {
   role: string = "";
   researcherMandateForm!: FormGroup
   showLoader: boolean = false;
-  researcher!: IResearcher;
+  researcher: IResearcher={
+    activityId:0,
+    activityName:0,
+    address:"",
+    arName:"",
+    companies:[],
+    compRegNumber:0,
+    email:"",
+    enName:"",
+    id:0,
+    phone:0,
+    status:true,
+    UserId:0,
+    userName:""
+  };
   researcherId!: string;
   companiesCount: number = 0;
   companies!: ICompany[];
@@ -70,10 +86,32 @@ export class ResearcherDetailsComponent implements OnInit {
   selecteCompanyIds: Set<number> = new Set<number>();
   researcherMandateId!: string;
   getCompanyResearcherMandateDto:any[] = [];
+  permissionResearcherDetails: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
-    , private researcherMandateService: ResearcherMandateService) {
+    , private researcherMandateService: ResearcherMandateService,
+    private permissionsService: PermissionsService) {
 
   }
   ngOnInit(): void {
@@ -89,6 +127,12 @@ export class ResearcherDetailsComponent implements OnInit {
     this.GetAllReseachers();
     this.researcherMandateForm = this.formBuilder.group({
       researcherMandateId: ['', Validators.required],
+    });
+    this.GetPermissionResearcherDetailsByUserId();
+  }
+  GetPermissionResearcherDetailsByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Researcher-Details").then(permissions => {
+      this.permissionResearcherDetails = permissions;
     });
   }
   onCheckboxChangeCompany(companyId: number, event: Event) {

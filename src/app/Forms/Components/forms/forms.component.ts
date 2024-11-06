@@ -17,6 +17,8 @@ import { InstructionsService } from 'src/app/instructions/services/instructions.
 import { IAddInstructionsDto, IAddListInstructionsDto } from 'src/app/shared/Dtos/NavigateDto';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { Editor } from 'ngx-editor';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-forms',
@@ -88,7 +90,91 @@ export class FormsComponent implements OnInit {
   arNotesForm = '';
   enNotesForm = '';
   yearsFilter: number[] = [];
-  tables: IGetTableDto[]=[]
+  tables: IGetTableDto[] = [];
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionTable: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionQuestion: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionFormDetails: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -99,7 +185,8 @@ export class FormsComponent implements OnInit {
     private codeService: CodeHomeService,
     private subCodeService: SubCodeHomeService,
     private instructionsService: InstructionsService,
-    private sectorsAndActivitiesServices: SectorAndActivitiesService
+    private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
     for (let year = 2007; year <= 2024; year++) {
@@ -143,6 +230,30 @@ export class FormsComponent implements OnInit {
     this.editoren = new Editor();
     this.editorForm = new Editor();
     this.editorenForm = new Editor();
+    this.GetPermissionByUserId();
+    this.GetPermissionByUserIdQuestion();
+    this.GetPermissionByUserIdFormDetails();
+    this.GetPermissionByUserIdTable();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Forms").then(permissions => {
+      this.permission = permissions;
+    });
+  }
+  GetPermissionByUserIdQuestion() {
+    this.permissionsService.FunctionGetPermissionByUserId("Question").then(permissions => {
+      this.permissionQuestion = permissions;
+    });
+  }
+  GetPermissionByUserIdFormDetails() {
+    this.permissionsService.FunctionGetPermissionByUserId("FormDetails").then(permissions => {
+      this.permissionFormDetails = permissions;
+    });
+  }
+  GetPermissionByUserIdTable() {
+    this.permissionsService.FunctionGetPermissionByUserId("Table").then(permissions => {
+      this.permissionTable = permissions;
+    });
   }
   ngOnChanges() {
     this.forms = this.forms;
@@ -469,14 +580,22 @@ export class FormsComponent implements OnInit {
     this.renderer.appendChild(subAnchor, img);
     this.renderer.appendChild(subAnchor, text);
     this.renderer.appendChild(subAnchor, divIcon);
-    this.renderer.appendChild(divIcon, tableIcon);
-    this.renderer.appendChild(crtbLabel, lText);
+    if (this.permissionTable.add) {
+      this.renderer.appendChild(divIcon, tableIcon);
+      this.renderer.appendChild(crtbLabel, lText);
+    }
     this.renderer.appendChild(divIcon, crtbLabel);
-    this.renderer.appendChild(divIcon, detailsIcon);
-    this.renderer.appendChild(divIcon, delIcon);
-    this.renderer.appendChild(divIcon, editIcon);
-    this.renderer.appendChild(divIcon, copyIcon);
-    this.renderer.appendChild(divIcon, instructionsIcon);
+    if (this.permissionFormDetails.isName) {
+      this.renderer.appendChild(divIcon, detailsIcon);
+    }
+    if (this.permission.delete)
+      this.renderer.appendChild(divIcon, delIcon);
+    if (this.permission.edit)
+      this.renderer.appendChild(divIcon, editIcon);
+    if (this.permission.copy)
+      this.renderer.appendChild(divIcon, copyIcon);
+    if (this.permission.Instructions)
+      this.renderer.appendChild(divIcon, instructionsIcon);
     this.renderer.appendChild(formLi, subAnchor);
     this.renderer.setStyle(subAnchor, 'display', 'inline-block');
     this.renderer.setStyle(subAnchor, 'font-size', 'large');
@@ -700,7 +819,7 @@ export class FormsComponent implements OnInit {
   }
   onYearChange(event: Event): void {
     const selectedYear = +(event.target as HTMLSelectElement).value; // Get selected year
-    
+
     if (selectedYear != null && selectedYear != undefined && selectedYear != 0)
       this.forms = this.formsTemp.filter(form => +form.reviewYear === selectedYear);
     else
@@ -875,8 +994,8 @@ export class FormsComponent implements OnInit {
     }
   }
   saveTable() {
-    
-    if((this.tableForm.value.Type == '3'||this.tableForm.value.Type == '4'||this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)){
+
+    if ((this.tableForm.value.Type == '3' || this.tableForm.value.Type == '4' || this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)) {
       Swal.fire({
         icon: 'error',
         title: 'يجب اضافة اجزاء',
@@ -905,13 +1024,13 @@ export class FormsComponent implements OnInit {
         totalTitleEn: this.tableForm.value.totalTitleEn,
         totalTitleAr: this.tableForm.value.totalTitleAr,
       };
-      if(Model.IsTotal == true){
-        if (Model.totalTitleAr == '' ||Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
+      if (Model.IsTotal == true) {
+        if (Model.totalTitleAr == '' || Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
           this.totalTitleArReq = true;
           this.Loader = false;
           return;
         }
-        if (Model.totalTitleEn == '' ||Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
+        if (Model.totalTitleEn == '' || Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
           this.totalTitleEnReq = true;
           this.Loader = false;
           return;
@@ -1060,7 +1179,7 @@ export class FormsComponent implements OnInit {
             totalTitleEn: this.addTable.totalTitleEn,
             period: this.tableForm.value.period,
           });
-          
+
           this.addTableParts = res.Data.tableParts;
           this.Loader = false;
           this._addTable = false;
@@ -1091,7 +1210,7 @@ export class FormsComponent implements OnInit {
   }
   updateTable() {
 
-    if((this.tableForm.value.Type == '3'||this.tableForm.value.Type == '4'||this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)){
+    if ((this.tableForm.value.Type == '3' || this.tableForm.value.Type == '4' || this.tableForm.value.Type == '7') && !(this.addTableParts.length > 0)) {
       Swal.fire({
         icon: 'error',
         title: 'يجب اضافة اجزاء',
@@ -1117,16 +1236,16 @@ export class FormsComponent implements OnInit {
         IsTotal: this.tableForm.value.IsTotal,
         period: this.tableForm.value.period,
         tableParts: this.addTableParts,
-        totalTitleAr:this.tableForm.value.totalTitleAr,
-        totalTitleEn:this.tableForm.value.totalTitleEn,
+        totalTitleAr: this.tableForm.value.totalTitleAr,
+        totalTitleEn: this.tableForm.value.totalTitleEn,
       };
-      if(Model.IsTotal == true){
-        if (Model.totalTitleAr == '' ||Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
+      if (Model.IsTotal == true) {
+        if (Model.totalTitleAr == '' || Model.totalTitleAr == null || Model.totalTitleAr == undefined) {
           this.totalTitleArReq = true;
           this.Loader = false;
           return;
         }
-        if (Model.totalTitleEn == '' ||Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
+        if (Model.totalTitleEn == '' || Model.totalTitleEn == null || Model.totalTitleEn == undefined) {
           this.totalTitleEnReq = true;
           this.Loader = false;
           return;
@@ -1561,8 +1680,8 @@ export class FormsComponent implements OnInit {
     this.addInstructions.push({
       arName: '',
       enName: '',
-      tableId:'',
-      id:0
+      tableId: '',
+      id: 0
     });
   }
 }

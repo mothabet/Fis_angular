@@ -47,7 +47,14 @@ export class AuditingRulesHomeComponent implements OnInit {
     settingsAuthId: 0,
     connectWithCompany:true,
     addCompaniesGroup:true,
-    copy:true
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
   };
   constructor(private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private subCodeHomeService: SubCodeHomeService,

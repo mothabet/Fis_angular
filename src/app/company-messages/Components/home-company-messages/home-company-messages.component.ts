@@ -8,6 +8,8 @@ import { ActivatedRoute } from '@angular/router';
 import { IMessage } from 'src/app/messages/Dtos/MessageDto';
 import { HomemessagesService } from 'src/app/messages/services/homemessages.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 
 @Component({
   selector: 'app-home-company-messages',
@@ -40,13 +42,98 @@ export class HomeCompanyMessagesComponent {
     Id: 0,
     typeMessage: 0
   };
+  permission: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true, 
+    AddFormNotes:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyMessages: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true, 
+    AddFormNotes:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true, 
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionCopmanyGeneralInformation: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
+  permissionForms: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany:true,
+    addCompaniesGroup:true,
+    copy:true,
+    Instructions:true,
+    FormNotes: true,  
+    AddFormNotes:true,
+    Approve: true, 
+    Complete: true, 
+    Close: true, 
+    Open: true
+  };
   constructor(
     private formBuilder: FormBuilder,
     private companyMessageService: HomeCompanyMessagesService,
     private sharedService: SharedService,
     private activeRouter: ActivatedRoute,
     private messageService: HomemessagesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
     this.companyMessageForm = this.formBuilder.group({
@@ -57,6 +144,30 @@ export class HomeCompanyMessagesComponent {
     this.GetAllCompanyMessages(1);
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetAllMessages(0, '');
+    this.GetPermissionByUserId();
+    this.GetPermissionByUserIdForms();
+    this.GetPermissionByUserIdCopmanyMessages();
+    this.GetPermissionByUserIdCopmanyGeneralInformation();
+  }
+  GetPermissionByUserId() {
+    this.permissionsService.FunctionGetPermissionByUserId("Companies-Details").then(permissions => {
+      this.permission = permissions;
+    });
+  }
+  GetPermissionByUserIdForms() {
+    this.permissionsService.FunctionGetPermissionByUserId("CompanyHome").then(permissions => {
+      this.permissionForms = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyMessages() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyMessages").then(permissions => {
+      this.permissionCopmanyMessages = permissions;
+    });
+  }
+  GetPermissionByUserIdCopmanyGeneralInformation() {
+    this.permissionsService.FunctionGetPermissionByUserId("CopmanyGeneralInformation").then(permissions => {
+      this.permissionCopmanyGeneralInformation = permissions;
+    });
   }
   updateMessage(event: Event) {
     const target = event.target as HTMLElement; // Cast to HTMLElement
