@@ -37,7 +37,7 @@ export class ReportContentsComponent implements OnInit {
   subActivitiesFields: IFieldDto[] = [];
   governoratesFields: IFieldDto[] = [];
   wilayatFields: IFieldDto[] = [];
-  
+
   generalDataFields: IFieldDto[] = [
     { dataType: 'String', name: 'اسم المنشأة' },
     { dataType: 'String', name: 'رقم السجل التجارى' },
@@ -105,7 +105,8 @@ export class ReportContentsComponent implements OnInit {
     seconedTable: '',
     withChart: false,  // default to false
     chartType: 0,      // default chart type
-    reportId: 0        // default ID
+    reportId: 0,     // default ID
+    reportDetails: '',
   };
   tables: ITableDto[] = [];
   reportId!: string
@@ -158,23 +159,23 @@ export class ReportContentsComponent implements OnInit {
   sectors: IDropdownList[] = []
   years: IDropdownList[] = [
     { id: 1, arName: '2007', enName: '2007', code: '' },
-    { id: 1, arName: '2008', enName: '2008', code: '' },
-    { id: 1, arName: '2009', enName: '2009', code: '' },
-    { id: 1, arName: '2010', enName: '2010', code: '' },
-    { id: 1, arName: '2011', enName: '2011', code: '' },
-    { id: 1, arName: '2012', enName: '2012', code: '' },
-    { id: 1, arName: '2013', enName: '2013', code: '' },
-    { id: 1, arName: '2014', enName: '2014', code: '' },
-    { id: 1, arName: '2015', enName: '2015', code: '' },
-    { id: 1, arName: '2016', enName: '2016', code: '' },
-    { id: 1, arName: '2017', enName: '2017', code: '' },
-    { id: 1, arName: '2018', enName: '2018', code: '' },
-    { id: 1, arName: '2019', enName: '2019', code: '' },
-    { id: 1, arName: '2020', enName: '2020', code: '' },
-    { id: 1, arName: '2021', enName: '2021', code: '' },
-    { id: 1, arName: '2022', enName: '2022', code: '' },
-    { id: 1, arName: '2023', enName: '2023', code: '' },
-    { id: 1, arName: '2024', enName: '2024', code: '' },
+    { id: 2, arName: '2008', enName: '2008', code: '' },
+    { id: 3, arName: '2009', enName: '2009', code: '' },
+    { id: 4, arName: '2010', enName: '2010', code: '' },
+    { id: 5, arName: '2011', enName: '2011', code: '' },
+    { id: 6, arName: '2012', enName: '2012', code: '' },
+    { id: 7, arName: '2013', enName: '2013', code: '' },
+    { id: 8, arName: '2014', enName: '2014', code: '' },
+    { id: 9, arName: '2015', enName: '2015', code: '' },
+    { id: 10, arName: '2016', enName: '2016', code: '' },
+    { id: 11, arName: '2017', enName: '2017', code: '' },
+    { id: 12, arName: '2018', enName: '2018', code: '' },
+    { id: 13, arName: '2019', enName: '2019', code: '' },
+    { id: 14, arName: '2020', enName: '2020', code: '' },
+    { id: 15, arName: '2021', enName: '2021', code: '' },
+    { id: 16, arName: '2022', enName: '2022', code: '' },
+    { id: 17, arName: '2023', enName: '2023', code: '' },
+    { id: 18, arName: '2024', enName: '2024', code: '' },
   ]
   filteredActivities: IDropdownList[] = [];
   filteredCountries: IDropdownList[] = [];
@@ -191,16 +192,31 @@ export class ReportContentsComponent implements OnInit {
     this.GetReports();
   }
   getTotal(report: any): number {
-  return report.fields.reduce((total: number, row: any) => total + (+row[2]?.value || 0), 0);
+    return report.fields.reduce((total: number, row: any) => total + (+row[2]?.value || 0), 0);
+  }
+  removeFilterRow(table: any, field: any) {
+    // Find the matching table in tables array based on enTableName
+    const tableToUpdate = this.tables.find((t: any) => t.enTableName === table.enTableName);
+    if (tableToUpdate && tableToUpdate.fields && tableToUpdate.fields.length > 0) {
+      // Filter out the field with matching name in the fields array of the found table
+      tableToUpdate.fields = tableToUpdate.fields.filter((f: any) => f.name !== field.name);
+    }
+
+  }
+  removeTable(table: any) {
+    if (this.tables && this.tables.length > 0) {
+      // Filter out the field with matching name in the fields array of the found table
+      this.tables = this.tables.filter((f: any) => f.enTableName !== table.enTableName);
+    }
   }
   GetReports(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+
           this.reports = res.Data;
           console.log(this.reports)
-
         }
         else {
           res.Data = []
@@ -214,6 +230,17 @@ export class ReportContentsComponent implements OnInit {
       },
     };
     this.reportServices.GetReportParts(0, '', +this.reportId).subscribe(observer);
+  }
+  getArTableNames(report: any): string {
+    // Get all names except the first one
+    return report.reportDetails.slice(1).map((detail: any) => detail.ArTableName).join(', ');
+  }
+  getReportYear(report: any): string {
+    // Find the detail that includes "years" in EnTableName
+    const yearDetail = report.reportDetails.find((detail: any) => detail.EnTableName && detail.EnTableName.toLowerCase().includes("years"));
+
+    // If found, return the appropriate year or a default message
+    return yearDetail ? yearDetail.year : 'غير محدد'; // Replace 'year' with the actual property that holds the year if different
   }
   getUniqueActivities(fields: any[]): any[] {
     const activities = fields
@@ -275,7 +302,7 @@ export class ReportContentsComponent implements OnInit {
     );
   }
   filterActivitiesRep() {
-    this.filteredTables = this.tablesRep.filter(code =>
+    this.filteredActivities = this.activities.filter(code =>
       code.arName.includes(this.searchActivityTerm)
     );
   }
@@ -913,7 +940,7 @@ export class ReportContentsComponent implements OnInit {
   }
   saveReport() {
     if (this.tables[0].enTableName == 'TablesReport') {
-      if (this.tables[0].fields.length == 0 || this.tables[0].fields.length > 1) {
+      if (this.searchTerm == '' || this.searchTerm == null) {
         Swal.fire({
           icon: 'error',
           title: 'يجب اختيار جدول فلتر واحد',
@@ -925,7 +952,7 @@ export class ReportContentsComponent implements OnInit {
     }
     if (this.tables.length > 1) {
       if (this.tables[1].enTableName == 'Years') {
-        if (this.tables[1].fields.length == 0 || this.tables[1].fields.length > 1) {
+        if (this.searchYearTerm == '' || this.searchYearTerm == null) {
           Swal.fire({
             icon: 'error',
             title: 'يجب اختيار سنة واحدة',
@@ -957,6 +984,7 @@ export class ReportContentsComponent implements OnInit {
       });
       return;
     }
+    this.report.reportDetails = JSON.stringify(this.tables);
 
     const observer = {
       next: (res: any) => {
@@ -969,7 +997,8 @@ export class ReportContentsComponent implements OnInit {
           seconedTable: '',
           withChart: false,  // default to false
           chartType: 0,      // default chart type
-          reportId: 0        // default ID
+          reportId: 0,
+          reportDetails: ''       // default ID
         };
         this.GetReports();
         Swal.fire({
@@ -1179,6 +1208,24 @@ export class ReportContentsComponent implements OnInit {
   }
   createFormContentQuery(tables: ITableDto[]): string {
     let query = '';
+
+    if (tables[0].fields.length == 0) {
+      const tableField: ITableFieldDto = {
+        name: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.arName || '',
+        dataType: null,
+        filter: null, // Initialize as null or a valid default value
+        value: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.Id || '' // Initialize value as needed
+      };
+      tables[0].fields[0] = tableField;
+    }
+    if (tables[1].fields.length == 0) {
+      const tableField: ITableFieldDto = {
+        name: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.arName || '',
+        dataType: null,
+        filter: null, // Initialize as null or a valid default value
+        value: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.id || '' // Initialize value as needed
+      };
+    }
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1188,7 +1235,7 @@ export class ReportContentsComponent implements OnInit {
         query = this.companyFilterQuery(tables, 1);
       }
       else if (tables[2].enTableName == 'SectorsRep') {
-        query = this.sectorFilterQuery(tables,1);
+        query = this.sectorFilterQuery(tables, 1);
       }
       else if (tables[2].enTableName == 'Countries') {
         query = this.countryFilterQuery(tables);
@@ -1197,17 +1244,11 @@ export class ReportContentsComponent implements OnInit {
     }
     else {
       this.report.seconedTable = tables[1].enTableName;
-      query = `SELECT f.reviewYear,JSON_VALUE(j.value, '$.arName') AS arName,COALESCE(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT), 0) AS firstCode FROM forms f INNER JOIN Tables t ON t.formId = f.id INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN codes ON fc.codeId = codes.id INNER JOIN CompanyForms cf ON f.id = cf.formId INNER JOIN companies c ON cf.companyId = c.id INNER JOIN formDatas fd ON fd.UserId = c.UserId CROSS APPLY OPENJSON(fd.Data) AS j`; // or any other filters
+      query = `SELECT f.reviewYear,JSON_VALUE(j.value, '$.arName') AS arName,JSON_VALUE(j.value, '$.codes[0]')  AS totalFirstCode FROM forms f INNER JOIN Tables t ON t.formId = f.id INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN codes ON fc.codeId = codes.id INNER JOIN CompanyForms cf ON f.id = cf.formId INNER JOIN companies c ON cf.companyId = c.id INNER JOIN formDatas fd ON fd.UserId = c.UserId CROSS APPLY OPENJSON(fd.Data) AS j`; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            // Append condition to whereClause
-            whereClause += ` WHERE codes.arName = N'الملكية العادية للاسهم فى شركتك(%من الاجمالى)' AND t.IsDeleted IS NULL AND t.IsActive = 1 AND JSON_VALUE(j.value, '$.arName') = N'${field.name}' and (fc.IsDeleted is null or fc.IsDeleted = 0)`;
-          }
-        });
+      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
+        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) AND (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL)`;
       }
 
       // Handle conditions based on tables[1] (Years)
@@ -1225,7 +1266,7 @@ export class ReportContentsComponent implements OnInit {
         }
       }
       // Final query with WHERE clause
-      let group = ` GROUP BY JSON_VALUE(j.value, '$.arName'),COALESCE(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT), 0),f.reviewyear`
+      let group = ` GROUP BY f.reviewYear, JSON_VALUE(j.value, '$.arName'),JSON_VALUE(j.value, '$.codes[0]') `
       query += whereClause + group;
       return query;
     }
@@ -1250,38 +1291,42 @@ export class ReportContentsComponent implements OnInit {
     }
     else {
       this.report.seconedTable = tables[1].enTableName;
-      if (tables[0].fields[0].dataType == '0')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,SUM(CAST(JSON_VALUE(c.value, '$.codes[4]') AS INT)) AS totalCodeValue5, t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3, t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue2,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') {
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,t.period as tablePeriod`;
-        for (let i = 0; i < Number(tables[0].fields[0].filter); i++) {
-          query += `,SUM(CAST(JSON_VALUE(c.value, '$.codes[${i}]') AS INT)) AS totalCodeValue${i + 1}`
-        }
-        query += `,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+      debugger
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
       }
+      debugger
+      if (tables[0].fields[0].dataType == '0')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '1')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '2')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '3')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '4')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5') 
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period as tablePeriod FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`;
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            const condition = `t.arName = N'${field.name}'`;
-
-            // Append condition to whereClause
-            whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
-          }
-        });
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL)`;
+        }
       }
-
       // Handle conditions based on tables[1] (Years)
       if (tables.length > 1 && tables[1].enTableName == 'Years') {
         if (tables[1].fields && tables[1].fields.length > 0) {
@@ -1297,8 +1342,9 @@ export class ReportContentsComponent implements OnInit {
         }
       }
       // Final query with WHERE clause
-      let group = ` GROUP BY f.reviewYear,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
-      query += whereClause + group;
+      // let group = ` GROUP BY f.reviewYear, f.arName, t.arName,t.type;`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
   }
@@ -1306,17 +1352,11 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,ac.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.code FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT f.reviewYear,ac.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.code FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            // Append condition to whereClause
-            whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${field.name}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)`;
-          }
-        });
+      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
+        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) and (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (co.IsDeleted != 1 OR co.IsDeleted IS NULL) `;
       }
 
       // Handle conditions based on tables[1] (Years)
@@ -1339,56 +1379,69 @@ export class ReportContentsComponent implements OnInit {
           const activityConditions: string[] = tables[2].fields
             .filter(field => field.name)
             .map(field => `ac.arName = N'${field.name}'`);
-          
+
           // Join all activity conditions with OR
           const combinedActivityCondition = activityConditions.length > 0 ? `(${activityConditions.join(" OR ")})` : "";
-      
+
           // Append to whereClause
           if (combinedActivityCondition) {
             whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
           }
         }
       }
-      
+
       // Final query with WHERE clause
       let group = ` GROUP BY ac.arName,JSON_VALUE(j.value, '$.arName'),ac.code,f.reviewyear`
       query += whereClause + group;
       return query;
     }
     else {
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
+      }
       let query = ''
       if (tables[0].fields[0].dataType == '0')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,SUM(CAST(JSON_VALUE(c.value, '$.codes[4]') AS INT)) AS totalCodeValue5,t.type As tableType,ac.arName as activity FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3, t.type As tableType,ac.arName as activity FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,t.type As tableType,ac.arName as activity FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue2,t.type As tableType,ac.arName as activity FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,t.type As tableType,ac.arName as activity FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') {
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,t.period as tablePeriod,ac.arName as activity`;
-        for (let i = 0; i < Number(tables[0].fields[0].filter); i++) {
-          query += `,SUM(CAST(JSON_VALUE(c.value, '$.codes[${i}]') AS INT)) AS totalCodeValue${i + 1}`
-        }
-        query += `,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      }
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5') 
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
+      // if (tables[0].fields && tables[0].fields.length > 0) {
+      //   tables[0].fields.forEach((field, fieldIndex) => {
+      //     if (field.name) {
+      //       // Build the condition for arName
+      //       const condition = `t.arName = N'${field.name}'`;
+
+      //       // Append condition to whereClause
+      //       whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
+      //     }
+      //   });
+      // }
       if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            const condition = `t.arName = N'${field.name}'`;
-
-            // Append condition to whereClause
-            whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
-          }
-        });
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`;
+        }
       }
-
       // Handle conditions based on tables[1] (Years)
       if (tables.length > 1 && tables[1].enTableName == 'Years') {
         if (tables[1].fields && tables[1].fields.length > 0) {
@@ -1418,8 +1471,9 @@ export class ReportContentsComponent implements OnInit {
         whereClause += `${whereActivity})`;
       }
       // Final query with WHERE clause
-      let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
-      query += whereClause + group;
+      // let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
   }
@@ -1427,17 +1481,11 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,co.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.arName as activityName,ac.code as activityCode FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT f.reviewYear,co.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.arName as activityName,ac.code as activityCode FROM forms f INNER JOIN tables t ON t.formId = f.id  INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            // Append condition to whereClause
-            whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${field.name}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)`;
-          }
-        });
+      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
+        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)  AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL)`;
       }
 
       // Handle conditions based on tables[1] (Years)
@@ -1461,56 +1509,69 @@ export class ReportContentsComponent implements OnInit {
           const companyConditions: string[] = tables[2].fields
             .filter(field => field.name)  // Only include fields with a name
             .map(field => `co.arName = N'${field.name}'`);
-      
+
           // Join all conditions with OR and wrap in parentheses for clarity
           const combinedCompanyCondition = companyConditions.length > 0 ? `(${companyConditions.join(" OR ")})` : "";
-      
+
           // Append the combined condition to whereClause
           if (combinedCompanyCondition) {
             whereClause += whereClause ? ` and ${combinedCompanyCondition}` : ` WHERE ${combinedCompanyCondition}`;
           }
         }
       }
-      
+
       // Final query with WHERE clause
       let group = ` GROUP BY JSON_VALUE(j.value, '$.arName'),co.arName,f.reviewyear,ac.arName,ac.code`
       query += whereClause + group;
       return query;
     }
     else {
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
+      }
       let query = ''
       if (tables[0].fields[0].dataType == '0')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,SUM(CAST(JSON_VALUE(c.value, '$.codes[4]') AS INT)) AS totalCodeValue5,t.type As tableType,co.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3, t.type As tableType,co.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,t.type As tableType,co.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue2,t.type As tableType,co.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,t.type As tableType,co.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') {
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,t.period as tablePeriod,co.arName as companyName`;
-        for (let i = 0; i < Number(tables[0].fields[0].filter); i++) {
-          query += `,SUM(CAST(JSON_VALUE(c.value, '$.codes[${i}]') AS INT)) AS totalCodeValue${i + 1}`
-        }
-        query += `,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      }
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5') 
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
+      // if (tables[0].fields && tables[0].fields.length > 0) {
+      //   tables[0].fields.forEach((field, fieldIndex) => {
+      //     if (field.name) {
+      //       // Build the condition for arName
+      //       const condition = `t.arName = N'${field.name}'`;
+
+      //       // Append condition to whereClause
+      //       whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
+      //     }
+      //   });
+      // }
       if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            const condition = `t.arName = N'${field.name}'`;
-
-            // Append condition to whereClause
-            whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
-          }
-        });
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`;
+        }
       }
-
       // Handle conditions based on tables[1] (Years)
       if (tables.length > 1 && tables[1].enTableName == 'Years') {
         if (tables[1].fields && tables[1].fields.length > 0) {
@@ -1530,7 +1591,7 @@ export class ReportContentsComponent implements OnInit {
         tables[2].fields.forEach((field, fieldIndex) => {
           if (field.name) {
             // Add the condition for f.reviewYear
-            const companyCondition = `co.arName = N'${field.name}'`;
+            const companyCondition = `c.arName = N'${field.name}'`;
 
 
             whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;
@@ -1540,8 +1601,9 @@ export class ReportContentsComponent implements OnInit {
         whereClause += `${whereCompany})`;
       }
       // Final query with WHERE clause
-      let group = ` GROUP BY f.reviewYear,co.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
-      query += whereClause + group;
+      // let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
   }
@@ -1549,17 +1611,11 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,s.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,s.code FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on g.sectionId = sec.id inner join sectors s on s.id = sec.sectorId  CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT f.reviewYear,s.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,s.code FROM forms f INNER JOIN tables t ON t.formId = f.id  INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on g.sectionId = sec.id inner join sectors s on s.id = sec.sectorId  CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            // Append condition to whereClause
-            whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${field.name}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)`;
-          }
-        });
+      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
+        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)  AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL)`;
       }
 
       // Handle conditions based on tables[1] (Years)
@@ -1582,56 +1638,69 @@ export class ReportContentsComponent implements OnInit {
           const sectorConditions: string[] = tables[2].fields
             .filter(field => field.name)  // Only include fields with a name
             .map(field => `s.arName = N'${field.name}'`);
-      
+
           // Join all conditions with OR and wrap in parentheses for clarity
           const combinedSectorCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
-      
+
           // Append the combined condition to whereClause
           if (combinedSectorCondition) {
             whereClause += whereClause ? ` and ${combinedSectorCondition}` : ` WHERE ${combinedSectorCondition}`;
           }
         }
       }
-      
+
       // Final query with WHERE clause
       let group = ` GROUP BY s.arName,s.code,f.reviewyear,JSON_VALUE(j.value, '$.arName')`
       query += whereClause + group;
       return query;
     }
     else {
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
+      }
       let query = ''
       if (tables[0].fields[0].dataType == '0')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,SUM(CAST(JSON_VALUE(c.value, '$.codes[4]') AS INT)) AS totalCodeValue5,t.type As tableType,s.arName as companyName FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id  inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3, t.type As tableType,s.arName as sector FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,t.type As tableType,s.arName as sector FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue2,t.type As tableType,s.arName as sector FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,SUM(CAST(JSON_VALUE(c.value, '$.codes[0]') AS INT)) AS totalCodeValue1,SUM(CAST(JSON_VALUE(c.value, '$.codes[1]') AS INT)) AS totalCodeValue2,SUM(CAST(JSON_VALUE(c.value, '$.codes[2]') AS INT)) AS totalCodeValue3,SUM(CAST(JSON_VALUE(c.value, '$.codes[3]') AS INT)) AS totalCodeValue4,t.type As tableType,s.arName as sector FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') {
-        query = `SELECT f.reviewYear,JSON_VALUE(c.value, '$.TableArName') AS TableArName,f.arName as formName,JSON_VALUE(c.value, '$.arName') AS arName,JSON_VALUE(c.value, '$.questionId') AS questionId,t.period as tablePeriod,s.arName as sector`;
-        for (let i = 0; i < Number(tables[0].fields[0].filter); i++) {
-          query += `,SUM(CAST(JSON_VALUE(c.value, '$.codes[${i}]') AS INT)) AS totalCodeValue${i + 1}`
-        }
-        query += `,t.type As tableType FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf on fd.FormId = cf.formId inner join companies co on cf.companyid = co.id inner join activities ac on co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on sec.id = g.sectionId Inner join sectors s on s.id = sec.sectorid CROSS APPLY OPENJSON(fd.Data) AS c`; // or any other filters
-      }
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5') 
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
+      // if (tables[0].fields && tables[0].fields.length > 0) {
+      //   tables[0].fields.forEach((field, fieldIndex) => {
+      //     if (field.name) {
+      //       // Build the condition for arName
+      //       const condition = `t.arName = N'${field.name}'`;
+
+      //       // Append condition to whereClause
+      //       whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
+      //     }
+      //   });
+      // }
       if (tables[0].fields && tables[0].fields.length > 0) {
-        tables[0].fields.forEach((field, fieldIndex) => {
-          if (field.name) {
-            // Build the condition for arName
-            const condition = `t.arName = N'${field.name}'`;
-
-            // Append condition to whereClause
-            whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
-          }
-        });
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+        }
       }
-
       // Handle conditions based on tables[1] (Years)
       if (tables.length > 1 && tables[1].enTableName == 'Years') {
         if (tables[1].fields && tables[1].fields.length > 0) {
@@ -1647,22 +1716,23 @@ export class ReportContentsComponent implements OnInit {
         }
       }
       if (tables[2].fields && tables[2].fields.length > 0) {
-        let whereSector = '';
+        let whereCompany = '';
         tables[2].fields.forEach((field, fieldIndex) => {
           if (field.name) {
             // Add the condition for f.reviewYear
-            const sectorCondition = `s.arName = N'${field.name}'`;
+            const companyCondition = `s.arName = N'${field.name}'`;
 
 
-            whereSector += whereSector ? ` or ${sectorCondition}` : ` AND (${sectorCondition}`;
+            whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;
             // Append this to the whereClause as well
           }
         });
-        whereClause += `${whereSector})`;
+        whereClause += `${whereCompany})`;
       }
       // Final query with WHERE clause
-      let group = ` GROUP BY f.reviewYear,s.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
-      query += whereClause + group;
+      // let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
   }

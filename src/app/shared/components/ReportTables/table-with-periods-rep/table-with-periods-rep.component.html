@@ -15,10 +15,10 @@
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields" scope="col">
                             <th scope="col"></th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
                             <td style="text-align: center;" *ngFor="let year of years;let i = index">
-                                {{field[i+5].value}}</td>
+                                {{field[i+9].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,15 +33,15 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields;let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
+                            <th *ngIf="i === 0 || report.fields[i][2].value !== report.fields[i-1][2].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[2].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
+                                {{field[2].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
                             <td style="text-align: center;" *ngFor="let year of years;let i = index">
-                                {{field[i+7].value}}</td>
+                                {{field[i+10].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,15 +56,15 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields;let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
+                            <th *ngIf="i === 0 || report.fields[i][2].value !== report.fields[i-1][2].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[2].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
+                                {{field[2].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
                             <td style="text-align: center;" *ngFor="let year of years;let i = index">
-                                {{field[i+7].value}}</td>
+                                {{field[i+10].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -79,15 +79,15 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields;let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
+                            <th *ngIf="i === 0 || report.fields[i][2].value !== report.fields[i-1][2].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[2].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
+                                {{field[2].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
                             <td style="text-align: center;" *ngFor="let year of years;let i = index">
-                                {{field[i+7].value}}</td>
+                                {{field[i+10].value}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -39,6 +39,7 @@ export interface IAddReportPartDto{
     withChart:boolean,
     reportType:string,
     seconedTable:string,
+    reportDetails:string,
     chartType:number,
     reportId:number
 }

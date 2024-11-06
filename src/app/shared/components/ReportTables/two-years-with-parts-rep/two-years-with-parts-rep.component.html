@@ -32,12 +32,12 @@
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields" scope="col">
                             <th scope="col"></th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[6].value}}</td>
-                            <td style="text-align: center;">{{field[7].value}}</td>
-                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                            <td style="text-align: center;">{{field[3].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -69,17 +69,17 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][10].value !== report.fields[i-1][10].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[10].value)"
+                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[10].value}}
+                                {{field[6].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[6].value}}</td>
-                            <td style="text-align: center;">{{field[7].value}}</td>
-                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                            <td style="text-align: center;">{{field[3].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -111,17 +111,17 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][10].value !== report.fields[i-1][10].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[10].value)"
+                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[10].value}}
+                                {{field[6].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[6].value}}</td>
-                            <td style="text-align: center;">{{field[7].value}}</td>
-                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                            <td style="text-align: center;">{{field[3].value}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -153,17 +153,17 @@
                     </thead>
                     <tbody>
                         <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][10].value !== report.fields[i-1][10].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[10].value)"
+                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
                                 style="vertical-align: middle; text-align: center;">
-                                {{field[10].value}}
+                                {{field[6].value}}
                             </th>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
                             <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[6].value}}</td>
-                            <td style="text-align: center;">{{field[7].value}}</td>
-                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                            <td style="text-align: center;">{{field[3].value}}</td>
                         </tr>
                     </tbody>
                 </table>

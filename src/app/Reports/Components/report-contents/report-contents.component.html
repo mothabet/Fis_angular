@@ -33,7 +33,7 @@
 
             <div class="d-flex flex-grow-1 gap-1 btns-group">
 
-                <button type="button" class="btn btn-add add-report" data-bs-toggle="modal"
+                <button (click)="onTableSelect()" type="button" class="btn btn-add add-report" data-bs-toggle="modal"
                     data-bs-target="#addReportDetails">
                     <i class="fa-solid fa-plus mx-1"></i>
                     إنشاء تفاصيل التقرير
@@ -52,11 +52,29 @@
         <div class="header d-flex justify-content-between align-items-center" style="width: 100%;">
             <div class="mb-2 d-flex flex-column justify-content-center align-items-center text-center"
                 style="width: 90%;">
-                <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
-                <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات
-                </div>
+                <!-- <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
+                <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات -->
+                <!-- </div> -->
                 <div class="mb-2">{{report.part}}</div>
-                <div class="mb-2" *ngIf="report.seconedTable != 'Years' && report.reportType == 'FormContent'">
+                <ng-container *ngIf="report.reportType == 'FormContent' || report.reportType == 'TablesReport'">
+                    <div class="mb-2" *ngFor="let detail of report.reportDetails">
+                        {{ detail.ArTableName }} / (<span *ngFor="let field of detail.Fields"> {{field.name}} </span>)
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="report.reportType !== 'FormContent' && report.reportType !== 'TablesReport'">
+                    <div *ngIf="report.reportDetails.length > 0">
+                        <span>تقرير عن ({{ report.reportDetails[0].ArTableName }})</span>
+                        <div class="mb-2" *ngIf="report.reportDetails.length > 1">
+                            بحث ب (<span>{{ getArTableNames(report) }}</span>)
+                        </div>
+                        <div class="mb-2" *ngIf="getReportYear(report)">
+                            السنة (<span>{{ getReportYear(report) }}</span>)
+                        </div>
+                    </div>
+                </ng-container>
+
+
+                <!-- <div class="mb-2" *ngIf="report.fields.length> 0 && report.seconedTable != 'Years' && report.reportType == 'FormContent'">
                     ({{(report.fields[0][3]).value }})
                 </div>
                 <div class="mb-2" *ngIf="report.fields.length >0 && report.reportType != 'FormContent'">جدول ({{
@@ -97,7 +115,7 @@
 
                 <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep' && report.reportType == 'FormContent'">
                     بحث بالقطاعات
-                </div>
+                </div> -->
             </div>
 
             <div class="btns d-flex">
@@ -110,7 +128,7 @@
             </div>
         </div>
         <div>
-            <div class="table-responsive company-table" style="max-height: 300px; overflow-y: auto;">
+            <div class="table-responsive company-table" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-borderless scrollable-table"
                     *ngIf="report.reportType != 'TablesReport' && report.reportType != 'FormContent'">
                     <thead>
@@ -128,30 +146,33 @@
                     </tbody>
                 </table>
                 <app-table-with-trans-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][8]?.value == 1"></app-table-with-trans-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][9]?.value == 1 || report.fields[0][10]?.value == 1) && report.fields[0][11]?.value == 'withTrans'"></app-table-with-trans-rep>
                 <app-quarter-table-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][10]?.value == 0"></app-quarter-table-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][10]?.value == 0 || report.fields[0][11]?.value == 0) && report.fields[0][12]?.value == 'quarter'"></app-quarter-table-rep>
                 <app-table-without-trans-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][7]?.value == 2"></app-table-without-trans-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][8]?.value == 2 || report.fields[0][9]?.value == 2) && report.fields[0][10]?.value == 'withoutTrans'"></app-table-without-trans-rep>
                 <app-one-year-with-parts-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][7]?.value == 3"></app-one-year-with-parts-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][7]?.value == 3 || report.fields[0][8]?.value == 3) && report.fields[0][9]?.value == 'yearWithParts'"></app-one-year-with-parts-rep>
                 <app-two-years-with-parts-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][9]?.value == 4"></app-two-years-with-parts-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][10]?.value == 4 || report.fields[0][11]?.value == 4) && report.fields[0][12]?.value == 'twoYearsWithParts'"></app-two-years-with-parts-rep>
                 <app-table-with-periods-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && report.fields[0][5]?.value == 5"></app-table-with-periods-rep>
+                    *ngIf="report.reportType == 'TablesReport' && (report.fields[0][6]?.value == 5 || report.fields[0][7]?.value == 5) && (report.fields[0][8]?.value == 'period' || report.fields[0][9]?.value == 'period')"></app-table-with-periods-rep>
+                <app-percentage-without-trans-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][9]?.value == 6 || report.fields[0][10]?.value == 6) && report.fields[0][11]?.value == 'percentage'"></app-percentage-without-trans-rep>
+                <app-one-year-with-parts-and-total-rep [report]="report"
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][10]?.value == 7 || report.fields[0][11]?.value == 7) && report.fields[0][12]?.value == 'withTotal'"></app-one-year-with-parts-and-total-rep>
+
                 <app-no-rep-data [report]="report" *ngIf="report.fields.length == 0"></app-no-rep-data>
                 <table class="table table-borderless scrollable-table"
                     *ngIf="report.reportType == 'FormContent' && report.fields.length > 0">
                     <thead>
                         <tr class="t-header">
-                            <th style="text-align: center;" scope="col">#</th>
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable != 'Years'">#</th>
                             <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'Years'">
                                 المؤشر</th>
-                            <th style="text-align: center;" scope="col"
-                                *ngIf="report.seconedTable == 'ActivitiesRep'">
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'ActivitiesRep'">
                                 كود النشاط </th>
-                            <th style="text-align: center;" scope="col"
-                                *ngIf="report.seconedTable == 'SectorsRep'">
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'SectorsRep'">
                                 كود القطاع </th>
                             <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'ActivitiesRep'">
                                 النشاط</th>
@@ -168,7 +189,7 @@
                                 {{report.fields[0][0].value}}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="report.seconedTable != 'Years'">
                         <tr *ngFor="let row of report.fields;let i = index ">
                             <td style="text-align: center;" scope="col">{{i+1}}</td>
                             <td style="text-align: center;"
@@ -182,7 +203,14 @@
                             <td style="text-align: center;">{{row[2].value}}</td>
                         </tr>
                     </tbody>
-                    <tfoot>
+                    <tbody *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
+                        <tr>
+                            <td style="text-align: center;">
+                                {{report.fields[0][1].value}}</td>
+                            <td style="text-align: center;">{{ getTotal(report) }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="report.seconedTable != 'Years'">
                         <tr>
                             <td colspan="3" style="text-align: center;"
                                 *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
@@ -237,7 +265,7 @@
                     <div class="d-flex overflow-auto" *ngIf="tables && tables.length > 0"
                         style="gap: 15px; white-space: nowrap; padding: 15px;">
                         <!-- Card 1 -->
-                        <ng-container *ngFor="let table of tables">
+                        <ng-container *ngFor="let table of tables;let i= index">
                             <div class="card" *ngIf="table.enTableName != 'Years'"
                                 style="min-width: 490px; border: 1px solid #ccc;max-height: 280px;min-height: 280px;">
                                 <div class="modal-header pb-0">
@@ -256,8 +284,11 @@
                                             <!-- Label linked to the checkbox, with top margin for alignment -->
                                             <label for="selectAllFieldsCheckbox"
                                                 style="margin-top: 5px; position: static;">اختر جميع الحقول</label>
+                                            <button class="icon" *ngIf="i!=0" (click)="removeTable(table)"
+                                                style="border: none; background-color: transparent">
+                                                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                                            </button>
                                         </div>
-
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <!-- Select input aligned next to the checkbox with more space -->
@@ -320,23 +351,17 @@
                                             </select>
                                             <label for="inputField">الفلتر</label>
                                         </div>
-                                        <h5 style="margin-right: 10px;">اختر الفلتر</h5>
+                                        <p style="margin-right: 10px;font-size: 15px;margin-top: 10px;">اختر الفلتر</p>
                                     </div>
                                     <div class="field-container"
                                         style="padding-left: 5px; padding-top: 5px; max-height: 145px;">
                                         <div class="field-item" *ngFor="let field of table.fields; let i = index">
                                             <!-- Bind field properties to the input element -->
-                                            <select style="width: 177px;margin-left: 10px;"
-                                                *ngIf="field.dataType === 'bool'" class="form-select add-report-select"
-                                                [(ngModel)]="field.value" [ngModelOptions]="{standalone: true}">
-                                                <option value="" disabled>اختر --</option>
-                                                <option value="1">نعم</option>
-                                                <option value="0">لا</option>
-                                            </select>
-                                            <input *ngIf="field.dataType != 'bool'" type="text" class="field-input"
-                                                [(ngModel)]="field.value" name="field-{{ i }}">
-                                            <select style="width: 120px;" class="form-select add-report-select"
-                                                [(ngModel)]="field.filter" [ngModelOptions]="{standalone: true}">
+                                            <span style="text-align: left;margin-left: 60px;"
+                                                class="field-text col-2">{{field.name}}</span>
+                                            <select style="width: 120px;margin-left: 7px;"
+                                                class="form-select add-report-select" [(ngModel)]="field.filter"
+                                                [ngModelOptions]="{standalone: true}">
                                                 <option value="" disabled>اختر الفلتر</option>
                                                 <ng-container
                                                     *ngIf="field.dataType !== 'String' && field.dataType != 'bool'">
@@ -353,100 +378,97 @@
                                                     </option>
                                                 </ng-container>
                                             </select>
-                                            <span style="text-align: left;"
-                                                class="field-text col-2">{{field.name}}</span>
+                                            <select style="width: 177px;margin-left: 10px;"
+                                                *ngIf="field.dataType === 'bool'" class="form-select add-report-select"
+                                                [(ngModel)]="field.value" [ngModelOptions]="{standalone: true}">
+                                                <option value="" disabled>اختر --</option>
+                                                <option value="1">نعم</option>
+                                                <option value="0">لا</option>
+                                            </select>
+                                            <input *ngIf="field.dataType != 'bool'" type="text" class="field-input"
+                                                [(ngModel)]="field.value" name="field-{{ i }}">
+                                            <button class="icon" (click)="removeFilterRow(table,field)"
+                                                style="border: none; background-color: transparent">
+                                                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                                            </button>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body" *ngIf="table.enTableName == 'FormContent' || table.enTableName == 'TablesReport'  
                                 || table.enTableName == 'ActivitiesRep' || table.enTableName == 'SectorsRep' 
                                 || table.enTableName == 'CompaniesRep' || table.enTableName == 'Countries'">
-                                    <div style="width: 100%;" class="form-group col-sm-6 mb-2">
+                                    <button *ngIf="i!=0" class="icon" (click)="removeTable(table)"
+                                        style="border: none; background-color: transparent">
+                                        <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                                    </button>
+                                    <div style="width: 100%; margin-top: 15px !important"
+                                        class="form-group col-sm-6 mb-2">
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'FormContent'">
-                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                                placeholder="Search..." [(ngModel)]="searchFormContentTerm"
-                                                name="searchFormContentTerm" (click)="toggleFormContentDropdown()"
-                                                (input)="filterSubCodes()" />
-                                            <ul class="dropdown-menu" [class.show]="isFormContentDropdownOpen"
-                                                style="padding: 0 9px; max-height: 120px;width: 100%;text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let code of filteredCodes"
-                                                    (click)="selectCode($event, tables[0],code)">
-                                                    {{code.arName}}
-                                                </li>
-                                            </ul>
-                                            <div class="field-container"
-                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                                <div class="field-item"
-                                                    *ngFor="let content of tables[0].fields; let i = index">
-                                                    <!-- Bind field properties to the input element -->
-                                                    <span style="text-align: left;"
-                                                        class="field-text col-2">{{content.name}}</span>
+                                            <div style="height: 85px !important;">
+                                                <input type="text" id="searchableDropdown"
+                                                    class="form-control input-modal" placeholder="Search..."
+                                                    [(ngModel)]="searchFormContentTerm" name="searchFormContentTerm"
+                                                    (click)="toggleFormContentDropdown()" (input)="filterSubCodes()" />
+                                                <ul class="dropdown-menu" [class.show]="isFormContentDropdownOpen"
+                                                    style="padding: 0 9px; max-height: 120px;width: 100%;text-align: right;">
+                                                    <li class="dropdown-item" *ngFor="let code of filteredCodes"
+                                                        (click)="selectCode($event, tables[0],code)">
+                                                        {{code.arName}}
+                                                    </li>
+                                                </ul>
+                                                <div class="field-container"
+                                                    style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
                                                 </div>
+                                                <label for="inputField">اختر المؤشر</label>
                                             </div>
-                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                                placeholder="Search..." [(ngModel)]="searchYearTerm"
-                                                name="searchYearTerm" (click)="toggleYearsDropdown()"
-                                                (input)="filterYearsRep()" />
-                                            <ul class="dropdown-menu" [class.show]="isYearsDropdownOpen"
-                                                style="padding: 0 9px; max-height: 120px;width: 100%;text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let year of years"
-                                                    (click)="selectYearRep($event, tables[1],year)">
-                                                    {{year.arName}}
-                                                </li>
-                                            </ul>
-                                            <div class="field-container"
-                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                                <div class="field-item"
-                                                    *ngFor="let content of tables[1].fields; let i = index">
-                                                    <!-- Bind field properties to the input element -->
-                                                    <span style="text-align: left;"
-                                                        class="field-text col-2">{{content.name}}</span>
-                                                </div>
+                                            <div>
+                                                <input type="text" id="searchableDropdown"
+                                                    class="form-control input-modal" placeholder="Search..."
+                                                    [(ngModel)]="searchYearTerm" name="searchYearTerm"
+                                                    (click)="toggleYearsDropdown()" (input)="filterYearsRep()" />
+                                                <ul class="dropdown-menu" [class.show]="isYearsDropdownOpen"
+                                                    style="padding: 0 9px; max-height: 100px;width: 100%;text-align: right;">
+                                                    <li class="dropdown-item" *ngFor="let year of years"
+                                                        (click)="selectYearRep($event, tables[1],year)">
+                                                        {{year.arName}}
+                                                    </li>
+                                                </ul>
+                                                <label style="top: 85px;" for="inputField">اختر السنة</label>
                                             </div>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'TablesReport'">
-                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                                placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm"
-                                                (click)="toggleDropdown()" (input)="filterTablesRep()" />
-                                            <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                            <div style="height: 85px !important;">
+                                                <input type="text" id="searchableDropdown"
+                                                    class="form-control input-modal" placeholder="Search..."
+                                                    [(ngModel)]="searchTerm" name="searchTerm"
+                                                    (click)="toggleDropdown()" (input)="filterTablesRep()" />
+                                                <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let tableRep of filteredTables"
-                                                    (click)="selectTable($event, tables[0],tableRep)">
-                                                    {{tableRep.arName}}
-                                                </li>
-                                            </ul>
-                                            <div class="field-container"
-                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                                <div class="field-item"
-                                                    *ngFor="let content of tables[0].fields; let i = index">
-                                                    <!-- Bind field properties to the input element -->
-                                                    <span style="text-align: left;"
-                                                        class="field-text col-2">{{content.name}}</span>
-                                                </div>
+                                                    <li class="dropdown-item" *ngFor="let tableRep of filteredTables"
+                                                        (click)="selectTable($event, tables[0],tableRep)">
+                                                        {{tableRep.arName}}
+                                                    </li>
+                                                </ul>
+                                                <label for="inputField">اختر الجدول</label>
                                             </div>
-                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
-                                                placeholder="Search..." [(ngModel)]="searchYearTerm"
-                                                name="searchYearTerm" (click)="toggleYearsDropdown()"
-                                                (input)="filterYearsRep()" />
-                                            <ul class="dropdown-menu" [class.show]="isYearsDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                            <div>
+                                                <input type="text" id="searchableDropdown"
+                                                    class="form-control input-modal" placeholder="Search..."
+                                                    [(ngModel)]="searchYearTerm" name="searchYearTerm"
+                                                    (click)="toggleYearsDropdown()" (input)="filterYearsRep()" />
+                                                <ul class="dropdown-menu" [class.show]="isYearsDropdownOpen" style="padding: 0 9px; max-height: 100px;
                                       width: 100%;
                                       text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let year of years"
-                                                    (click)="selectYearRep($event, tables[1],year)">
-                                                    {{year.arName}}
-                                                </li>
-                                            </ul>
-                                            <div class="field-container"
-                                                style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
-                                                <div class="field-item"
-                                                    *ngFor="let content of tables[1].fields; let i = index">
-                                                    <!-- Bind field properties to the input element -->
-                                                    <span style="text-align: left;"
-                                                        class="field-text col-2">{{content.name}}</span>
-                                                </div>
+                                                    <li class="dropdown-item" *ngFor="let year of years"
+                                                        (click)="selectYearRep($event, tables[1],year)">
+                                                        {{year.arName}}
+                                                    </li>
+                                                </ul>
+                                                <label style="top: 85px;" for="inputField">اختر السنة</label>
                                             </div>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
@@ -463,6 +485,7 @@
                                                     {{activity.arName}}
                                                 </li>
                                             </ul>
+                                            <label for="inputField">اختر النشاط</label>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'Countries'">
@@ -478,6 +501,7 @@
                                                     {{country.arName}}
                                                 </li>
                                             </ul>
+                                            <label for="inputField">اختر الدولة</label>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'SectorsRep'">
@@ -493,6 +517,7 @@
                                                     {{sector.arName}}
                                                 </li>
                                             </ul>
+                                            <label for="inputField">اختر القطاع</label>
                                         </div>
                                         <div class="dropdown" [class.show]="isDropdownOpen"
                                             *ngIf="table.enTableName == 'CompaniesRep'">
@@ -508,16 +533,20 @@
                                                     {{company.arName}}
                                                 </li>
                                             </ul>
+                                            <label for="inputField">اختر الشركة</label>
                                         </div>
-                                        <label for="inputField">الاسم بالكامل</label>
                                     </div>
                                     <div class="field-container"
                                         *ngIf="tables.length == 3 && table.enTableName !='TablesReport' && table.enTableName !='FormContent'"
                                         style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
                                         <div class="field-item" *ngFor="let content of tables[2].fields; let i = index">
                                             <!-- Bind field properties to the input element -->
-                                            <span style="text-align: left;"
+                                            <span style="text-align: right;min-width: 384px;"
                                                 class="field-text col-2">{{content.name}}</span>
+                                            <button class="icon" (click)="removeFilterRow(table,content)"
+                                                style="border: none; background-color: transparent">
+                                                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
