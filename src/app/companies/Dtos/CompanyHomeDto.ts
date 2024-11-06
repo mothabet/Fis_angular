@@ -38,7 +38,9 @@ export interface ICompany {
     institutionVlaue: string,
     sectorCode: string,
     activityCode: string,
-    subActivityCode: string,
+    subActivityCode: string,   
+    companyEmails: ICompanyEmail[];
+
 }
 export interface ICompaniesPDF {
     activityId: number,

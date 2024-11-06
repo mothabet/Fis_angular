@@ -509,7 +509,7 @@ export class SharedTableWithPeriodComponent {
       for (let i = 0; i < subCode.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         subCode.values[i] = subCode.subCodes.reduce((sum, _subCode) => {
-          debugger
+          
           _subCode.values[_subCode.values.length - 1] = 0
           for (let index = 0; index < _subCode.values.length - 1; index++) {
             _subCode.values[_subCode.values.length - 1] += _subCode.values[index]
@@ -651,7 +651,7 @@ export class SharedTableWithPeriodComponent {
     console.log(formContent)
   }
   changeStatus(status: number, formContent: IGetQuestionDto, level: number, indexFormContent: number = 0) {
-    debugger
+    
     if (level == 1) {
       formContent.values[formContent.values.length-1] = 0;
       for (let index = 0; index < formContent.values.length-1; index++) {

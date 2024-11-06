@@ -54,6 +54,8 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
     { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
     { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)',inputValue: '' , isSelect:false},
+
   ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
@@ -126,10 +128,16 @@ export class SharedWorkDataComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.company = res.Data;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
               item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes("الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ")) {
+
+              item.inputValue = this.company.legalType;
+              item.isSelect = true;
             }
             else if (item.arName.includes('الموقع الإلكتروني : ')) {
 
@@ -141,7 +149,7 @@ export class SharedWorkDataComponent implements OnInit {
             }
             else if (item.arName.includes('البريد الالكترونى : ')) {
 
-              item.inputValue = this.company.email;
+              item.inputValue = this.company.companyEmails[0].Email;
             }
             else if (item.arName.includes('رقم الهاتف : ')) {
 
@@ -156,15 +164,14 @@ export class SharedWorkDataComponent implements OnInit {
               item.inputValue = this.company.mailBox;
             }
             else if (item.arName.includes('الولاية : ')) {
-
-              item.inputValue = this.company.wilayat;
+              item.inputValue = this.company.wilayatId.toString();
               item.isSelect = true;
+
             }
             else if (item.arName.includes('المحافظة : ')) {
 
               item.inputValue = this.company.governoratesId.toString();
               item.isSelect = true;
-              this.GetWilayat(+item.inputValue)
             }
             else if (item.arName.includes('عنوان المنشاة : ')) {
 
@@ -187,6 +194,17 @@ export class SharedWorkDataComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
+          debugger
+          let generalData = localStorage.getItem(`generalData`);
+          if (generalData) {
+            this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            this.workData = this.coverForm.GeneralData.CompanyInfo;
+          }
+          else {
+            this.coverForm.GeneralData = this.generalDataDto;
+            this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
+            localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
+          }
         }
         this.Loader = false;
       },

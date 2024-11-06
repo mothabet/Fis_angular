@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit {
     let res = this.authService.decodedToken(isLoggedIn);
     this.role = res.roles;
     this.id = res.id;
-    if (this.role === "User") {
+    if (this.role === "User"|| this.role==='Researcher') {
       this.GetPermissionByUserId(res);
     }
   }
@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit {
     this.permissionsService.GetPermissionByUserId(res.id).subscribe(observer);
   }
   checkPermission(url: string): boolean {
-    if (this.role === "User") {
+    if (this.role === "User"|| this.role==='Researcher') {
 
       const permissionCheck = this.permissions.find(r => r.enName === url);
       if (permissionCheck && permissionCheck.isName) {

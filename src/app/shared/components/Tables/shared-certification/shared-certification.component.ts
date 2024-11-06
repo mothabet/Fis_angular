@@ -37,7 +37,6 @@ export class SharedCertificationComponent {
             telephoneNo: '',
             dateOfCompletion: '',
           };
-          
           this.coverForm = res.Data;
           this.coverForm.certification = certificationData
           this.GetFormData();

@@ -81,6 +81,9 @@ export class SettingsAuthHomeComponent {
     { arName: 'الأنشطة', enName: "Activities", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
     { arName: 'الدول', enName: "Countries", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
   ];
+  searchTerm: string = '';
+filteredPermissions: any[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     private settingsAuthService: SettingsAuthService,
@@ -95,6 +98,7 @@ export class SettingsAuthHomeComponent {
     // Listen for changes in each isName checkbox
 
   }
+  
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("SettingsAuth").then(permissions => {
       this.permission = permissions;
@@ -165,8 +169,18 @@ export class SettingsAuthHomeComponent {
       email: ['', [Validators.required, Validators.email]],
       permissions: this.formBuilder.array(permissionsFormGroups),
     });
+    this.filteredPermissions = this.permissions.controls;
   }
-
+  filterPermissions() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredPermissions = this.permissions.controls.filter((control, index) => {
+      const arName = this.staticPermissions[index].arName.toLowerCase();
+      var x =  arName.includes(term);
+        return x;
+    });
+    this.filteredPermissions = this.filteredPermissions;
+    
+}
   get permissions(): FormArray {
     return this.settingsAuthForm.get('permissions') as FormArray;
   }
@@ -300,41 +314,52 @@ export class SettingsAuthHomeComponent {
     this.settingsAuthService.GetAllSettingsAuths(page, textSearch).subscribe(observer);
   }
   resetForm(): void {
-    this.settingsAuthForm.reset({
-      userName: '',
-      password: '',
-      arName: '',
-      enName: '',
-      status: '', // Default value for status after reset
-      phone: '',
-      email: ''
-    });
+    const permissionsFormGroups = this.staticPermissions.map(permission =>
+      this.formBuilder.group({
+        arName: [permission.arName, Validators.required],
+        enName: [permission.enName, Validators.required],
+        isName: [true],
+        add: [true],
+        edit: [true],
+        delete: [true],
+        download: [true],
+        connectWithCompany: [true],
+        addCompaniesGroup: [true],
+        copy: [true],
+        Instructions: [true],
+        FormNotes: [true],
+        AddFormNotes: [true],
+        Approve: [true],
+        Complete: [true],
+        Close: [true],
+        Open: [true]
+      })
+    );
 
-    // Reset permissions, but maintain the relationship and arName, enName
-    this.permissions.controls.forEach((group) => {
-      group.patchValue({
-        isName: true, // Reset to false or the initial value
-        add: true,
-        edit: true,
-        delete: true,
-        download: true,
-        connectWithCompany: true,
-        addCompaniesGroup: true,
-        copy: true,
-        Instructions: true,
-        FormNotes: true,
-        AddFormNotes: true,
-        Approve: true,
-        Complete: true,
-        Close: true,
-        Open: true,
-        arName: group.get('arName')?.value, // Keep the existing value
-        enName: group.get('enName')?.value, // Keep the existing value
-      });
+    this.settingsAuthForm = this.formBuilder.group({
+      userName: ['', Validators.required],
+      password: ['', Validators.required],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+      status: ['', Validators.required],
+      phone: [
+        '',
+        [
+          Validators.pattern('^[0-9]*$'),
+          Validators.minLength(8)
+        ]
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      permissions: this.formBuilder.array(permissionsFormGroups),
     });
+    
+    this.filteredPermissions = this.permissions.controls;
+    this.searchTerm = "";
+    // Additional actions
     this.add = true;
     this.generateRandomCredentials();
   }
+  
   showAlert(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
@@ -377,9 +402,36 @@ export class SettingsAuthHomeComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          
           this.settingsAuthDto = res.Data;
           this.settingsAuthDto.phone = this.settingsAuthDto.phone.replace(this.phoneCode.toString(), '');
-
+          if (res.Data.researcherId > 0 && !(this.settingsAuthDto.permissions.length>0)) {
+            this.staticPermissions.forEach(permission=>{
+              const permissionAdd: IGetPermissionDto = {
+                add: true,
+                addCompaniesGroup: true,
+                AddFormNotes: true,
+                Approve: true,
+                arName: permission.arName,
+                Close: true,
+                Complete: true,
+                connectWithCompany: true,
+                copy: true,
+                delete: true,
+                download: true,
+                edit: true,
+                enName: permission.enName,
+                FormNotes: true,
+                id: 0,
+                Instructions: true,
+                isName: true,
+                Open: true,
+                settingsAuthId: this.settingsAuthDto.id
+              }
+              this.settingsAuthDto.permissions.push(permissionAdd);
+            })
+          }
+          
           // Create the FormArray for permissions
           const permissionsFormGroups = this.settingsAuthDto.permissions.map(permission => {
             const group = this.formBuilder.group({
