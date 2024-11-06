@@ -39,49 +39,49 @@ export class ReportContentsComponent implements OnInit {
   wilayatFields: IFieldDto[] = [];
 
   generalDataFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم المنشأة' },
-    { dataType: 'String', name: 'رقم السجل التجارى' },
-    { dataType: 'String', name: 'رقم الترخيص البلدي' },
-    { dataType: 'String', name: 'النشاط الاقتصادى الرئيسى' },
-    { dataType: 'String', name: 'النشاط الثانوى' },
-    { dataType: 'String', name: 'عنوان المنشاة' },
-    { dataType: 'String', name: 'المنطقة' },
-    { dataType: 'String', name: 'الولاية' },
-    { dataType: 'String', name: 'رقم صندوق البريد' },
-    { dataType: 'String', name: 'الرمز البريدى' },
-    { dataType: 'String', name: 'رقم الهاتف' },
-    { dataType: 'String', name: 'رقم الفاكس' },
-    { dataType: 'String', name: 'البريد الالكترونى' },
-    { dataType: 'String', name: 'الموقع الإلكتروني' },
-    { dataType: 'bool', name: 'منشاة فردية' },
-    { dataType: 'bool', name: 'تضامنية' },
-    { dataType: 'bool', name: 'توصية' },
-    { dataType: 'bool', name: 'محاصة' },
-    { dataType: 'bool', name: 'مساهمة ( عامه او مقفله )' },
-    { dataType: 'bool', name: 'محدودة المسؤولية' },
-    { dataType: 'bool', name: 'فرع شركة اجنبية' },
-    { dataType: 'bool', name: 'أخرى (حدد)' },
-    { dataType: 'DateTime', name: 'الفترة او السنه الماليه من' },
-    { dataType: 'DateTime', name: 'الفترة او السنه الماليه إالى' },
+    { dataType: 'String', name: 'اسم المنشأة',arName :'' },
+    { dataType: 'String', name: 'رقم السجل التجارى',arName :'' },
+    { dataType: 'String', name: 'رقم الترخيص البلدي',arName :'' },
+    { dataType: 'String', name: 'النشاط الاقتصادى الرئيسى',arName :'' },
+    { dataType: 'String', name: 'النشاط الثانوى' ,arName :''},
+    { dataType: 'String', name: 'عنوان المنشاة' ,arName :''},
+    { dataType: 'String', name: 'المنطقة',arName :'' },
+    { dataType: 'String', name: 'الولاية',arName :'' },
+    { dataType: 'String', name: 'رقم صندوق البريد',arName :'' },
+    { dataType: 'String', name: 'الرمز البريدى',arName :'' },
+    { dataType: 'String', name: 'رقم الهاتف' ,arName :''},
+    { dataType: 'String', name: 'رقم الفاكس',arName :'' },
+    { dataType: 'String', name: 'البريد الالكترونى',arName :'' },
+    { dataType: 'String', name: 'الموقع الإلكتروني' ,arName :''},
+    { dataType: 'bool', name: 'منشاة فردية',arName :'' },
+    { dataType: 'bool', name: 'تضامنية',arName :'' },
+    { dataType: 'bool', name: 'توصية',arName :'' },
+    { dataType: 'bool', name: 'محاصة' ,arName :''},
+    { dataType: 'bool', name: 'مساهمة ( عامه او مقفله )',arName :'' },
+    { dataType: 'bool', name: 'محدودة المسؤولية',arName :'' },
+    { dataType: 'bool', name: 'فرع شركة اجنبية',arName :'' },
+    { dataType: 'bool', name: 'أخرى (حدد)' ,arName :''},
+    { dataType: 'DateTime', name: 'الفترة او السنه الماليه من' ,arName :''},
+    { dataType: 'DateTime', name: 'الفترة او السنه الماليه إالى' ,arName :''},
   ];
   certificationFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم معبئ الاستمارة' },
-    { dataType: 'String', name: 'رقم الهاتف' },
-    { dataType: 'DateTime', name: 'تاريخ التعبئة' },
+    { dataType: 'String', name: 'اسم معبئ الاستمارة',arName :'' },
+    { dataType: 'String', name: 'رقم الهاتف',arName :'' },
+    { dataType: 'DateTime', name: 'تاريخ التعبئة' ,arName :''},
   ]
   coverFields: IFieldDto[] = [
-    { dataType: 'Int', name: 'رمز النشاط' },
-    { dataType: 'Int', name: 'رقم الاستماره' },
-    { dataType: 'Int', name: 'المرجع. سنة' }
+    { dataType: 'Int', name: 'رمز النشاط',arName :'' },
+    { dataType: 'Int', name: 'رقم الاستماره',arName :'' },
+    { dataType: 'Int', name: 'المرجع. سنة' ,arName :''}
   ]
   quarterCoverFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم مؤسستك' },
-    { dataType: 'String', name: 'الرمز البريدي' },
-    { dataType: 'String', name: 'رقم الاستماره' },
-    { dataType: 'String', name: 'رقم الهاتف' },
-    { dataType: 'String', name: 'رقم الفاكس' },
-    { dataType: 'String', name: 'عنوان البريد الإلكتروني' },
-    { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)' },
+    { dataType: 'String', name: 'اسم مؤسستك' ,arName :''},
+    { dataType: 'String', name: 'الرمز البريدي' ,arName :''},
+    { dataType: 'String', name: 'رقم الاستماره',arName :'' },
+    { dataType: 'String', name: 'رقم الهاتف' ,arName :''},
+    { dataType: 'String', name: 'رقم الفاكس',arName :'' },
+    { dataType: 'String', name: 'عنوان البريد الإلكتروني' ,arName :''},
+    { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)',arName :'' },
   ]
   isDropdownOpen = false;
   isFormContentDropdownOpen = false;
@@ -337,6 +337,7 @@ export class ReportContentsComponent implements OnInit {
     const selectedField = this.codes.find(field => field.arName === code.arName);
     if (selectedField && table) {
       const tableField: ITableFieldDto = {
+        arName:selectedField.arName,
         name: selectedField.arName,
         dataType: null,
         filter: null, // Initialize as null or a valid default value
@@ -359,6 +360,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: selectedField.Type,
           filter: selectedField.period, // Initialize as null or a valid default value
           value: selectedField.Id // Initialize value as needed
@@ -381,6 +383,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
@@ -404,6 +407,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
@@ -427,6 +431,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
@@ -450,6 +455,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
@@ -473,6 +479,7 @@ export class ReportContentsComponent implements OnInit {
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
+          arName: selectedField.arName,
           dataType: null,
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
@@ -516,6 +523,7 @@ export class ReportContentsComponent implements OnInit {
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
+          debugger
           if (res.Data) {
             if (tableType == 1)
               this.companyFields = res.Data
@@ -682,6 +690,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -701,6 +710,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -720,6 +730,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -739,6 +750,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -758,6 +770,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -777,6 +790,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -796,6 +810,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -815,6 +830,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -834,6 +850,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -853,6 +870,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -872,6 +890,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -891,6 +910,7 @@ export class ReportContentsComponent implements OnInit {
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
             name: selectedField.name,
+            arName: selectedField.arName,
             dataType: selectedField.dataType,
             filter: null, // Initialize as null or a valid default value
             value: '' // Initialize value as needed
@@ -900,6 +920,21 @@ export class ReportContentsComponent implements OnInit {
         }
       }
     }
+  }
+  getTranslatedName(fieldName: string,report:any): string {
+    if (report.reportType === 'Companies') {
+      debugger
+      if(this.companyFields.length === 0){
+        this.tableType = 1;
+        this.GetTableFields(1);
+      }
+      const companyField = this.companyFields.find(
+        (companyField: IFieldDto) => companyField.name === fieldName
+      );
+      debugger
+      return companyField ? companyField.arName : '';
+    }
+    return fieldName; // In other report types, just return the field name
   }
   openModal() {
     const modal = document.getElementById('chooseTable');
@@ -1212,6 +1247,7 @@ export class ReportContentsComponent implements OnInit {
     if (tables[0].fields.length == 0) {
       const tableField: ITableFieldDto = {
         name: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.arName || '',
+        arName: '',
         dataType: null,
         filter: null, // Initialize as null or a valid default value
         value: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.Id || '' // Initialize value as needed
@@ -1221,6 +1257,7 @@ export class ReportContentsComponent implements OnInit {
     if (tables[1].fields.length == 0) {
       const tableField: ITableFieldDto = {
         name: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.arName || '',
+        arName: '',
         dataType: null,
         filter: null, // Initialize as null or a valid default value
         value: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.id || '' // Initialize value as needed
@@ -1295,6 +1332,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
+          arName: '',
           dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.type,
           filter: null, // Initialize as null or a valid default value
           value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
@@ -1399,6 +1437,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
+          arName: '',
           dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
           filter: null, // Initialize as null or a valid default value
           value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
@@ -1529,6 +1568,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
+          arName: '',
           dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
           filter: null, // Initialize as null or a valid default value
           value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
@@ -1658,6 +1698,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
+          arName: '',
           dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
           filter: null, // Initialize as null or a valid default value
           value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed

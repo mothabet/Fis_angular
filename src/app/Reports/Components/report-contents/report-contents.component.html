@@ -134,15 +134,20 @@
                     <thead>
                         <tr class="t-header">
                             <th style="text-align: center;" scope="col">#</th>
-                            <th style="text-align: center;" *ngFor="let field of report.fields[0]" scope="col">
-                                {{field.key}}</th>
+                            <ng-container *ngFor="let field of report.fields[0]">
+                                <th style="text-align: center;min-width: 140px" scope="col">
+                                    {{ field.key }}
+                                </th>
+                            </ng-container>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let row of report.fields;let i = index ">
-                            <td style="text-align: center;" scope="col">{{i+1}}</td>
-                            <td style="text-align: center;" *ngFor="let field of row" scope="col">{{field.value}}</td>
-                        </tr>
+                        <tr *ngFor="let row of report.fields; let i = index">
+                            <td style="text-align: center;" scope="col">{{i + 1}}</td>
+                            <ng-container *ngFor="let field of row">
+                              <td style="text-align: center;" scope="col">{{field.value}}</td>
+                            </ng-container>
+                          </tr>
                     </tbody>
                 </table>
                 <app-table-with-trans-rep [report]="report"
@@ -306,46 +311,58 @@
                                                 (change)="onFieldSelect($event, table)" style="width: 100%;">
                                                 <option selected value="0" disabled>اختر الحقل</option>
                                                 <ng-container *ngIf="table.enTableName == 'Companies'">
-                                                    <option *ngFor="let field of companyFields">{{field.name}}</option>
+                                                    <option *ngFor="let field of companyFields" [value]="field.name">{{
+                                                        field.arName }}</option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Forms'">
-                                                    <option *ngFor="let field of formFields">{{field.name}}</option>
+                                                    <option *ngFor="let field of formFields" [value]="field.name">{{
+                                                        field.arName }}</option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Researcher'">
-                                                    <option *ngFor="let field of researcherFields">{{field.name}}
+                                                    <option *ngFor="let field of researcherFields" [value]="field.name">
+                                                        {{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Sectors'">
-                                                    <option *ngFor="let field of sectorFields">{{field.name}}</option>
+                                                    <option *ngFor="let field of sectorFields" [value]="field.name">{{
+                                                        field.arName }}</option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Activities'">
-                                                    <option *ngFor="let field of activitiesFields">{{field.name}}
+                                                    <option *ngFor="let field of activitiesFields" [value]="field.name">
+                                                        {{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'SubActivities'">
-                                                    <option *ngFor="let field of subActivitiesFields">{{field.name}}
+                                                    <option *ngFor="let field of subActivitiesFields"
+                                                        [value]="field.name">{{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Governorates'">
-                                                    <option *ngFor="let field of governoratesFields">{{field.name}}
+                                                    <option *ngFor="let field of governoratesFields"
+                                                        [value]="field.name">{{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Wilayats'">
-                                                    <option *ngFor="let field of wilayatFields">{{field.name}}</option>
+                                                    <option *ngFor="let field of wilayatFields" [value]="field.name">{{
+                                                        field.arName }}</option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Tables'">
-                                                    <option *ngFor="let field of tableFields">{{field.name}}</option>
+                                                    <option *ngFor="let field of tableFields" [value]="field.name">{{
+                                                        field.arName }}</option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'GeneralData'">
-                                                    <option *ngFor="let field of generalDataFields">{{field.name}}
+                                                    <option *ngFor="let field of generalDataFields"
+                                                        [value]="field.name">{{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Certification'">
-                                                    <option *ngFor="let field of certificationFields">{{field.name}}
+                                                    <option *ngFor="let field of certificationFields"
+                                                        [value]="field.name">{{ field.arName }}
                                                     </option>
                                                 </ng-container>
                                                 <ng-container *ngIf="table.enTableName == 'Cover'">
-                                                    <option *ngFor="let field of currentFields">{{field.name}}
+                                                    <option *ngFor="let field of currentFields" [value]="field.name">{{
+                                                        field.arName }}
                                                     </option>
                                                 </ng-container>
                                             </select>
@@ -358,7 +375,7 @@
                                         <div class="field-item" *ngFor="let field of table.fields; let i = index">
                                             <!-- Bind field properties to the input element -->
                                             <span style="text-align: left;margin-left: 60px;"
-                                                class="field-text col-2">{{field.name}}</span>
+                                                class="field-text col-2">{{field.arName}}</span>
                                             <select style="width: 120px;margin-left: 7px;"
                                                 class="form-select add-report-select" [(ngModel)]="field.filter"
                                                 [ngModelOptions]="{standalone: true}">
