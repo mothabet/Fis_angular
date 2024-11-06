@@ -55,6 +55,7 @@ export class SharedFormCoverComponent implements OnInit {
     { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
     { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
     { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)',inputValue: '' , isSelect:false},
   ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
@@ -101,6 +102,7 @@ export class SharedFormCoverComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.isCoverActive = true
     this.GetFormById(+this.formId)
   }
@@ -110,7 +112,7 @@ export class SharedFormCoverComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          
+          this
           this.coverForm = {
             ...this.coverForm,  // Spread the current values of coverForm to preserve them
             ...res.Data,        // Overwrite only the properties from res.Data
@@ -462,10 +464,16 @@ export class SharedFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.company = res.Data;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
               item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes("الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ")) {
+
+              item.inputValue = this.company.legalType;
+              item.isSelect = true;
             }
             else if (item.arName.includes('الموقع الإلكتروني : ')) {
 
@@ -477,7 +485,7 @@ export class SharedFormCoverComponent implements OnInit {
             }
             else if (item.arName.includes('البريد الالكترونى : ')) {
 
-              item.inputValue = this.company.email;
+              item.inputValue = this.company.companyEmails[0].Email;
             }
             else if (item.arName.includes('رقم الهاتف : ')) {
 
@@ -522,7 +530,7 @@ export class SharedFormCoverComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          
+          debugger
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;

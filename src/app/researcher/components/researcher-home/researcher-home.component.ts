@@ -582,7 +582,7 @@ export class ResearcherHomeComponent {
   }
   GetPermissionResearcherDetailsByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("Researcher-Details").then(permissions => {
-      debugger
+      
       this.permissionResearcherDetails = permissions;
     });
   }

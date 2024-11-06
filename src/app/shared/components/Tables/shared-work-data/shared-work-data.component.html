@@ -36,12 +36,13 @@
                                 border-radius: 6px;
                                 text-align: center;
                                 padding: 1px 7px;
-                                color: #7b7890;" (change)="GetWilayat(+workQues.inputValue)" [(ngModel)]="workQues.inputValue">
+                                color: #7b7890;" (change)="GetWilayat(+workQues.inputValue)"
+                                    [(ngModel)]="workQues.inputValue">
                                     <option selected value="0">--اختر المحافظه--</option>
                                     <option *ngFor="let governorate of Governorates" value="{{ governorate.id }}">
-                                      {{ governorate.arName }}
+                                        {{ governorate.arName }}
                                     </option>
-                                  </select>
+                                </select>
                             </td>
                             <td class="text-center" *ngIf="workQues.isSelect && workQues.arName === 'الولاية : '">
                                 <select style="width: 100% !important;
@@ -51,34 +52,30 @@
                                 border-radius: 6px;
                                 text-align: center;
                                 padding: 1px 7px;
-                                color: #7b7890;"  [(ngModel)]="workQues.inputValue">
+                                color: #7b7890;" [(ngModel)]="workQues.inputValue">
                                     <option selected value="0">--اختر الولاية--</option>
                                     <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
-                                      {{ wilaya.arName }}
+                                        {{ wilaya.arName }}
                                     </option>
-                                  </select>
+                                </select>
+                            </td>
+                            <td class="text-center"
+                                *ngIf="workQues.isSelect && workQues.arName === 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : '">
+                                <select class="form-control" name="coverForm.GeneralData.ChekInfo"
+                                [(ngModel)]="workQues.inputValue"
+                                    style="width: 50% !important;border: solid 1px;display: inline;">
+                                    <option value="">--اختر الشكل القانوني--</option>
+                                    <option [ngValue]="1">منشاة فردية</option>
+                                    <option [ngValue]="2">تضامنية</option>
+                                    <option [ngValue]="3">توصية</option>
+                                    <option [ngValue]="4">محاصة</option>
+                                    <option [ngValue]="5">مساهمة ( عامه او مقفله )</option>
+                                    <option [ngValue]="6">محدودة المسؤولية</option>
+                                    <option [ngValue]="7">فرع شركة اجنبية</option>
+                                    <option [ngValue]="8">أخرى (حدد)</option>
+                                </select>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">{{workQues.enName}}</td>
-                        </tr>
-                        <tr>
-                            <td style="text-wrap: balance;">الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالة
-                                المنشأة)</td>
-                            <td class="text-center">
-                                <div class="input-floating-label mb-0" style="padding: inherit;">
-                                    <select class="form-control" name="coverForm.GeneralData.ChekInfo"
-                                        [(ngModel)]="coverForm.GeneralData.ChekInfo"
-                                        style="width: 50% !important;border: solid 1px;display: inline;">
-                                        <option value="0"></option>
-                                        <option value="1" *ngFor="let workChk of workDataChk; let i = index">
-                                            {{workChk.arName}} - {{workChk.enName}}</option>
-                                    </select>
-                                    <label for="user"
-                                        style="font-size: larger;margin-right: 76px;margin-top: 5px;">اختيار الكيان
-                                        القانونى للمنشأة</label>
-                                </div>
-                            </td>
-                            <td style="text-wrap: balance;" class="text-start">The Legal Type of Organization (tick
-                                approprate reponse)</td>
                         </tr>
                         <tr>
                             <td style="text-wrap: balance;">الفترة او السنه الماليه</td>
@@ -124,7 +121,8 @@
                                         </option>
                                     </select>
                                     <label for="user"
-                                        style="font-size: larger;margin-right: 84px;margin-top: 5px;">اختيار مصدر اليانات</label>
+                                        style="font-size: larger;margin-right: 84px;margin-top: 5px;">اختيار مصدر
+                                        اليانات</label>
                                 </div>
                             </td>
                             <td style="text-wrap: balance;" class="text-start">Source of data</td>
