@@ -195,9 +195,9 @@
                             </div>
                         </div>
                         <h5 class="modal-title my-2" id="auth">الصلاحيات</h5>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <input type="text" placeholder="بحث" class="form-control" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}" (input)="filterPermissions()">
-                        </div>
+                        </div> -->
                         <div class="scrollable-container">
                             <div formArrayName="permissions">
                               <div *ngFor="let permission of filteredPermissions; let i = index" [formGroupName]="i"  class=" boldBorderRow">
