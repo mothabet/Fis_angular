@@ -39,49 +39,49 @@ export class ReportContentsComponent implements OnInit {
   wilayatFields: IFieldDto[] = [];
 
   generalDataFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم المنشأة',arName :'' },
-    { dataType: 'String', name: 'رقم السجل التجارى',arName :'' },
-    { dataType: 'String', name: 'رقم الترخيص البلدي',arName :'' },
-    { dataType: 'String', name: 'النشاط الاقتصادى الرئيسى',arName :'' },
-    { dataType: 'String', name: 'النشاط الثانوى' ,arName :''},
-    { dataType: 'String', name: 'عنوان المنشاة' ,arName :''},
-    { dataType: 'String', name: 'المنطقة',arName :'' },
-    { dataType: 'String', name: 'الولاية',arName :'' },
-    { dataType: 'String', name: 'رقم صندوق البريد',arName :'' },
-    { dataType: 'String', name: 'الرمز البريدى',arName :'' },
-    { dataType: 'String', name: 'رقم الهاتف' ,arName :''},
-    { dataType: 'String', name: 'رقم الفاكس',arName :'' },
-    { dataType: 'String', name: 'البريد الالكترونى',arName :'' },
-    { dataType: 'String', name: 'الموقع الإلكتروني' ,arName :''},
-    { dataType: 'bool', name: 'منشاة فردية',arName :'' },
-    { dataType: 'bool', name: 'تضامنية',arName :'' },
-    { dataType: 'bool', name: 'توصية',arName :'' },
-    { dataType: 'bool', name: 'محاصة' ,arName :''},
-    { dataType: 'bool', name: 'مساهمة ( عامه او مقفله )',arName :'' },
-    { dataType: 'bool', name: 'محدودة المسؤولية',arName :'' },
-    { dataType: 'bool', name: 'فرع شركة اجنبية',arName :'' },
-    { dataType: 'bool', name: 'أخرى (حدد)' ,arName :''},
-    { dataType: 'DateTime', name: 'الفترة او السنه الماليه من' ,arName :''},
-    { dataType: 'DateTime', name: 'الفترة او السنه الماليه إالى' ,arName :''},
+    { dataType: 'String', name: 'اسم المنشأة', arName: '' },
+    { dataType: 'String', name: 'رقم السجل التجارى', arName: '' },
+    { dataType: 'String', name: 'رقم الترخيص البلدي', arName: '' },
+    { dataType: 'String', name: 'النشاط الاقتصادى الرئيسى', arName: '' },
+    { dataType: 'String', name: 'النشاط الثانوى', arName: '' },
+    { dataType: 'String', name: 'عنوان المنشاة', arName: '' },
+    { dataType: 'String', name: 'المنطقة', arName: '' },
+    { dataType: 'String', name: 'الولاية', arName: '' },
+    { dataType: 'String', name: 'رقم صندوق البريد', arName: '' },
+    { dataType: 'String', name: 'الرمز البريدى', arName: '' },
+    { dataType: 'String', name: 'رقم الهاتف', arName: '' },
+    { dataType: 'String', name: 'رقم الفاكس', arName: '' },
+    { dataType: 'String', name: 'البريد الالكترونى', arName: '' },
+    { dataType: 'String', name: 'الموقع الإلكتروني', arName: '' },
+    { dataType: 'bool', name: 'منشاة فردية', arName: '' },
+    { dataType: 'bool', name: 'تضامنية', arName: '' },
+    { dataType: 'bool', name: 'توصية', arName: '' },
+    { dataType: 'bool', name: 'محاصة', arName: '' },
+    { dataType: 'bool', name: 'مساهمة ( عامه او مقفله )', arName: '' },
+    { dataType: 'bool', name: 'محدودة المسؤولية', arName: '' },
+    { dataType: 'bool', name: 'فرع شركة اجنبية', arName: '' },
+    { dataType: 'bool', name: 'أخرى (حدد)', arName: '' },
+    { dataType: 'DateTime', name: 'الفترة او السنه الماليه من', arName: '' },
+    { dataType: 'DateTime', name: 'الفترة او السنه الماليه إالى', arName: '' },
   ];
   certificationFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم معبئ الاستمارة',arName :'' },
-    { dataType: 'String', name: 'رقم الهاتف',arName :'' },
-    { dataType: 'DateTime', name: 'تاريخ التعبئة' ,arName :''},
+    { dataType: 'String', name: 'اسم معبئ الاستمارة', arName: '' },
+    { dataType: 'String', name: 'رقم الهاتف', arName: '' },
+    { dataType: 'DateTime', name: 'تاريخ التعبئة', arName: '' },
   ]
   coverFields: IFieldDto[] = [
-    { dataType: 'Int', name: 'رمز النشاط',arName :'' },
-    { dataType: 'Int', name: 'رقم الاستماره',arName :'' },
-    { dataType: 'Int', name: 'المرجع. سنة' ,arName :''}
+    { dataType: 'Int', name: 'رمز النشاط', arName: '' },
+    { dataType: 'Int', name: 'رقم الاستماره', arName: '' },
+    { dataType: 'Int', name: 'المرجع. سنة', arName: '' }
   ]
   quarterCoverFields: IFieldDto[] = [
-    { dataType: 'String', name: 'اسم مؤسستك' ,arName :''},
-    { dataType: 'String', name: 'الرمز البريدي' ,arName :''},
-    { dataType: 'String', name: 'رقم الاستماره',arName :'' },
-    { dataType: 'String', name: 'رقم الهاتف' ,arName :''},
-    { dataType: 'String', name: 'رقم الفاكس',arName :'' },
-    { dataType: 'String', name: 'عنوان البريد الإلكتروني' ,arName :''},
-    { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)',arName :'' },
+    { dataType: 'String', name: 'اسم مؤسستك', arName: '' },
+    { dataType: 'String', name: 'الرمز البريدي', arName: '' },
+    { dataType: 'String', name: 'رقم الاستماره', arName: '' },
+    { dataType: 'String', name: 'رقم الهاتف', arName: '' },
+    { dataType: 'String', name: 'رقم الفاكس', arName: '' },
+    { dataType: 'String', name: 'عنوان البريد الإلكتروني', arName: '' },
+    { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)', arName: '' },
   ]
   isDropdownOpen = false;
   isFormContentDropdownOpen = false;
@@ -337,7 +337,7 @@ export class ReportContentsComponent implements OnInit {
     const selectedField = this.codes.find(field => field.arName === code.arName);
     if (selectedField && table) {
       const tableField: ITableFieldDto = {
-        arName:selectedField.arName,
+        arName: selectedField.arName,
         name: selectedField.arName,
         dataType: null,
         filter: null, // Initialize as null or a valid default value
@@ -523,7 +523,7 @@ export class ReportContentsComponent implements OnInit {
       this.showLoader = true;
       const observer = {
         next: (res: any) => {
-          debugger
+
           if (res.Data) {
             if (tableType == 1)
               this.companyFields = res.Data
@@ -677,15 +677,27 @@ export class ReportContentsComponent implements OnInit {
       this.GetTables();
     }
   }
-  onFieldSelect(event: Event, table: ITableDto): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement.value;
-    if (table.enTableName == 'Companies') {
-      const selectedField = this.companyFields.find(field => field.name === selectedValue);
+  onFieldSelect(event: Event | null = null, _field: string = '', table: ITableDto): void {
+    let selectedValue = '';
+    if (event) {
+      const selectElement = event.target as HTMLSelectElement;
+      selectedValue = selectElement.value;
+    }
+    else {
+      selectedValue = _field;
+    }
 
+    if (table.enTableName == 'Companies') {
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.companyFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.companyFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -701,11 +713,17 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Researcher') {
-      const selectedField = this.researcherFields.find(field => field.name === selectedValue);
 
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.researcherFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.researcherFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -721,11 +739,17 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Sectors') {
-      const selectedField = this.sectorFields.find(field => field.name === selectedValue);
 
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.sectorFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.sectorFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -741,11 +765,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Activities') {
-      const selectedField = this.activitiesFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.activitiesFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.activitiesFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -761,11 +790,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'SubActivities') {
-      const selectedField = this.subActivitiesFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.subActivitiesFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.subActivitiesFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -781,11 +815,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Governorates') {
-      const selectedField = this.governoratesFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.governoratesFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.governoratesFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -801,11 +840,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Wilayats') {
-      const selectedField = this.wilayatFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.wilayatFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.wilayatFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -821,13 +865,20 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Tables') {
-      const selectedField = this.tableFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.tableFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.tableFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
-
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
         if (!fieldExists) {
+          debugger
+          if (selectedField.name === 'Order')
+            selectedField.name = '[Order]'
           const tableField: ITableFieldDto = {
             name: selectedField.name,
             arName: selectedField.arName,
@@ -841,11 +892,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Forms') {
-      const selectedField = this.formFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.formFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.formFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -861,11 +917,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'GeneralData') {
-      const selectedField = this.generalDataFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.generalDataFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.generalDataFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -881,11 +942,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Cover') {
-      const selectedField = this.coverFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.coverFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.coverFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -901,11 +967,16 @@ export class ReportContentsComponent implements OnInit {
       }
     }
     else if (table.enTableName == 'Certification') {
-      const selectedField = this.certificationFields.find(field => field.name === selectedValue);
-
+      let selectedField: IFieldDto | undefined;
+      if (event) {
+        selectedField = this.certificationFields.find(field => field.name === selectedValue);
+      }
+      else {
+        selectedField = this.certificationFields.find(field => field.arName === selectedValue);
+      }
       if (selectedField && table) {
         // Check if the field already exists in the table's fields array
-        const fieldExists = table.fields.some(field => field.name === selectedField.name);
+        const fieldExists = table.fields.some(field => field.name === selectedField!.name);
 
         if (!fieldExists) {
           const tableField: ITableFieldDto = {
@@ -921,17 +992,17 @@ export class ReportContentsComponent implements OnInit {
       }
     }
   }
-  getTranslatedName(fieldName: string,report:any): string {
+  getTranslatedName(fieldName: string, report: any): string {
     if (report.reportType === 'Companies') {
-      debugger
-      if(this.companyFields.length === 0){
+
+      if (this.companyFields.length === 0) {
         this.tableType = 1;
         this.GetTableFields(1);
       }
       const companyField = this.companyFields.find(
         (companyField: IFieldDto) => companyField.name === fieldName
       );
-      debugger
+
       return companyField ? companyField.arName : '';
     }
     return fieldName; // In other report types, just return the field name
@@ -1018,6 +1089,22 @@ export class ReportContentsComponent implements OnInit {
         confirmButtonText: 'اغلاق'
       });
       return;
+    }
+
+    if (this.tables.length > 0 && this.tables[0].enTableName !== 'FormContent' && this.tables[0].enTableName !== 'TablesReport') {
+      this.tables.forEach(table => {
+        // Check if the fields array is empty or needs to be filled with null data
+        if (table.fields.length === 0) {
+          // Add a placeholder object with null/default values
+          table.fields = [{
+            dataType: 'null',
+            name: '',
+            arName: '',
+            filter: 0,
+            value: 0
+          }];
+        }
+      });
     }
     this.report.reportDetails = JSON.stringify(this.tables);
 
@@ -1144,24 +1231,70 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
 
       tables.forEach((table, tableIndex) => {
-        const tableAlias = `t${tableIndex + 1}`;
-
+        const tableAlias = `${table.enTableName}`;
         // Determine if all fields should be selected
+
         if (table.selectAllFields || table.fields.length === 0) {
-          fields += `${tableAlias}.*`;
-        } else {
-          // Select the fields for each table if fields are defined
-          table.fields.forEach((field, fieldIndex) => {
-            fields += `${tableAlias}.${field.name} AS ${table.enTableName}_${field.name}`;
-
-            // Add a comma if not the last field of the last table
-            if (fieldIndex !== table.fields.length - 1 || tableIndex !== tables.length - 1) {
-              fields += ', ';
-            }
-            // Only build WHERE condition if both value and filter are present
-
-          });
+          if (table.enTableName == 'Companies') {
+            this.companyFields.forEach((companyField, companyFieldIndex) => {
+              this.onFieldSelect(null, companyField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Forms') {
+            this.formFields.forEach((companyField, companyFieldIndex) => {
+              this.onFieldSelect(null, companyField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Researcher') {
+            this.researcherFields.forEach((researcherField, researcherFieldIndex) => {
+              this.onFieldSelect(null, researcherField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Sectors') {
+            this.sectorFields.forEach((sectorField, sectorFieldIndex) => {
+              this.onFieldSelect(null, sectorField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Activities') {
+            this.activitiesFields.forEach((activitiesField, activitiesFieldIndex) => {
+              this.onFieldSelect(null, activitiesField.arName, table);
+            });
+          }
+          if (table.enTableName == 'SubActivities') {
+            this.subActivitiesFields.forEach((subActivitiesField, subActivitiesFieldIndex) => {
+              this.onFieldSelect(null, subActivitiesField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Governorates') {
+            this.governoratesFields.forEach((govenoratesField, govenoratesFieldIndex) => {
+              this.onFieldSelect(null, govenoratesField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Wilayats') {
+            this.wilayatFields.forEach((wilayatField, wilayatFieldIndex) => {
+              this.onFieldSelect(null, wilayatField.arName, table);
+            });
+          }
+          if (table.enTableName == 'Tables') {
+            this.tableFields.forEach((tablesField, tableFieldIndex) => {
+              this.onFieldSelect(null, tablesField.arName, table);
+            });
+          }
         }
+        // Select the fields for each table if fields are defined
+        table.fields.forEach((field, fieldIndex) => {
+          if (field.name != '[Order]')
+            fields += `${tableAlias}.${field.name} AS ${table.enTableName}_${field.name}`;
+          else
+            fields += `${tableAlias}.[Order] AS ${table.enTableName}_Order`;
+          // Add a comma if not the last field of the last table
+          if (fieldIndex !== table.fields.length - 1 || tableIndex !== tables.length - 1) {
+            fields += ', ';
+          }
+          // Only build WHERE condition if both value and filter are present
+
+        });
+
         table.fields.forEach((field, fieldIndex) => {
           if (field.value !== null && field.filter !== null) {
             let filterItem;
@@ -1190,35 +1323,35 @@ export class ReportContentsComponent implements OnInit {
         if (tableIndex !== tables.length - 1 && (table.selectAllFields || table.fields.length === 0)) {
           fields += ', ';
         }
-
         // Construct the FROM and JOIN part of the query
         if (tableIndex === 0) {
           fromTable = `FROM ${table.enTableName} ${tableAlias}`;
         } else {
+
           switch (table.enTableName) {
             case 'Companies':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.researcherId`;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON Companies.researcherId = ${tables[0].enTableName}.id`;
               break;
             case 'Researcher':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.researcherId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.researcherId = ${tableAlias}.id `;
               break;
             case 'Sectors':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.sectorId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.sectorId = ${tableAlias}.id `;
               break;
             case 'Activities':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.activityId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.activityId = ${tableAlias}.id `;
               break;
             case 'SubActivities':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.subActivityId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.subActivityId = ${tableAlias}.id `;
               break;
             case 'Governorates':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.governoratesId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.governoratesId = ${tableAlias}.id `;
               break;
             case 'Wilayats':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.wilayatId = ${tableAlias}.id `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.wilayatId = ${tableAlias}.id `;
               break;
             case 'Tables':
-              joins += ` JOIN ${table.enTableName} ${tableAlias} ON t1.id = ${tableAlias}.formId `;
+              joins += ` JOIN ${table.enTableName} ${tableAlias} ON ${tables[0].enTableName}.id = ${tableAlias}.formId `;
               break;
             default:
               throw new Error(`Unknown table: ${table.enTableName}`);
@@ -1328,7 +1461,7 @@ export class ReportContentsComponent implements OnInit {
     }
     else {
       this.report.seconedTable = tables[1].enTableName;
-      debugger
+
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
@@ -1339,7 +1472,7 @@ export class ReportContentsComponent implements OnInit {
         };
         tables[0].fields[0] = tableField
       }
-      debugger
+
       if (tables[0].fields[0].dataType == '0')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
@@ -1350,7 +1483,7 @@ export class ReportContentsComponent implements OnInit {
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') 
+      else if (tables[0].fields[0].dataType == '5')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period as tablePeriod FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`;
       else if (tables[0].fields[0].dataType == '6')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
@@ -1455,7 +1588,7 @@ export class ReportContentsComponent implements OnInit {
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') 
+      else if (tables[0].fields[0].dataType == '5')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
@@ -1586,7 +1719,7 @@ export class ReportContentsComponent implements OnInit {
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') 
+      else if (tables[0].fields[0].dataType == '5')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,c.arName as companyName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
@@ -1716,7 +1849,7 @@ export class ReportContentsComponent implements OnInit {
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
-      else if (tables[0].fields[0].dataType == '5') 
+      else if (tables[0].fields[0].dataType == '5')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
