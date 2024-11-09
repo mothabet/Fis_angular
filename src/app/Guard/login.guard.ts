@@ -19,11 +19,11 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);
       const role = res.roles;
       const url: string = route.url[0].path;
-      
-      if ((role === "User" ||role==='Researcher') && this.authService.isUserRoute(url)) {
+      debugger
+      if ((role === "User" && this.authService.isUserRoute(url)) || (role === "Researchers" &&  (this.authService.isUserRoute(url) || this.authService.isResearcherRoute(url)))) {
         const observer = {
           next: (_res: any) => {
-            
+            debugger
             if (_res.Data) {
               this.permissions = _res.Data;
               const permissionCheck = this.permissions.find(r => r.enName === url);
@@ -33,12 +33,18 @@ export class LoginGuard {
               else if (!permissionCheck && this.authService.isTableRoute(url)){
                 return true;
               }
+              else if (role === 'Researchers' && (this.authService.isResearcherRoute(url))) {
+                return true;
+              }
               else {
                 this.router.navigate(['/Home']);
                 return true;
               }
             }
             else {
+              if (role === 'Researchers' && (this.authService.isResearcherRoute(url))) {
+                return true;
+              }
               this.router.navigate(['/Home']);
               return true;
             }
@@ -51,7 +57,7 @@ export class LoginGuard {
         this.permissionsService.GetPermissionByUserId(res.id).subscribe(observer);
         return true
       }
-      else if ((role === "User" ||role==='Researcher') && !(this.authService.isUserRoute(url))) {
+      else if ((role === "User" ||role==='Researchers') && !(this.authService.isUserRoute(url))) {
         this.router.navigate(['/Home']);
         return true;
       }
@@ -66,10 +72,10 @@ export class LoginGuard {
           this.router.navigate(['/Home']);
           return true;
         }
-        else if ((role === 'User'||role==='Researcher') && this.authService.isAdminRoute(url)) {
+        else if ((role === 'User'||role==='Researchers') && this.authService.isAdminRoute(url)) {
           return true;
         }
-        else if ((role === 'User'||role==='Researcher') && !(this.authService.isAdminRoute(url))) {
+        else if ((role === 'User'||role==='Researchers') && !(this.authService.isAdminRoute(url))) {
           this.router.navigate(['/Home']);
           return true;
         }
