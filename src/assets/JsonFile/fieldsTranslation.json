@@ -1,0 +1,102 @@
+{
+
+    "companies": {
+        "id": "رقم الشركة",
+        "municipalityNumber": "رقم البلدي",
+        "compRegNumber": "السجل التجاري",
+        "accountingPeriod": " بداية السنة المالية",
+        "completionAccPeriod": " نهاية السنة المالية",
+        "phoneNumber": "الهاتف",
+        "telNumber": "التليفون",
+        "fax": "الفاكس",
+        "address": "العنوان",
+        "mailBox": "صندوق البريد",
+        "postalCode": "الرمز البريدي",
+        "dateOfWork": "تاريخ مزاولة العمل",
+        "legalType": "الشكل القانوني",
+        "UserId": "رقم المستخدم",
+        "sectorId": "رمز القطاع",
+        "activityId": "رمز النشاط",
+        "subActivityId": "النشاط الفرعي",
+        "governoratesId": "المحافظة",
+        "wilayatId": "الولاية",
+        "researcherId": "رقم الباحث",
+        "arName": "اسم الشركة عربي ",
+        "enName": "اسم الشركة انجليزي",
+        "status": "حالة الشركة",
+
+        "institutionHeadquarters": "مقر المؤسسة",
+        "institutionVlaue": "",
+        "webSite": "موقع الكتروني",
+
+        "arNotes": "ملاحظات بالعربي",
+        "enNotes": " ملاحظات بالانجليزية",
+
+        "activityName": " اسم النشاط",
+        "sectorName": "اسم القطاع",
+        "subActivityName": "اسم النشاط السنوي"
+    },
+    "countries": {
+        "arName": "اسم الدولة عربي ",
+        "enName": "اسم الدولة انجليزي",
+        "code": "رمز الدولة"
+    },
+    "forms": {
+        "arName": "اسم الاستمارة عربي ",
+        "enName": "اسم الاستمارة انجليزي",
+        "Type": "نوع الاستمارة",
+        "IsActive": "نشط",
+        "reviewYear": "سنة المسح",
+        "typeQuarter": "الربع",
+        "codeSector": "القطاع"
+    },
+    "researcher": {
+        "id": " رقم الباحث",
+
+        "userName": " اسم المستخدم",
+        "status": " حالة الباحث",
+        "email": " ايميل الباحث",
+        "phone": " هاتف الباحث",
+
+        "arName": " اسم الباحث عربي",
+        "enName": " اسم الباحث انجليزي"
+
+    },
+    "sectors": {
+        "arName": "اسم القطاع عربي ",
+        "enName": "اسم القطاع انجليزي",
+        "code": "رمز القطاع"
+    },
+    "wilayats": {
+        "arName": "اسم الولاية عربي ",
+        "enName": "اسم الولاية انجليزي"
+
+    },
+    "Governorates": {
+        "arName": "اسم المحافظة عربي ",
+        "enName": "اسم المحافظة انجليزي"
+
+    },
+
+    "activities": {
+        "arName": "اسم النشاط عربي ",
+        "enName": "اسم النشاط انجليزي",
+        "code": "رمز النشاط"
+    },
+    "Tables": {
+        "arHeading": " عنوان الجدول عربي",
+        "enHeading": " عنوان الجدول انجليزي",
+        "Type": " نوع الجدول",
+        "formId": " رقم الاستمارة",
+        "arName": " اسم الجدول عربي",
+        "enName": " اسم الجدول انجليزي",
+        "IsActive": " نشط",
+        "arNotes": " ملاحظات الجدول عربي",
+        "enNotes": " ملاحظات الجدول انجليزي",
+        "IsTotal": " هل جدول باجمالي",
+        "Order": " ترتيب الجدول",
+        "IsDisabled": " فعال",
+        "totalTitleAr": " عنوان الاجمالي عربي",
+        "totalTitleEn": " انجليزي الاجمالي عربي"
+    }
+}

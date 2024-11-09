@@ -19,6 +19,7 @@ export interface ITableDto {
 export interface ITableFieldDto {
     dataType: string|null;
     name: string;  // Name of the field
+    arName: string;  // Name of the field
     filter: number|null; // Filter applied to the field
     value: any;     // Value of the field, can be any type
 }
@@ -26,6 +27,7 @@ export interface ITableFieldDto {
 export interface IFieldDto {
     dataType: string;
     name: string; 
+    arName: string ; 
 }
 export interface IReportFilterDto {
     id: number;
