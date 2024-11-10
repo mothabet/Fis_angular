@@ -88,7 +88,7 @@
           <span class="">الاستمارات السابقه</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  || role==='Researchers' ">
         <div class="has-dropdown">
           <a routerLink="Forms" class="sidebar-link" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Forms'))">
             <i class="fa-solid fa-file-lines icon"></i>
