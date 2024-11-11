@@ -464,7 +464,7 @@ export class SharedFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.company = res.Data;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
@@ -530,7 +530,7 @@ export class SharedFormCoverComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          debugger
+          
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;

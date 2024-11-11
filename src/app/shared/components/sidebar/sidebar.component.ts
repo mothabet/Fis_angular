@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit {
     this.permissionsService.GetPermissionByUserId(res.id).subscribe(observer);
   }
   checkPermission(url: string): boolean {
-    debugger
+    
     if (this.role === "User"|| this.role==='Researchers') {
 
       const permissionCheck = this.permissions.find(r => r.enName === url);

@@ -19,11 +19,11 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);
       const role = res.roles;
       const url: string = route.url[0].path;
-      debugger
+      
       if ((role === "User" && this.authService.isUserRoute(url)) || (role === "Researchers" &&  (this.authService.isUserRoute(url) || this.authService.isResearcherRoute(url)))) {
         const observer = {
           next: (_res: any) => {
-            debugger
+            
             if (_res.Data) {
               this.permissions = _res.Data;
               const permissionCheck = this.permissions.find(r => r.enName === url);

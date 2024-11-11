@@ -5,8 +5,8 @@ import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
-import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
@@ -14,6 +14,7 @@ import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
+import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
 @Component({
   selector: 'app-shared-table-without-trans',
   templateUrl: './shared-table-without-trans.component.html',
@@ -24,15 +25,33 @@ export class SharedTableWithoutTransComponent {
   @Input() formId!: string;
   @Input() tableId!: string;
   isChecked!: boolean;
-  table!: IGetTableDto;
-  table2!: IGetTableDto;
-  coverForm!: ICoverFormDetailsDto;
+  table: IGetTableDto = {
+    id: 0,
+      arName: '',
+      enName: '',
+      arHeading: '',
+      enHeading: '',
+      arNotes: '',
+      enNotes: '',
+      Type: '',
+      Order: '',
+      formId: 0,
+      period: 0,
+      IsActive: false,
+      IsTotal: false,
+      totalTitleAr: '',
+      totalTitleEn: '',
+      IsDisabled: false,
+      formContents: [], // Initialize as an empty array
+      tableParts: []    // Initialize as an empty array
+  };
+  coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm();
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
   companyId!: string;
   formData!: IDataDto[];
   auditRules: IAuditRule[] = [];
-
+  expenses :number[] = [0,0];
   constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
     private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private auditRuleHomeService: AuditRuleHomeService) {
@@ -48,6 +67,7 @@ export class SharedTableWithoutTransComponent {
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
+
     });
   }
   onArCountryChange(subCode: any) {
@@ -109,6 +129,8 @@ export class SharedTableWithoutTransComponent {
         if (res.Data) {
           this.Loader = false;
           this.coverForm = res.Data;
+          this.handleByExpenses(this.coverForm);
+          
           this.GetTableById(+this.tableId);
         }
       },
@@ -553,7 +575,6 @@ export class SharedTableWithoutTransComponent {
     this.handleParent(formContent);
   }
   handleParent(formContent: IGetQuestionDto) {
-    this.changeStatus(this.coverForm.status);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
     if (rule) {
       const ruleParts = rule.Rule.split('=');
@@ -641,17 +662,88 @@ export class SharedTableWithoutTransComponent {
       localStorage.removeItem(`coverForm${this.coverForm.id}`);
       localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
     }
-    console.log(formContent)
+    this.changeStatus(formContent,this.coverForm.status,this.coverForm);
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
       return sum + (formContent.values[index] || 0);
     }, 0);
   }
-  changeStatus(status: number) {
-    if (status < 3)
-      this.BeginningForm();
+  private getDefaultCoverForm(): ICoverFormDetailsDto {
+    return {
+      id: 0,
+      typeQuarter: 0,
+      tables: [],
+      arName: "",
+      enName: "",
+      arNotes: "",
+      enNotes: "",
+      reviewYear: "",
+      status: 0,
+      quarterCoverData: {} as IQuarterCoverFormDataDto,
+      coverFormData: {} as ICoverFormData,
+      certification: {} as ICertificationDto,
+      codeActivity: "",
+      codeSectorName: "",
+      GeneralData: {} as IGeneralDataDto,
+      Type: 0,
+    };
   }
+  handleByExpenses(coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm(),) {
+    
+    const table: IGetTableDto | undefined = coverForm?.tables?.find(t => t.id === +this.tableId);
+    const formContent_5031: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5031");
+    const formContent_5032: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5032");
+    const formContent_503: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "503");
+    if (formContent_503 && formContent_503.values) {
+      formContent_503.values = [0, 0]
+    }
+    if (formContent_5031 && formContent_5031.values && formContent_503 && formContent_503.values) {
+      formContent_503.values[0] += formContent_5031.values[0];
+      formContent_503.values[1] += formContent_5031.values[1];
+    }
+    if (formContent_5032 && formContent_5032.values && formContent_503 && formContent_503.values) {
+      formContent_503.values[0] += formContent_5032.values[0];
+      formContent_503.values[1] += formContent_5032.values[1];
+    }
+    const formContent_5060: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5060");
+    if (formContent_5060 && formContent_5060.values && formContent_503 && formContent_503.values) {
+      formContent_5060.values = [0, 0];
+      formContent_5060.values[0] -= formContent_503.values[0];
+      formContent_5060.values[1] -= formContent_503.values[1];
+      const formContent_501: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "501");
+      if (formContent_501 && formContent_501.values) {
+        formContent_5060.values[0] += formContent_501.values[0];
+        formContent_5060.values[1] += formContent_501.values[1];
+      }
+    }
+    const formContent_5080: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5080");
+    if (formContent_5080 && formContent_5080.values)
+      formContent_5080.values = [0, 0];
+    if (formContent_5060 && formContent_5060.values && formContent_5080 && formContent_5080.values) {
+      formContent_5080.values[0] += formContent_5060.values[0];
+      formContent_5080.values[1] += formContent_5060.values[1];
+    }
+    const formContent_5070: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5070");
+    if (formContent_5070 && formContent_5070.values && formContent_5080 && formContent_5080.values) {
+      formContent_5080.values[0] -= formContent_5070.values[0];
+      formContent_5080.values[1] -= formContent_5070.values[1];
+    }
+  }
+  changeStatus(
+    formContent: IGetQuestionDto, 
+    status: number, 
+    coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm(), 
+  ) { 
+    
+    if (formContent.code.QuestionCode === "5031" || formContent.code.QuestionCode === "5032" || formContent.code.QuestionCode === "501" || formContent.code.QuestionCode === "5070") {
+      this.handleByExpenses(coverForm);
+    }
+    if (status < 3) {
+      this.BeginningForm();
+    }
+  }
+  
   BeginningForm(): void {
     this.Loader = true;
     const observer = {

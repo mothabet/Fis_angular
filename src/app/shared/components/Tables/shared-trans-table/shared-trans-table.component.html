@@ -294,7 +294,7 @@
                         <tr class="footer boldBorderRow" *ngIf="table.IsTotal" style="background: #d3fffb33;">
                             <td style="background: #d3fffb33;">{{table.totalTitleAr}}</td>
                             <td style="background: #d3fffb33;" class="text-center" [ngClass]="coverForm.typeQuarter == 1 ? 'quarter' : ''">
-                                <input disabled type="number" [value]="getSumOfValues(1)" />
+                                <input disabled type="number" [value]="getSumOfValues(0)" />
                             </td>
 
                             <!-- Difference between formContent.values[1] and formContent.values[0] -->
@@ -304,7 +304,7 @@
 
                             <!-- Sum of formContent.values[0] -->
                             <td style="background: #d3fffb33;color: black;" class="text-center" >
-                                <input style="background: #d3fffb33;color: black;" disabled type="number" [value]="getSumOfValues(0)" />
+                                <input style="background: #d3fffb33;color: black;" disabled type="number" [value]="getSumOfValues(1)" />
                             </td>
 
                             <td style="background: #d3fffb33;" class="text-center">

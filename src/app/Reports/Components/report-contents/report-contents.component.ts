@@ -876,7 +876,7 @@ export class ReportContentsComponent implements OnInit {
         // Check if the field already exists in the table's fields array
         const fieldExists = table.fields.some(field => field.name === selectedField!.name);
         if (!fieldExists) {
-          debugger
+          
           if (selectedField.name === 'Order')
             selectedField.name = '[Order]'
           const tableField: ITableFieldDto = {

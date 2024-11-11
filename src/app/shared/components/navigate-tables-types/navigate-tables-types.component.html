@@ -1,16 +1,16 @@
 <div class="header-nav" style="margin-bottom: 20px">
     <app-loader *ngIf="Loader"></app-loader>
     <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewFormNotes" id="ViewFormNotesBtn" hidden >
-      <img src="./images/list-box-outline.png" alt="">
+      <img src="../../../../assets/images/list-box-outline.png" alt="">
   </button>
   <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#AddFormNotes" id="AddFormNotesBtn" hidden >
-      <img src="./images/list-box-outline.png" alt="">
+      <img src="../../../../assets/images/list-box-outline.png" alt="">
   </button>
   <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#OpenFormModel" id="OpenFormModelBtn" hidden >
-    <img src="./images/list-box-outline.png" alt="">
+    <img src="../../../../assets/images/list-box-outline.png" alt="">
 </button>
   <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewInstructions" id="ViewInstructionsBtn" hidden >
-    <img src="./images/list-box-outline.png" alt="">
+    <img src="../../../../assets/images/list-box-outline.png" alt="">
 </button>
 
 
@@ -53,11 +53,11 @@
                     </button>
                 </div>
                 <button type="button" class="btn btn-send mx-1" (click)="GetAllFormNotesByRole('')" >
-                    <img src="./images/list-box-outline.png" alt="">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="">
                     اضافة ملاحظه
                 </button>
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)">
-                  <img src="./images/list-box-outline.png" alt="">
+                  <img src="../../../../assets/images/list-box-outline.png" alt="">
                   الإرشادات
               </button>
             </div>
@@ -102,20 +102,20 @@
                     حالة الإستمارة : تم اعادة فتح الاستمارة
                 </button>
                 <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('')" *ngIf="role == 'Researchers' || (role==='User' && permission.AddFormNotes)">
-                    <img src="./images/list-box-outline.png" alt="">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="">
                     اضافة ملاحظه
                 </button>
                 <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Admin')" *ngIf="role == 'Researchers' || (role==='User' && permission.FormNotes)">
-                    <img src="./images/list-box-outline.png" alt="">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="">
                     عرض ملاحظات الاداره
                 </button>
                 <button type="button" class="btn btn-send" (click)="GetAllFormNotesByRole('Researchers')" *ngIf="role == 'Company'  ">
-                    <img src="./images/list-box-outline.png" alt="">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="">
                     عرض ملاحظات
                 </button>
                 
                 <button type="button" class="btn btn-send" data-bs-toggle="modal" (click)="GetAllInstructions(role)" *ngIf="(role==='User' && permission.Instructions)">
-                    <img src="./images/list-box-outline.png" alt="">
+                    <img src="../../../../assets/images/list-box-outline.png" alt="">
                     الإرشادات
                 </button>
                 <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal"
@@ -141,7 +141,7 @@
                 </button>
                 <button *ngIf="(role == 'Company' || (role==='User' && permission.Approve)) && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="SaveData('Approve',0)">
-                    موافقة
+                    ارسال
                 </button>
                 <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Complete)) && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
                     (click)="CompleteForm()">

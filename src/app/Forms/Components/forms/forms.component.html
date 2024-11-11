@@ -55,9 +55,7 @@
         </select>
         <label for="search" class="select-label">بحث بالسنة</label>
       </div>
-
     </div>
-
     <div>
       <div class="items d-none" id="items" (mousedown)="onMouseDown($event)">
         <ul [ngStyle]="{'transform': 'scale(' + zoomLevel + ')'}">
@@ -304,7 +302,8 @@
                 </div>
               </div>
               <hr *ngIf="Type == 3 || Type == 4 || Type == 7" />
-              <div class="table-responsive company-table research-table table-border" *ngIf="Type == 3 || Type == 4 || Type == 7">
+              <div class="table-responsive company-table research-table table-border"
+                *ngIf="Type == 3 || Type == 4 || Type == 7">
                 <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">اضافة سطر</button>
                 <table class="table table-borderless">
                   <thead>
@@ -386,6 +385,12 @@
                     </option>
                   </select>
                   <label>رمز السؤال</label>
+                </div>
+              </div>
+              <div class="col-12 col-lg-4 mb-2">
+                <div class="form-check form-switch d-flex align-items-center questionActive">
+                  <label class="form-check-label" for="active" style="font-size: 14px">فعال</label>
+                  <input formControlName="IsActive" class="form-check-input" type="checkbox" id="active" checked />
                 </div>
               </div>
             </div>

@@ -221,6 +221,7 @@ export class FormsComponent implements OnInit {
     });
     this.questionForm = this.formBuilder.group({
       tableId: [''],
+      IsActive: [true],
       codeId: [0, Validators.required],
     });
     this.GetAllForms();
@@ -831,12 +832,9 @@ export class FormsComponent implements OnInit {
       this.AppenHtmlForm(element); // Pass each form to the append method
       (element.tables as IGetTableDto[]).forEach(
         (elementTable: IGetTableDto) => {
-
           this.AppenHtmlTable(elementTable);
           (elementTable.formContents as IGetQuestionDto[]).forEach(
             (elementQuestion: IGetQuestionDto) => {
-
-
               this.AppenHtmlQues(elementQuestion);
             }
           );
@@ -1298,6 +1296,7 @@ export class FormsComponent implements OnInit {
       const Model: IAddQuestion = {
         codeId: Number(this.questionForm.value.codeId),
         tableId: this.questionForm.value.tableId,
+        IsActive: this.questionForm.value.IsActive,
       };
       const observer = {
         next: (res: any) => {
@@ -1338,6 +1337,7 @@ export class FormsComponent implements OnInit {
     this.questionForm.reset({
       codeId: '',
       tableId: '',
+      IsActive:true,
     });
     this.subCodes = [];
   }
@@ -1386,6 +1386,7 @@ export class FormsComponent implements OnInit {
           this.questionForm.patchValue({
             tableId: this.editQues.tableId,
             codeId: this.editQues.codeId,
+            IsActive: this.editQues.IsActive,
           });
           this.GetSubCodesById(this.editQues.codeId)
           this.Loader = false;
@@ -1412,6 +1413,7 @@ export class FormsComponent implements OnInit {
       const Model: IAddQuestion = {
         tableId: this.questionForm.value.tableId,
         codeId: this.questionForm.value.codeId,
+        IsActive: this.questionForm.value.IsActive,
       };
       const observer = {
         next: (res: any) => {
