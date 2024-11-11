@@ -77,6 +77,23 @@
                             </td>
                             <td style="text-wrap: balance;" class="text-start">{{workQues.enName}}</td>
                         </tr>
+                        <tr *ngIf="coverForm.Type ==2">
+                            <td style="text-wrap: balance;">جنسية المستثمر</td>
+                            <td class="text-center">
+                                    <select class="form-control" style="width: 100% !important; 
+                                    border-width: 1px;
+                                    border-style: solid;
+                                    border-radius: 6px;
+                                    text-align: center;
+                                    padding: 1px 7px;"
+                                        name="coverForm.GeneralData.dataSource"
+                                        [(ngModel)]="coverForm.GeneralData.countruId">
+                                        <option value="0"></option>
+                                        <option value={{country.id}} *ngFor="let country of countries">{{country.arName}}</option>
+                                    </select>
+                            </td>
+                            <td style="text-wrap: balance;" class="text-start">Investor's Nationality</td>
+                        </tr>
                         <tr>
                             <td style="text-wrap: balance;">الفترة او السنه الماليه</td>
                             <td class="text-center" style="display: flex;">

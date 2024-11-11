@@ -41,21 +41,21 @@ export class SharedFormCoverComponent implements OnInit {
     Type: 0
   };
   workData: IWorkDataQuesDto[] = [
-    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise',inputValue: '' , isSelect:false},
-    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No',inputValue: '' , isSelect:false},
-    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number',inputValue: '' , isSelect:false},
-    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity',inputValue: '' , isSelect:false},
-    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
-    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location',inputValue: '' , isSelect:false},
-    { arName: 'المحافظة : ', enName: ' :  Region',inputValue: '' , isSelect:false},
-    { arName: 'الولاية : ', enName: ' :  Wilayat',inputValue: '' , isSelect:false},
-    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box',inputValue: '' , isSelect:false},
-    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code',inputValue: '' , isSelect:false},
-    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No',inputValue: '' , isSelect:false},
-    { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
-    { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
-    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
-    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)',inputValue: '' , isSelect:false},
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '', isSelect: false },
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '', isSelect: false },
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '', isSelect: false },
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '', isSelect: false },
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '', isSelect: false },
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '', isSelect: false },
+    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '', isSelect: false },
+    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '', isSelect: false },
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '', isSelect: false },
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '', isSelect: false },
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '', isSelect: false },
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '', isSelect: false },
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '', isSelect: false },
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '', isSelect: false },
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)', inputValue: '', isSelect: false },
   ];
   workDataChk: IWorkDataChkDto[] = [
     { arName: 'منشاة فردية', enName: 'Sole Proprietorship', selected: false },
@@ -73,9 +73,53 @@ export class SharedFormCoverComponent implements OnInit {
     from: '',
     to: '',
     describeMainActivity: '',
-    dataSource : 0
+    dataSource: 0,
+    countryId:0
   };
-  company!: ICompany;
+  company: ICompany = {
+    activityId: 0,
+    arActivityName: '',
+    enActivityName: '',
+    address: '',
+    arName: '',
+    enName: '',
+    compRegNumber: '',
+    municipalityNumber: '',
+    fax: '',
+    telNumber: '',
+    activity: '',
+    subActivity: '',
+    governorates: '',
+    governoratesId: 0,
+    sectorId: 0,
+    mailBox: '',
+    wilayatId: 0,
+    wilayat: '',
+    embeded: '',
+    webSite: '',
+    postalCode: '',
+    phoneNumber: '',
+    email: '',
+    status: '',
+    id: 0,
+    researcherId: '',
+    accountingPeriod: new Date(),
+    legalType: '',
+    pathImgProfile: '',
+    researcherArName: '',
+    activityName: '',
+    sectorName: '',
+    subActivityName: '',
+    institutionHeadquarters: '',
+    completionAccPeriod: new Date(),
+    dateOfWork: new Date(),
+    institutionVlaue: '',
+    sectorCode: '',
+    activityCode: '',
+    subActivityCode: '',
+    companyEmails: []
+  };
+
   Loader: boolean = false;
   noData: boolean = false;
   forms: IGetFormDto[] = [];
@@ -118,7 +162,7 @@ export class SharedFormCoverComponent implements OnInit {
             ...res.Data,        // Overwrite only the properties from res.Data
             GeneralData: res.Data.GeneralData || this.coverForm.GeneralData, // Preserve GeneralData if not provided
           };
-          
+
           this.GetFormData();
         }
       },
@@ -170,7 +214,7 @@ export class SharedFormCoverComponent implements OnInit {
                       GeneralData: parsedCoverForm.GeneralData || this.coverForm.GeneralData,  // Preserve GeneralData if not provided
                     };
                   }
-                  
+
                   tablesList.forEach((table: any) => {
                     const tableIndex = this.coverForm.tables.findIndex(t => t.id == table.TableId);
                     if (tableIndex !== -1) {
@@ -360,7 +404,7 @@ export class SharedFormCoverComponent implements OnInit {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -395,18 +439,18 @@ export class SharedFormCoverComponent implements OnInit {
                   if (generalData) {
                     this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
                     this.workData = this.coverForm.GeneralData.CompanyInfo;
-                    
+
                   }
                   else if (res.Data.length > 0) {
                     if (res.Data[0].GeneralData) {
                       this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
                       this.workData = this.coverForm.GeneralData.CompanyInfo;
-                      
+
                     }
                   }
                 }
                 else {
-                  
+
                   this.GetCompanyById(+this.companyId);
                 }
               }
@@ -464,7 +508,6 @@ export class SharedFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
           this.company = res.Data;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
@@ -530,7 +573,7 @@ export class SharedFormCoverComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          
+
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;

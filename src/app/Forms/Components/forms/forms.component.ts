@@ -175,6 +175,8 @@ export class FormsComponent implements OnInit {
     Close: true, 
     Open: true
   };
+  yearSelect:string="";
+  typeSelect:string="";
   constructor(
     private formBuilder: FormBuilder,
     private formServices: FormService,
@@ -192,6 +194,9 @@ export class FormsComponent implements OnInit {
     for (let year = 2007; year <= 2024; year++) {
       this.yearsFilter.push(year);
     }
+    debugger
+    this.yearSelect = new Date().getFullYear().toString();
+    this.typeSelect = "";
     this.formForm = this.formBuilder.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -224,7 +229,7 @@ export class FormsComponent implements OnInit {
       IsActive: [true],
       codeId: [0, Validators.required],
     });
-    this.GetAllForms();
+    this.GetAllForms(this.yearSelect,this.typeSelect);
     this.years = this.sharedServices.generateYears(2000, 2024);
     this.GetSectors();
     this.editor = new Editor();
@@ -714,7 +719,7 @@ export class FormsComponent implements OnInit {
             button.click();
           }
           this.Loader = false;
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           Swal.fire({
             icon: 'success',
             title: res.Message,
@@ -759,9 +764,8 @@ export class FormsComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
-  GetAllForms(): void {
+  GetAllForms(yearSelect:string,typeSelect:string): void {
     this.Loader = true;
-
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
@@ -816,31 +820,10 @@ export class FormsComponent implements OnInit {
         this.Loader = false;
       },
     };
-    this.formServices.GetAllForms().subscribe(observer);
+    this.formServices.GetAllForms(yearSelect,typeSelect).subscribe(observer);
   }
-  onYearChange(event: Event): void {
-    const selectedYear = +(event.target as HTMLSelectElement).value; // Get selected year
-
-    if (selectedYear != null && selectedYear != undefined && selectedYear != 0)
-      this.forms = this.formsTemp.filter(form => +form.reviewYear === selectedYear);
-    else
-      this.forms = this.formsTemp // Filter forms
-    // Clear and append filtered forms
-    this.clearAppendedForms();
-
-    (this.forms as IGetFormDto[]).forEach((element: IGetFormDto) => {
-      this.AppenHtmlForm(element); // Pass each form to the append method
-      (element.tables as IGetTableDto[]).forEach(
-        (elementTable: IGetTableDto) => {
-          this.AppenHtmlTable(elementTable);
-          (elementTable.formContents as IGetQuestionDto[]).forEach(
-            (elementQuestion: IGetQuestionDto) => {
-              this.AppenHtmlQues(elementQuestion);
-            }
-          );
-        }
-      );
-    });
+  onSearch(yearSelect: string,typeSelect:string): void {
+    this.GetAllForms(yearSelect,typeSelect);
   }
   clearAppendedForms() {
     const maindiv = document.getElementById('main')!;
@@ -868,7 +851,7 @@ export class FormsComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllForms();
+        this.GetAllForms(this.yearSelect,this.typeSelect);
         this.Loader = false;
         Swal.fire({
           icon: 'success',
@@ -888,7 +871,7 @@ export class FormsComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllForms();
+        this.GetAllForms(this.yearSelect,this.typeSelect);
         this.Loader = false;
         Swal.fire({
           icon: 'success',
@@ -966,7 +949,7 @@ export class FormsComponent implements OnInit {
 
           this.resetForm();
           this.form = res.Data;
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           this.Loader = false;
           Swal.fire({
             icon: 'success',
@@ -1041,7 +1024,7 @@ export class FormsComponent implements OnInit {
             button.click();
           }
           this.resetTable();
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           console.log(res);
           this.Loader = false;
           Swal.fire({
@@ -1136,7 +1119,7 @@ export class FormsComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllForms();
+        this.GetAllForms(this.yearSelect,this.typeSelect);
         this.Loader = false;
         Swal.fire({
           icon: 'success',
@@ -1256,7 +1239,7 @@ export class FormsComponent implements OnInit {
             button.click();
           }
           this.resetForm();
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           this.Loader = false;
           Swal.fire({
             icon: 'success',
@@ -1306,7 +1289,7 @@ export class FormsComponent implements OnInit {
             button.click();
           }
           this.resetQuestion();
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           console.log(res);
           this.Loader = false;
           Swal.fire({
@@ -1361,7 +1344,7 @@ export class FormsComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        this.GetAllForms();
+        this.GetAllForms(this.yearSelect,this.typeSelect);
         this.Loader = false;
         Swal.fire({
           icon: 'success',
@@ -1423,7 +1406,7 @@ export class FormsComponent implements OnInit {
           }
           this.resetForm();
           this.form = res.Data;
-          this.GetAllForms();
+          this.GetAllForms(this.yearSelect,this.typeSelect);
           this.Loader = false;
           Swal.fire({
             icon: 'success',

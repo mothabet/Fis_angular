@@ -54,7 +54,7 @@
         *ngIf="role === 'Researchers'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
-          <span>الباحث او المشرف</span>
+          <span>ملف الباحث</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Companies'))">

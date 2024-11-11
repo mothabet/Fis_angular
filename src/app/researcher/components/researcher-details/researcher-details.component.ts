@@ -107,6 +107,8 @@ export class ResearcherDetailsComponent implements OnInit {
     Close: true, 
     Open: true
   };
+  isAllSelected: boolean = false;
+
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
@@ -119,7 +121,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.topScreenServices.setResearcherId(this.researcherId);
     this.GetResearcherById(+this.researcherId,1,'');
     this.GetAllMessages(0, '')
-    this.GetAllForms();
+    this.GetAllForms("2024");
     const isLoggedIn = this.authService.getToken();
     let result = this.authService.decodedToken(isLoggedIn);
     this.role = result.roles;
@@ -166,6 +168,7 @@ export class ResearcherDetailsComponent implements OnInit {
         if (res.Data) {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
+          debugger
           this.companies = res.Data.companies.getCompaniesDtos;
           this.companiesSelect = this.companies.filter(c=>c.researcherArName === "");
           this.currentPage = res.Data.companies.PageNumber;
@@ -242,7 +245,7 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-
+debugger
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))
@@ -285,7 +288,7 @@ export class ResearcherDetailsComponent implements OnInit {
       this.selectedMessage = this.messages.find(msg => msg.Id === this.selectedMessageId)!;
     }
   }
-  GetAllForms(): void {
+  GetAllForms(yearSelect:string): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -308,7 +311,7 @@ export class ResearcherDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.formServices.GetAllForms().subscribe(observer);
+    this.formServices.GetAllForms("","").subscribe(observer);
   }
 
   onSubmit() {
@@ -345,18 +348,40 @@ export class ResearcherDetailsComponent implements OnInit {
     };
     this.formServices.sendForm(formDto).subscribe(observer);
   }
-
-
   onCheckboxChange(event: any, company: any): void {
     if (event.target.checked) {
+      // إضافة الشركة إلى القائمة
       this.selectedCompanyIds.push(company.id);
     } else {
+      // إزالة الشركة من القائمة
       this.selectedCompanyIds = this.selectedCompanyIds.filter(id => id !== company.id);
     }
+  
+    // تحديث حالة اختيار الكل
+    this.updateSelectAllState();
   }
-
+  
+  // اختيار أو إلغاء اختيار الكل
+  toggleSelectAll(event: any): void {
+    this.isAllSelected = event.target.checked;
+    if (this.isAllSelected) {
+      // اختيار جميع الشركات
+      this.selectedCompanyIds = this.companies.map(company => company.id);
+    } else {
+      // إلغاء تحديد جميع الشركات
+      this.selectedCompanyIds = [];
+    }
+  }
+  
+  // التحقق مما إذا كانت الشركة محددة
   isSelected(companyId: number): boolean {
     return this.selectedCompanyIds.includes(companyId);
+  }
+  
+  // تحديث حالة اختيار الكل بناءً على الشركات المختارة
+  updateSelectAllState(): void {
+    const allSelected = this.companies.length > 0 && this.companies.every(company => this.selectedCompanyIds.includes(company.id));
+    this.isAllSelected = allSelected;
   }
 
   printPdf() {

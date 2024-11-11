@@ -48,13 +48,24 @@
         </button>
       </div>
       <!-- Select and Label on the Left -->
-      <div class="d-flex align-items-center col-2 position-relative">
-        <select name="search" class="form-control" (change)="onYearChange($event)">
-          <option value="" selected></option>
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-        </select>
-        <label for="search" class="select-label">بحث بالسنة</label>
-      </div>
+       <div class="d-flex align-items-center col-4 row">
+
+         <div class=" position-relative col-6 ">
+           <select name="search" class="form-control" [(ngModel)]="yearSelect" (change)="onSearch(yearSelect,typeSelect)">
+             <option value="" selected>جميع السنوات</option>
+             <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+           </select>
+           <label for="search" class="select-label">بحث بالسنة</label>
+         </div>
+         <div class=" position-relative col-6">
+           <select name="search" class="form-control" [(ngModel)]="typeSelect" (change)="onSearch(yearSelect,typeSelect)">
+             <option value="" selected>سنويه وربعيه</option>
+             <option value="1" >سنويه</option>
+             <option value="2" >ربعيه</option>
+           </select>
+           <label for="search" class="select-label">بحث بالنوع</label>
+         </div>
+       </div>
     </div>
     <div>
       <div class="items d-none" id="items" (mousedown)="onMouseDown($event)">

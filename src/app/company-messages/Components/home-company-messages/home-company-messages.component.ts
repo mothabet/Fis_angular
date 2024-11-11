@@ -141,8 +141,9 @@ export class HomeCompanyMessagesComponent {
       messageid: ['', Validators.required],
       arDetails: '',
     });
-    this.GetAllCompanyMessages(1);
+    debugger
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
+    this.GetAllCompanyMessages(1);
     this.GetAllMessages(0, '');
     this.GetPermissionByUserId();
     this.GetPermissionByUserIdForms();
@@ -257,7 +258,18 @@ get sanitizedContent() {
         this.showLoader = false;
       },
     };
-    this.companyMessageService.GetAllCompanyMessages(page, textSearch).subscribe(observer);
+    this.companyMessageService.GetAllCompanyMessages(page,+this.companyId, textSearch).subscribe(observer);
+  }
+  getDateOnly(dateTimeString: Date): string {
+    if(dateTimeString!=null && dateTimeString.toString() != ""){
+      const date = new Date(dateTimeString.toString());
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+      const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+      return `${year}-${month}-${day}`;
+    }
+    else
+      return ""
   }
   showAlert(id: number): void {
     Swal.fire({
@@ -394,14 +406,6 @@ get sanitizedContent() {
     }
     return errors;
   }
-  getDateOnly(dateTimeString: string): string {
-    const date = new Date(dateTimeString);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
-    const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
-    return `${year}-${month}-${day}`;
-  }
-  
   
   researcherSearch() {
     this.GetAllCompanyMessages(this.currentPage, this.searchText);

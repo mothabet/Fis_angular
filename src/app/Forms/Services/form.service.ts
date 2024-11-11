@@ -19,9 +19,9 @@ export class FormService {
     var response = this.http.post(environment.apiUrl + `Form/AddForm?lang=2`, Model, { headers });
     return response;
   }
-  GetAllForms(){
+  GetAllForms(yearSelect:string,typeSelect:string){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.get(environment.apiUrl+`Form/GetAllForms?lang=2`,{ headers });
+     var resopnse = this.http.get(environment.apiUrl+`Form/GetAllForms?lang=2&yearSelect=${yearSelect}&typeSelect=${typeSelect}`,{ headers });
      return resopnse;
    }
    GetFormData(formId:number , companyId:number = 0,tableId=0){

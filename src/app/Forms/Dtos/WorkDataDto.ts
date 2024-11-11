@@ -16,5 +16,6 @@ export interface IGeneralDataDto {
   dataSource: number,
   from: string,
   to: string,
-  describeMainActivity: string
+  describeMainActivity: string,
+  countryId : number,
 }

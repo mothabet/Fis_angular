@@ -14,4 +14,5 @@ export interface ICompanyMessage {
     enDetails: string,
     arName: string,
     enName: string,
+    CreatedOn: Date
 }

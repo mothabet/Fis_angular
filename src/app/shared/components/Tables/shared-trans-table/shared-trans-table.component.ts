@@ -120,11 +120,6 @@ export class SharedTransTableComponent {
     if (status < 3)
       this.BeginningForm();
   }
-  calculateTransactionFormContent(item: any, status: number) {
-    item.values[2] = item.values[1] - item.values[0];
-    if (status < 3)
-      this.BeginningForm();
-  }
   addSubCodeRow(code: ICode) {
     const subCode: ISubCodeForm = {
       arName: '',
@@ -678,7 +673,7 @@ export class SharedTransTableComponent {
   getDifferenceBetweenSums(index1: number, index2: number): number {
     const sum1 = this.getSumOfValues(index1);
     const sum2 = this.getSumOfValues(index2);
-    return sum1 - sum2;
+    return sum2 - sum1;
   }
   BeginningForm(): void {
     this.Loader = true;

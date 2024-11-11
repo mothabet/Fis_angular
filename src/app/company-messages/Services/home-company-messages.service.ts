@@ -17,9 +17,9 @@ export class HomeCompanyMessagesService {
      return resopnse;
    }
    
-   GetAllCompanyMessages(pageNumber:number , textSearch : string =''){
+   GetAllCompanyMessages(pageNumber:number,companyId:number , textSearch : string =''){
      var headers= this.sharedService.getHeaders();
-      var resopnse = this.http.get(environment.apiUrl+`CompanyMessage/GetAllCompanyMessages?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+      var resopnse = this.http.get(environment.apiUrl+`CompanyMessage/GetAllCompanyMessages?companyId=${companyId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
       return resopnse;
     }
     DeleteCompanyMessage(id:number){

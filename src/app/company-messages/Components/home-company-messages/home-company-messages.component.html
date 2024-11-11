@@ -41,6 +41,7 @@
                     <tr class="t-header">
                         <th >#</th>
                         <th class="text-center" scope="col">اسم المراسلة</th>
+                        <th class="text-center" scope="col">تاريخ الارسال</th>
                        <th style="min-width: 150px;" class="text-center" scope="col">الحالة</th>
                     </tr>
                 </thead>
@@ -48,6 +49,7 @@
                     <tr *ngFor="let message of companyMessages ; let i = index">
                         <th >{{i+1}}</th>
                         <td class="text-center">{{message.arName}}</td>
+                        <td class="text-center">{{getDateOnly( message.CreatedOn)}}</td>
                         <td class="text-center">
                             تم الارسال
                         </td>
