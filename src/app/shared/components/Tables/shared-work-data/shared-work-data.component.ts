@@ -75,7 +75,7 @@ export class SharedWorkDataComponent implements OnInit {
     to: '',
     describeMainActivity: '',
     dataSource: 0,
-    countruId:0
+    countryId:0
   };
   Governorates: IDropdownList[] = []
   Wilayat: IDropdownList[] = []
