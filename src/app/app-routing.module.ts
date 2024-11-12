@@ -39,6 +39,8 @@ import { GroupComponent } from './sectors-and-activities/Components/group/group.
 import { CategoryComponent } from './sectors-and-activities/Components/category/category.component';
 import { SectionComponent } from './sectors-and-activities/Components/section/section.component';
 import { OneYearWithPartsAndTotalComponent } from './Forms/Components/one-year-with-parts-and-total/one-year-with-parts-and-total.component';
+import { GeneralIndicatorsComponent } from './home-setting/Components/general-indicators/general-indicators.component';
+import { OmanMapsComponent } from './home-setting/Components/oman-maps/oman-maps.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -78,6 +80,8 @@ const routes: Routes = [
   { path: 'Home', component: HomeComponent, canActivate: [LoginGuard] },
   { path: 'CompanyHome/:companyId', component: CompanyHomeComponent, canActivate: [LoginGuard] },
   { path: 'PrevForm', component: PrevFormComponent, canActivate: [LoginGuard] },
+  { path: 'GeneralIndicators', component: GeneralIndicatorsComponent, canActivate: [LoginGuard] },
+  { path: 'OmanMaps', component: OmanMapsComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];

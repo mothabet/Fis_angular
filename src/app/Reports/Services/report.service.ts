@@ -34,7 +34,6 @@ export class ReportService {
     return resopnse;
   }
   GetTableFields(tableType: number) {
-    
     var headers = this.sharedService.getHeaders();
     var resopnse = this.http.get(environment.apiUrl + `ReportParts/GetTableFields?tableType=${tableType}&lang=2`, { headers });
     return resopnse;

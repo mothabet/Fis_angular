@@ -18,6 +18,7 @@ import { SectorsAndActivitiesModule } from './sectors-and-activities/sectors-and
 import { ReportsModule } from './Reports/reports.module';
 import { SettingsAuthModule } from './settings-auth/settings-auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { HomeSettingModule } from './home-setting/home-setting.module';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     PermissionsModule,
     CopmanyGeneralInformationModule,
     BrowserModule,
+    HomeSettingModule,
     AppRoutingModule,
     ToastrModule.forRoot({
       timeOut: 2000,
