@@ -75,7 +75,9 @@ export class LoginService {
       'Groups',
       'Categories',
       'SettingsAuth',
-      'Sections'
+      'Sections',
+      'GeneralIndicators',
+      'OmanMaps'
     ];
     return adminRoutes.includes(url);
   }

@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
-import { IAddReportPartDto, IFieldDto, IGetReportDto, IGetReportPartsDto, IReportFilterDto, ITableDto, ITableFieldDto } from '../../Dtos/ReportDto';
+import { IAddReportPartDto, IFieldDto, IGetReportDto, IGetReportPartsDto, IReportFilterDto, ITableDto, ITableFieldDto, ReportField } from '../../Dtos/ReportDto';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as saveAs from 'file-saver';
@@ -27,6 +27,8 @@ import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 export class ReportContentsComponent implements OnInit {
   @ViewChild('chooseTable') chooseTableModal!: ElementRef;
   tableType: number = 0;
+  reportYearFrom: number | undefined;
+  reportYearTo: number | undefined;
   showLoader: boolean = false;
   companyFields: IFieldDto[] = [];
   researcherFields: IFieldDto[] = [];
@@ -83,6 +85,7 @@ export class ReportContentsComponent implements OnInit {
     { dataType: 'String', name: 'عنوان البريد الإلكتروني', arName: '' },
     { dataType: 'String', name: 'التوزيع الجغرافي للاستثمار الأجنبي المباشر المتجه إلى الخارج (حسب الدولة)', arName: '' },
   ]
+  transformedReport: ReportField[] = [];  // Declare transformedReport
   isDropdownOpen = false;
   isFormContentDropdownOpen = false;
   isActivityDropdownOpen = false;
@@ -182,6 +185,10 @@ export class ReportContentsComponent implements OnInit {
   filteredSectors: IDropdownList[] = [];
   filteredCompanies: IDropdownList[] = [];
   filteredYears: IDropdownList[] = this.years;
+  errorMessage: string = '';
+  isTableError: boolean = false;
+  isYearError: boolean = false;
+  isReportNameError: boolean = false;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private reportServices: ReportService, private companyService: CompanyHomeService
     , private formServices: FormService,
@@ -192,7 +199,7 @@ export class ReportContentsComponent implements OnInit {
     this.GetReports();
   }
   getTotal(report: any): number {
-    return report.fields.reduce((total: number, row: any) => total + (+row[2]?.value || 0), 0);
+    return report.fields.reduce((total: number, row: any) => total + (+row[0]?.value || 0), 0);
   }
   removeFilterRow(table: any, field: any) {
     // Find the matching table in tables array based on enTableName
@@ -334,16 +341,21 @@ export class ReportContentsComponent implements OnInit {
   selectCode(event: Event, table: ITableDto, code: any) {
     this.searchFormContentTerm = code.arName;
     this.isFormContentDropdownOpen = false;
+
     const selectedField = this.codes.find(field => field.arName === code.arName);
     if (selectedField && table) {
-      const tableField: ITableFieldDto = {
-        arName: selectedField.arName,
-        name: selectedField.arName,
-        dataType: null,
-        filter: null, // Initialize as null or a valid default value
-        value: selectedField.Id // Initialize value as needed
-      };      // Check if the field already exists in the table's fields array
-      table.fields[0] = tableField
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          arName: selectedField.arName,
+          name: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.Id // Initialize value as needed
+        };
+        // Check if the field already exists in the table's fields array
+        table.fields.push(tableField);
+      }
     }
     // Perform any additional logic, like setting a FormControl value
   }
@@ -366,7 +378,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.Id // Initialize value as needed
         };
 
-        table.fields[0] = tableField;
+        table.fields.push(tableField);
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -379,7 +391,6 @@ export class ReportContentsComponent implements OnInit {
     if (selectedField && table) {
       // Check if the field already exists in the table's fields array
       const fieldExists = table.fields.some(field => field.name === selectedField.arName);
-
       if (!fieldExists) {
         const tableField: ITableFieldDto = {
           name: selectedField.arName,
@@ -437,7 +448,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.id // Initialize value as needed
         };
 
-        table.fields[0] = tableField;
+        table.fields.push(tableField);
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -604,6 +615,11 @@ export class ReportContentsComponent implements OnInit {
     this.formServices.GetTables().subscribe(observer);
   }
   onTableSelect(): void {
+    this.isTableError = false;
+    this.isYearError = false;
+    this.isReportNameError = false;
+    this.reportYearFrom = undefined;
+    this.reportYearTo = undefined;
     this.tables = [];
     if (this.tableType === 1) {
       // Add the 'Companies' table to tableDto
@@ -1045,6 +1061,11 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
+    if (this.tables.length == 0) {
+      this.isTableError = true;
+      this.errorMessage = 'يجب تحديد جدول للتقرير'
+      return;
+    }
     if (this.tables[0].enTableName == 'TablesReport') {
       if (this.searchTerm == '' || this.searchTerm == null) {
         Swal.fire({
@@ -1056,40 +1077,102 @@ export class ReportContentsComponent implements OnInit {
         return;
       }
     }
-    if (this.tables.length > 1) {
-      if (this.tables[1].enTableName == 'Years') {
-        if (this.searchYearTerm == '' || this.searchYearTerm == null) {
-          Swal.fire({
-            icon: 'error',
-            title: 'يجب اختيار سنة واحدة',
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
-          });
-          return;
-        }
+    // if (this.tables.length > 1) {
+    //   if (this.tables[1].enTableName == 'Years') {
+    //     if (this.searchYearTerm == '' || this.searchYearTerm == null) {
+    //       Swal.fire({
+    //         icon: 'error',
+    //         title: 'يجب اختيار سنة واحدة',
+    //         showConfirmButton: true,
+    //         confirmButtonText: 'اغلاق'
+    //       });
+    //       return;
+    //     }
+    //   }
+    // }
+    if (this.tables[0].fields.length == 0) {
+      this.isYearError = true;
+      this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
+      return
+    }
+    debugger
+    if (this.reportYearTo === undefined || this.reportYearTo === null) {
+      const currentYear = new Date().getFullYear();
+      for (let year = this.reportYearFrom!; year <= currentYear; year++) {
+        const tableField: ITableFieldDto = {
+          name: year.toString(),
+          arName: year.toString(),
+          dataType: '', // Use appropriate data type as needed
+          filter: null,
+          value: ''
+        };
+        this.tables[1].fields.push(tableField);
+      }
+    }
+  
+    // Case 2: reportYearFrom and reportYearTo both have values
+    else if (this.reportYearTo !== undefined && this.reportYearTo > this.reportYearFrom!) {
+      for (let year = this.reportYearFrom; year! <= this.reportYearTo; year!++) {
+        const tableField: ITableFieldDto = {
+          name: year!.toString(),
+          arName: year!.toString(),
+          dataType: '', // Use appropriate data type as needed
+          filter: null,
+          value: ''
+        };
+        this.tables[1].fields.push(tableField);
+      }
+    }
+  
+    // Case 3: reportYearFrom and reportYearTo are equal
+    if (this.reportYearFrom === this.reportYearTo) {
+      const tableField: ITableFieldDto = {
+        name: this.reportYearFrom!.toString(),
+        arName: this.reportYearFrom!.toString(),
+        dataType: '', // Use appropriate data type as needed
+        filter: null,
+        value: ''
+      };
+      this.tables[1].fields.push(tableField);
+    }
+    if (!this.reportYearFrom || this.reportYearFrom === undefined) {
+      this.isYearError = true;
+      this.errorMessage = 'يجب تحديد سنة البداية'
+      return; // Stop further execution
+    }
+    if (this.reportYearFrom !== undefined && this.reportYearTo !== undefined) {
+      if ((this.reportYearFrom ?? 0) > (this.reportYearTo ?? 0)) {
+        this.isYearError = true;
+        this.errorMessage = 'يجب تحديد سنة النهاية اكبر من سنة البداية'
+        return; // Stop further execution
+      }
+    }
+    if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
+      this.isReportNameError = true;
+      this.errorMessage = 'يجب ادخال عنوان الجدول'
+      return;
+    }
+    if(this.tables.length == 3){
+      if (this.tables[2].fields.length == 0) {
+        this.isYearError = true;
+        this.errorMessage = `يجب الاختيار من ${this.tables[2].arTableName}`
+        return
       }
     }
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
-    if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب ادخال عنوان الجدول',
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
-      return;
-    }
 
-    if (this.report.query == '' || this.report.query == 'SELECT    ;' || this.report.query == null || this.report.query == undefined) {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب تحديد جداول للتقرير',
-        showConfirmButton: true,
-        confirmButtonText: 'اغلاق'
-      });
-      return;
-    }
+
+
+    // if (this.report.query == '' || this.report.query == 'SELECT    ;' || this.report.query == null || this.report.query == undefined) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'يجب تحديد جداول للتقرير',
+    //     showConfirmButton: true,
+    //     confirmButtonText: 'اغلاق'
+    //   });
+    //   return;
+    // }
 
     if (this.tables.length > 0 && this.tables[0].enTableName !== 'FormContent' && this.tables[0].enTableName !== 'TablesReport') {
       this.tables.forEach(table => {
@@ -1112,6 +1195,9 @@ export class ReportContentsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         this.tables = [];
+        this.isReportNameError = false;
+        this.reportYearFrom = undefined;
+        this.reportYearTo = undefined;
         this.report = {
           part: '',
           query: '',
@@ -1221,6 +1307,92 @@ export class ReportContentsComponent implements OnInit {
       this.closeModal();
     }
   }
+  transformFields(fields: any[], report: any): ReportField[] {
+    // Step 1: Group the fields by 'codeArName'
+    const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportField }, fieldArray: any[]) => {
+      const questionCode = fieldArray[0].value;
+      const codeArName = fieldArray[1].value;
+      const codeEnName = fieldArray[2].value;
+      const reviewYear = fieldArray[3].value;
+      const totalCodeKey = `totalCode_${reviewYear}`;
+      const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
+  
+      // Check if the group already exists
+      if (!acc[codeArName]) {
+        acc[codeArName] = {
+          questionCode,
+          codeArName,
+          codeEnName,
+          years: []
+        };
+      }
+  
+      // Add the year and totalCode
+      if (totalCode) {
+        acc[codeArName].years.push({
+          reviewYear: Number(reviewYear),
+          totalCode: Number(totalCode)
+        });
+      }
+  
+      return acc;
+    }, {}));
+  
+    // Step 2: Append missing years from report.reportDetails[1].Fields with a value of 0
+    let fieldsInReport = groupedReport as ReportField[];
+  
+    // Define the years range to add (e.g., 2021, 2022)
+    const yearsToAdd = [2022, 2021];
+  
+    // Use inline type annotation for fieldDetail
+    report.reportDetails[1].Fields.forEach((fieldDetail: { value: string | number }) => {
+      fieldsInReport.forEach((field) => {
+        const yearExists = field.years.some(year => year.reviewYear === fieldDetail.value);
+  
+        // Check if the year exists, and if not, add it
+        if (!yearExists) {
+          const missingYear = Number(fieldDetail.value);
+          // Avoid adding '0' and only add years in 'yearsToAdd' if they don't already exist
+          if (missingYear > 0 && !field.years.some(year => year.reviewYear === missingYear)) {
+            field.years.push({
+              reviewYear: missingYear,
+              totalCode: 0
+            });
+          }
+        }
+      });
+    });
+  
+    // Step 3: Ensure the years array is sorted by 'reviewYear'
+    fieldsInReport.forEach(field => {
+      field.years.sort((a, b) => a.reviewYear - b.reviewYear);
+      field.years = this.processYears(report.reportDetails[1].Fields,field.years)
+
+    });
+    debugger
+    // Step 4: Return the transformed report
+    return fieldsInReport;
+  }
+  processYears(yearsWithoutValues: any[], yearsWithValues: any[]): any[] {
+    // Convert the yearsWithValues to a Map for quick lookup by year
+    const yearsWithValuesMap = new Map<number, number>();
+    yearsWithValues.forEach(item => yearsWithValuesMap.set(item.reviewYear, item.totalCode));
+
+    // Add missing years with value 0
+    yearsWithoutValues.forEach(year => {
+      if (yearsWithValuesMap.has(Number(year.name))) {
+        // If the year is in yearsWithValues, set the value
+        year.value = yearsWithValuesMap.get(Number(year.name)) || 0;
+      } else {
+        // If the year is not in yearsWithValues, set value to 0
+        year.value = 0;
+      }
+    });
+
+    // Sort by year
+    return yearsWithoutValues.sort((a, b) => Number(a.name) - Number(b.name));
+  } 
+  
   fbuildJoinQuery(tables: ITableDto[], stringFilterItems: IReportFilterDto[], numberFilterItems: IReportFilterDto[]): string {
     this.report.reportType = tables[0].enTableName;
     if (tables[0].enTableName != 'FormContent' && tables[0].enTableName != 'TablesReport') {
@@ -1296,6 +1468,7 @@ export class ReportContentsComponent implements OnInit {
         });
 
         table.fields.forEach((field, fieldIndex) => {
+
           if (field.value !== null && field.filter !== null) {
             let filterItem;
 
@@ -1315,7 +1488,21 @@ export class ReportContentsComponent implements OnInit {
               }
 
               const condition = `${tableAlias}.${field.name} ${filterItem.enName} ${conditionValue}`;
+
               whereClause += whereClause ? ` AND ${condition}` : ` WHERE ${condition}`;
+            }
+          }
+          else {
+            if (this.reportYearFrom && this.reportYearTo) {
+              if (this.reportYearFrom === this.reportYearTo) {
+                whereClause += ` where YEAR(CreatedOn) = ${this.reportYearFrom}`;
+              } else {
+                whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+              }
+            } else if (this.reportYearFrom && !this.reportYearTo) {
+              whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+            } else if (!this.reportYearFrom && this.reportYearTo) {
+              whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
             }
           }
         });
@@ -1376,26 +1563,7 @@ export class ReportContentsComponent implements OnInit {
   }
   createFormContentQuery(tables: ITableDto[]): string {
     let query = '';
-
-    if (tables[0].fields.length == 0) {
-      const tableField: ITableFieldDto = {
-        name: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.arName || '',
-        arName: '',
-        dataType: null,
-        filter: null, // Initialize as null or a valid default value
-        value: this.filteredCodes.find(c => c.arName === this.searchFormContentTerm)?.Id || '' // Initialize value as needed
-      };
-      tables[0].fields[0] = tableField;
-    }
-    if (tables[1].fields.length == 0) {
-      const tableField: ITableFieldDto = {
-        name: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.arName || '',
-        arName: '',
-        dataType: null,
-        filter: null, // Initialize as null or a valid default value
-        value: this.filteredYears.find(c => c.arName === this.searchYearTerm)?.id || '' // Initialize value as needed
-      };
-    }
+    
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1414,30 +1582,55 @@ export class ReportContentsComponent implements OnInit {
     }
     else {
       this.report.seconedTable = tables[1].enTableName;
-      query = `SELECT f.reviewYear,JSON_VALUE(j.value, '$.arName') AS arName,JSON_VALUE(j.value, '$.codes[0]')  AS totalFirstCode FROM forms f INNER JOIN Tables t ON t.formId = f.id INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN codes ON fc.codeId = codes.id INNER JOIN CompanyForms cf ON f.id = cf.formId INNER JOIN companies c ON cf.companyId = c.id INNER JOIN formDatas fd ON fd.UserId = c.UserId CROSS APPLY OPENJSON(fd.Data) AS j`; // or any other filters
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId`; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
-        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) AND (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL)`;
-      }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
 
-      // Handle conditions based on tables[1] (Years)
-      if (tables.length > 1 && tables[1].enTableName == 'Years') {
-        if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
 
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
-          });
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
         }
       }
+      // if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
+      //   whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) AND (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL)`;
+      // }
+
+      // Handle conditions based on tables[1] (Years)
+      // if (tables.length > 1 && tables[1].enTableName == 'Years') {
+      //   if (tables[1].fields && tables[1].fields.length > 0) {
+      //     tables[1].fields.forEach((field, fieldIndex) => {
+      //       if (field.name) {
+      //         // Add the condition for f.reviewYear
+      //         const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+      //         // Append this to the whereClause as well
+      //         whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+      //       }
+      //     });
+      //   }
+      // }
       // Final query with WHERE clause
-      let group = ` GROUP BY f.reviewYear, JSON_VALUE(j.value, '$.arName'),JSON_VALUE(j.value, '$.codes[0]') `
-      query += whereClause + group;
+      // let group = ` GROUP BY f.reviewYear, JSON_VALUE(j.value, '$.arName'),JSON_VALUE(j.value, '$.codes[0]') `
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
   }
@@ -1523,25 +1716,31 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,ac.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.code FROM forms f INNER JOIN tables t ON t.formId = f.id INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear,ac.arName as activityArName , ac.enName as activityEnName, ac.code as activityCode FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId inner join formDatas fd on f.id = fd.FormId inner join companies c on c.UserId = fd.UserId inner join activities ac on ac.id = c.activityId`; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
-        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) and (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (co.IsDeleted != 1 OR co.IsDeleted IS NULL) `;
-      }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
 
-      // Handle conditions based on tables[1] (Years)
-      if (tables.length > 1 && tables[1].enTableName == 'Years') {
-        if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
 
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
-          });
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
         }
       }
       if (tables.length > 1 && tables[2].enTableName === 'ActivitiesRep') {
@@ -1562,8 +1761,9 @@ export class ReportContentsComponent implements OnInit {
       }
 
       // Final query with WHERE clause
-      let group = ` GROUP BY ac.arName,JSON_VALUE(j.value, '$.arName'),ac.code,f.reviewyear`
-      query += whereClause + group;
+      // let group = ` GROUP BY ac.arName,JSON_VALUE(j.value, '$.arName'),ac.code,f.reviewyear`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
     else {
@@ -1653,25 +1853,31 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,co.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,ac.arName as activityName,ac.code as activityCode FROM forms f INNER JOIN tables t ON t.formId = f.id  INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear,c.arName as companyArName , c.enName as companyEnName , ac.code FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId inner join formDatas fd on f.id = fd.FormId inner join companies c on c.UserId = fd.UserId inner join activities ac on ac.id = c.activityId`; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
-        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)  AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL)`;
-      }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
 
-      // Handle conditions based on tables[1] (Years)
-      if (tables.length > 1 && tables[1].enTableName == 'Years') {
-        if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
 
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
-          });
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
         }
       }
 
@@ -1680,7 +1886,7 @@ export class ReportContentsComponent implements OnInit {
           // Collect conditions for each field name in an array
           const companyConditions: string[] = tables[2].fields
             .filter(field => field.name)  // Only include fields with a name
-            .map(field => `co.arName = N'${field.name}'`);
+            .map(field => `c.arName = N'${field.name}'`);
 
           // Join all conditions with OR and wrap in parentheses for clarity
           const combinedCompanyCondition = companyConditions.length > 0 ? `(${companyConditions.join(" OR ")})` : "";
@@ -1693,8 +1899,9 @@ export class ReportContentsComponent implements OnInit {
       }
 
       // Final query with WHERE clause
-      let group = ` GROUP BY JSON_VALUE(j.value, '$.arName'),co.arName,f.reviewyear,ac.arName,ac.code`
-      query += whereClause + group;
+      // let group = ` GROUP BY JSON_VALUE(j.value, '$.arName'),co.arName,f.reviewyear,ac.arName,ac.code`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
     else {
@@ -1784,25 +1991,31 @@ export class ReportContentsComponent implements OnInit {
     if (isFormContentRep == 1) {
       let query = ''
       this.report.seconedTable = tables[2].enTableName;
-      query = `SELECT f.reviewYear,s.arName,COALESCE(SUM(CAST(JSON_VALUE(j.value, '$.codes[0]') AS INT)), 0) AS totalCodeValue1,JSON_VALUE(j.value, '$.arName') as questionArName,s.code FROM forms f INNER JOIN tables t ON t.formId = f.id  INNER JOIN formContents fc ON fc.tableId = t.id INNER JOIN formDatas fd ON f.id = fd.FormId INNER JOIN CompanyForms cf ON fd.FormId = cf.formId INNER JOIN companies co ON cf.companyid = co.id INNER JOIN activities ac ON co.activityId = ac.id inner join categories cat on ac.categoryId = cat.id inner join groups g on cat.groupId = g.id inner join Section sec on g.sectionId = sec.id inner join sectors s on s.id = sec.sectorId  CROSS APPLY OPENJSON(fd.Data) AS j `; // or any other filters
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear,s.arName as sectorArName , s.enName as sectorEnName ,s.code as sectorCode FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId inner join formDatas fd on f.id = fd.FormId inner join companies c on c.UserId = fd.UserId inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id = g.sectionId inner join sectors s on s.id = sec.sectorId`; // or any other filters
       let whereClause = '';
       // Handle fields from tables[0]
-      if (this.searchFormContentTerm && this.searchFormContentTerm != '' && this.searchFormContentTerm != null) {
-        whereClause += ` WHERE JSON_VALUE(j.value, '$.arName') = N'${this.searchFormContentTerm}' AND JSON_VALUE(j.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL)  AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL)`;
-      }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) AND (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL) AND (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) AND (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
 
-      // Handle conditions based on tables[1] (Years)
-      if (tables.length > 1 && tables[1].enTableName == 'Years') {
-        if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
 
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
-          });
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
         }
       }
       if (tables.length > 1 && tables[2].enTableName === 'SectorsRep') {
@@ -1823,8 +2036,9 @@ export class ReportContentsComponent implements OnInit {
       }
 
       // Final query with WHERE clause
-      let group = ` GROUP BY s.arName,s.code,f.reviewyear,JSON_VALUE(j.value, '$.arName')`
-      query += whereClause + group;
+      // let group = ` GROUP BY s.arName,s.code,f.reviewyear,JSON_VALUE(j.value, '$.arName')`
+      // query += whereClause + group;
+      query += whereClause;
       return query;
     }
     else {

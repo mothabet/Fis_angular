@@ -159,11 +159,12 @@
             </a>
           </li>
           <li class="sidebar-item">
-            <a href="./settings-home.html" *ngIf="checkPermission('none')" class="sidebar-link inactive">
+            <a [routerLink]="'/GeneralIndicators'" *ngIf="checkPermission('GeneralIndicators')" class="sidebar-link inactive">
               <i class="fa-solid fa-file-pen icon inactive"></i>
               <span>الصفحة الرئيسية</span>
             </a>
           </li>
+          
         </ul>
       </li>
     </ul>

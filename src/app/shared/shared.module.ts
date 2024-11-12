@@ -31,6 +31,7 @@ import { QuarterTableRepComponent } from './components/ReportTables/quarter-tabl
 import { SharedOneYearWithPartsAndTotalComponent } from './components/Tables/shared-one-year-with-parts-and-total/shared-one-year-with-parts-and-total.component';
 import { PercentageWithoutTransRepComponent } from './components/ReportTables/percentage-without-trans-rep/percentage-without-trans-rep.component';
 import { OneYearWithPartsAndTotalRepComponent } from './components/ReportTables/one-year-with-parts-and-total-rep/one-year-with-parts-and-total-rep.component';
+import { GeneralIndicatorsComponent } from '../home-setting/Components/general-indicators/general-indicators.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,7 @@ import { OneYearWithPartsAndTotalRepComponent } from './components/ReportTables/
     NoRepDataComponent,
     QuarterTableRepComponent,
     PercentageWithoutTransRepComponent,
-    OneYearWithPartsAndTotalRepComponent
+    OneYearWithPartsAndTotalRepComponent,
   ]
 })
 export class SharedModule { }
