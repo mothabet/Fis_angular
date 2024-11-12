@@ -183,7 +183,10 @@
                                 <td class="text-center">{{ company.activityId }}</td>
                                 <td class="text-center">{{ company.arActivityName }}</td>
                                 <td class="text-center">{{company.address}}</td>
-                                <td class="text-center notes" *ngIf="company.researcherArName==''"></td>
+                                <td class="text-center notes" *ngIf="company.researcherArName=='' && company.researcherMandateArName==''"></td>
+                                <td class="text-center notes" *ngIf="!(company.researcherMandateArName=='')">
+                                    شركه مفوضه الي ({{company.researcherMandateArName}})
+                                </td>
                                 <td class="text-center notes" *ngIf="!(company.researcherArName=='')">
                                     شركه مفوضه من قبل ({{company.researcherArName}})
                                 </td>

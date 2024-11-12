@@ -4,16 +4,17 @@ import { ActivatedRoute } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
-import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { forkJoin } from 'rxjs';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import Swal from 'sweetalert2';
+import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
 
 @Component({
   selector: 'app-shared-two-years-with-parts',
@@ -25,8 +26,27 @@ export class SharedTwoYearsWithPartsComponent {
   @Input() tableId!: string;
   Loader: boolean = false;
   isChecked!: boolean;
-  table!: IGetTableDto;
-  coverForm!: ICoverFormDetailsDto;
+  table: IGetTableDto = {
+    id: 0,
+      arName: '',
+      enName: '',
+      arHeading: '',
+      enHeading: '',
+      arNotes: '',
+      enNotes: '',
+      Type: '',
+      Order: '',
+      formId: 0,
+      period: 0,
+      IsActive: false,
+      IsTotal: false,
+      totalTitleAr: '',
+      totalTitleEn: '',
+      IsDisabled: false,
+      formContents: [], // Initialize as an empty array
+      tableParts: []    // Initialize as an empty array
+  };
+  coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm();
   tablePartsCount = 0;
   countries!: IGetCountriesDto[];
   activities!: IGetActivitiesDto[];
@@ -51,6 +71,26 @@ export class SharedTwoYearsWithPartsComponent {
       this.GetActivites();
       this.GetCountrites();
     });
+  }
+  private getDefaultCoverForm(): ICoverFormDetailsDto {
+    return {
+      id: 0,
+      typeQuarter: 0,
+      tables: [],
+      arName: "",
+      enName: "",
+      arNotes: "",
+      enNotes: "",
+      reviewYear: "",
+      status: 0,
+      quarterCoverData: {} as IQuarterCoverFormDataDto,
+      coverFormData: {} as ICoverFormData,
+      certification: {} as ICertificationDto,
+      codeActivity: "",
+      codeSectorName: "",
+      GeneralData: {} as IGeneralDataDto,
+      Type: 0,
+    };
   }
   onRadioChange(event: Event, value: string) {
     this.selectedValue = value;
@@ -650,7 +690,10 @@ export class SharedTwoYearsWithPartsComponent {
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
-      return sum + (formContent.values[index] || 0);
+      if(formContent.code.QuestionCode !=="7021"){
+        sum += (formContent.values[index] || 0);
+      }
+      return sum;
     }, 0);
   }
   changeStatus(status: number) {

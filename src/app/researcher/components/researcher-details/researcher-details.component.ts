@@ -245,7 +245,6 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-debugger
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))

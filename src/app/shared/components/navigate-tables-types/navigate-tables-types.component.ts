@@ -106,6 +106,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = tableIdParam ? +tableIdParam : null;
     this.GetFormById(this.formId ?? "0")
     this.GetPermissionByUserId();
+    this.GetAllFormNotesByRole('Researchers' , true);
   }
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("FormDetails").then(permissions => {
@@ -958,29 +959,32 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formNotesService.AddFormNotes(Model).subscribe(observer);
   }
-  GetAllFormNotesByRole(role: string): void {
+  GetAllFormNotesByRole(role: string , isFirst:boolean = false): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.addFormNotesDto = res.Data.getFormNotesDtos
-          this.add = true;
-          if (role != '') {
-            const button = document.getElementById('ViewFormNotesBtn');
-            if (button) {
-              button.click();
+          this.add = true
+          debugger
+          if (!isFirst) {
+            if (role != '') {
+              const button = document.getElementById('ViewFormNotesBtn');
+              if (button) {
+                button.click();
+              }
             }
-          }
-          else {
-            const button = document.getElementById('AddFormNotesBtn');
-            if (button) {
-              button.click();
+            else {
+              const button = document.getElementById('AddFormNotesBtn');
+              if (button) {
+                button.click();
+              }
             }
           }
           this.Loader = false;
 
         }
-        else {
+        else if (!res.Data && !isFirst) {
           Swal.fire({
             icon: 'error',
             title: res.Message,
