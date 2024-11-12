@@ -4,9 +4,10 @@ import { LoginService } from 'src/app/auth/services/login.service';
 import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
-import { ICertificationDto, ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGeneralDataDto, IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { ICoverFormData } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -73,12 +74,16 @@ export class SharedWorkDataComponent implements OnInit {
     from: '',
     to: '',
     describeMainActivity: '',
-    dataSource: 0
+    dataSource: 0,
+    countryId:0
   };
   Governorates: IDropdownList[] = []
   Wilayat: IDropdownList[] = []
+  countries!: IGetCountriesDto[];
 
-  constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService, private router: Router, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+  constructor(private authService: LoginService, private companyServices: CompanyHomeService, 
+    private formServices: FormService, private sectorsAndActivitiesServices: SectorAndActivitiesService, private sharedServices: SharedService,
+     private activeRouter: ActivatedRoute) {
 
   }
   ngOnInit(): void {
@@ -86,6 +91,23 @@ export class SharedWorkDataComponent implements OnInit {
     this.GetFormById(+this.formId)
     this.isWorkDataActive = true;
     this.GetGovernorates();
+    this.GetCountrites();
+  }
+  GetCountrites() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.countries = res.Data.getCountryDtos;
+        }
+        else{
+          this.countries = [];
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetCountries(0, '').subscribe(observer);
   }
   GetGovernorates() {
     const observer = {
@@ -128,7 +150,7 @@ export class SharedWorkDataComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.company = res.Data;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
@@ -194,7 +216,7 @@ export class SharedWorkDataComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          debugger
+          
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;

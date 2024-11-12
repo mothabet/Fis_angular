@@ -44,7 +44,7 @@
           <span class="">الاستمارات الحاليه</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researcher') && checkPermission('Researcher'))">
+      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Researcher'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
           <span>الباحثين او المشرف</span>
@@ -54,10 +54,10 @@
         *ngIf="role === 'Researchers'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
-          <span>الباحث او المشرف</span>
+          <span>ملف الباحث</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researcher') && checkPermission('Companies'))">
+      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Companies'))">
         <a class="sidebar-link" routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
           <span>الشركات</span>
@@ -76,7 +76,7 @@
           <span>التقارير</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researcher') && checkPermission('none'))">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('none'))">
         <a href="#" class="sidebar-link">
           <i class="fa-solid fa-chart-simple icon"></i>
           <span>تكبير البيانات</span>
@@ -88,9 +88,9 @@
           <span class="">الاستمارات السابقه</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  || role==='Researchers' ">
         <div class="has-dropdown">
-          <a routerLink="Forms" class="sidebar-link" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researcher') && checkPermission('Forms'))">
+          <a routerLink="Forms" class="sidebar-link" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Forms'))">
             <i class="fa-solid fa-file-lines icon"></i>
             <span>تصميم الاستمارات</span>
           </a>
@@ -112,13 +112,13 @@
           </li>
         </ul>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researcher') && checkPermission('Auditing-Rules'))">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Auditing-Rules'))">
         <a routerLink="Auditing-Rules" class="sidebar-link">
           <i class="fa-solid fa-database icon"></i>
           <span>قواعد التدقيق</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  ||role==='Researcher'">
+      <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  ||role==='Researchers'">
         <div class="has-dropdown collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false"
           aria-controls="setting">
           <a class="sidebar-link" id="setting-icon">

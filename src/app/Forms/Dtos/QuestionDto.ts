@@ -1,8 +1,9 @@
-import { ICode, ICodeForm } from "src/app/code/Dtos/CodeHomeDto";
+import { ICodeForm } from "src/app/code/Dtos/CodeHomeDto";
 
 export interface IAddQuestion {
   tableId: number;
   codeId: number;
+  IsActive:boolean;
 }
 
 export interface IGetQuestionDto {
@@ -14,4 +15,5 @@ export interface IGetQuestionDto {
   valueCheck:boolean;
   isRule:boolean;
   IsHideSub:boolean,
+  IsActive:boolean,
 }

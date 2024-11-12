@@ -226,3 +226,6 @@ button img {
 .show {
   display: block;
 }
+.questionActive{
+  float: left;
+}

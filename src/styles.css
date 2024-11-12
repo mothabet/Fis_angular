@@ -49,3 +49,6 @@ td{
 .boldBorderRow {
   border-bottom: .1rem solid #c2c4c0 !important; /* Change the color and thickness as needed */
 }
+.modal-content{
+  background-color: #e6f3f1 !important;
+}

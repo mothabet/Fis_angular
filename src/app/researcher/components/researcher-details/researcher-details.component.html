@@ -243,7 +243,11 @@
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
-                            <th scope="col">اسم الشركة</th>
+                            <th scope="col">
+                                <!-- اختيار الكل -->
+                                <input type="checkbox" (change)="toggleSelectAll($event)" [checked]="isAllSelected" />
+                                اسم الشركة
+                            </th>
                             <th class="text-center" scope="col">رقم السجل التجاري</th>
                             <th class="text-center" scope="col">رقم الشركة</th>
                             <th class="text-center" scope="col">رمز النشاط</th>
@@ -254,20 +258,23 @@
                     <tbody>
                         <tr *ngFor="let company of companies">
                             <td>
-                                <input type="checkbox" [value]="company.id" (change)="onCheckboxChange($event, company)"
-                                    [checked]="isSelected(company.id)" type="checkbox" name="companyName1"
-                                    id="companyName1" />
-                                {{company.arName}}
+                                <!-- اختيار الشركة -->
+                                <input type="checkbox" 
+                                       [value]="company.id" 
+                                       (change)="onCheckboxChange($event, company)"
+                                       [checked]="isSelected(company.id)" />
+                                {{ company.arName }}
                             </td>
-                            <td class="text-center">{{company.compRegNumber}}</td>
-                            <td class="text-center">{{company.id}}</td>
-                            <td class="text-center">184510</td>
-                            <td class="text-center">الترفيه</td>
-                            <td class="text-center">{{company.address}}</td>
+                            <td class="text-center">{{ company.compRegNumber }}</td>
+                            <td class="text-center">{{ company.id }}</td>
+                            <td class="text-center">{{ company.activityCode }}</td>
+                            <td class="text-center">{{ company.arActivityName }}</td>
+                            <td class="text-center">{{ company.address }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            
             <form>
                 <div class="modal-body pb-1">
                     <div class="row">

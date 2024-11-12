@@ -4,10 +4,10 @@ import { FormService } from 'src/app/Forms/Services/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import Swal from 'sweetalert2';
-import { ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { NavigateTablesTypesService } from '../../services/navigate-tables-types.service';
-import { IAddFormDataDto, IDataDto } from '../../Dtos/FormDataDto';
+import { IAddFormDataDto, ICoverFormData, IDataDto } from '../../Dtos/FormDataDto';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
@@ -16,6 +16,7 @@ import { FormNotesService } from 'src/app/form-notes/services/form-notes.service
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 import { PermissionsService } from 'src/app/permissions/services/permissions.service';
 import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
+import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
 
 @Component({
   selector: 'app-navigate-tables-types',
@@ -23,7 +24,24 @@ import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
   styleUrls: ['./navigate-tables-types.component.css']
 })
 export class NavigateTablesTypesComponent implements OnInit {
-  @Input() coverForm!: ICoverFormDetailsDto;
+  @Input() coverForm: ICoverFormDetailsDto = {
+    id: 0,
+    typeQuarter: 0,
+    tables: [],
+    arName: "",
+    enName: "",
+    arNotes: "",
+    enNotes: "",
+    reviewYear: "",
+    status: 0,
+    quarterCoverData: {} as IQuarterCoverFormDataDto,
+    coverFormData: {} as ICoverFormData,
+    certification: {} as ICertificationDto,
+    codeActivity: "",
+    codeSectorName: "",
+    GeneralData: {} as IGeneralDataDto,
+    Type: 0,
+  };
   @Input() tapType!: number;
   @Input() isCoverActive: boolean = false;
   @Input() isWorkDataActive: boolean = false;
@@ -176,6 +194,8 @@ export class NavigateTablesTypesComponent implements OnInit {
 
   // Scroll to the active tab
   scrollToActiveTab() {
+    if (!this.tabContainer) return;
+
     const activeTab = this.tabContainer.nativeElement.querySelector('.arrow.active');
     if (activeTab) {
       const container = this.tabContainer.nativeElement;
@@ -284,7 +304,30 @@ export class NavigateTablesTypesComponent implements OnInit {
     else if (this.table.Type == "7")
       this.addTableToListInLocalStorage(this.table);
   }
-  addTableToListInLocalStorage(table: any): void {
+  private getDefaultTable(): IGetTableDto {
+    return {
+      id: 0,
+      arName: '',
+      enName: '',
+      arHeading: '',
+      enHeading: '',
+      arNotes: '',
+      enNotes: '',
+      Type: '',
+      Order: '',
+      formId: 0,
+      period: 0,
+      IsActive: false,
+      IsTotal: false,
+      totalTitleAr: '',
+      totalTitleEn: '',
+      IsDisabled: false,
+      formContents: [], // Initialize as an empty array
+      tableParts: []    // Initialize as an empty array
+    };
+  }
+  
+  addTableToListInLocalStorage(table: IGetTableDto = this.getDefaultTable()): void {
     let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto;
     if (storedTables) {
