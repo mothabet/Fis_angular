@@ -1,4 +1,4 @@
-<!-- <app-loader *ngIf="showLoader"></app-loader> -->
+<app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
   <!-- header -->
   <app-top-screen [title]="'المؤشرات العامة'"></app-top-screen>
@@ -10,7 +10,7 @@
           <a routerLink="/GeneralIndicators">المؤشرات العامة</a>
         </li>
         <li routerLinkActive="active">
-            <a routerLink="/OmanMaps">خرائط عمان</a>
+          <a routerLink="/OmanMaps">خرائط عمان</a>
         </li>
       </ul>
     </div>
@@ -23,12 +23,12 @@
       </div>
       <div class="btns d-flex">
         <div class="search">
-          <input class="form-control" type="text"
+          <input (keydown.enter)="generalIndicatorsSearch()" [(ngModel)]="searchText" class="form-control" type="text"
             name="search" placeholder="البحث">
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          <i (click)="generalIndicatorsSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button type="button" class="btn btn-add" data-bs-toggle="modal"
+          <button (click)="addGeneralIndicator()" type="button" class="btn btn-add" data-bs-toggle="modal"
             data-bs-target="#addSector">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
             اضافة مؤشرات عامة
@@ -42,27 +42,31 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
+            <th class="text-center" scope="col">#</th>
             <th class="text-center" scope="col">اسم المؤشر</th>
-            <th class="text-center" scope="col">الرمز</th>
+            <th class="text-center" scope="col">السنة من</th>
+            <th class="text-center" scope="col">السنة إلى</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-center">1</td>
-            <td class="text-center">1</td>
+          <tr *ngFor="let genIndicator of generalIndicators;let i = index">
+            <td class="text-center">{{i+1}}</td>
+            <td class="text-center">{{genIndicator.codeName}}</td>
+            <td class="text-center">{{genIndicator.yearFrom}}</td>
+            <td class="text-center">{{genIndicator.yearTo}}</td>
             <td class="text-center">
-              <button class="icon">
+              <button class="icon" (click)="DeleteGeneralIndicator(genIndicator.id)">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
-              <button class="icon" data-bs-toggle="modal"
+              <button class="icon" data-bs-toggle="modal" (click)="openUpdatePopup(genIndicator.id)"
                 data-bs-target="#addSector">
                 <img src="../../../../assets/images/pencil-outline.png" alt="">
               </button>
             </td>
           </tr>
         </tbody>
-        <tfoot>
+        <tfoot *ngIf="noData">
           <tr>
             <th colspan="7">
               <div class="alert alert-warning">
@@ -78,55 +82,63 @@
   </div>
   <!-- end content -->
 </div>
-<!-- <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
   (pageChange)="onPageChange($event)"></app-pagination>
 <div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
-    <div class="modal-content" style="width: 50%;">
+    <div class="modal-content" style="width: 60%;">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add">إضافة نشاط</h5>
+        <h5 class="modal-title" id="add">إضافة مؤشرات عامة</h5>
       </div>
-      <form [formGroup]="activityForm">
+      <form>
         <div class="modal-body pb-1">
           <div class="row">
-            <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="arName" />
-              <label for="inputField">اسم النشاط بالعربية</label>
-            </div>
-            <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="enName" />
-              <label for="inputField">Activity Name in English</label>
-            </div>
-            <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="code" />
-              <label for="inputField">رمز النشاط</label>
-              <div *ngIf="codeLengthError" class="text-danger">
-                يجب ان يكون رمز النشاط مكون من 6 ارقام
+            <div class="dropdown" [class.show]="isDropdownOpen">
+              <div style="height: 85px !important;width: 100%;">
+                <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                  [(ngModel)]="searchTerm" name="searchTerm" (click)="toggleDropdown()" (input)="filterFormContent()" />
+                <ul class="dropdown-menu" [class.show]="isDropdownOpen"
+                  style="padding: 0 9px; max-height: 120px;width: 95%;text-align: right;">
+                  <li class="dropdown-item" *ngFor="let formContent of filteredFormContents"
+                    (click)="selectFormContent($event,formContent)">
+                    {{formContent.arName}}
+                  </li>
+                </ul>
+                <span *ngIf="isFormContentError" style="color: red;margin-bottom: 15px;">{{errorMessage}}</span>
+                <label for="inputField">اختر المؤشر</label>
               </div>
             </div>
-            <div class="form-group col-sm-12 mb-2">
-              <select class="form-control input-modal" formControlName="categoryId">
-                <option value="0">--اختر رمز الفئة--</option>
-                <option *ngFor="let category of categories" [value]="category.id">{{category.arName}}</option>
+            <div class="col-sm-6 mb-3">
+              <select [(ngModel)]="yearFrom" name="yearFrom" class="form-select" style="width: 100%;">
+                <option selected [ngValue]="0" disabled>اختر السنه</option>
+                <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
               </select>
-              <label for="inputField">اسم الفئة</label>
+              <label style="top: 104px;">السنه من</label>
+              <!-- Error message if reportYearFrom is not selected -->
+              <span *ngIf="isYearError" style="color: red;">{{errorMessage}}</span>
             </div>
-
+            <div class="col-sm-6 mb-3">
+              <select [(ngModel)]="yearTo" name="yearTo" class="form-select add-report-select" style="width: 100%;">
+                <option selected [ngValue]="0" disabled>اختر السنه</option>
+                <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+              </select>
+              <label style="top: 104px;right: 250px">السنه إلى</label>
+              <!-- Error message if yearFrom is not selected -->
+            </div>
           </div>
         </div>
         <div class="modal-footer pt-0">
           <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
             إلغاء
           </button>
-          <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="button" (click)="onSave()">
+          <button (click)="saveGeneralIndicator()" *ngIf="!isUpdate" type="button" class="btn btn-save">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateActivity()" type="button"
-            class="btn btn-save">
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
             تعديل
           </button>
         </div>
       </form>
     </div>
   </div>
-</div> -->
+</div>
