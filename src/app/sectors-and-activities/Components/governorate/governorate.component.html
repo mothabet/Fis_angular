@@ -1,55 +1,55 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
   <!-- header -->
-  <app-top-screen [title]="'الدول'"></app-top-screen>
+  <app-top-screen [title]="'المحافظات'"></app-top-screen>
   <!-- end-header -->
   <div class="header-nav companies-details">
     <div class="card-box mb-3">
-      <ul>
-        <li routerLinkActive="active" *ngIf="permissionSectors.isName">
-            <a routerLink="/Sectors">القطاعات</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionSections.isName">
-            <a routerLink="/Sections">القسم</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionGroups.isName">
-            <a routerLink="/Groups">المجموعات</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionCategories.isName">
-            <a routerLink="/Categories">الفئات</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionActivities.isName">
-            <a routerLink="/Activities">الأنشطة</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionCountries.isName">
-            <a routerLink="/Countries">الدول</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionGovernorates.isName">
-            <a routerLink="/Governorates">المحافظات</a>
-          </li>
-          <li routerLinkActive="active" *ngIf="permissionWilayat.isName">
-            <a routerLink="/Wilayat">الولايات</a>
-          </li>
-    </ul>
+        <ul>
+            <li routerLinkActive="active" *ngIf="permissionSectors.isName">
+                <a routerLink="/Sectors">القطاعات</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionSections.isName">
+                <a routerLink="/Sections">القسم</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionGroups.isName">
+                <a routerLink="/Groups">المجموعات</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionCategories.isName">
+                <a routerLink="/Categories">الفئات</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionActivities.isName">
+                <a routerLink="/Activities">الأنشطة</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionCountries.isName">
+                <a routerLink="/Countries">الدول</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionGovernorates.isName">
+                <a routerLink="/Governorates">المحافظات</a>
+              </li>
+              <li routerLinkActive="active" *ngIf="permissionWilayat.isName">
+                <a routerLink="/Wilayat">الولايات</a>
+              </li>
+        </ul>
     </div>
 </div>
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
       <div class="title">
-        قائمة الدول
+        قائمة المحافظات
       </div>
       <div class="btns d-flex">
         <div class="search">
-          <input (keydown.enter)="countriesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+          <input (keydown.enter)="governoratesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
             name="search" placeholder="البحث">
-          <i (click)="countriesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          <i (click)="governoratesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" *ngIf="permissionCountries.add"
+          <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" *ngIf="permissionGovernorates.add"
             data-bs-target="#addSector">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-            اضافة دولة
+            اضافة محافظه
           </button>
 
         </div>
@@ -60,22 +60,18 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
-            <th class="text-center" scope="col">اسم الدوله</th>
-            <th class="text-center" scope="col">الرمز</th>
-            <th class="text-center" scope="col">رقم الدوله</th>
+            <th class="text-center" scope="col">اسم المحافظه</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let country of countries">
+          <tr *ngFor="let country of governorates">
             <td class="text-center">{{country.arName}}</td>
-            <td class="text-center">{{country.code}}</td>
-            <td class="text-center">{{country.countryPhone}}</td>
             <td class="text-center">
-              <button class="icon" (click)="DeleteCountry(country.id)" *ngIf="permissionCountries.delete">
+              <button class="icon" (click)="DeleteGovernorate(country.id)" *ngIf="permissionGovernorates.delete">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
-              <button class="icon" (click)="openUpdatePopup(country.id)" data-bs-toggle="modal" *ngIf="permissionCountries.edit"
+              <button class="icon" (click)="openUpdatePopup(country.id)" data-bs-toggle="modal" *ngIf="permissionGovernorates.edit"
                 data-bs-target="#addSector">
                 <img src="../../../../assets/images/pencil-outline.png" alt="">
               </button>
@@ -106,24 +102,16 @@
       <div class="modal-header pb-0">
         <h5 class="modal-title" id="add">إضافة دولة</h5>
       </div>
-      <form [formGroup]="countryForm" (ngSubmit)="onSave()">
+      <form [formGroup]="governorateForm" (ngSubmit)="onSave()">
         <div class="modal-body pb-1">
           <div class="row">
             <div class="form-group col-sm-12 mb-2">
               <input class="form-control input-modal" type="text" formControlName="arName" name="arName" />
-              <label for="inputField">اسم الدوله بالعربية</label>
+              <label for="inputField">اسم المحافظه بالعربية</label>
             </div>
             <div class="form-group col-sm-12 mb-2">
               <input class="form-control input-modal" type="text" formControlName="enName" name="enName" />
               <label for="inputField">Country Name in English</label>
-            </div>
-            <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="code" name="code" />
-              <label for="inputField">رمز الدولة</label>
-            </div>
-            <div class="form-group col-sm-12 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="countryPhone" name="countryPhone" />
-              <label for="inputField">رقم الدولة</label>
             </div>
           </div>
         </div>
@@ -134,7 +122,7 @@
           <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateCountry()" type="button"
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="UpdateGovernorate()" type="button"
             class="btn btn-save">
             تعديل
           </button>

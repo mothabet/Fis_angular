@@ -570,7 +570,9 @@ export class SharedOneYearWithPartsAndTotalComponent {
     }
   }
   restoreIfNotPositive(values: number[], index: number): void {
-    if (values[index] === null || values[index] <= 0) {
+    if (values[index] === null
+      
+    ) {
       values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
   }

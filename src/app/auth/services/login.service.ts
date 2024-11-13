@@ -77,7 +77,9 @@ export class LoginService {
       'SettingsAuth',
       'Sections',
       'GeneralIndicators',
-      'OmanMaps'
+      'OmanMaps',
+      'Governorates',
+      'Wilayat'
     ];
     return adminRoutes.includes(url);
   }
@@ -112,7 +114,9 @@ export class LoginService {
       'Countries',
       'Activities',
       'Sectors',
-      'SettingsAuth'
+      'SettingsAuth',
+      'Governorates',
+      'Wilayat'
     ];
     return adminRoutes.includes(url);
   }

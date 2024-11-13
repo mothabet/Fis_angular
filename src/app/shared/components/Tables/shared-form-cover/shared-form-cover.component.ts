@@ -107,6 +107,7 @@ export class SharedFormCoverComponent implements OnInit {
     legalType: '',
     pathImgProfile: '',
     researcherArName: '',
+    researcherMandateArName: '',
     activityName: '',
     sectorName: '',
     subActivityName: '',

@@ -5,26 +5,32 @@
   <!-- end-header -->
   <div class="header-nav companies-details">
     <div class="card-box mb-3">
-        <ul>
-            <li routerLinkActive="active" *ngIf="permissionSectors.isName">
-                <a routerLink="/Sectors">القطاعات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionSections.isName">
-                <a routerLink="/Sections">القسم</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionGroups.isName">
-                <a routerLink="/Groups">المجموعات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionCategories.isName">
-                <a routerLink="/Categories">الفئات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionActivities.isName">
-                <a routerLink="/Activities">الأنشطة</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionCountries.isName">
-                <a routerLink="/Countries">الدول</a>
-              </li>
-        </ul>
+      <ul>
+        <li routerLinkActive="active" *ngIf="permissionSectors.isName">
+            <a routerLink="/Sectors">القطاعات</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionSections.isName">
+            <a routerLink="/Sections">القسم</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionGroups.isName">
+            <a routerLink="/Groups">المجموعات</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionCategories.isName">
+            <a routerLink="/Categories">الفئات</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionActivities.isName">
+            <a routerLink="/Activities">الأنشطة</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionCountries.isName">
+            <a routerLink="/Countries">الدول</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionGovernorates.isName">
+            <a routerLink="/Governorates">المحافظات</a>
+          </li>
+          <li routerLinkActive="active" *ngIf="permissionWilayat.isName">
+            <a routerLink="/Wilayat">الولايات</a>
+          </li>
+    </ul>
     </div>
 </div>
   <!-- start content -->

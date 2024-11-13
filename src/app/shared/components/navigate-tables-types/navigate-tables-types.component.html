@@ -1,5 +1,6 @@
 <div class="header-nav" style="margin-bottom: 20px">
     <app-loader *ngIf="Loader"></app-loader>
+    <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto"  *ngIf="this.addFormNotesDto.length > 0 && role == 'Company'"><i class="fa-regular fa-bell"></i>يوجد ملاحظات من الباحث</div>
     <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewFormNotes" id="ViewFormNotesBtn" hidden >
       <img src="../../../../assets/images/list-box-outline.png" alt="">
   </button>

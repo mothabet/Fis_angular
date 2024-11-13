@@ -168,7 +168,7 @@ export class ResearcherDetailsComponent implements OnInit {
         if (res.Data) {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
-          debugger
+          
           this.companies = res.Data.companies.getCompaniesDtos;
           this.companiesSelect = this.companies.filter(c=>c.researcherArName === "");
           this.currentPage = res.Data.companies.PageNumber;
@@ -245,7 +245,6 @@ export class ResearcherDetailsComponent implements OnInit {
   }
 
   researcherCompanySerach() {
-debugger
     this.researcher.companies = this.researcher.companies.filter(c => c.arName.includes(this.text)
       && c.address.includes(this.text) && c.arActivityName.includes(this.text)
       && c.compRegNumber.includes(this.text) && c.email.includes(this.text))

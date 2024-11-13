@@ -29,6 +29,7 @@ export interface ICompany {
     legalType: string,
     pathImgProfile:string,
     researcherArName:string,
+    researcherMandateArName:string,
     activityName:string,
     sectorName:string,
     subActivityName:string,
@@ -40,7 +41,6 @@ export interface ICompany {
     activityCode: string,
     subActivityCode: string,   
     companyEmails: ICompanyEmail[];
-
 }
 export interface ICompaniesPDF {
     activityId: number,

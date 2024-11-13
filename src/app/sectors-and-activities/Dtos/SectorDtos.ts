@@ -16,7 +16,16 @@ export interface IAddActivityDto{
     sectorId:number;
     categoryId:number;
 }
-
+export interface IAddGovernorateDto{
+    arName:string;
+    enName:string;
+}
+export interface IAddWilayatDto{
+    arName:string;
+    enName:string;
+    embeded:string;
+    GovernoratesId:number
+}
 export interface IAddCategory{
     arName:string;
     enName:string;
@@ -47,6 +56,19 @@ export interface IGetCountryDto{
     code:string;
     createdOn:string;
     countryPhone:string;
+}
+export interface IGetGovernorateDto{
+    id:number;
+    arName:string;
+    enName:string;
+}
+export interface IGetWilayatDto{
+    id:number;
+    arName:string;
+    enName:string;
+    embeded:string;
+    GovernoratesId:number
+    Governorates:IGetGovernorateDto
 }
 
 export interface IAddGroupDto{

@@ -8,6 +8,8 @@ import { SharedModule } from '../shared/shared.module';
 import { CategoryComponent } from './Components/category/category.component';
 import { GroupComponent } from './Components/group/group.component';
 import { SectionComponent } from './Components/section/section.component';
+import { GovernorateComponent } from './Components/governorate/governorate.component';
+import { WilayatComponent } from './Components/wilayat/wilayat.component';
 
 
 
@@ -19,7 +21,9 @@ import { SectionComponent } from './Components/section/section.component';
     CountriesComponent,
     CategoryComponent,
     GroupComponent,
-    SectionComponent
+    SectionComponent,
+    GovernorateComponent,
+    WilayatComponent
   ],
   imports: [
     CommonModule,

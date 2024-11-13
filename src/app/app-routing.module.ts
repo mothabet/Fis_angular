@@ -41,6 +41,8 @@ import { SectionComponent } from './sectors-and-activities/Components/section/se
 import { OneYearWithPartsAndTotalComponent } from './Forms/Components/one-year-with-parts-and-total/one-year-with-parts-and-total.component';
 import { GeneralIndicatorsComponent } from './home-setting/Components/general-indicators/general-indicators.component';
 import { OmanMapsComponent } from './home-setting/Components/oman-maps/oman-maps.component';
+import { GovernorateComponent } from './sectors-and-activities/Components/governorate/governorate.component';
+import { WilayatComponent } from './sectors-and-activities/Components/wilayat/wilayat.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -50,6 +52,8 @@ const routes: Routes = [
   { path: 'Activities', component: ActivitiesComponent, canActivate: [LoginGuard] },
   { path: 'SubActivities', component: SubActivitiesComponent, canActivate: [LoginGuard] },
   { path: 'Countries', component: CountriesComponent, canActivate: [LoginGuard] },
+  { path: 'Governorates', component: GovernorateComponent, canActivate: [LoginGuard] },
+  { path: 'Wilayat', component: WilayatComponent, canActivate: [LoginGuard] },
   { path: 'Certification/:formId/:companyId', component: CertificationComponent, canActivate: [LoginGuard] },
   { path: 'Reports', component: ReportsComponent, canActivate: [LoginGuard] },
   { path: 'ReportContents/:reportId', component: ReportContentsComponent, canActivate: [LoginGuard] },

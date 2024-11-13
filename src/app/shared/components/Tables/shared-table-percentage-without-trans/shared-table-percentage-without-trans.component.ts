@@ -71,7 +71,7 @@ export class SharedTablePercentageWithoutTransComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
+          
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
@@ -487,7 +487,7 @@ export class SharedTablePercentageWithoutTransComponent {
 
               const tableIndex = this.coverForm.tables.findIndex(t => t.id === +this.tableId);
               if (tableIndex !== -1 && this.coverForm.tables[tableIndex].formContents[0].values != undefined) {
-                debugger
+                
                 this.table = this.coverForm.tables[tableIndex];
 
                 for (let index = 0; index < this.table.formContents.length; index++) {
@@ -695,7 +695,8 @@ export class SharedTablePercentageWithoutTransComponent {
   }
 
   restoreIfNotPositive(values: number[], index: number): void {
-    if (values[index] === null || values[index] <= 0) {
+    
+    if (values[index] === null) {
       values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAddActivityDto, IAddCategory, IAddGroupDto, IAddSectorDto, IAddSubActivityDto } from '../Dtos/SectorDtos';
+import { IAddActivityDto, IAddCategory, IAddGovernorateDto, IAddGroupDto, IAddSectorDto, IAddSubActivityDto, IAddWilayatDto } from '../Dtos/SectorDtos';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -113,6 +113,56 @@ export class SectorAndActivitiesService {
   UpdateCountry(id:number,reportDto: IAddSectorDto){
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`Country/UpdateCountry?id=${id}&lang=2`, reportDto, { headers });
+     return resopnse;
+   }
+   AddGovernorate(Sector: IAddGovernorateDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Governorates/AddGovernorate?lang=2`, Sector, { headers });
+     return resopnse;
+   }
+   GetGovernorates(pageNumber:number , textSearch : string =''){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Governorates/GetGovernorates?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     return resopnse;
+   }
+   DeleteGovernorate(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Governorates/DeleteGovernorate?id=${id}&lang=2`, { headers });
+     return response;
+   }
+   GetGovernorate(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Governorates/GetGovernorate?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateGovernorate(id:number,reportDto: IAddGovernorateDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Governorates/UpdateGovernorate?id=${id}&lang=2`, reportDto, { headers });
+     return resopnse;
+   }
+   AddWilayat(Sector: IAddWilayatDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.post(environment.apiUrl+`Wilayat/AddWilaya?lang=2`, Sector, { headers });
+     return resopnse;
+   }
+   GetWilayats(governorateId:number,pageNumber:number , textSearch : string =''){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Wilayat/GetWilayats?governorateId=${governorateId}&pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     return resopnse;
+   }
+   DeleteWilayat(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`Wilayat/DeleteWilayat?id=${id}&lang=2`, { headers });
+     return response;
+   }
+   GetWilayat(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Wilayat/GetWilaya?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateWilayat(id:number,reportDto: IAddWilayatDto){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`Wilayat/UpdateWilayat?id=${id}&lang=2`, reportDto, { headers });
      return resopnse;
    }
    GetGroups(pageNumber:number , textSearch : string ='',sectorId:number = 0){

@@ -80,6 +80,8 @@ export class SettingsAuthHomeComponent {
     { arName: 'الفئات', enName: "Categories", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
     { arName: 'الأنشطة', enName: "Activities", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
     { arName: 'الدول', enName: "Countries", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'المحافظات', enName: "Governorates", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
+    { arName: 'الولايات', enName: "Countries", isName: true, add: true, edit: true, delete: true, download: true, connectWithCompany: true, addCompaniesGroup: true, copy: true, Instructions: true, FormNotes: true, AddFormNotes: true, Approve: true, Complete: true, Close: true, Open: true },
   ];
   searchTerm: string = '';
 filteredPermissions: any[] = [];
@@ -605,7 +607,9 @@ filteredPermissions: any[] = [];
       'Groups',
       'Categories',
       'Activities',
-      'Countries'
+      'Countries',
+      'Governorates',
+      'Wilayat'
     ];
     return enNamePermission.includes(enName);
   }
@@ -627,7 +631,9 @@ filteredPermissions: any[] = [];
       'Groups',
       'Categories',
       'Activities',
-      'Countries'
+      'Countries',
+      'Governorates',
+      'Wilayat'
     ];
     return enNamePermission.includes(enName);
   }
@@ -649,7 +655,9 @@ filteredPermissions: any[] = [];
       'Groups',
       'Categories',
       'Activities',
-      'Countries'
+      'Countries',
+      'Governorates',
+      'Wilayat'
     ];
     return enNamePermission.includes(enName);
   }
