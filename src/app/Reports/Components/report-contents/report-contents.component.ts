@@ -1095,7 +1095,7 @@ export class ReportContentsComponent implements OnInit {
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
-    debugger
+    
     if (this.reportYearTo === undefined || this.reportYearTo === null) {
       const currentYear = new Date().getFullYear();
       for (let year = this.reportYearFrom!; year <= currentYear; year++) {
@@ -1369,7 +1369,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = this.processYears(report.reportDetails[1].Fields,field.years)
 
     });
-    debugger
+    
     // Step 4: Return the transformed report
     return fieldsInReport;
   }

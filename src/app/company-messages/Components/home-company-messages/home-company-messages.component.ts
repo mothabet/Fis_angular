@@ -141,7 +141,7 @@ export class HomeCompanyMessagesComponent {
       messageid: ['', Validators.required],
       arDetails: '',
     });
-    debugger
+    
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.GetAllCompanyMessages(1);
     this.GetAllMessages(0, '');

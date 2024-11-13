@@ -168,7 +168,7 @@ export class ResearcherDetailsComponent implements OnInit {
         if (res.Data) {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
-          debugger
+          
           this.companies = res.Data.companies.getCompaniesDtos;
           this.companiesSelect = this.companies.filter(c=>c.researcherArName === "");
           this.currentPage = res.Data.companies.PageNumber;

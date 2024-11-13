@@ -194,7 +194,7 @@ export class FormsComponent implements OnInit {
     for (let year = 2007; year <= 2024; year++) {
       this.yearsFilter.push(year);
     }
-    debugger
+    
     this.yearSelect = new Date().getFullYear().toString();
     this.typeSelect = "";
     this.formForm = this.formBuilder.group({

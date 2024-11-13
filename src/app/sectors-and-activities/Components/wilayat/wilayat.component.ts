@@ -1,31 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Validators } from 'ngx-editor';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { IAddActivityDto, IAddCategory, IGetSectorDto } from '../../Dtos/SectorDtos';
-import Swal from 'sweetalert2';
-import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 import { PermissionsService } from 'src/app/permissions/services/permissions.service';
+import { IAddGovernorateDto, IAddWilayatDto, IGetGovernorateDto, IGetWilayatDto } from '../../Dtos/SectorDtos';
+import Swal from 'sweetalert2';
+
 @Component({
-  selector: 'app-category',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.css']
+  selector: 'app-wilayat',
+  templateUrl: './wilayat.component.html',
+  styleUrls: ['./wilayat.component.css']
 })
-export class CategoryComponent implements OnInit {
-  categoryForm!: FormGroup;
+export class WilayatComponent {
   showLoader: boolean = false;
-  categories!: IGetSectorDto[];
-  category!: IGetSectorDto;
-  groups!: IGetSectorDto[];
-  isUpdate: boolean = false;
-  id: number = 0;
-  currentPage: number = 1;
-  isLastPage: boolean = false;
-  totalPages: number = 0;
-  searchText: string = '';
-  noData: boolean = false;
-  
+
   permissionSectors: IGetPermissionDto = {
     add: true,
     arName: "",
@@ -36,15 +25,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionSections: IGetPermissionDto = {
@@ -57,15 +46,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionGroups: IGetPermissionDto = {
@@ -78,15 +67,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionCategories: IGetPermissionDto = {
@@ -99,15 +88,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionActivities: IGetPermissionDto = {
@@ -120,15 +109,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionCountries: IGetPermissionDto = {
@@ -141,15 +130,15 @@ export class CategoryComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionGovernorates: IGetPermissionDto = {
@@ -194,25 +183,45 @@ export class CategoryComponent implements OnInit {
     Close: true,
     Open: true
   };
-  constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
-  private sectorsAndActivitiesServices: SectorAndActivitiesService,
-  private permissionsService: PermissionsService) { }
+  wilayatForm!: FormGroup;
+  currentPage: number = 1;
+  isLastPage: boolean = false;
+  totalPages: number = 0;
+  searchText: string = '';
+  noData: boolean = false;
+  Wilayat: IGetWilayatDto[] = [];
+  getWilayat : IGetWilayatDto = {
+    id:0,
+    arName:'',
+    enName:'',
+    embeded:'',
+    GovernoratesId:0,
+    Governorates:{} as IGetGovernorateDto
+  };
+  isUpdate: boolean = false;
+  id:number=0;
+  governorates : IGetGovernorateDto[] = [];
 
+  constructor(private sharedService: SharedService, private fb: FormBuilder,
+    private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private permissionsService: PermissionsService) { }
   ngOnInit(): void {
-    this.categoryForm = this.formBuilder.group({
-      code: ['', Validators.required],
+    this.wilayatForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
-      groupId: [0, Validators.required],
+      embeded: [''],
+      GovernoratesId: ['', Validators.required]
     });
-    this.GetCategories(1, '',)
-    this.GetGroups(1, '',)
+    this.GetWilayat(0,1, '',);
+    this.GetGovernorates(0,'',);
     this.GetPermissionByUserIdSectors();
     this.GetPermissionByUserIdSections();
     this.GetPermissionByUserIdGroups();
     this.GetPermissionByUserIdCategories();
     this.GetPermissionByUserIdActivities();
     this.GetPermissionByUserIdCountries();
+    this.GetPermissionByUserIdGovernorates();
+    this.GetPermissionByUserIdWilayat();
   }
   GetPermissionByUserIdSectors() {
     this.permissionsService.FunctionGetPermissionByUserId("Sectors").then(permissions => {
@@ -254,21 +263,19 @@ export class CategoryComponent implements OnInit {
       this.permissionWilayat = permissions;
     });
   }
-  onSave() {
+  onSave(): void {
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.categoryForm.value.arName == "" || this.categoryForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم الفئة بالعربية');
+    if (this.wilayatForm.value.arName == "" || this.wilayatForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الولايه بالعربية');
     }
-    if (this.categoryForm.value.enName == "" || this.categoryForm.value.enName == null) {
-      allErrors.push("Category Name in English is required.");
+    if (this.wilayatForm.value.enName == "" || this.wilayatForm.value.enName == null) {
+      allErrors.push("State Name in English is required.");
     }
-    if (this.categoryForm.value.code == "" || this.categoryForm.value.code == null) {
-      allErrors.push('يجب اختيار الفئة');
+    if (this.wilayatForm.value.GovernoratesId == "" || this.wilayatForm.value.GovernoratesId == null) {
+      allErrors.push('يجب اختيار المحافظه');
     }
-    if (!(this.categoryForm.value.groupId > 0)) {
-      allErrors.push('يجب اختيار اسم المجموعة');
-    }
+
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -279,11 +286,11 @@ export class CategoryComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const category: IAddCategory = {
-        arName: this.categoryForm.value.arName,
-        enName: this.categoryForm.value.enName,
-        code: this.categoryForm.value.code,
-        groupId: this.categoryForm.value.groupId,
+      const wilayat: IAddWilayatDto = {
+        arName: this.wilayatForm.value.arName,
+        enName: this.wilayatForm.value.enName,
+        embeded: '',
+        GovernoratesId: this.wilayatForm.value.GovernoratesId,
       }
       const observer = {
         next: (res: any) => {
@@ -292,13 +299,13 @@ export class CategoryComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetCategories(1, '');
+          this.GetWilayat(0,1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
             title: res.Message,
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
+            showConfirmButton: false,
+            timer: 2000
           });
         },
         error: (err: any) => {
@@ -306,23 +313,24 @@ export class CategoryComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.AddCategory(category).subscribe(observer);
+      this.sectorsAndActivitiesServices.AddWilayat(wilayat).subscribe(observer);
     }
   }
-  GetCategories(page: number, textSearch: string = ''): void {
+  GetWilayat(governorateId:number,page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          this.categories = res.Data.categoryDtos;
+          debugger
+          this.Wilayat = res.Data.getWilayaDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
           this.totalPages = res.Data.TotalCount;
           this.onReset();
         }
-        else{
-          this.categories = [];
+        else {
+          this.Wilayat = [];
         }
         this.showLoader = false;
       },
@@ -331,32 +339,25 @@ export class CategoryComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetCategories(page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayats(governorateId,page, textSearch).subscribe(observer);
   }
   onPageChange(page: number) {
     this.currentPage = page;
-    this.GetCategories(page);
+    this.GetWilayat(0,page);
   }
-  countriesSearch() {
-    this.GetCategories(this.currentPage, this.searchText);
+  wilayatSearch() {
+    this.GetWilayat(0,this.currentPage, this.searchText);
   }
-  GetGroups(page: number, textSearch: string = ''): void {
-    this.showLoader = true;
-    const observer = {
-      next: (res: any) => {
-        if (res.Data) {
-          this.groups = res.Data.GroupDtos;
-        }
-        this.showLoader = false;
-      },
-      error: (err: any) => {
-        this.sharedService.handleError(err);
-        this.showLoader = false;
-      },
-    };
-    this.sectorsAndActivitiesServices.GetGroups(0, '').subscribe(observer);
+  onReset(): void {
+    this.isUpdate = false;
+    this.wilayatForm = this.fb.group({
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+      embeded: [''],
+      GovernoratesId: ['', Validators.required]
+    });
   }
-  DeleteCategory(id: number): void {
+  DeleteWilayat(id: number): void {
     Swal.fire({
       title: 'هل انت متأكد؟',
       text: 'لا يمكن التراجع عن هذا',
@@ -371,7 +372,7 @@ export class CategoryComponent implements OnInit {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetCategories(1, '');
+            this.GetWilayat(0,1, '');
             this.showLoader = false;
             Swal.fire({
               icon: 'success',
@@ -385,7 +386,7 @@ export class CategoryComponent implements OnInit {
             this.showLoader = false;
           },
         };
-        this.sectorsAndActivitiesServices.DeleteCategory(id).subscribe(observer);
+        this.sectorsAndActivitiesServices.DeleteWilayat(id).subscribe(observer);
       }
     });
   }
@@ -394,14 +395,14 @@ export class CategoryComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.category = res.Data;
-          this.categoryForm.patchValue({
-            arName: this.category.arName,
-            enName: this.category.enName,
-            code: this.category.code,
-            groupId: res.Data.groupId
+          this.getWilayat = res.Data;
+          this.wilayatForm.patchValue({
+            arName: this.getWilayat.arName,
+            enName: this.getWilayat.enName,
+            embeded: this.getWilayat.enName,
+            GovernoratesId: this.getWilayat.GovernoratesId,
           });
-          this.id = this.category.id;
+          this.id = this.getWilayat.id;
         }
         this.isUpdate = true;
         this.showLoader = false;
@@ -411,26 +412,21 @@ export class CategoryComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetCategory(id).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayat(id).subscribe(observer);
   }
-  updateCategory() {
+  UpdateWilayat() {
     this.showLoader = true;
     const allErrors: string[] = [];
-    if (this.categoryForm.value.arName == "" || this.categoryForm.value.arName == null) {
-      allErrors.push('يجب ادخال اسم الفئة بالعربية');
+    if (this.wilayatForm.value.arName == "" || this.wilayatForm.value.arName == null) {
+      allErrors.push('يجب ادخال اسم الولايه بالعربية');
     }
-    if (this.categoryForm.value.enName == "" || this.categoryForm.value.enName == null) {
-      allErrors.push("Category Name in English is required.");
+    if (this.wilayatForm.value.enName == "" || this.wilayatForm.value.enName == null) {
+      allErrors.push("State Name in English is required.");
     }
-    if (this.categoryForm.value.code == "" || this.categoryForm.value.code == null) {
-      allErrors.push('يجب اختيار الفئة');
+    if (this.wilayatForm.value.GovernoratesId == "" || this.wilayatForm.value.GovernoratesId == null) {
+      allErrors.push('يجب اختيار المحافظه');
     }
-    else if (this.categoryForm.value.code.length != 6) {
-      allErrors.push('يجب ان يكون رمز الفئة مكون من 6 ارقام');
-    }
-    if (!(this.categoryForm.value.groupId > 0)) {
-      allErrors.push('يجب اختيار اسم المجموعة');
-    }
+
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -441,11 +437,11 @@ export class CategoryComponent implements OnInit {
       this.showLoader = false;
     }
     else {
-      const Model: IAddCategory = {
-        arName: this.categoryForm.value.arName,
-        enName: this.categoryForm.value.enName,
-        code: this.categoryForm.value.code,
-        groupId: this.categoryForm.value.groupId,
+      const Model: IAddWilayatDto = {
+        arName: this.wilayatForm.value.arName,
+        enName: this.wilayatForm.value.enName,
+        embeded:this.wilayatForm.value.embeded,
+        GovernoratesId: this.wilayatForm.value.GovernoratesId,
       };
       const observer = {
         next: (res: any) => {
@@ -454,13 +450,13 @@ export class CategoryComponent implements OnInit {
             button.click();
           }
           this.onReset();
-          this.GetCategories(1);
+          this.GetWilayat(0,1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
             title: res.Message,
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
+            showConfirmButton: false,
+            timer: 2000
           });
         },
         error: (err: any) => {
@@ -468,37 +464,27 @@ export class CategoryComponent implements OnInit {
           this.showLoader = false;
         },
       };
-      this.sectorsAndActivitiesServices.UpdateCategory(this.id, Model).subscribe(observer);
-    } 
-  }
-  getControlErrors(controlName: string): string[] {
-    const control = this.categoryForm.get(controlName);
-    const errors: string[] = [];
-    if (control && control.errors) {
-      if (controlName == 'arName') controlName = 'اسم الفئة بالعربية';
-      if (controlName == 'enName') controlName = 'Category Name in English';
-      if (controlName == 'code') controlName = 'رمز الفئة';
-      if (controlName == 'groupId') controlName = 'اسم المجموعة';
-      if (controlName == 'اسم القطاع' && control.errors['required']) {
-        errors.push(`يجب اختيار ${controlName}`);
-      }
-      else if (control.errors['required']) {
-        errors.push(`يجب ادخال ${controlName}`);
-      }
+      this.sectorsAndActivitiesServices.UpdateWilayat(this.id, Model).subscribe(observer);
     }
-    return errors;
   }
-  onReset(): void {
-    this.isUpdate = false;
-    this.categoryForm = this.formBuilder.group({
-      arName: ['', Validators.required],
-      enName: ['', Validators.required],
-      code : ['', Validators.required],
-      groupId : 0,
-    });    
-  }
-  onlyNumber(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+  GetGovernorates(page: number, textSearch: string = ''): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          debugger
+          this.governorates = res.Data.getGovernoratesDto;
+        }
+        else{
+          this.governorates = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetGovernorates(page, textSearch).subscribe(observer);
   }
 }

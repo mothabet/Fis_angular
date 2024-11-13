@@ -154,6 +154,48 @@ export class ActivitiesComponent implements OnInit {
     Close: true, 
     Open: true
   };
+  permissionGovernorates: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
+    Open: true
+  };
+  permissionWilayat: IGetPermissionDto = {
+    add: true,
+    arName: "",
+    delete: true,
+    download: true,
+    edit: true,
+    enName: "",
+    id: 0,
+    isName: true,
+    settingsAuthId: 0,
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
+    Open: true
+  };
   constructor(private sharedService: SharedService, private formBuilder: FormBuilder,
     private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private permissionsService: PermissionsService) { }
@@ -204,7 +246,16 @@ export class ActivitiesComponent implements OnInit {
       this.permissionCountries = permissions;
     });
   }
-  
+  GetPermissionByUserIdGovernorates() {
+    this.permissionsService.FunctionGetPermissionByUserId("Governorates").then(permissions => {
+      this.permissionGovernorates = permissions;
+    });
+  }
+  GetPermissionByUserIdWilayat() {
+    this.permissionsService.FunctionGetPermissionByUserId("Wilayat").then(permissions => {
+      this.permissionWilayat = permissions;
+    });
+  }
   onSave() {
     this.showLoader = true;
     const allErrors: string[] = [];

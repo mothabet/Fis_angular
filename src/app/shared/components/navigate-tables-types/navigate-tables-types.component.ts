@@ -966,7 +966,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         if (res.Data) {
           this.addFormNotesDto = res.Data.getFormNotesDtos
           this.add = true
-          debugger
+          
           if (!isFirst) {
             if (role != '') {
               const button = document.getElementById('ViewFormNotesBtn');
