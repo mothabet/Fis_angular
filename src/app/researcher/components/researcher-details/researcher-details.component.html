@@ -180,7 +180,7 @@
                                 <td>{{company.arName}}</td>
                                 <td class="text-center">{{ company.compRegNumber }}</td>
                                 <td class="text-center">{{company.id}}</td>
-                                <td class="text-center">{{ company.activityId }}</td>
+                                <td class="text-center">{{ company.activityCode }}</td>
                                 <td class="text-center">{{ company.arActivityName }}</td>
                                 <td class="text-center">{{company.address}}</td>
                                 <td class="text-center notes" *ngIf="company.researcherArName=='' && company.researcherMandateArName==''"></td>
@@ -243,12 +243,15 @@
                 </div>
             </div>
             <div class="table-responsive company-modal-table mx-2">
+                <div>
+                    <input type="checkbox" (change)="toggleSelectAll($event)" [checked]="isAllSelected" />
+                    اختيار الكل
+                </div>
                 <table class="table table-borderless">
                     <thead>
                         <tr class="t-header">
                             <th scope="col">
                                 <!-- اختيار الكل -->
-                                <input type="checkbox" (change)="toggleSelectAll($event)" [checked]="isAllSelected" />
                                 اسم الشركة
                             </th>
                             <th class="text-center" scope="col">رقم السجل التجاري</th>

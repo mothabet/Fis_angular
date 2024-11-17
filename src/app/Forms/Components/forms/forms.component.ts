@@ -698,7 +698,7 @@ export class FormsComponent implements OnInit {
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter,
-        codeSector: this.formForm.value.codeSector,
+        codeSector: "",
       };
 
       this.Loader = true;
@@ -938,7 +938,7 @@ export class FormsComponent implements OnInit {
         Type: this.formForm.value.type,
         reviewYear: this.formForm.value.reviewYear,
         typeQuarter: this.formForm.value.typeQuarter,
-        codeSector: this.formForm.value.codeSector,
+        codeSector: "",
       };
       const observer = {
         next: (res: any) => {

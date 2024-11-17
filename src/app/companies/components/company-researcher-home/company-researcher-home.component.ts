@@ -282,31 +282,44 @@ export class CompanyResearcherHomeComponent {
   }
   GetWilayat(govId: number) {
     if (govId > 0) {
-      const observer = {
-        next: (res: any) => {
-          if (res.Data) {
-            this.Wilayat = res.Data;
-          }
-        },
-        error: (err: any) => {
-          this.sharedService.handleError(err);
-        },
-      };
-      this.companyHomeServices.GetWilayat(govId).subscribe(observer);
-    }
-  }
-  GetGovernorates() {
+      this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Governorates = res.Data;
+          this.Wilayat = res.Data.getWilayaDtos;
         }
+        else {
+          this.Wilayat = [];
+        }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
+        this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetGovernorates().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayats(govId,0, '').subscribe(observer);
+    }
+  }
+  GetGovernorates() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+          this.Governorates = res.Data.getGovernoratesDto;
+        }
+        else{
+          this.Governorates = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
   }
   GetCompanyCode() {
     const observer = {

@@ -113,33 +113,36 @@ export class SharedWorkDataComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Governorates = res.Data;
+          
+          this.Governorates = res.Data.getGovernoratesDto;
+        }
+        else{
+          this.Governorates = [];
         }
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);
       },
     };
-    this.companyServices.GetGovernorates().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
   }
   GetWilayat(govId: number) {
     if (govId > 0) {
-      const observer = {
-        next: (res: any) => {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
           
-          if (res.Data) {
-            this.Wilayat = res.Data;
-          }
-          const checkWilaya = this.Wilayat.find(r=>r.id == +this.workData[7].inputValue);
-          if(!checkWilaya){
-            this.workData[7].inputValue = '0';
-          }
-        },
-        error: (err: any) => {
-          this.sharedServices.handleError(err);
-        },
-      };
-      this.companyServices.GetWilayat(govId).subscribe(observer);
+          this.Wilayat = res.Data.getWilayaDtos;
+        }
+        else {
+          this.Wilayat = [];
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetWilayats(govId,0, '').subscribe(observer);
     }
   }
   onDataSourceCheckboxChange(value: number) {

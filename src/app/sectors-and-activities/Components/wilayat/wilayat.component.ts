@@ -322,7 +322,7 @@ export class WilayatComponent {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          debugger
+          
           this.Wilayat = res.Data.getWilayaDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
@@ -472,7 +472,7 @@ export class WilayatComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.governorates = res.Data.getGovernoratesDto;
         }
         else{
