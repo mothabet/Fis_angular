@@ -79,6 +79,8 @@ export class AuditingRulesHomeComponent implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
+    this.GetAuditRules(page);
+
   }
   addSelect() {
     if (this.selects.length > 0) {

@@ -45,7 +45,7 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No',inputValue: '' , isSelect:false},
     { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number',inputValue: '' , isSelect:false},
     { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity',inputValue: '' , isSelect:false},
-    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
+    { arName: 'النشاط السنوي : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
     { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location',inputValue: '' , isSelect:false},
     { arName: 'المحافظة : ', enName: ' :  Region',inputValue: '0' , isSelect:true},
     { arName: 'الولاية : ', enName: ' :  Wilayat',inputValue: '0' , isSelect:true},
@@ -202,13 +202,13 @@ export class SharedWorkDataComponent implements OnInit {
 
               item.inputValue = this.company.address;
             }
-            else if (item.arName.includes('النشاط الثانوى : ')) {
+            else if (item.arName.includes('النشاط السنوي : ')) {
 
-              item.inputValue = this.company.subActivity;
+              item.inputValue = this.company.subActivityCode;
             }
             else if (item.arName.includes('النشاط الاقتصادى الرئيسى : ')) {
 
-              item.inputValue = this.company.activity;
+              item.inputValue = this.company.activityCode;
             }
             else if (item.arName.includes('رقم الترخيص البلدي : ')) {
 
@@ -219,7 +219,7 @@ export class SharedWorkDataComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          
+          debugger
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
@@ -270,6 +270,7 @@ export class SharedWorkDataComponent implements OnInit {
       next: (res: any) => {
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
+          debugger
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);

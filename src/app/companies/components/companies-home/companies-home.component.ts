@@ -42,6 +42,8 @@ export class CompaniesHomeComponent implements OnInit {
   sectorName: string = "";
   sectorCode: string = "";
   activityName: string = "";
+  activityId: string = "";
+  subActivityId:string = "";
   subActivityName:string ="";
   companyForm!: FormGroup;
   showLoader: boolean = false;
@@ -57,6 +59,7 @@ export class CompaniesHomeComponent implements OnInit {
   tableColumns = ['رقم الهاتف', 'عنوان الشركة', 'النشاط', 'رمز النشاط', 'رقم الشركة', 'رقم السجل التجاري', 'اسم الشركة'];
   data: any[] = [];
   years: number[] = [];
+  activityCode:string="";
   permission: IGetPermissionDto = {
     add: true,
     arName: "",
@@ -134,9 +137,11 @@ export class CompaniesHomeComponent implements OnInit {
       sectorId: [{value:'',disabled:true}, Validators.required],
       sectorName: [{value:'',disabled:true}, Validators.required],
       sectorCode: [{value:'',disabled:true}, Validators.required],
+      activityCode: [''],
       activityId: ['', Validators.required],
       activityName: [{value:'',disabled:true}, Validators.required],
-      subActivityId: [0],
+      subActivityId: [''],
+      subActivityCode: [''],
       subActivityName: [{value:'',disabled:true},],
       governoratesId: [0],
       wilayatId: [0],
@@ -159,7 +164,8 @@ export class CompaniesHomeComponent implements OnInit {
   }
   
   filterActivities() {
-    const searchTerm = this.companyForm.get('activityId')?.value || '';
+    const searchTerm = this.companyForm.get('activityCode')?.value || '';
+    
     this.filteredACtivity = this.Activities.filter(activity =>
       activity.code.includes(searchTerm)
     );
@@ -167,22 +173,24 @@ export class CompaniesHomeComponent implements OnInit {
   
   selectActivities(activity: IDropdownList) {
     this.companyForm.patchValue({
+      activityCode:activity.code,
       activityId: activity.id
     });
 
     this.isDropdownOpen = false;
     const observer = {
       next: (res: any) => {
-        
         if (res.Data) {
           this.sectorId = res.Data.sectorId;
           this.sectorCode = res.Data.code;
           this.sectorName = res.Data.sectorName;
           this.activityName = res.Data.arName;
+          this.activityId = res.Data.id;
           this.companyForm.value.sectorId = this.sectorId;
           this.companyForm.value.sectorCode = this.sectorCode;
           this.companyForm.value.sectorName = this.sectorName;
           this.companyForm.value.activityName = this.activityName;
+          this.companyForm.value.activityId = this.activityId;
         }
       },
       error: (err: any) => {
@@ -214,7 +222,8 @@ export class CompaniesHomeComponent implements OnInit {
   }
   
   filterSubActivities() {
-    const searchTerm = this.companyForm.get('subActivityId')?.value || '';
+    const searchTerm = this.companyForm.get('subActivityCode')?.value || '';
+    debugger
     this.filteredSubACtivity = this.Activities.filter(activity =>
       activity.code.includes(searchTerm)
     );
@@ -223,7 +232,8 @@ export class CompaniesHomeComponent implements OnInit {
   selectSubActivities(subActivity: IDropdownList) {
     this.companyForm.patchValue({
       subActivityId: subActivity.id,
-      subActivityName : subActivity.arName
+      subActivityName : subActivity.arName,
+      subActivityCode : subActivity.code
     });
     this.isDropdownOpenSubActivities = false;
   }
@@ -641,6 +651,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
+      debugger
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -881,7 +892,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            
+            debugger
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -902,6 +913,7 @@ export class CompaniesHomeComponent implements OnInit {
               legalType: this.company.legalType,
               sectorId: this.company.sectorId,
               activityId: this.company.activityId,
+              activityCode: res.Data.activityCode,
               subActivityId: this.company.subActivityId,
               governoratesId: this.company.governoratesId,
               wilayatId: this.company.wilayatId,
@@ -910,6 +922,8 @@ export class CompaniesHomeComponent implements OnInit {
               activityName: this.company.activityName,
               sectorName: this.company.sectorName,
               subActivityName: this.company.subActivityName,
+              sectorCode:res.Data.sectorCode,
+              subActivityCode:res.Data.subActivityCode,
             });
             if(this.company.accountingPeriod != null)
             {
