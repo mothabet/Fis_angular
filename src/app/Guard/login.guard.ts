@@ -19,7 +19,9 @@ export class LoginGuard {
       let res = this.authService.decodedToken(isLoggedIn);
       const role = res.roles;
       const url: string = route.url[0].path;
-      
+      if (!(this.authService.isTableRoute(url))) {
+        localStorage.clear();
+      }
       if ((role === "User" && this.authService.isUserRoute(url)) || (role === "Researchers" &&  (this.authService.isUserRoute(url) || this.authService.isResearcherRoute(url)))) {
         const observer = {
           next: (_res: any) => {
@@ -62,9 +64,7 @@ export class LoginGuard {
         return true;
       }
       else {
-        if (!(this.authService.isTableRoute(url))) {
-          localStorage.clear();
-        }
+        
         if (role === 'Admin' && this.authService.isAdminRoute(url)) {
           return true;
         }
