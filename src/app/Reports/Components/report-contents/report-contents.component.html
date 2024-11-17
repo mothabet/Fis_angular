@@ -240,29 +240,29 @@
                             </td>
                         </tr>
                     </tbody>
-                    <!-- <tfoot *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
+                    <tfoot *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
                         <tr>
                             <td colspan="2" style="text-align: center; font-weight: bold;">الإجمالي</td>
 
                             <td style="text-align: center;"
-                                *ngFor="let total of getColumnTotals(report.fields, report.yearsWithoutValues)">
+                                *ngFor="let total of getColumnTotals(report.fields,report)">
                                 {{ total.total }}
                             </td>
                         </tr>
-                    </tfoot>  -->
-                    <!-- <tfoot *ngIf="report.seconedTable != 'Years'">
+                    </tfoot>
+                    <tfoot *ngIf="report.seconedTable != 'Years'">
                         <tr>
-                            <td colspan="3" style="text-align: center;"
+                            <td colspan="4" style="text-align: center;"
                                 *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
                             </td>
                             <td colspan="2" style="text-align: center;" *ngIf="report.seconedTable == 'Years' ">الإجمالي
                             </td>
-                            <td colspan="3" style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                            <td colspan="4" style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
                                 الإجمالي
                             </td>
-                            <td style="text-align: center;">{{ getTotal(report) }}</td>
+                            <td style="text-align: center;" *ngFor="let total of getColumnTotals(report.fields,report)">{{ total.total }}</td>
                         </tr>
-                    </tfoot> -->
+                    </tfoot>
                 </table>
             </div>
 
@@ -283,9 +283,11 @@
                         <!-- First three fields on the same row -->
                         <div class="col-sm-8 mb-3 label-with-icon">
                             <input style="width: 100%;" class="form-control input-modal" [(ngModel)]="report.part"
-                                type="text" name="reportPart" required #reportPartInput="ngModel" (ngModelChange)="onReportPartChange($event)">
+                                type="text" name="reportPart" required #reportPartInput="ngModel"
+                                (ngModelChange)="onReportPartChange($event)">
                             <label style="top: 14px;">اسم محتوى التقرير</label>
                         </div>
+                        <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
                         <div class="col-sm-4 mb-3">
                             <select [(ngModel)]="tableType" name="tableType" (change)="onTableSelect()"
                                 class="form-select add-report-select" style="width: 100%;">
@@ -301,8 +303,8 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-4 mb-3">
-                            <select (ngModelChange)="onReportYearChange()" [(ngModel)]="reportYearFrom" name="reportYearFrom"
-                                class="form-select add-report-select" style="width: 100%;">
+                            <select (ngModelChange)="onReportYearChange()" [(ngModel)]="reportYearFrom"
+                                name="reportYearFrom" class="form-select add-report-select" style="width: 100%;">
                                 <option selected [ngValue]="0" disabled>اختر السنه</option>
                                 <option *ngFor="let year of years" [ngValue]="year.arName">{{year.arName}}</option>
                             </select>
@@ -612,7 +614,7 @@
                                             <ul class="dropdown-menu" [class.show]="isSectorDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let sector of sectors"
+                                                <li class="dropdown-item" *ngFor="let sector of filteredSectors"
                                                     (click)="selectSectorRep($event, tables[2],sector)">
                                                     {{sector.arName}}
                                                 </li>
@@ -628,7 +630,7 @@
                                             <ul class="dropdown-menu" [class.show]="isCompanyDropdownOpen" style="padding: 0 9px; max-height: 120px;
                                       width: 100%;
                                       text-align: right;">
-                                                <li class="dropdown-item" *ngFor="let company of companies"
+                                                <li class="dropdown-item" *ngFor="let company of filteredCompanies"
                                                     (click)="selectCompanyRep($event, tables[2],company)">
                                                     {{company.arName}}
                                                 </li>
@@ -652,14 +654,16 @@
                                 </div>
                             </div>
                         </ng-container>
-                        <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
 
                         <!-- Add Button -->
                         <button (click)="openModal()"
                             style="background-color: #00af9d; border-radius: 5px; float: left; height: 30px;">
                             <i style="color: white;" class="fa fa-plus" aria-hidden="true"></i>
                         </button>
+
                     </div>
+                    <span *ngIf="isContenterror" style="color: red;">{{errorMessage}}</span>
+
                     <!-- Continue with remaining fields -->
                     <!-- <h4 class="mb-3">نوع التقرير</h4> -->
                     <!-- <div class="form-check ps-0 d-flex radio-form me-2 col-6">
