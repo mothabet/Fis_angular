@@ -231,7 +231,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     };
     this.generalIndicatorServices.GetGeneralIndicator(id).subscribe(observer);
   }
-  updateActivity() {
+  updateGeneralIndicator() {
     this.showLoader = true;
     if (this.searchTerm == '' || this.searchTerm == undefined) {
       this.isFormContentError = true;

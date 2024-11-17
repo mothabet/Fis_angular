@@ -57,6 +57,14 @@ export interface ReportField {
     codeEnName: string;
     years: YearData[];
 }
+export interface ReportActivityField {
+    questionCode: string;
+    codeArName: string;
+    codeEnName: string;
+    activityCode: string;
+    activityArName: string;
+    years: YearData[];
+}
 
 export interface IGetReportPartsDto {
     id: number,

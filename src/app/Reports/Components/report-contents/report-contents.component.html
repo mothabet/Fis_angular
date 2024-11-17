@@ -186,7 +186,7 @@
                     <thead>
                         <tr class="t-header">
                             <th style="text-align: center;" scope="col">#</th>
-                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'Years'">
+                            <th style="text-align: center;" scope="col">
                                 المؤشر</th>
                             <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'ActivitiesRep'">
                                 كود النشاط </th>
@@ -208,19 +208,27 @@
                         </tr>
                     </thead>
                     <tbody *ngIf="report.seconedTable == 'ActivitiesRep' || report.seconedTable == 'SectorsRep'">
-                        <tr *ngFor="let row of report.fields;let i = index ">
+                        <tr *ngFor="let list of transActivityFields(report.fields,report); let i = index">
                             <td style="text-align: center;" scope="col">{{i+1}}</td>
-                            <td style="text-align: center;">{{row[7].value}}</td>
-                            <td style="text-align: center;">{{row[3].value}}</td>
-                            <td style="text-align: center;">{{row[0].value}}</td>
+                            <td style="text-align: center;">{{ list.codeArName }}</td>
+                            <td>{{ list.activityCode}}</td> <!-- كود النشاط -->
+                            <td>{{ list.activityArName }}</td>
+                            <!-- النشاط باللغة العربية -->
+                            <td style="text-align: center;" *ngFor="let item of list.years">
+                                {{ item.value }}
+                            </td>
                         </tr>
                     </tbody>
                     <tbody *ngIf="report.seconedTable == 'CompaniesRep'">
-                        <tr *ngFor="let row of report.fields;let i = index ">
+                        <tr *ngFor="let list of transActivityFields(report.fields,report); let i = index">
                             <td style="text-align: center;" scope="col">{{i+1}}</td>
-                            <td style="text-align: center;">{{row[5].value}}</td>
-                            <td style="text-align: center;">{{row[7].value}}</td>
-                            <td style="text-align: center;">{{row[0].value}}</td>
+                            <td style="text-align: center;">{{ list.codeArName }}</td>
+                            <td>{{ list.activityArName}}</td> <!-- كود النشاط -->
+                            <td>{{ list.activityCode }}</td>
+                            <!-- النشاط باللغة العربية -->
+                            <td style="text-align: center;" *ngFor="let item of list.years">
+                                {{ item.value }}
+                            </td>
                         </tr>
                     </tbody>
                     <tbody *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
@@ -228,11 +236,21 @@
                             <td style="text-align: center;" scope="col">{{ i + 1 }}</td>
                             <td style="text-align: center;">{{ list.codeArName }}</td>
                             <td style="text-align: center;" *ngFor="let item of list.years">
-                                {{ item.totalCode }}
+                                {{ item.value }}
                             </td>
                         </tr>
                     </tbody>
-                    <tfoot *ngIf="report.seconedTable != 'Years'">
+                    <!-- <tfoot *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
+                        <tr>
+                            <td colspan="2" style="text-align: center; font-weight: bold;">الإجمالي</td>
+
+                            <td style="text-align: center;"
+                                *ngFor="let total of getColumnTotals(report.fields, report.yearsWithoutValues)">
+                                {{ total.total }}
+                            </td>
+                        </tr>
+                    </tfoot>  -->
+                    <!-- <tfoot *ngIf="report.seconedTable != 'Years'">
                         <tr>
                             <td colspan="3" style="text-align: center;"
                                 *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
@@ -244,7 +262,7 @@
                             </td>
                             <td style="text-align: center;">{{ getTotal(report) }}</td>
                         </tr>
-                    </tfoot>
+                    </tfoot> -->
                 </table>
             </div>
 
@@ -265,9 +283,8 @@
                         <!-- First three fields on the same row -->
                         <div class="col-sm-8 mb-3 label-with-icon">
                             <input style="width: 100%;" class="form-control input-modal" [(ngModel)]="report.part"
-                                type="text" name="reportPart" required #reportPartInput="ngModel">
+                                type="text" name="reportPart" required #reportPartInput="ngModel" (ngModelChange)="onReportPartChange($event)">
                             <label style="top: 14px;">اسم محتوى التقرير</label>
-                            <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
                         </div>
                         <div class="col-sm-4 mb-3">
                             <select [(ngModel)]="tableType" name="tableType" (change)="onTableSelect()"
@@ -284,7 +301,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-4 mb-3">
-                            <select [(ngModel)]="reportYearFrom" name="reportYearFrom"
+                            <select (ngModelChange)="onReportYearChange()" [(ngModel)]="reportYearFrom" name="reportYearFrom"
                                 class="form-select add-report-select" style="width: 100%;">
                                 <option selected [ngValue]="0" disabled>اختر السنه</option>
                                 <option *ngFor="let year of years" [ngValue]="year.arName">{{year.arName}}</option>
@@ -635,6 +652,7 @@
                                 </div>
                             </div>
                         </ng-container>
+                        <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
 
                         <!-- Add Button -->
                         <button (click)="openModal()"
