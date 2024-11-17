@@ -140,20 +140,7 @@
                   <label>نوع الاستماره</label>
                 </div>
               </div>
-              <div class="col-sm-12 mb-3">
-                <div class="input-floating-label mb-0">
-                  <select formControlName="codeSector" class="form-control">
-                    <option selected value="0" disabled>
-                      اختيار رمز القطاع
-                    </option>
-                    <option *ngFor="let activity of Sectors" value="{{ activity.id }}">
-                      {{activity.code}}_{{ activity.arName }}
-                    </option>
-                  </select>
-                  <label>رمز القطاع</label>
-                </div>
-              </div>
-
+              
               <div class="col-sm-12 mb-3" *ngIf="typeForm=='1'||typeForm=='2'">
                 <div class="input-floating-label mb-0">
                   <select formControlName="reviewYear" class="form-control" style="width: 100%"

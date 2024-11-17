@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CompanyHomeService } from '../../services/companyHome.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -99,6 +99,13 @@ export class CompaniesHomeComponent implements OnInit {
     Close: true, 
     Open: true
   };  
+  isDropdownOpen = false;
+  filteredACtivity: IDropdownList[] = [];
+  isDropdownOpenSubActivities = false;
+  filteredSubACtivity: IDropdownList[] = [];
+  @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
+  @ViewChild('dropdownContainerSub') dropdownContainerSub!: ElementRef;
+
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private permissionsService: PermissionsService) { }
@@ -136,6 +143,7 @@ export class CompaniesHomeComponent implements OnInit {
       status: [true],
       compEmails: this.formBuilder.array([this.createEmailField()])
     });
+    
     this.GetPermissionByUserId();
     this.GetPermissionByUserIdCompaniesDetails();
     const currentYear = new Date().getFullYear();
@@ -146,6 +154,80 @@ export class CompaniesHomeComponent implements OnInit {
     this.username = this.companyForm.value.username;
     this.GetSectorActvities(0);
   }
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  
+  filterActivities() {
+    const searchTerm = this.companyForm.get('activityId')?.value || '';
+    this.filteredACtivity = this.Activities.filter(activity =>
+      activity.code.includes(searchTerm)
+    );
+  }
+  
+  selectActivities(activity: IDropdownList) {
+    this.companyForm.patchValue({
+      activityId: activity.id
+    });
+
+    this.isDropdownOpen = false;
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.sectorId = res.Data.sectorId;
+          this.sectorCode = res.Data.code;
+          this.sectorName = res.Data.sectorName;
+          this.activityName = res.Data.arName;
+          this.companyForm.value.sectorId = this.sectorId;
+          this.companyForm.value.sectorCode = this.sectorCode;
+          this.companyForm.value.sectorName = this.sectorName;
+          this.companyForm.value.activityName = this.activityName;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.getActivityByActivityId(activity.id).subscribe(observer);
+  }
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+
+    // Check if the click was outside the main activity dropdown
+    const isInsideMainDropdown = this.dropdownContainer?.nativeElement.contains(targetElement);
+    if (this.isDropdownOpen && !isInsideMainDropdown) {
+      this.isDropdownOpen = false;
+    }
+
+    // Check if the click was outside the sub-activity dropdown
+    const isInsideSubDropdown = this.dropdownContainerSub?.nativeElement.contains(targetElement);
+    if (this.isDropdownOpenSubActivities && !isInsideSubDropdown) {
+      this.isDropdownOpenSubActivities = false;
+    }
+  }
+
+
+  toggleDropdownSubActivities() {
+    this.isDropdownOpenSubActivities = !this.isDropdownOpenSubActivities;
+  }
+  
+  filterSubActivities() {
+    const searchTerm = this.companyForm.get('subActivityId')?.value || '';
+    this.filteredSubACtivity = this.Activities.filter(activity =>
+      activity.code.includes(searchTerm)
+    );
+  }
+  
+  selectSubActivities(subActivity: IDropdownList) {
+    this.companyForm.patchValue({
+      subActivityId: subActivity.id,
+      subActivityName : subActivity.arName
+    });
+    this.isDropdownOpenSubActivities = false;
+  }
+  
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("Companies").then(permissions => {
       this.permission = permissions;
@@ -161,7 +243,6 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         
         if (res.Data) {
-          
           this.sectorId = res.Data.sectorId;
           this.sectorCode = res.Data.code;
           this.sectorName = res.Data.sectorName;
@@ -283,6 +364,9 @@ export class CompaniesHomeComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.Activities = res.Data.getActivitiesDtos;
+          this.filteredACtivity = res.Data.getActivitiesDtos;
+          this.filteredSubACtivity = res.Data.getActivitiesDtos;
+          
         }
       },
       error: (err: any) => {
@@ -291,6 +375,7 @@ export class CompaniesHomeComponent implements OnInit {
     };
     this.sectorsAndActivitiesServices.GetActivities(0, '', 0).subscribe(observer);
   }
+  
   GetSubActivities(activityId: number) {
     if (activityId > 0) {
       const observer = {
@@ -347,32 +432,47 @@ export class CompaniesHomeComponent implements OnInit {
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   GetWilayat(govId: number) {
+    
     if (govId > 0) {
-      const observer = {
-        next: (res: any) => {
-          if (res.Data) {
-            this.Wilayat = res.Data;
-          }
-        },
-        error: (err: any) => {
-          this.sharedService.handleError(err);
-        },
-      };
-      this.companyHomeServices.GetWilayat(govId).subscribe(observer);
-    }
-  }
-  GetGovernorates() {
+      this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Governorates = res.Data;
+          
+          this.Wilayat = res.Data.getWilayaDtos;
         }
+        else {
+          this.Wilayat = [];
+        }
+        this.showLoader = false;
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
+        this.showLoader = false;
       },
     };
-    this.companyHomeServices.GetGovernorates().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayats(govId,0, '').subscribe(observer);
+    }
+  }
+  GetGovernorates() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+          this.Governorates = res.Data.getGovernoratesDto;
+        }
+        else{
+          this.Governorates = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
   }
   GetCompanyCode() {
     const observer = {
@@ -711,6 +811,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.GetCompanyCode();
   }
   popAddCompany() {
+    
     this.GetSectors();
     this.GetGovernorates();
     this.generateRandomCredentials();
@@ -719,6 +820,7 @@ export class CompaniesHomeComponent implements OnInit {
       this.resetForm();
     }
     this.companyForm.get('governoratesId')!.valueChanges.subscribe(value => {
+      
       if (value != 0) {
         this.clearWilayat();
       }

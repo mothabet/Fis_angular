@@ -13,6 +13,7 @@ import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { IGeneralDataDto, IWorkDataChkDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 
@@ -55,6 +56,7 @@ export class SharedFormCoverComponent implements OnInit {
     { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '', isSelect: false },
     { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '', isSelect: false },
     { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '', isSelect: false },
+    { arName: 'رمز القطاع : ', enName: ' :  sector Code', inputValue: '', isSelect: false },
     { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)', inputValue: '', isSelect: false },
   ];
   workDataChk: IWorkDataChkDto[] = [
@@ -140,17 +142,19 @@ export class SharedFormCoverComponent implements OnInit {
   auditRules: IAuditRule[] = [];
   Governorates: IDropdownList[] = []
   Wilayat: IDropdownList[] = []
-
+  sectorCode: string="";
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService,
     private auditRuleHomeService: AuditRuleHomeService, private companyHomeServices: CompanyHomeService
-    , private sharedService: SharedService, private sharedServices: SharedService, private activeRouter: ActivatedRoute) {
+    , private sharedService: SharedService, private sharedServices: SharedService, private activeRouter: ActivatedRoute, 
+    private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
   }
   ngOnInit(): void {
     this.companyId = this.activeRouter.snapshot.paramMap.get('companyId')!;
     this.isCoverActive = true
-    this.GetFormById(+this.formId)
-  }
+    this.GetFormById(+this.formId);
+    this.GetCompanySectorCodeById(+this.companyId);
+    }
   GetFormById(id: number): void {
     this.Loader = true;
     const observer = {
@@ -440,13 +444,12 @@ export class SharedFormCoverComponent implements OnInit {
                   if (generalData) {
                     this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
                     this.workData = this.coverForm.GeneralData.CompanyInfo;
-
-                  }
+                                   }
                   else if (res.Data.length > 0) {
                     if (res.Data[0].GeneralData) {
                       this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
                       this.workData = this.coverForm.GeneralData.CompanyInfo;
-
+                      
                     }
                   }
                 }
@@ -509,7 +512,9 @@ export class SharedFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.company = res.Data;
+          this.sectorCode = this.company.sectorCode;
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
               item.inputValue = this.company.arName;
@@ -573,12 +578,13 @@ export class SharedFormCoverComponent implements OnInit {
 
               item.inputValue = this.company.compRegNumber;
             }
+            
           });
-
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             this.workData = this.coverForm.GeneralData.CompanyInfo;
+            
           }
           else {
             this.coverForm.GeneralData = this.generalDataDto;
@@ -595,33 +601,57 @@ export class SharedFormCoverComponent implements OnInit {
     };
     this.companyServices.GetCompanyById(id).subscribe(observer);
   }
-  GetWilayat(govId: number) {
-    if (govId > 0) {
-      const observer = {
-        next: (res: any) => {
-          if (res.Data) {
-            this.Wilayat = res.Data;
-          }
-          this.GetGovernorates();
-        },
-        error: (err: any) => {
-          this.sharedService.handleError(err);
-        },
-      };
-      this.companyHomeServices.GetWilayat(govId).subscribe(observer);
-    }
-  }
-  GetGovernorates() {
+  GetCompanySectorCodeById(id: number) {
+    this.Loader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.Governorates = res.Data;
+          this.sectorCode = res.Data.sectorCode;
+          
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.companyServices.GetCompanyById(id).subscribe(observer);
+  }
+  GetWilayat(govId: number) {
+    if (govId > 0) {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+          this.Wilayat = res.Data.getWilayaDtos;
+        }
+        else {
+          this.Wilayat = [];
         }
       },
       error: (err: any) => {
         this.sharedService.handleError(err);
       },
     };
-    this.companyHomeServices.GetGovernorates().subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayats(govId,0, '').subscribe(observer);
+    }
+  }
+  GetGovernorates() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+          this.Governorates = res.Data.getGovernoratesDto;
+        }
+        else{
+          this.Governorates = [];
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
   }
 }
