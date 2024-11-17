@@ -134,7 +134,7 @@
           <button (click)="saveGeneralIndicator()" *ngIf="!isUpdate" type="button" class="btn btn-save">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
+          <button (click)="updateGeneralIndicator()" type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
             تعديل
           </button>
         </div>
