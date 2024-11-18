@@ -1108,7 +1108,7 @@ export class ReportContentsComponent implements OnInit {
         return; // Stop further execution
       }
     }
-    
+
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
       this.isReportNameError = true;
       this.errorMessage = 'يجب ادخال عنوان الجدول'
@@ -1232,6 +1232,10 @@ export class ReportContentsComponent implements OnInit {
           reportDetails: ''       // default ID
         };
         this.GetReports();
+        const button = document.getElementById('close');
+        if (button) {
+          button.click();
+        }
         Swal.fire({
           icon: 'success',
           title: res.Message,
@@ -1247,16 +1251,16 @@ export class ReportContentsComponent implements OnInit {
     this.reportServices.AddReportContent(this.report).subscribe(observer);
   }
   onReportYearChange() {
-    if(this.isYearError)
+    if (this.isYearError)
       this.isYearError = false
   }
   onReportPartChange(newValue: string) {
-    
-    if(newValue == ''){
+
+    if (newValue == '') {
       this.isYearError = true
       this.errorMessage = "يجب ادخال اسم محتوىالتقرير"
     }
-    else{
+    else {
       this.isYearError = false
       this.errorMessage = "يجب ادخال اسم محتوىالتقرير"
     }
@@ -1405,7 +1409,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1420,10 +1424,10 @@ export class ReportContentsComponent implements OnInit {
       const activityCode = fieldArray[6].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
       const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
-    
+
       // استخدم مفتاح مركب يجمع بين codeArName و activityCode
       const compositeKey = `${codeArName}_${activityCode}`;
-    
+
       // تحقق من وجود المجموعة في acc
       if (!acc[compositeKey]) {
         acc[compositeKey] = {
@@ -1435,7 +1439,7 @@ export class ReportContentsComponent implements OnInit {
           years: []
         };
       }
-    
+
       // أضف السنة و totalCode إذا كانت موجودة
       if (totalCode) {
         acc[compositeKey].years.push({
@@ -1443,10 +1447,10 @@ export class ReportContentsComponent implements OnInit {
           totalCode: Number(totalCode)
         });
       }
-    
+
       return acc;
     }, {}));
-    
+
 
     // Step 2: Append missing years from report.reportDetails[1].Fields with a value of 0
     let fieldsInReport = groupedReport as ReportField[];
@@ -1478,7 +1482,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1499,7 +1503,7 @@ export class ReportContentsComponent implements OnInit {
 
     return updatedYears.sort((a, b) => Number(a.name) - Number(b.name));
   }
-  getColumnTotals(fields: any[][],report:any): { year: string, total: number }[] {
+  getColumnTotals(fields: any[][], report: any): { year: string, total: number }[] {
     const totals: { [key: string]: number } = {};
 
     // جمع الإجماليات لجميع السنوات من fields
@@ -1514,7 +1518,7 @@ export class ReportContentsComponent implements OnInit {
     });
 
     // إضافة السنوات التي لا تحتوي على قيم
-    report.reportDetails[1].Fields.forEach((year:any) => {
+    report.reportDetails[1].Fields.forEach((year: any) => {
       const yearName = year.name;
       const totalValue = year.value || 0;  // القيمة 0 في حال لم تكن موجودة في yearsWithValues
       totals[yearName] = (totals[yearName] || 0) + totalValue;
@@ -1524,7 +1528,7 @@ export class ReportContentsComponent implements OnInit {
     const sortedTotals = Object.entries(totals)
       .sort(([yearA], [yearB]) => Number(yearA) - Number(yearB))  // ترتيب حسب السنة
       .map(([year, total]) => ({ year, total }));
-      
+
     return sortedTotals;
   }
   fbuildJoinQuery(tables: ITableDto[], stringFilterItems: IReportFilterDto[], numberFilterItems: IReportFilterDto[]): string {
@@ -1542,7 +1546,7 @@ export class ReportContentsComponent implements OnInit {
         if (table.enTableName != 'Years') {
           const tableAlias = `${table.enTableName}`;
           // Determine if all fields should be selected
-          
+
           if (table.selectAllFields || table.fields.length === 0) {
             if (table.enTableName == 'Companies') {
               this.companyFields.forEach((companyField, companyFieldIndex) => {
@@ -1598,7 +1602,7 @@ export class ReportContentsComponent implements OnInit {
               fields += `${tableAlias}.[Order] AS ${table.enTableName}_Order`;
 
             // Add a comma if not the last field of the last table
-            
+
             if (tables.length == 3) {
               if (fieldIndex !== table.fields.length - 1 || tableIndex !== tables.length - 1) {
                 fields += ', ';

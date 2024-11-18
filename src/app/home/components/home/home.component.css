@@ -1,0 +1,5 @@
+canvas {
+    max-width: 100% !important; /* Make canvas fill the width of its container */
+    height: 250px; /* Adjust height for better visual appeal */
+    margin: 0 auto; /* Center the canvas inside the card */
+  }

@@ -242,9 +242,9 @@
                     </tbody>
                     <tfoot *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
                         <tr>
-                            <td colspan="2" style="text-align: center; font-weight: bold;">الإجمالي</td>
+                            <td colspan="2" style="text-align: center; font-weight: bold;background-color: #56bfb533;">الإجمالي</td>
 
-                            <td style="text-align: center;"
+                            <td style="text-align: center;background-color: #56bfb533;"
                                 *ngFor="let total of getColumnTotals(report.fields,report)">
                                 {{ total.total }}
                             </td>
@@ -252,15 +252,15 @@
                     </tfoot>
                     <tfoot *ngIf="report.seconedTable != 'Years'">
                         <tr>
-                            <td colspan="4" style="text-align: center;"
+                            <td colspan="4" style="text-align: center;background-color: #56bfb533;"
                                 *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
                             </td>
-                            <td colspan="2" style="text-align: center;" *ngIf="report.seconedTable == 'Years' ">الإجمالي
+                            <td colspan="2" style="text-align: center;background-color: #56bfb533;" *ngIf="report.seconedTable == 'Years' ">الإجمالي
                             </td>
-                            <td colspan="4" style="text-align: center;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                            <td colspan="4" style="text-align: center;background-color: #56bfb533;" *ngIf="report.seconedTable == 'CompaniesRep'">
                                 الإجمالي
                             </td>
-                            <td style="text-align: center;" *ngFor="let total of getColumnTotals(report.fields,report)">{{ total.total }}</td>
+                            <td style="text-align: center;background-color: #56bfb533;" *ngFor="let total of getColumnTotals(report.fields,report)">{{ total.total }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -681,7 +681,7 @@
                 </div>
 
                 <div class="modal-footer pt-0" style="border-top: none;">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" id="close" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
                     <button type="button" class="btn" (click)="saveReport()">حفظ</button>
                 </div>
             </form>
