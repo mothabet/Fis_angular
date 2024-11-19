@@ -39,11 +39,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionSections: IGetPermissionDto = {
@@ -60,11 +60,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionGroups: IGetPermissionDto = {
@@ -81,11 +81,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionCategories: IGetPermissionDto = {
@@ -102,11 +102,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionActivities: IGetPermissionDto = {
@@ -123,11 +123,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionCountries: IGetPermissionDto = {
@@ -144,11 +144,11 @@ export class SectorsComponent implements OnInit {
     addCompaniesGroup: true,
     copy: true,
     Instructions: true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   permissionGovernorates: IGetPermissionDto = {

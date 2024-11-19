@@ -46,7 +46,7 @@ export class SharedFormCoverComponent implements OnInit {
     { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '', isSelect: false },
     { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '', isSelect: false },
     { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '', isSelect: false },
-    { arName: 'النشاط السنوي : ', enName: ' :  Secondary Activity', inputValue: '', isSelect: false },
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '', isSelect: false },
     { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '', isSelect: false },
     { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '', isSelect: false },
     { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '', isSelect: false },
@@ -562,7 +562,7 @@ export class SharedFormCoverComponent implements OnInit {
 
               item.inputValue = this.company.address;
             }
-            else if (item.arName.includes('النشاط السنوي : ')) {
+            else if (item.arName.includes('النشاط الثانوى : ')) {
 
               item.inputValue = this.company.subActivityCode;
             }

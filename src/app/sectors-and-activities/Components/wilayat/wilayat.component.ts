@@ -4,7 +4,7 @@ import { IGetPermissionDto } from 'src/app/permissions/Dtos/PermissionDto';
 import { SectorAndActivitiesService } from '../../Services/sector-and-activities.service';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { PermissionsService } from 'src/app/permissions/services/permissions.service';
-import { IAddGovernorateDto, IAddWilayatDto, IGetGovernorateDto, IGetWilayatDto } from '../../Dtos/SectorDtos';
+import { IAddWilayatDto, IGetGovernorateDto, IGetWilayatDto } from '../../Dtos/SectorDtos';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -190,17 +190,18 @@ export class WilayatComponent {
   searchText: string = '';
   noData: boolean = false;
   Wilayat: IGetWilayatDto[] = [];
-  getWilayat : IGetWilayatDto = {
-    id:0,
-    arName:'',
-    enName:'',
-    embeded:'',
-    GovernoratesId:0,
-    Governorates:{} as IGetGovernorateDto
+  getWilayat: IGetWilayatDto = {
+    id: 0,
+    arName: '',
+    enName: '',
+    embeded: '',
+    GovernoratesId: 0,
+    Governorates: {} as IGetGovernorateDto,
+    code: ''
   };
   isUpdate: boolean = false;
-  id:number=0;
-  governorates : IGetGovernorateDto[] = [];
+  id: number = 0;
+  governorates: IGetGovernorateDto[] = [];
 
   constructor(private sharedService: SharedService, private fb: FormBuilder,
     private sectorsAndActivitiesServices: SectorAndActivitiesService,
@@ -210,10 +211,11 @@ export class WilayatComponent {
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       embeded: [''],
-      GovernoratesId: ['', Validators.required]
+      GovernoratesId: ['', Validators.required],
+      code: ['', Validators.required]
     });
-    this.GetWilayat(0,1, '',);
-    this.GetGovernorates(0,'',);
+    this.GetWilayat(0, 1, '',);
+    this.GetGovernorates(0, '',);
     this.GetPermissionByUserIdSectors();
     this.GetPermissionByUserIdSections();
     this.GetPermissionByUserIdGroups();
@@ -275,7 +277,9 @@ export class WilayatComponent {
     if (this.wilayatForm.value.GovernoratesId == "" || this.wilayatForm.value.GovernoratesId == null) {
       allErrors.push('يجب اختيار المحافظه');
     }
-
+    if (this.wilayatForm.value.code == "" || this.wilayatForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز الولايه');
+    }
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -291,6 +295,8 @@ export class WilayatComponent {
         enName: this.wilayatForm.value.enName,
         embeded: '',
         GovernoratesId: this.wilayatForm.value.GovernoratesId,
+        code: this.wilayatForm.value.code,
+
       }
       const observer = {
         next: (res: any) => {
@@ -299,7 +305,7 @@ export class WilayatComponent {
             button.click();
           }
           this.onReset();
-          this.GetWilayat(0,1, '');
+          this.GetWilayat(0, 1, '');
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -316,13 +322,13 @@ export class WilayatComponent {
       this.sectorsAndActivitiesServices.AddWilayat(wilayat).subscribe(observer);
     }
   }
-  GetWilayat(governorateId:number,page: number, textSearch: string = ''): void {
+  GetWilayat(governorateId: number, page: number, textSearch: string = ''): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          
+
           this.Wilayat = res.Data.getWilayaDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
@@ -339,14 +345,14 @@ export class WilayatComponent {
         this.showLoader = false;
       },
     };
-    this.sectorsAndActivitiesServices.GetWilayats(governorateId,page, textSearch).subscribe(observer);
+    this.sectorsAndActivitiesServices.GetWilayats(governorateId, page, textSearch).subscribe(observer);
   }
   onPageChange(page: number) {
     this.currentPage = page;
-    this.GetWilayat(0,page);
+    this.GetWilayat(0, page);
   }
   wilayatSearch() {
-    this.GetWilayat(0,this.currentPage, this.searchText);
+    this.GetWilayat(0, this.currentPage, this.searchText);
   }
   onReset(): void {
     this.isUpdate = false;
@@ -354,7 +360,8 @@ export class WilayatComponent {
       arName: ['', Validators.required],
       enName: ['', Validators.required],
       embeded: [''],
-      GovernoratesId: ['', Validators.required]
+      GovernoratesId: ['', Validators.required],
+      code: ['', Validators.required]
     });
   }
   DeleteWilayat(id: number): void {
@@ -372,7 +379,7 @@ export class WilayatComponent {
         this.showLoader = true;
         const observer = {
           next: (res: any) => {
-            this.GetWilayat(0,1, '');
+            this.GetWilayat(0, 1, '');
             this.showLoader = false;
             Swal.fire({
               icon: 'success',
@@ -401,6 +408,8 @@ export class WilayatComponent {
             enName: this.getWilayat.enName,
             embeded: this.getWilayat.enName,
             GovernoratesId: this.getWilayat.GovernoratesId,
+            code: this.getWilayat.code,
+
           });
           this.id = this.getWilayat.id;
         }
@@ -427,6 +436,9 @@ export class WilayatComponent {
       allErrors.push('يجب اختيار المحافظه');
     }
 
+    if (this.wilayatForm.value.code == "" || this.wilayatForm.value.code == null) {
+      allErrors.push('يجب ادخال رمز الولايه');
+    }
     if (allErrors.length > 0) {
       Swal.fire({
         icon: 'error',
@@ -440,8 +452,10 @@ export class WilayatComponent {
       const Model: IAddWilayatDto = {
         arName: this.wilayatForm.value.arName,
         enName: this.wilayatForm.value.enName,
-        embeded:this.wilayatForm.value.embeded,
+        embeded: this.wilayatForm.value.embeded,
         GovernoratesId: this.wilayatForm.value.GovernoratesId,
+        code: this.wilayatForm.value.code,
+
       };
       const observer = {
         next: (res: any) => {
@@ -450,7 +464,7 @@ export class WilayatComponent {
             button.click();
           }
           this.onReset();
-          this.GetWilayat(0,1);
+          this.GetWilayat(0, 1);
           this.showLoader = false;
           Swal.fire({
             icon: 'success',
@@ -472,10 +486,10 @@ export class WilayatComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           this.governorates = res.Data.getGovernoratesDto;
         }
-        else{
+        else {
           this.governorates = [];
         }
         this.showLoader = false;

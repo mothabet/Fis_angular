@@ -216,6 +216,7 @@ export class ResearcherHomeComponent {
 
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
+          debugger
           this.researchers = res.Data.getResearcherDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
@@ -408,7 +409,7 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
 
         this.showLoader = false;
-
+debugger
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
 
@@ -478,6 +479,7 @@ export class ResearcherHomeComponent {
             this.selectedCompanyIdsIsResearcher.add(res.Data[index].id);
           }
         }
+        debugger
         this.showLoader = false;
       },
       error: (err: any) => {

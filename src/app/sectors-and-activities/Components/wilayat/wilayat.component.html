@@ -5,34 +5,34 @@
   <!-- end-header -->
   <div class="header-nav companies-details">
     <div class="card-box mb-3">
-        <ul>
-            <li routerLinkActive="active" *ngIf="permissionSectors.isName">
-                <a routerLink="/Sectors">القطاعات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionSections.isName">
-                <a routerLink="/Sections">القسم</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionGroups.isName">
-                <a routerLink="/Groups">المجموعات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionCategories.isName">
-                <a routerLink="/Categories">الفئات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionActivities.isName">
-                <a routerLink="/Activities">الأنشطة</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionCountries.isName">
-                <a routerLink="/Countries">الدول</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionGovernorates.isName">
-                <a routerLink="/Governorates">المحافظات</a>
-              </li>
-              <li routerLinkActive="active" *ngIf="permissionWilayat.isName">
-                <a routerLink="/Wilayat">الولايات</a>
-              </li>
-        </ul>
+      <ul>
+        <li routerLinkActive="active" *ngIf="permissionSectors.isName">
+          <a routerLink="/Sectors">القطاعات</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionSections.isName">
+          <a routerLink="/Sections">القسم</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionGroups.isName">
+          <a routerLink="/Groups">المجموعات</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionCategories.isName">
+          <a routerLink="/Categories">الفئات</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionActivities.isName">
+          <a routerLink="/Activities">الأنشطة</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionCountries.isName">
+          <a routerLink="/Countries">الدول</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionGovernorates.isName">
+          <a routerLink="/Governorates">المحافظات</a>
+        </li>
+        <li routerLinkActive="active" *ngIf="permissionWilayat.isName">
+          <a routerLink="/Wilayat">الولايات</a>
+        </li>
+      </ul>
     </div>
-</div>
+  </div>
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
@@ -46,8 +46,8 @@
           <i (click)="wilayatSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" *ngIf="permissionWilayat.add"
-            data-bs-target="#addSector">
+          <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal"
+            *ngIf="permissionWilayat.add" data-bs-target="#addSector">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
             اضافة الولايه
           </button>
@@ -62,6 +62,7 @@
           <tr class="t-header">
             <th class="text-center" scope="col">اسم المحافظه</th>
             <th class="text-center" scope="col">اسم الولايه</th>
+            <th class="text-center" scope="col">الرمز</th>
             <th style="width: 150px;" class="text-center" scope="col"> </th>
           </tr>
         </thead>
@@ -69,12 +70,13 @@
           <tr *ngFor="let wilaya of Wilayat">
             <td class="text-center">{{wilaya.Governorates.arName}}</td>
             <td class="text-center">{{wilaya.arName}}</td>
+            <td class="text-center">{{wilaya.code}}</td>
             <td class="text-center">
               <button class="icon" (click)="DeleteWilayat(wilaya.id)" *ngIf="permissionWilayat.delete">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
-              <button class="icon" (click)="openUpdatePopup(wilaya.id)" data-bs-toggle="modal" *ngIf="permissionWilayat.edit"
-                data-bs-target="#addSector">
+              <button class="icon" (click)="openUpdatePopup(wilaya.id)" data-bs-toggle="modal"
+                *ngIf="permissionWilayat.edit" data-bs-target="#addSector">
                 <img src="../../../../assets/images/pencil-outline.png" alt="">
               </button>
             </td>
@@ -116,11 +118,16 @@
               <label for="inputField">State Name in English</label>
             </div>
             <div class="form-group col-sm-12 mb-2">
-                <select class="form-control input-modal" formControlName="GovernoratesId">
-                    <option value="0">--اختر المحافظه--</option>
-                    <option *ngFor="let governorate of governorates" [value]="governorate.id">{{governorate.arName}}</option>
-                </select>
-                <label for="inputField">اسم المحافظه</label>
+              <select class="form-control input-modal" formControlName="GovernoratesId">
+                <option value="0">--اختر المحافظه--</option>
+                <option *ngFor="let governorate of governorates" [value]="governorate.id">{{governorate.arName}}
+                </option>
+              </select>
+              <label for="inputField">اسم المحافظه</label>
+            </div>
+            <div class="form-group col-sm-12 mb-2">
+              <input class="form-control input-modal" type="text" formControlName="code" name="code" />
+              <label for="inputField">رمز الولايه</label>
             </div>
           </div>
         </div>
