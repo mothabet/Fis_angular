@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let formContent of table.formContents">
+                        <ng-container *ngFor="let formContent of table.formContents; let index = index">
                             <ng-container *ngIf="formContent.IsActive">
 
                                 <tr class="parent boldBorderRow">
