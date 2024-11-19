@@ -146,7 +146,7 @@ export class ReportContentsComponent implements OnInit {
   ];
   tableRepTables: IReportFilterDto[] = [
     { id: 1, arName: 'الانشطة', enName: 'ActivitiesRep' },
-    { id: 2, arName: 'الدول', enName: 'Countries' },
+    // { id: 2, arName: 'الدول', enName: 'Countries' },
     { id: 3, arName: 'القطاعات', enName: 'SectorsRep' },
     { id: 4, arName: 'الشركات', enName: 'CompaniesRep' },
   ];
@@ -324,6 +324,7 @@ export class ReportContentsComponent implements OnInit {
     );
   }
   filterCompaniesRep() {
+    debugger
     this.filteredCompanies = this.companies.filter(code =>
       code.arName.includes(this.searchCompanyTerm)
     );
@@ -1107,7 +1108,7 @@ export class ReportContentsComponent implements OnInit {
         return; // Stop further execution
       }
     }
-    debugger
+
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
       this.isReportNameError = true;
       this.errorMessage = 'يجب ادخال عنوان الجدول'
@@ -1128,7 +1129,7 @@ export class ReportContentsComponent implements OnInit {
     // }
 
     if (this.tables[0].fields.length == 0 && (this.tables[0].enTableName == 'FormContent' || this.tables[0].enTableName == 'TablesReport')) {
-      this.isYearError = true;
+      this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
@@ -1231,6 +1232,10 @@ export class ReportContentsComponent implements OnInit {
           reportDetails: ''       // default ID
         };
         this.GetReports();
+        const button = document.getElementById('close');
+        if (button) {
+          button.click();
+        }
         Swal.fire({
           icon: 'success',
           title: res.Message,
@@ -1246,16 +1251,16 @@ export class ReportContentsComponent implements OnInit {
     this.reportServices.AddReportContent(this.report).subscribe(observer);
   }
   onReportYearChange() {
-    if(this.isYearError)
+    if (this.isYearError)
       this.isYearError = false
   }
   onReportPartChange(newValue: string) {
-    debugger
-    if(newValue == ''){
+
+    if (newValue == '') {
       this.isYearError = true
       this.errorMessage = "يجب ادخال اسم محتوىالتقرير"
     }
-    else{
+    else {
       this.isYearError = false
       this.errorMessage = "يجب ادخال اسم محتوىالتقرير"
     }
@@ -1404,7 +1409,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1419,9 +1424,13 @@ export class ReportContentsComponent implements OnInit {
       const activityCode = fieldArray[6].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
       const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
-      // Check if the group already exists
-      if (!acc[codeArName]) {
-        acc[codeArName] = {
+
+      // استخدم مفتاح مركب يجمع بين codeArName و activityCode
+      const compositeKey = `${codeArName}_${activityCode}`;
+
+      // تحقق من وجود المجموعة في acc
+      if (!acc[compositeKey]) {
+        acc[compositeKey] = {
           questionCode,
           codeArName,
           codeEnName,
@@ -1431,9 +1440,9 @@ export class ReportContentsComponent implements OnInit {
         };
       }
 
-      // Add the year and totalCode
+      // أضف السنة و totalCode إذا كانت موجودة
       if (totalCode) {
-        acc[codeArName].years.push({
+        acc[compositeKey].years.push({
           reviewYear: Number(reviewYear),
           totalCode: Number(totalCode)
         });
@@ -1441,6 +1450,7 @@ export class ReportContentsComponent implements OnInit {
 
       return acc;
     }, {}));
+
 
     // Step 2: Append missing years from report.reportDetails[1].Fields with a value of 0
     let fieldsInReport = groupedReport as ReportField[];
@@ -1472,11 +1482,10 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
-  
   processYears(yearsWithoutValues: any[], yearsWithValues: any[]): any[] {
     // إنشاء نسخة جديدة من yearsWithoutValues لتجنب التأثير على المصدر الأصلي
     const updatedYears = yearsWithoutValues.map(year => ({ ...year }));
@@ -1494,7 +1503,7 @@ export class ReportContentsComponent implements OnInit {
 
     return updatedYears.sort((a, b) => Number(a.name) - Number(b.name));
   }
-  getColumnTotals(fields: any[][], yearsWithoutValues: any[] = []): { year: string, total: number }[] {
+  getColumnTotals(fields: any[][], report: any): { year: string, total: number }[] {
     const totals: { [key: string]: number } = {};
 
     // جمع الإجماليات لجميع السنوات من fields
@@ -1509,7 +1518,7 @@ export class ReportContentsComponent implements OnInit {
     });
 
     // إضافة السنوات التي لا تحتوي على قيم
-    yearsWithoutValues.forEach(year => {
+    report.reportDetails[1].Fields.forEach((year: any) => {
       const yearName = year.name;
       const totalValue = year.value || 0;  // القيمة 0 في حال لم تكن موجودة في yearsWithValues
       totals[yearName] = (totals[yearName] || 0) + totalValue;
@@ -1537,6 +1546,7 @@ export class ReportContentsComponent implements OnInit {
         if (table.enTableName != 'Years') {
           const tableAlias = `${table.enTableName}`;
           // Determine if all fields should be selected
+
           if (table.selectAllFields || table.fields.length === 0) {
             if (table.enTableName == 'Companies') {
               this.companyFields.forEach((companyField, companyFieldIndex) => {
@@ -1634,7 +1644,7 @@ export class ReportContentsComponent implements OnInit {
             }
           });
           // Ensure a comma between * and other fields, but only if it's not the last table
-          if (tableIndex !== tables.length - 1 && (table.selectAllFields || table.fields.length === 0)) {
+          if (tableIndex !== tables.length - 1 && (table.selectAllFields && table.fields.length === 0)) {
             fields += ', ';
           }
           // Construct the FROM and JOIN part of the query
