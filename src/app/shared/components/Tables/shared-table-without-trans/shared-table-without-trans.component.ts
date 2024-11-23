@@ -93,19 +93,29 @@ export class SharedTableWithoutTransComponent {
           this.Loader = false;
           this.table = res.Data;
 
-          this.table.formContents.forEach((formContent: any) => {
+          this.table.formContents.forEach((formContent: IGetQuestionDto) => {
             formContent.values = formContent.values || [0, 0];
             formContent.values[0] = formContent.values[0] || 0;
             formContent.values[1] = formContent.values[1] || 0;
             // If there are subCodes, ensure their values are also initialized
             if (formContent.code.SubCodes) {
-              formContent.code.SubCodes.forEach((subCode: any) => {
+              formContent.code.SubCodes.forEach((subCode: ISubCodeForm) => {
                 // Initialize subCode `values` array if it doesn't exist
                 subCode.values = subCode.values || [0, 0];
 
                 // Ensure the `values` array has the correct length and initial values
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
                 subCode.values[1] = subCode.values[1] || 0; // nextYear
+                if (subCode.subCodes) {
+                  subCode.subCodes.forEach((subSubCode: any) => {
+                    // Initialize subCode `values` array if it doesn't exist
+                    subSubCode.values = subSubCode.values || [0, 0];
+    
+                    // Ensure the `values` array has the correct length and initial values
+                    subSubCode.values[0] = subSubCode.values[0] || 0; // lastYear
+                    subSubCode.values[1] = subSubCode.values[1] || 0; // nextYear
+                  });
+                }
               });
             }
           });

@@ -120,6 +120,17 @@ export class SharedTransTableComponent {
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
                 subCode.values[2] = 0; // Set transaction explicitly to 0
                 subCode.values[1] = subCode.values[1] || 0; // nextYear
+                if (subCode.subCodes) {
+                  subCode.subCodes.forEach((_subCode: any) => {
+                    // Initialize subCode `values` array if it doesn't exist
+                    _subCode.values = _subCode.values || [0, 0, 0];
+
+                    // Ensure the `values` array has the correct length and initial values
+                    _subCode.values[0] = _subCode.values[0] || 0; // lastYear
+                    _subCode.values[2] = 0; // Set transaction explicitly to 0
+                    _subCode.values[1] = _subCode.values[1] || 0; // nextYear
+                  });
+                }
               });
             }
           });
