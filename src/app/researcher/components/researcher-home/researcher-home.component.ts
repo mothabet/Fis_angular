@@ -216,6 +216,7 @@ export class ResearcherHomeComponent {
 
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
+          debugger
           this.researchers = res.Data.getResearcherDtos;
           this.currentPage = page;
           this.isLastPage = res.Data.LastPage;
@@ -408,7 +409,7 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
 
         this.showLoader = false;
-
+debugger
         if (res.Data) {
           this.companies = res.Data.getCompaniesDtos;
 
@@ -478,6 +479,7 @@ export class ResearcherHomeComponent {
             this.selectedCompanyIdsIsResearcher.add(res.Data[index].id);
           }
         }
+        debugger
         this.showLoader = false;
       },
       error: (err: any) => {
@@ -492,7 +494,6 @@ export class ResearcherHomeComponent {
     const selectedCompanies = this.companies.filter(company => this.selectedCompanyIds.has(company.id));
 
     this.showLoader = true;
-    if (selectedCompanies.length > 0) {
 
       const observer = {
         next: (res: any) => {
@@ -517,15 +518,7 @@ export class ResearcherHomeComponent {
         },
       };
       this.companyService.UpdateCompanyToRecearcher(this.id, selectedCompanies).subscribe(observer);
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب اختيار شركات',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      this.showLoader = false;
-    }
+    
   }
   companiesSearch() {
     this.GetCompanies(this.searchText, 1);

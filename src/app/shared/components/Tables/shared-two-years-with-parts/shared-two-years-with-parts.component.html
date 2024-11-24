@@ -276,8 +276,14 @@
                                                 <td class="text-center">
                                                     <div style="display: flex;justify-content: center;">
                                                         <input type="text" style="width: 220px !important;"
-                                                            [(ngModel)]="_subCode.arName" />
-                                                        <button
+                                                            [(ngModel)]="_subCode.arName" [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                            ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
+                                                            ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
+                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))"/>
+                                                        <button *ngIf="!((subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                        ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
+                                                        ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
+                                                        ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029')))"
                                                             (click)="removeSubCodeFromSubRow(formContent,subCode,_subCode,indexSub)"
                                                             style="background-color: white; border:none;">
                                                             <img src=".././../../../assets/images/trash-can-outline.png"
@@ -300,7 +306,10 @@
                                                 <td class="text-center" style=" direction: ltr;">
                                                     <div style="display: flex;justify-content: center;">
                                                         <input type="text" style="width: 220px !important;"
-                                                            [(ngModel)]="_subCode.enName" />
+                                                            [(ngModel)]="_subCode.enName" [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                            ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
+                                                            ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
+                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))"/>
                                                     </div>
                                                 </td>
                                             </tr>

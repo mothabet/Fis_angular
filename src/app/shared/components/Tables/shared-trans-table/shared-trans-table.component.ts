@@ -6,12 +6,13 @@ import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
-import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto } from 'src/app/Forms/Dtos/FormDto';
+import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
+import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
-import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 @Component({
@@ -24,8 +25,27 @@ export class SharedTransTableComponent {
   @Input() formId!: string;
   @Input() tableId!: string;
   isChecked!: boolean;
-  table!: IGetTableDto;
-  coverForm!: ICoverFormDetailsDto;
+  table: IGetTableDto = {
+    id: 0,
+    arName: '',
+    enName: '',
+    arHeading: '',
+    enHeading: '',
+    arNotes: '',
+    enNotes: '',
+    Type: '',
+    Order: '',
+    formId: 0,
+    period: 0,
+    IsActive: false,
+    IsTotal: false,
+    totalTitleAr: '',
+    totalTitleEn: '',
+    IsDisabled: false,
+    formContents: [], // Initialize as an empty array
+    tableParts: []    // Initialize as an empty array
+  };
+  coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm();
   lastYear = 0;
   nextYear = 0;
   transaction = 0;
@@ -37,9 +57,9 @@ export class SharedTransTableComponent {
   checkFormData: boolean = false;
   auditRules: IAuditRule[] = [];
 
-  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, 
-    private sharedServices: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService,
-  private auditRuleHomeService : AuditRuleHomeService) {
+  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
+    private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private auditRuleHomeService: AuditRuleHomeService) {
 
 
   }
@@ -55,6 +75,26 @@ export class SharedTransTableComponent {
       this.GetSectors();
     });
   }
+  private getDefaultCoverForm(): ICoverFormDetailsDto {
+    return {
+      id: 0,
+      typeQuarter: 0,
+      tables: [],
+      arName: "",
+      enName: "",
+      arNotes: "",
+      enNotes: "",
+      reviewYear: "",
+      status: 0,
+      quarterCoverData: {} as IQuarterCoverFormDataDto,
+      coverFormData: {} as ICoverFormData,
+      certification: {} as ICertificationDto,
+      codeActivity: "",
+      codeSectorName: "",
+      GeneralData: {} as IGeneralDataDto,
+      Type: 0,
+    };
+  }
   GetTableById(id: number): void {
     this.Loader = true;
     const observer = {
@@ -65,7 +105,7 @@ export class SharedTransTableComponent {
           this.Loader = false;
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
-            formContent.values = formContent.values || [0,0,0];
+            formContent.values = formContent.values || [0, 0, 0];
             formContent.values[1] = formContent.values[1] || 0;
             formContent.values[2] = 0; // Set transaction explicitly to 0 since it's derived
             formContent.values[0] = formContent.values[2] || 0;
@@ -74,12 +114,23 @@ export class SharedTransTableComponent {
             if (formContent.code.SubCodes) {
               formContent.code.SubCodes.forEach((subCode: any) => {
                 // Initialize subCode `values` array if it doesn't exist
-                subCode.values = subCode.values || [0,0,0];
+                subCode.values = subCode.values || [0, 0, 0];
 
                 // Ensure the `values` array has the correct length and initial values
                 subCode.values[0] = subCode.values[0] || 0; // lastYear
                 subCode.values[2] = 0; // Set transaction explicitly to 0
                 subCode.values[1] = subCode.values[1] || 0; // nextYear
+                if (subCode.subCodes) {
+                  subCode.subCodes.forEach((_subCode: any) => {
+                    // Initialize subCode `values` array if it doesn't exist
+                    _subCode.values = _subCode.values || [0, 0, 0];
+
+                    // Ensure the `values` array has the correct length and initial values
+                    _subCode.values[0] = _subCode.values[0] || 0; // lastYear
+                    _subCode.values[2] = 0; // Set transaction explicitly to 0
+                    _subCode.values[1] = _subCode.values[1] || 0; // nextYear
+                  });
+                }
               });
             }
           });
@@ -101,7 +152,7 @@ export class SharedTransTableComponent {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          
+
           this.Loader = false;
           this.coverForm = res.Data;
           this.GetTableById(+this.tableId);
@@ -131,11 +182,11 @@ export class SharedTransTableComponent {
       values: [0, 0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
-      connectedWithType:'',
-      IsTrueAndFalse :false,
-      IsTransaction:false,
-      IsHdd:false,
-      valueCheck:false
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsTransaction: false,
+      IsHdd: false,
+      valueCheck: false
     }
     code.SubCodes.push(subCode);
   }
@@ -167,13 +218,14 @@ export class SharedTransTableComponent {
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
 
+
   GetCountrites() {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.countries = res.Data.getCountryDtos;
         }
-        else{
+        else {
           this.countries = [];
         }
       },
@@ -191,19 +243,19 @@ export class SharedTransTableComponent {
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: [0, 0,0],
+      values: [0, 0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
+      IsTransaction: false,
       IsHdd: false,
       valueCheck: false
     }
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm, _subCode: ISubCodeForm, indexSub: number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`
@@ -212,10 +264,10 @@ export class SharedTransTableComponent {
           SubCode.values[i] -= _subCode.values[i];
         }
       }
-      
+
       // إزالة الـsubCode من المصفوفة
       SubCode.subCodes.splice(index, 1);
-      this.handelSupParent(formContent,SubCode,indexSub);
+      this.handelSupParent(formContent, SubCode, indexSub);
     }
   }
   GetFormData() {
@@ -427,7 +479,7 @@ export class SharedTransTableComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false
                             }
@@ -442,7 +494,7 @@ export class SharedTransTableComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -455,7 +507,7 @@ export class SharedTransTableComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck
                               }
@@ -510,7 +562,7 @@ export class SharedTransTableComponent {
       }
     })
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
@@ -522,31 +574,31 @@ export class SharedTransTableComponent {
 
         }, 0); // Start the summation from 0
       }
-      
+
       formContent.code.SubCodes[index] = subCode;
-      this.handleParent(formContent.code.SubCodes[index],formContent);
+      this.handleParent(formContent.code.SubCodes[index], formContent);
     }
-    else{
+    else {
       for (let i = 0; i < formContent.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         formContent.values[i] = 0;
       }
-      this.handleParent(subCode,formContent);
+      this.handleParent(subCode, formContent);
 
     }
   }
-  
+
   updateParentValue(subCode: any, formContent: any, index: number): void {
     // Initialize formContent values if not present
     if (!formContent.values) {
       formContent.values = [];
     }
-  
+
     // Initialize subCode values if not present
     if (!subCode.values) {
       subCode.values = [];
     }
-  
+
     // Calculate the sum of all subCode values for the given index
     let sum = 0;
     formContent.code.SubCodes.forEach((sub: any) => {
@@ -554,103 +606,110 @@ export class SharedTransTableComponent {
         sum += sub.values[index];
       }
     });
-  
+
     // Update the parent formContent value with the sum
     formContent.values[index] = sum;
-  
+
     // Optionally, update any other logic or status here if needed
   }
-  
-  handleParent(subCode: any,formContent: IGetQuestionDto) {
-    this.calculateTransaction(subCode,this.coverForm.status);
-    const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
-    if (rule) {
-      const ruleParts = rule.Rule.split('=');
-      if (ruleParts.length < 2) {
-        Swal.fire({
-          icon: 'error',
-          title: `تنسيق القاعدة غير صحيح: ${rule.Rule}`,
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-        return;
-      }
-      const ruleExpression = ruleParts[1].trim();
-      // Extract numbers and operators
-      const numberPattern = /\d+/g; // Matches numeric values
-      const operatorPattern = /[\+\-]/g; // Matches operators
-      // Extract numbers and operators
-      const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
-      const operators = ruleExpression.match(operatorPattern) || [];
 
-      // Ensure correct length of operators and numbers
-      if (numbers.length === 0) {
-        Swal.fire({
-          icon: 'error',
-          title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-        return;
-      }
-      let valuesLength = formContent.values.length;
-      let subCodes = formContent.code.SubCodes;
+  handleParent(subCode: ISubCodeForm, formContent: IGetQuestionDto) {
+    this.calculateTransaction(subCode, this.coverForm.status);
+    debugger
+    if (!subCode.IsTransaction) {
 
-      // Reset sums for current formContent
-      let indexSums = new Array(valuesLength).fill(0);
-      for (let j = 0; j < subCodes.length; j++) {
-        let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
-        if (numbers.includes(subCodeQuestionCode)) {
-          let subCodeValues = subCodes[j].values;
+      const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
+      if (rule) {
+        const ruleParts = rule.Rule.split('=');
+        if (ruleParts.length < 2) {
+          Swal.fire({
+            icon: 'error',
+            title: `تنسيق القاعدة غير صحيح: ${rule.Rule}`,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+        const ruleExpression = ruleParts[1].trim();
+        // Extract numbers and operators
+        const numberPattern = /\d+/g; // Matches numeric values
+        const operatorPattern = /[\+\-]/g; // Matches operators
+        // Extract numbers and operators
+        const numbers = ruleExpression.match(numberPattern)?.map(val => Number(val.trim())) || [];
+        const operators = ruleExpression.match(operatorPattern) || [];
 
-          // Find the operator before the current number
-          let indexOfCode = numbers.indexOf(subCodeQuestionCode);
-          let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
-          // Apply the correct operation based on the operator
-          for (let k = 0; k < subCodeValues.length; k++) {
-            if (k < indexSums.length) {
-              if (operator === '-' || !operator) {
-                indexSums[k] -= subCodeValues[k];
-              } else {
-                indexSums[k] += subCodeValues[k];
+        // Ensure correct length of operators and numbers
+        if (numbers.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: `لم يتم العثور على أرقام صالحة في تعبير القاعدة: ${ruleExpression}`,
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
+        let valuesLength = formContent.values.length;
+        let subCodes = formContent.code.SubCodes;
+
+        // Reset sums for current formContent
+        let indexSums = new Array(valuesLength).fill(0);
+        for (let j = 0; j < subCodes.length; j++) {
+          if (!subCode.IsTransaction) {
+            let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
+            if (numbers.includes(subCodeQuestionCode)) {
+              let subCodeValues = subCodes[j].values;
+
+              // Find the operator before the current number
+              let indexOfCode = numbers.indexOf(subCodeQuestionCode);
+              let operator = (indexOfCode > 0) ? operators[indexOfCode - 1] : '+';
+              // Apply the correct operation based on the operator
+              for (let k = 0; k < subCodeValues.length; k++) {
+                if (k < indexSums.length) {
+                  if (operator === '-' || !operator) {
+                    indexSums[k] -= subCodeValues[k];
+                  } else {
+                    indexSums[k] += subCodeValues[k];
+                  }
+                }
               }
             }
           }
         }
-      }
-      let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
-      // Add the accumulated sums to the totalValues
-      for (let l = 0; l < totalValues.length; l++) {
-        if (l < indexSums.length) {
-          totalValues[l] += indexSums[l];
-          formContent.values[l] = totalValues[l]
+        let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+        // Add the accumulated sums to the totalValues
+        for (let l = 0; l < totalValues.length; l++) {
+          if (l < indexSums.length) {
+            totalValues[l] += indexSums[l];
+            formContent.values[l] = totalValues[l]
+          }
         }
       }
-    }
-    else{
-     for (let index = 0; index < formContent.values.length; index++) {
-       let sum = 0;
-       for (let i = 0; i < formContent.code.SubCodes.length; i++) {
-         sum+=formContent.code.SubCodes[i].values[index]
-       }
-       formContent.values[index] = sum
-     }
-    }
-    let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
-    if (foundFormContent) {
+      else {
+        debugger
+        for (let index = 0; index < formContent.values.length; index++) {
+          let sum = 0;
+          for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+            if (!formContent.code.SubCodes[i].IsTransaction)
+              sum += formContent.code.SubCodes[i].values[index]
+          }
+          formContent.values[index] = sum
+        }
+      }
+      let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
+      if (foundFormContent) {
         Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
+      }
+      const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
+      if (storedCoverForm) {
+        this.coverForm = JSON.parse(storedCoverForm);
+      }
+      const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
+      if (tableIndex !== -1) {
+        this.coverForm.tables[tableIndex] = this.table;
+        localStorage.removeItem(`coverForm${this.coverForm.id}`);
+        localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+      }
     }
-    const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
-              if (storedCoverForm) {
-                this.coverForm = JSON.parse(storedCoverForm);
-              }
-                const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
-                if (tableIndex !== -1) {
-                this.coverForm.tables[tableIndex]=this.table;
-                localStorage.removeItem(`coverForm${this.coverForm.id}`);
-                localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
-              }
-    console.log(formContent)
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
@@ -679,7 +738,7 @@ export class SharedTransTableComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
@@ -720,13 +779,13 @@ export class SharedTransTableComponent {
   }
   clearIfZero(values: any[], index: number): void {
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
+  }
 
-restoreIfNotPositive(values: number[], index: number): void {
+  restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
-}
+  }
 }

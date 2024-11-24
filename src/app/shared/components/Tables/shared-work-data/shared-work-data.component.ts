@@ -45,7 +45,7 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No',inputValue: '' , isSelect:false},
     { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number',inputValue: '' , isSelect:false},
     { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity',inputValue: '' , isSelect:false},
-    { arName: 'النشاط السنوي : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity',inputValue: '' , isSelect:false},
     { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location',inputValue: '' , isSelect:false},
     { arName: 'المحافظة : ', enName: ' :  Region',inputValue: '0' , isSelect:true},
     { arName: 'الولاية : ', enName: ' :  Wilayat',inputValue: '0' , isSelect:true},
@@ -55,7 +55,7 @@ export class SharedWorkDataComponent implements OnInit {
     { arName: 'رقم الفاكس : ', enName: ' :  Fax No',inputValue: '' , isSelect:false},
     { arName: 'البريد الالكترونى : ', enName: ' :  Email',inputValue: '' , isSelect:false},
     { arName: 'الموقع الإلكتروني : ', enName: ' :  Website',inputValue: '' , isSelect:false},
-    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)',inputValue: '' , isSelect:false},
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)',inputValue: '' , isSelect:true},
 
   ];
   workDataChk: IWorkDataChkDto[] = [
@@ -202,7 +202,7 @@ export class SharedWorkDataComponent implements OnInit {
 
               item.inputValue = this.company.address;
             }
-            else if (item.arName.includes('النشاط السنوي : ')) {
+            else if (item.arName.includes('النشاط الثانوى : ')) {
 
               item.inputValue = this.company.subActivityCode;
             }
@@ -219,13 +219,15 @@ export class SharedWorkDataComponent implements OnInit {
               item.inputValue = this.company.compRegNumber;
             }
           });
-          debugger
+          
           let generalData = localStorage.getItem(`generalData`);
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            
             this.workData = this.coverForm.GeneralData.CompanyInfo;
           }
           else {
+            
             this.coverForm.GeneralData = this.generalDataDto;
             this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
             localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
@@ -270,7 +272,7 @@ export class SharedWorkDataComponent implements OnInit {
       next: (res: any) => {
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
-          debugger
+          
           let res_ = this.authService.decodedToken(isLoggedIn);
           var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);

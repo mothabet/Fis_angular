@@ -167,7 +167,7 @@ export class CompaniesHomeComponent implements OnInit {
     const searchTerm = this.companyForm.get('activityCode')?.value || '';
     
     this.filteredACtivity = this.Activities.filter(activity =>
-      activity.code.includes(searchTerm)
+      activity.code.includes(searchTerm) || activity.arName.includes(searchTerm)
     );
   }
   
@@ -225,7 +225,7 @@ export class CompaniesHomeComponent implements OnInit {
     const searchTerm = this.companyForm.get('subActivityCode')?.value || '';
     debugger
     this.filteredSubACtivity = this.Activities.filter(activity =>
-      activity.code.includes(searchTerm)
+      activity.code.includes(searchTerm) || activity.arName.includes(searchTerm)
     );
   }
   

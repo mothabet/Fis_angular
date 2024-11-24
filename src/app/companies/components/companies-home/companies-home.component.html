@@ -197,7 +197,7 @@
                     type="text" 
                     id="searchableDropdown" 
                     class="form-control input-modal" 
-                    placeholder="Search..."
+                    placeholder="ابحث..."
                     (click)="toggleDropdown()"
                     formControlName="activityCode"
                     (input)="filterActivities()" />
@@ -205,7 +205,7 @@
                   <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; width: 100%; text-align: right;max-height: 350px;
                       overflow-y: auto;">
                     <li *ngFor="let activity of filteredACtivity" class="dropdown-item" (click)="selectActivities(activity)">
-                      {{ activity.code }}
+                      {{ activity.code }}_{{ activity.arName }}
                     </li>
                   </ul>
                 </div>
@@ -226,7 +226,7 @@
                     type="text" 
                     id="searchableDropdown" 
                     class="form-control input-modal" 
-                    placeholder="Search..."
+                    placeholder="ابحث..."
                     (click)="toggleDropdownSubActivities()" 
                     formControlName="subActivityCode" 
                     (input)="filterSubActivities()" />
@@ -234,20 +234,20 @@
                   <ul class="dropdown-menu" [class.show]="isDropdownOpenSubActivities" style="padding: 0 9px; width: 100%; text-align: right;max-height: 350px;
                       overflow-y: auto;">
                     <li *ngFor="let subActivity of filteredSubACtivity" class="dropdown-item" (click)="selectSubActivities(subActivity)">
-                      {{ subActivity.code }}
+                      {{ subActivity.code }}_{{ subActivity.arName }}
                     </li>
                   </ul>
                 </div>
-                <label for="inputField" class="text-danger" style="font-size: 15px; right: 25px;">رمز النشاط السنوي </label>
+                <label for="inputField" class="text-danger" style="font-size: 15px; right: 25px;">رمز النشاط الثانوى </label>
               </div>
               <div class="form-group col-6 mb-2" hidden>
                 <input formControlName="subActivityId" class="form-control input-modal" type="text" [(ngModel)]="subActivityId" />
-                <label for="inputField" class="text-danger">رقم النشاط السنوي<span>*</span></label>
+                <label for="inputField" class="text-danger">رقم النشاط الثانوى<span>*</span></label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="subActivityName" class="form-control input-modal" type="text"
                   [(ngModel)]="subActivityName" />
-                <label for="inputField">النشاط السنوي</label>
+                <label for="inputField">النشاط الثانوى</label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="municipalityNumber" class="form-control input-modal" type="text" />
