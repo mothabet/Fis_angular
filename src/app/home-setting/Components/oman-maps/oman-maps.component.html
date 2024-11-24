@@ -1,131 +1,164 @@
-<!-- <app-loader *ngIf="showLoader"></app-loader> -->
+<app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
-    <!-- header -->
-    <app-top-screen [title]="'خرائط عمان'"></app-top-screen>
-    <!-- end-header -->
-    <div class="header-nav companies-details">
-      <div class="card-box mb-3">
-        <ul>
-          <li routerLinkActive="active">
-            <a routerLink="/GeneralIndicators">المؤشرات العامة</a>
-          </li>
-          <li routerLinkActive="active">
-            <a routerLink="/OmanMaps">خرائط عمان</a>
-          </li>
-        </ul>
-      </div>
+  <!-- header -->
+  <app-top-screen [title]="'خرائط عمان'"></app-top-screen>
+  <!-- end-header -->
+  <div class="header-nav companies-details">
+    <div class="card-box mb-3">
+      <ul>
+        <li routerLinkActive="active">
+          <a routerLink="/GeneralIndicators">المؤشرات العامة</a>
+        </li>
+        <li routerLinkActive="active">
+          <a routerLink="/OmanMaps">خرائط عمان</a>
+        </li>
+      </ul>
     </div>
-    <!-- start content -->
-    <div class="content companies researcher">
-      <div class="header d-flex mb-0">
-        <div class="title">
-          قائمة خرائط عمان
-        </div>
-        <div class="btns d-flex">
-          <div class="search">
-            <input class="form-control" type="text"
-              name="search" placeholder="البحث">
-            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-          </div>
-          <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-            <button type="button" class="btn btn-add" data-bs-toggle="modal"
-              data-bs-target="#addSector">
-              <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-              اضافة خرائط عمان
-            </button>
-  
-          </div>
-        </div>
-      </div>
-  
-      <div class="table-responsive company-table research-table">
-        <table class="table table-borderless">
-          <thead>
-            <tr class="t-header">
-              <th class="text-center" scope="col">اسم الخريطه</th>
-              <th class="text-center" scope="col">الرمز</th>
-              <th style="width: 150px;" class="text-center" scope="col"> </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-center">1</td>
-              <td class="text-center">1</td>
-              <td class="text-center">
-                <button class="icon">
-                  <img src="../../../../assets/images/trash-can-outline.png" alt="">
-                </button>
-                <button class="icon" data-bs-toggle="modal"
-                  data-bs-target="#addSector">
-                  <img src="../../../../assets/images/pencil-outline.png" alt="">
-                </button>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="7">
-                <div class="alert alert-warning">
-                  <i class="fa-solid fa-triangle-exclamation"></i>
-                  <br />
-                  <span> لا يوجد بيانات </span>
-                </div>
-              </th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-    <!-- end content -->
   </div>
-  <app-pagination ></app-pagination>
-  <div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
-      <div class="modal-content" style="width: 50%;">
-        <div class="modal-header pb-0">
-          <h5 class="modal-title" id="add">إضافة نشاط</h5>
+  <!-- start content -->
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">
+        قائمة خرائط عمان
+      </div>
+      <div class="btns d-flex">
+        <div class="search">
+          <input class="form-control" (keydown.enter)="omanGovernoratesSearch()" [(ngModel)]="searchText" type="text" name="search" placeholder="البحث">
+          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
-        <form>
-          <div class="modal-body pb-1">
-            <div class="row">
-              <div class="form-group col-sm-12 mb-2">
-                <input class="form-control input-modal" type="text" formControlName="arName" />
-                <label for="inputField">اسم النشاط بالعربية</label>
+        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector">
+            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
+            اضافة محافظة
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th class="text-center" scope="col">#</th>
+            <th class="text-center" scope="col">اسم المحافظة</th>
+            <th class="text-center" scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of omanGovernarates;let i = index">
+            <td class="text-center">{{i+1}}</td>
+            <td class="text-center">{{item.arName}}</td>
+            <td class="text-center">
+              <button class="icon">
+                <img src="../../../../assets/images/trash-can-outline.png" alt="">
+              </button>
+              <button class="icon" data-bs-toggle="modal" data-bs-target="#addSector">
+                <img src="../../../../assets/images/pencil-outline.png" alt="">
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
               </div>
-              <div class="form-group col-sm-12 mb-2">
-                <input class="form-control input-modal" type="text" formControlName="enName" />
-                <label for="inputField">Activity Name in English</label>
-              </div>
-              <div class="form-group col-sm-12 mb-2">
-                <input class="form-control input-modal" type="text" formControlName="code" />
-                <label for="inputField">رمز النشاط</label>
-                <div class="text-danger">
-                  يجب ان يكون رمز النشاط مكون من 6 ارقام
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination><div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+    <div class="modal-content" style="width: 50%;">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add">إضافة محافظة</h5>
+      </div>
+      <form>
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="dropdown" [class.show]="isGovernorateDropdownOpen">
+              <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                [(ngModel)]="searchGovernorateTerm" name="searchGovernorateTerm" (click)="toggleGovenorateDropdown()"
+                (input)="filterGovernorates()" />
+              <ul class="dropdown-menu" [class.show]="isGovernorateDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 94%;
+                                      text-align: right;">
+                <li class="dropdown-item" *ngFor="let governorate of GovernoratesFiltered"
+                  (click)="selectGovernorate($event,governorate)">
+                  {{governorate.arName}}
+                </li>
+              </ul>
+              <label for="inputField" style="font-size: x-small;">اختر المحافظة</label>
+            </div>
+            <div class="dropdown mt-4" [class.show]="isWilayatDropdownOpen">
+              <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                [(ngModel)]="searchWilayatTerm" name="searchWilayatTerm" (click)="toggleWilayatDropdown()"
+                (input)="filterWilayat()" />
+              <ul class="dropdown-menu" [class.show]="isWilayatDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 94%;
+                                      text-align: right;">
+                <li class="dropdown-item" *ngFor="let Wilaya of WilayatFiltered" (click)="selectWilaya($event,Wilaya)">
+                  {{Wilaya.arName}}
+                </li>
+              </ul>
+              <div class="field-container" style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
+                <div class="field-item" *ngFor="let content of wilayatList; let i = index">
+                  <!-- Bind field properties to the input element -->
+                  <span style="text-align: right;min-width: 335px;" class="field-text col-2">{{content.arName}}</span>
+                  <button class="icon" (click)="removeWilaya(content)"
+                    style="border: none; background-color: transparent">
+                    <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                  </button>
                 </div>
               </div>
-              <div class="form-group col-sm-12 mb-2">
-                <select class="form-control input-modal" formControlName="categoryId">
-                  <option value="0">--اختر رمز الفئة--</option>
-                  <option *>lll</option>
-                </select>
-                <label for="inputField">اسم الفئة</label>
+              <label for="inputField" style="font-size: x-small;">اختر الولاية</label>
+            </div>
+            <div class="dropdown mt-4" [class.show]="isCodesDropdownOpen">
+              <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+                [(ngModel)]="searchCodeTerm" name="searchCodeTerm" (click)="toggleCodesDropdown()"
+                (input)="filterCodes()" />
+              <ul class="dropdown-menu" [class.show]="isCodesDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 94%;
+                                      text-align: right;">
+                <li class="dropdown-item" *ngFor="let code of CodesFiltered" (click)="selectCodes($event,code)">
+                  {{code.arName}}
+                </li>
+              </ul>
+              <div class="field-container" style="padding-left: 5px; padding-top: 5px; max-height: 190px;">
+                <div class="field-item" *ngFor="let content of codesList; let i = index">
+                  <!-- Bind field properties to the input element -->
+                  <span style="text-align: right;min-width: 335px;" class="field-text col-2">{{content.arName}}</span>
+                  <button class="icon" (click)="removeCode(content)"
+                    style="border: none; background-color: transparent">
+                    <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                  </button>
+                </div>
               </div>
-  
+              <label for="inputField" style="font-size: x-small;">اختر المؤشر</label>
             </div>
           </div>
-          <div class="modal-footer pt-0">
-            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
-              إلغاء
-            </button>
-            <button type="button" class="btn btn-save" >
-              حفظ
-            </button>
-            <button type="button" class="btn btn-save" type="button"
-              class="btn btn-save">
-              تعديل
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button (click)="onReset()" type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-save" *ngIf="!isUpdate" (click)="saveOmanGovernorate()">
+            حفظ
+          </button>
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
+            تعديل
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>

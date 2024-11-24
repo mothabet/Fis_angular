@@ -4,3 +4,8 @@ export interface IAddGeneralIndicator{
     yearFrom:number,
     yearTo:number
 }
+export interface IAddOmanMap{
+    governorateId :number;
+    wilayatId :number[];
+    codesId :number[];
+}

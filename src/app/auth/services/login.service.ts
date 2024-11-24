@@ -79,7 +79,8 @@ export class LoginService {
       'GeneralIndicators',
       'OmanMaps',
       'Governorates',
-      'Wilayat'
+      'Wilayat',
+      'HomeMap'
     ];
     return adminRoutes.includes(url);
   }

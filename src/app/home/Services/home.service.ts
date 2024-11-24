@@ -14,4 +14,9 @@ export class HomeService {
     var resopnse = this.http.get(environment.apiUrl + `Home/GetGeneralIndicatorsChart?lang=2`, { headers });
     return resopnse;
   }
+  GetMapGovData(id: number,govName:string) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `Home/GetMapGovData?lang=2&govName=${govName}`, { headers });
+    return resopnse;
+  }
 }
