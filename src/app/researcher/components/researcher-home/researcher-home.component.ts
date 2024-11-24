@@ -494,7 +494,6 @@ debugger
     const selectedCompanies = this.companies.filter(company => this.selectedCompanyIds.has(company.id));
 
     this.showLoader = true;
-    if (selectedCompanies.length > 0) {
 
       const observer = {
         next: (res: any) => {
@@ -519,15 +518,7 @@ debugger
         },
       };
       this.companyService.UpdateCompanyToRecearcher(this.id, selectedCompanies).subscribe(observer);
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'يجب اختيار شركات',
-        showConfirmButton: false,
-        timer: 2000
-      });
-      this.showLoader = false;
-    }
+    
   }
   companiesSearch() {
     this.GetCompanies(this.searchText, 1);
