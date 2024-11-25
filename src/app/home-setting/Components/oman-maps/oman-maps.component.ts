@@ -189,7 +189,7 @@ export class OmanMapsComponent implements OnInit {
     this.omanGovernorates.wilayatId = this.omanGovernorates.wilayatId.filter((f: any) => f !== field.id);
   }
   saveOmanGovernorate() {
-    
+    debugger
     if(this.searchGovernorateTerm != '' && this.searchGovernorateTerm != undefined && this.searchGovernorateTerm != null){
       const selectedField = this.Governorates.find(field => field.arName === this.searchGovernorateTerm) as any;
       if (selectedField) {
@@ -200,6 +200,7 @@ export class OmanMapsComponent implements OnInit {
       next: (res: any) => {
         this.showLoader = false;
         this.onReset();
+        this.GetOmanGovernorate(1, '');
         const button = document.getElementById('btnCancel');
         if (button) {
           button.click();

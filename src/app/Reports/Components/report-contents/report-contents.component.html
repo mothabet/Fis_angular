@@ -301,7 +301,7 @@
                             <span *ngIf="isTableError" style="color: red;">{{errorMessage}}</span>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="tableType != 5">
                         <div class="col-sm-4 mb-3">
                             <select (ngModelChange)="onReportYearChange()" [(ngModel)]="reportYearFrom"
                                 name="reportYearFrom" class="form-select add-report-select" style="width: 100%;">
