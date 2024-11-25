@@ -1,0 +1,41 @@
+canvas {
+    max-width: 100% !important; /* Make canvas fill the width of its container */
+    height: 250px; /* Adjust height for better visual appeal */
+    margin: 0 auto; /* Center the canvas inside the card */
+  }
+  .map-container {
+    width: 100%;
+    height: auto;
+  }
+  
+  svg path {
+    fill: #ccc;
+    stroke: #000;
+    stroke-width: 1;
+    cursor: pointer;
+    transition: fill 0.2s;
+  }
+  
+  svg path:hover {
+    fill: #007BFF; /* لون مختلف عند التمرير */
+  }
+  
+  .card-details{
+    min-width: 355px;
+  }
+  tfoot tr th .alert {
+    text-align: center;
+    
+  }
+  tfoot tr th .alert i {
+    font-size: 100px;
+  }
+  tfoot tr th .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }
+  .card-body {
+    overflow: hidden; /* Hide overflow to control scrolling with field-container */
+}

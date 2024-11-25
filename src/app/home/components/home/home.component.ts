@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
   ];
   generalIndicatorsCharts: any[] = []
   chartsMap: Map<string, Chart> = new Map(); // خريطة لتخزين المخططات حسب معرفها
-  
+
   constructor(private sharedService: SharedService, private homeServices: HomeService) { }
 
   ngOnInit() {
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.generalIndicatorsCharts = res.Data;
-          
+
           // تعديل البيانات لإضافة السنوات المفقودة
           this.generalIndicatorsCharts.forEach((chart: any) => {
             const endYear = chart.yearTo === 0 ? currentYear : chart.yearTo;
@@ -59,13 +59,13 @@ export class HomeComponent implements OnInit {
             // ترتيب البيانات
             chart.yearTotal.sort((a: any, b: any) => parseInt(a.year) - parseInt(b.year));
           });
-          
+
           // إنشاء الرسوم البيانية
           setTimeout(() => {
             this.generalIndicatorsCharts.forEach((chart: any, index: number) => {
               this.createChart(chart, index);  // تمرير chart و index إلى دالة createChart
             });
-            
+
           }, 0);
         }
         this.showLoader = false;
@@ -132,6 +132,9 @@ export class HomeComponent implements OnInit {
         plugins: {
           tooltip: {
             enabled: true,
+          },
+          legend: {
+            display: false, // تعطيل الشرح (legend)
           },
         },
       },

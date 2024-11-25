@@ -43,7 +43,7 @@ import { GeneralIndicatorsComponent } from './home-setting/Components/general-in
 import { OmanMapsComponent } from './home-setting/Components/oman-maps/oman-maps.component';
 import { GovernorateComponent } from './sectors-and-activities/Components/governorate/governorate.component';
 import { WilayatComponent } from './sectors-and-activities/Components/wilayat/wilayat.component';
-import { ChangePercentageComponent } from './home-setting/Components/change-percentage/change-percentage.component';
+import { HomeMapComponent } from './home/components/home-map/home-map.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -88,6 +88,7 @@ const routes: Routes = [
   { path: 'GeneralIndicators', component: GeneralIndicatorsComponent, canActivate: [LoginGuard] },
   { path: 'ChangePercentage', component: ChangePercentageComponent, canActivate: [LoginGuard] },
   { path: 'OmanMaps', component: OmanMapsComponent, canActivate: [LoginGuard] },
+  { path: 'HomeMap', component: HomeMapComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];

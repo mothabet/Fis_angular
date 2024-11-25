@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAddGeneralIndicator } from '../Dtos/GeneralIndicatorDto';
+import { IAddGeneralIndicator, IAddOmanMap } from '../Dtos/GeneralIndicatorDto';
 import { environment } from 'src/environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from 'src/app/shared/services/shared.service';
@@ -10,10 +10,9 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 export class GeneralIndicatorServicesService {
 
   constructor(private sharedService: SharedService, private http: HttpClient) { }
-  AddGeneralIndicator(Report: IAddGeneralIndicator) {
-    
+  AddGeneralIndicator(generalIndicator: IAddGeneralIndicator) {
     var headers = this.sharedService.getHeaders();
-    var resopnse = this.http.post(environment.apiUrl + `GeneralIndication/AddGeneralIndicator?lang=2`, Report, { headers });
+    var resopnse = this.http.post(environment.apiUrl + `GeneralIndication/AddGeneralIndicator?lang=2`, generalIndicator, { headers });
     return resopnse;
   }
   GetGeneralIndicators(pageNumber:number , textSearch : string =''){
@@ -35,5 +34,20 @@ export class GeneralIndicatorServicesService {
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`GeneralIndication/UpdateGeneralIndicator?id=${id}&lang=2`, reportDto, { headers });
      return resopnse;
+   }
+   AddOmanGovernorate(omanGovernorate: IAddOmanMap) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.post(environment.apiUrl + `OmanMaps/AddOmanMap?lang=2`, omanGovernorate, { headers });
+    return resopnse;
+  }
+  GetOmanMaps(pageNumber:number , textSearch : string =''){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`OmanMaps/GetOmanMaps?pageNumber=${pageNumber}&lang=2&textSearch=${textSearch}`, { headers });
+     return resopnse;
+   }
+   DeleteOmanMap(id:number){
+    var headers= this.sharedService.getHeaders();
+     var response = this.http.delete(environment.apiUrl+`OmanMaps/DeleteOmanMap?id=${id}&lang=2`, { headers });
+     return response;
    }
 }

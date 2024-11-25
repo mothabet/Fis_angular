@@ -1,0 +1,120 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card" style="height: 500px;"> <!-- إضافة height للحاوية -->
+  <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
+
+  <!-- tabs -->
+  <div class="tabs">
+    <ul class="nav nav-pills mb-3">
+      <li class="nav-item">
+        <a routerLink="/Home" class="nav-link ms-0 active d-flex" type="button">
+          <i class="fa-solid fa-square-poll-vertical icon"></i>
+          المؤشرات العامة
+        </a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a routerLink="/HomeMap" class="nav-link ms-0 d-flex" type="button">
+          <i class="fa-regular fa-map icon"></i>
+          خريطة عمان
+        </a>
+      </li>
+      <li class="nav-item" role="presentation">
+        <a href="assets/precise.html" class="nav-link ms-0 d-flex" type="button">
+          <i class="fa-solid fa-table icon"></i>
+          تدقيق
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- main content -->
+  <div class="p-4 main card main-content" style="flex: 1;">
+    <!-- tab content -->
+    <div class="tab-content">
+      <div class="map tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        <div class="card-img d-flex justify-content-center align-items-center">
+          <div class="image">
+            <img src="assets/images/map.png" class="img-fluid" alt="">
+
+            <!-- المحافظات -->
+            <a class="pointer point-1" (click)="showGovernorate('ظفار')">
+              ظفار
+            </a>
+            <a class="pointer point-2" (click)="showGovernorate('الوسطى')">
+              الوسطى
+            </a>
+            <a class="pointer point-3" (click)="showGovernorate('البريمي')">
+              البريمي
+            </a>
+            <a class="pointer point-4" (click)="showGovernorate('الدخلية')">
+              الدخلية
+            </a>
+            <a class="pointer point-5" (click)="showGovernorate('جنوب الشرقية')">
+              جنوب الشرقية
+            </a>
+            <a class="pointer point-6" (click)="showGovernorate('شمال الشرقية')">
+              شمال الشرقية
+            </a>
+            <a class="pointer point-7" (click)="showGovernorate('الدخلية')">
+              الدخلية
+            </a>
+            <a class="pointer point-8" (click)="showGovernorate('شمال الباطنة')">
+              شمال الباطنة
+            </a>
+            <a class="pointer point-9" (click)="showGovernorate('جنوب الباطنة')">
+              جنوب الباطنة
+            </a>
+            <a class="pointer point-10" (click)="showGovernorate('مسقط')">
+              مسقط
+            </a>
+            <a class="pointer point-11" (click)="showGovernorate('مسندم')">
+              مسندم
+            </a>
+          </div>
+        </div>
+        <div class="card-details" *ngIf="selectedGovernorate">
+          <ng-container *ngIf="hasData">
+            <div class="header">
+              <div class="header-image">
+                <img src="assets/images/pointer3.png" class="img-fluid" alt="">
+                <div class="title">{{govData?.Governorate}}</div>
+              </div>
+            </div>
+            <table class="table table-borderless details caption-top" *ngFor="let code of govData?.Codes">
+              <caption class="table-title">{{code?.CodeArName}}</caption>
+              <tbody>
+                <tr *ngFor="let wilaya of code.wilayatValues">
+                  <th class="row-name" scope="row">{{wilaya?.name}}</th>
+                  <th class="row-num">{{wilaya?.value}}</th>
+                </tr>
+              </tbody>
+            </table>
+          </ng-container>
+          <ng-container *ngIf="govData.length == 0">
+            <div class="header">
+              <div class="header-image">
+                <img src="assets/images/pointer3.png" class="img-fluid" alt="">
+                <div class="title">{{selectedGovernorate}}</div>
+              </div>
+            </div>
+            <table class="table table-borderless details caption-top">
+              <tfoot>
+                <tr>
+                  <th colspan="7">
+                    <div class="alert alert-warning">
+                      <i class="fa-solid fa-triangle-exclamation"></i>
+                      <br />
+                      <span> لا يوجد بيانات </span>
+                    </div>
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- end main content -->
+
+</div>

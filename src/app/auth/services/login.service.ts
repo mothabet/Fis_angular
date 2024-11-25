@@ -80,7 +80,8 @@ export class LoginService {
       'OmanMaps',
       'ChangePercentage',
       'Governorates',
-      'Wilayat'
+      'Wilayat',
+      'HomeMap'
     ];
     return adminRoutes.includes(url);
   }
