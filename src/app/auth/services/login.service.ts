@@ -78,7 +78,9 @@ export class LoginService {
       'Sections',
       'GeneralIndicators',
       'OmanMaps',
+      'ChangePercentage',
       'Governorates',
+      'Audit',
       'Wilayat',
       'HomeMap'
     ];
@@ -116,6 +118,10 @@ export class LoginService {
       'Activities',
       'Sectors',
       'SettingsAuth',
+      'GeneralIndicators',
+      'Audit',
+      'OmanMaps',
+      'ChangePercentage',
       'Governorates',
       'Wilayat'
     ];
