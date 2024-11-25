@@ -44,6 +44,7 @@ import { OmanMapsComponent } from './home-setting/Components/oman-maps/oman-maps
 import { GovernorateComponent } from './sectors-and-activities/Components/governorate/governorate.component';
 import { WilayatComponent } from './sectors-and-activities/Components/wilayat/wilayat.component';
 import { HomeMapComponent } from './home/components/home-map/home-map.component';
+import { ChangePercentageComponent } from './home-setting/Components/change-percentage/change-percentage.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
