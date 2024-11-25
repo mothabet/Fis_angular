@@ -15,7 +15,7 @@ export class ChangePercentageComponent implements OnInit {
   percentageForm!: FormGroup;
   id:number = 0;
   getPercentage:IGetPercentageDto[]=[]
-  constructor(private fb: FormBuilder, private sharedService: SharedService, private changePercentage: ChangePercentageService) { }
+  constructor(private fb: FormBuilder, private sharedService: SharedService, private changePercentageService: ChangePercentageService) { }
   ngOnInit(): void {
     this.GetAllPercentage();
     this.percentageForm = this.fb.group({
@@ -61,13 +61,13 @@ export class ChangePercentageComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.changePercentage.AddChangePercentage(Model).subscribe(observer);
+    this.changePercentageService.AddChangePercentage(Model).subscribe(observer);
   }
   GetAllPercentage(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.getPercentage = res.Data;
           this.id = this.getPercentage[0].id;
@@ -85,6 +85,6 @@ export class ChangePercentageComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.changePercentage.GetAllChangePercentage(0).subscribe(observer);
+    this.changePercentageService.GetAllChangePercentage(0).subscribe(observer);
   }
 }

@@ -25,28 +25,37 @@
       </li>
     </ul>
   </div>
+  <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto" ><i class="fa-regular fa-bell"></i>نسبة التغير العامه هي {{changePercentage}} %</div>
+
   <!-- start content -->
   <div class="content companies researcher">
     <div class="table-responsive company-table research-table">
-      <table class="table table-borderless">
-        <thead>
-          <tr class="t-header">
-            <th class="text-center" scope="col">اسم الشركه</th>
-            <th class="text-center" scope="col">اسم المؤشر</th>
-            <th class="text-center" scope="col">كود المؤشر</th>
-            <th class="text-center" scope="col">نسبة التغير الناتجه عن فرق السنه الحاله والسنه السابقه</th>
-            <th style="width: 150px;" class="text-center" scope="col"> </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let category of getAuditDto">
-            <td class="text-center">{{category.companyName}}</td>
-            <td class="text-center">{{category.codeArName}}</td>
-            <td class="text-center">{{category.questionCode}}</td>
-            <td class="text-center">{{category.changePercentageNew}}</td>
-          </tr>
-        </tbody>
-        <!-- <tfoot *ngIf="noData">
+      <div class="table-container">
+
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th class="text-center" scope="col"></th>
+              <th class="text-center" scope="col">اسم الشركه</th>
+              <th class="text-center" scope="col">اسم المؤشر</th>
+              <th class="text-center" scope="col">كود المؤشر</th>
+              <th class="text-center" scope="col">{{currentYear}}</th>
+              <th class="text-center" scope="col">{{currentYear-1}}</th>
+              <th class="text-center" scope="col">نسبة التغير </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of getAuditDtoPagination; let i = index">
+              <td class="text-center">{{i+1}}</td>
+              <td class="text-center">{{category.companyName}}</td>
+              <td class="text-center">{{category.codeArName}}</td>
+              <td class="text-center">{{category.questionCode}}</td>
+              <td class="text-center">{{category.valueCurrentYear}}</td>
+              <td class="text-center">{{category.valuePreviousYear}}</td>
+              <td class="text-center">{{category.changePercentageNew}} %</td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="!(getAuditDto.length>0)">
           <tr>
             <th colspan="7">
               <div class="alert alert-warning">
@@ -56,9 +65,23 @@
               </div>
             </th>
           </tr>
-        </tfoot> -->
-      </table>
+        </tfoot>
+        </table>
+      </div>
     </div>
   </div>
+
   <!-- end content -->
+  
+<div class="pagination" *ngIf="getAuditDto.length>0">
+  <ul>
+    <li (click)="onPageChange(1)" [class.disabled]="currentPage===1">&laquo;&laquo;</li>
+    <li (click)="onPageChange(currentPage - 1)" [class.disabled]="currentPage === 1">&laquo;</li>
+    <li *ngIf="currentPage > 1" (click)="onPageChange(currentPage - 1)">{{ currentPage - 1 }}</li>
+    <li class="active">{{ currentPage }}</li>
+    <li *ngIf="!isLastPage" (click)="onPageChange(currentPage + 1)">{{ currentPage + 1 }}</li>
+    <li (click)="onPageChange(currentPage + 1)" [class.disabled]="isLastPage">&raquo;</li>
+    <li (click)="onPageChange(totalPages)" [class.disabled]="currentPage===totalPages">&raquo;&raquo;</li>
+  </ul>
+</div>
 </div>

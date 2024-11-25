@@ -614,9 +614,8 @@ export class SharedTransTableComponent {
   }
 
   handleParent(subCode: ISubCodeForm, formContent: IGetQuestionDto) {
-    this.calculateTransaction(subCode, this.coverForm.status);
-    debugger
     if (!subCode.IsTransaction) {
+      this.calculateTransaction(subCode, this.coverForm.status);
 
       const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
       if (rule) {
@@ -654,7 +653,7 @@ export class SharedTransTableComponent {
         // Reset sums for current formContent
         let indexSums = new Array(valuesLength).fill(0);
         for (let j = 0; j < subCodes.length; j++) {
-          if (!subCode.IsTransaction) {
+          if (!subCodes[j].IsTransaction) {
             let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
             if (numbers.includes(subCodeQuestionCode)) {
               let subCodeValues = subCodes[j].values;
@@ -675,7 +674,9 @@ export class SharedTransTableComponent {
             }
           }
         }
-        let totalValues = new Array(valuesLength).fill(0); // Initialize totalValues based on length of values
+        let totalValues = new Array(valuesLength).fill(0); 
+        
+        // Initialize totalValues based on length of values
         // Add the accumulated sums to the totalValues
         for (let l = 0; l < totalValues.length; l++) {
           if (l < indexSums.length) {
@@ -685,10 +686,10 @@ export class SharedTransTableComponent {
         }
       }
       else {
-        debugger
         for (let index = 0; index < formContent.values.length; index++) {
           let sum = 0;
           for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+            
             if (!formContent.code.SubCodes[i].IsTransaction)
               sum += formContent.code.SubCodes[i].values[index]
           }
@@ -709,6 +710,10 @@ export class SharedTransTableComponent {
         localStorage.removeItem(`coverForm${this.coverForm.id}`);
         localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
       }
+    }
+    else{
+      if (this.coverForm.status < 3)
+        this.BeginningForm();
     }
   }
   onArCountryChange(subCode: any) {

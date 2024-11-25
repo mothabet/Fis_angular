@@ -512,7 +512,7 @@ export class SharedFormCoverComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.company = res.Data;
           this.sectorCode = this.company.sectorCode;
           this.workData.forEach((item) => {

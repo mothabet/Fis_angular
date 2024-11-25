@@ -324,7 +324,7 @@ export class ReportContentsComponent implements OnInit {
     );
   }
   filterCompaniesRep() {
-    debugger
+    
     this.filteredCompanies = this.companies.filter(code =>
       code.arName.includes(this.searchCompanyTerm)
     );
