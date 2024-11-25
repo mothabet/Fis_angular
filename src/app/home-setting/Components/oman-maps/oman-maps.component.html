@@ -50,7 +50,7 @@
             <td class="text-center">{{i+1}}</td>
             <td class="text-center">{{item.arName}}</td>
             <td class="text-center">
-              <button class="icon">
+              <button class="icon" (click)="DeleteGeneralIndicator(item.id)">
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
               <button class="icon" data-bs-toggle="modal" data-bs-target="#addSector">

@@ -1096,12 +1096,12 @@ export class ReportContentsComponent implements OnInit {
       }
     }
 
-    if (!this.reportYearFrom || this.reportYearFrom === undefined) {
+    if (!this.reportYearFrom || this.reportYearFrom === undefined && this.tableType != 5) {
       this.isYearError = true;
       this.errorMessage = 'يجب تحديد سنة البداية'
       return; // Stop further execution
     }
-    if (this.reportYearFrom !== undefined && this.reportYearTo !== undefined) {
+    if (this.reportYearFrom !== undefined && this.reportYearTo !== undefined && this.tableType != 5) {
       if ((this.reportYearFrom ?? 0) > (this.reportYearTo ?? 0)) {
         this.isYearError = true;
         this.errorMessage = 'يجب تحديد سنة النهاية اكبر من او يساوي سنة البداية'

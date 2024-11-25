@@ -80,7 +80,10 @@
               </div>
             </div>
             <table class="table table-borderless details caption-top" *ngFor="let code of govData?.Codes">
-              <caption class="table-title">{{code?.CodeArName}}</caption>
+              <div class="table-title" style="display: flex; justify-content: space-between;gap: 20px;width: 127%;">
+                <span>{{ code?.CodeArName }}</span>
+                <span>{{ code?.value || 0 }}</span>
+              </div>
               <tbody>
                 <tr *ngFor="let wilaya of code.wilayatValues">
                   <th class="row-name" scope="row">{{wilaya?.name}}</th>
