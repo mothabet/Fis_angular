@@ -1,0 +1,41 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card  " style="flex: 1;">
+    <!-- header -->
+    <app-top-screen [title]="'نسبة التغير العامه'"></app-top-screen>
+    <!-- end-header -->
+    <div class="header-nav companies-details">
+        <div class="card-box mb-3">
+            <ul>
+                <li>
+                    <a routerLink="/GeneralIndicators">المؤشرات العامة</a>
+                </li>
+                <li>
+                    <a routerLink="/OmanMaps">خرائط عمان</a>
+                </li>
+                <li routerLinkActive="active">
+                    <a routerLink="/ChangePercentage">نسبة التغير العامه</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="modal-content m-2">
+        <div class="modal-header p-2">
+            <h5 class="modal-title" id="add">إضافة نسبة التغير</h5>
+        </div>
+        <form [formGroup]="percentageForm">
+            <div class="modal-body pb-1">
+                <div class="row">
+                    <div class="form-group col-sm-12 col-md-6 col-xl-4 mb-2">
+                        <input class="form-control input-modal" type="text" formControlName="percentage" />
+                        <label for="inputField">نسبة التغير العامه</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-success" (click)="SavePercentage()">
+                    حفظ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
