@@ -19,4 +19,9 @@ export class HomeService {
     var resopnse = this.http.get(environment.apiUrl + `Home/GetMapGovData?lang=2&govName=${govName}`, { headers });
     return resopnse;
   }
+  GetAllAudit(){
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.get(environment.apiUrl+`Home/GetAllAudit?lang=2`, { headers });
+     return resopnse;
+   }
 }
