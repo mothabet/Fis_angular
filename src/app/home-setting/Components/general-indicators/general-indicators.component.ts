@@ -62,7 +62,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.filteredFormContents = res.Data.getCodeDtos;
@@ -215,7 +215,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.searchTerm = res.Data.codeName;
           this.yearFrom = res.Data.yearFrom;
           this.yearTo = res.Data.yearTo;

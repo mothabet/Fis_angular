@@ -223,7 +223,7 @@ export class CompaniesHomeComponent implements OnInit {
   
   filterSubActivities() {
     const searchTerm = this.companyForm.get('subActivityCode')?.value || '';
-    debugger
+    
     this.filteredSubACtivity = this.Activities.filter(activity =>
       activity.code.includes(searchTerm) || activity.arName.includes(searchTerm)
     );
@@ -651,7 +651,7 @@ export class CompaniesHomeComponent implements OnInit {
       return; // Stop the form submission
     }
     else if (this.companyForm.valid) {
-      debugger
+      
       const Model: IAddCompany = {
         userName: this.companyForm.value.userName,
         password: this.companyForm.value.password,
@@ -892,7 +892,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            debugger
+            
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
