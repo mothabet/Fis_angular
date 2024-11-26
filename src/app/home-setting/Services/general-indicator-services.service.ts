@@ -50,4 +50,15 @@ export class GeneralIndicatorServicesService {
      var response = this.http.delete(environment.apiUrl+`OmanMaps/DeleteOmanMap?id=${id}&lang=2`, { headers });
      return response;
    }
+   GetOmanMap(id: number) {
+    var headers = this.sharedService.getHeaders();
+    var resopnse = this.http.get(environment.apiUrl + `OmanMaps/GetOmanMap?id=${id}&lang=2`, { headers });
+    return resopnse;
+  }
+  UpdateOmanMap(id:number,omanGovernorate: IAddOmanMap){
+    debugger
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`OmanMaps/UpdateOmanMap?id=${id}&lang=2`, omanGovernorate, { headers });
+     return resopnse;
+   }
 }

@@ -28,10 +28,10 @@ export class OmanMapsComponent implements OnInit {
   CodesFiltered: IDropdownList[] = []
   codesList: IDropdownList[] = []
   isCodesDropdownOpen = false;
-  omanGovernorates: IAddOmanMap ={
+  omanGovernorates: IAddOmanMap = {
     governorateId: 0,
-    codesId:[],
-    wilayatId:[]
+    codesId: [],
+    wilayatId: []
   };
   isUpdate: boolean = false;
   noData: boolean = false;
@@ -41,9 +41,6 @@ export class OmanMapsComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 0;
   searchText: string = '';
-  /**
-   *
-   */
   constructor(private codeHomeService: CodeHomeService, private generalIndicatorServices: GeneralIndicatorServicesService, private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
   }
@@ -173,7 +170,7 @@ export class OmanMapsComponent implements OnInit {
           id: selectedField.Id,
           code: selectedField.code
         };
-        debugger
+
         // Check if the field already exists in the table's fields array
         this.codesList.push(code);
         this.omanGovernorates.codesId.push(code.id);
@@ -181,16 +178,20 @@ export class OmanMapsComponent implements OnInit {
     }
   }
   removeCode(field: any) {
-    this.codesList = this.codesList.filter((f: any) => f.name !== field.name);
+    this.codesList = this.codesList.filter(
+      (f: any) => f.name !== (field.name ?? field.arName) && f.arName !== (field.arName ?? field.name)
+    );
     this.omanGovernorates.codesId = this.omanGovernorates.codesId.filter((f: any) => f !== field.id);
   }
   removeWilaya(field: any) {
-    this.wilayatList = this.wilayatList.filter((f: any) => f.name !== field.name);
+    this.wilayatList = this.wilayatList.filter(
+      (f: any) => f.name !== (field.name ?? field.arName) && f.arName !== (field.arName ?? field.name)
+    );
     this.omanGovernorates.wilayatId = this.omanGovernorates.wilayatId.filter((f: any) => f !== field.id);
   }
   saveOmanGovernorate() {
     this.showLoader = true;
-    if(this.searchGovernorateTerm != '' && this.searchGovernorateTerm != undefined && this.searchGovernorateTerm != null){
+    if (this.searchGovernorateTerm != '' && this.searchGovernorateTerm != undefined && this.searchGovernorateTerm != null) {
       const selectedField = this.Governorates.find(field => field.arName === this.searchGovernorateTerm) as any;
       if (selectedField) {
         this.omanGovernorates.governorateId = selectedField.id;
@@ -228,7 +229,7 @@ export class OmanMapsComponent implements OnInit {
     this.searchCodeTerm = '';
     this.searchWilayatTerm = '';
     this.codesList = [];
-    this.wilayatList =[];
+    this.wilayatList = [];
     this.isUpdate = false;
   }
   GetOmanGovernorate(page: number, textSearch: string = '') {
@@ -237,7 +238,7 @@ export class OmanMapsComponent implements OnInit {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          debugger
+
           this.omanGovernarates = res.Data.getOmanMapDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;
@@ -297,5 +298,64 @@ export class OmanMapsComponent implements OnInit {
         this.generalIndicatorServices.DeleteOmanMap(id).subscribe(observer);
       }
     });
+  }
+  openUpdatePopup(id: number) {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.id = id;
+          this.omanGovernorates = res.Data
+          this.codesList = res.Data.codeList
+          this.wilayatList = res.Data.wilayatList
+          this.searchGovernorateTerm = res.Data.name
+          const governorate = this.Governorates.find(gov => gov.arName === res.Data.name);
+          if (governorate?.id !== undefined) {
+            this.GetWilayat(governorate.id);
+          }
+        }
+        this.isUpdate = true;
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.generalIndicatorServices.GetOmanMap(id).subscribe(observer);
+  }
+  updateGeneralIndicator() {
+    this.showLoader = true;
+    if (this.searchGovernorateTerm != '' && this.searchGovernorateTerm != undefined && this.searchGovernorateTerm != null) {
+      const selectedField = this.Governorates.find(field => field.arName === this.searchGovernorateTerm) as any;
+      if (selectedField) {
+        this.omanGovernorates.governorateId = selectedField.id;
+      }
+    }
+    this.omanGovernorates.wilayatId = this.wilayatList.map(w => w.id);
+    this.omanGovernorates.codesId = this.codesList.map(w => w.id);
+    const observer = {
+      next: (res: any) => {
+        const button = document.getElementById('btnCancel');
+        if (button) {
+          button.click();
+        }
+        this.onReset();
+        this.GetOmanGovernorate(1);
+        this.showLoader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: true,
+          confirmButtonText: 'اغلاق'
+        });
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.generalIndicatorServices.UpdateOmanMap(this.id, this.omanGovernorates).subscribe(observer);
   }
 }

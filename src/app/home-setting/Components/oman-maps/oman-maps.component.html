@@ -57,7 +57,7 @@
                 <img src="../../../../assets/images/trash-can-outline.png" alt="">
               </button>
               <button class="icon" data-bs-toggle="modal" data-bs-target="#addSector">
-                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                <img src="../../../../assets/images/pencil-outline.png" (click)="openUpdatePopup(item.id)" alt="">
               </button>
             </td>
           </tr>
@@ -157,7 +157,7 @@
           <button type="button" class="btn btn-save" *ngIf="!isUpdate" (click)="saveOmanGovernorate()">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateGeneralIndicator()" type="button" class="btn btn-save">
             تعديل
           </button>
         </div>
