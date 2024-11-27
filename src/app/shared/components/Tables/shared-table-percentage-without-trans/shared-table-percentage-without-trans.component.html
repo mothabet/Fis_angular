@@ -170,7 +170,7 @@
                                                         <option value="">اختيار مصدر المال--</option>
                                                         <option *ngFor="let country of countries"
                                                             [value]="country.arName">
-                                                            {{country.code}}-{{country.arName}}</option>
+                                                            {{country.arName}}</option>
                                                     </select>
                                                     <select class="form-control" [(ngModel)]="subCode.enName"
                                                         (ngModelChange)="onEnCountryChange(subCode)"
@@ -178,7 +178,7 @@
                                                         <option value="">اختيار جنسية المستثمر--</option>
                                                         <option *ngFor="let country of countries"
                                                             [value]="country.enName">
-                                                            {{country.code}}-{{ country.arName }}
+                                                            {{ country.arName }}
                                                         </option>
                                                     </select>
                                                     <button (click)="removeSubCodeRow(formContent, subCode)"
@@ -257,7 +257,7 @@
                                                         <option value="">Choose Investor Nationality--</option>
                                                         <option *ngFor="let country of countries"
                                                             [value]="country.enName">
-                                                            {{country.code}}-{{ country.enName }}
+                                                            {{ country.enName }}
                                                         </option>
                                                     </select>
                                                     <select class="form-control" [(ngModel)]="subCode.arName"
@@ -266,7 +266,7 @@
                                                         <option value="">Choose Source of money--</option>
                                                         <option *ngFor="let country of countries"
                                                             [value]="country.arName">
-                                                            {{country.code}}-{{country.enName}}</option>
+                                                            {{country.enName}}</option>
                                                     </select>
                                                 </div>
                                             </td>
