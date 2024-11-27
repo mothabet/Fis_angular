@@ -152,7 +152,7 @@
                     (click)="CloseForm()">
                     إغلاق
                 </button>
-                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Open)) && coverForm.status == 6" type="button" class="btn btn-exit" data-bs-toggle="modal" data-bs-target="#OpenFormModel">
+                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Open)) && (coverForm.status == 6 || coverForm.status == 7)" type="button" class="btn btn-exit" data-bs-toggle="modal" data-bs-target="#OpenFormModel">
                     اعادة فتح الاستماره
                 </button>
             </div>
