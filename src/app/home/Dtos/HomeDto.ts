@@ -10,4 +10,5 @@ export interface IGetAuditDto{
     changePercentageNew:number,
     valueCurrentYear:number,
     valuePreviousYear:number,
+    currentYear:number,
 }

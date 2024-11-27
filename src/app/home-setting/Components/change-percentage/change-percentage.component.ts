@@ -14,12 +14,20 @@ export class ChangePercentageComponent implements OnInit {
   showLoader: boolean = false;
   percentageForm!: FormGroup;
   id:number = 0;
-  getPercentage:IGetPercentageDto[]=[]
+  getPercentage:IGetPercentageDto[]=[];
+  years: number[] = [];
+  currentYear: number=0;
   constructor(private fb: FormBuilder, private sharedService: SharedService, private changePercentageService: ChangePercentageService) { }
   ngOnInit(): void {
+    this.currentYear = new Date().getFullYear(); // Get the current year
+    for (let year = 2007; year <= this.currentYear; year++) {
+      this.years.push(year);
+    }
     this.GetAllPercentage();
+    debugger
     this.percentageForm = this.fb.group({
       percentage: [0, Validators.required],
+      formYear: [this.currentYear, Validators.required],
     });
   }
   SavePercentage(): void {
@@ -37,6 +45,7 @@ export class ChangePercentageComponent implements OnInit {
     const Model: IAddPercentageDto = {
       id: this.id,
       percentage: this.percentageForm.value.percentage,
+      formYear: this.percentageForm.value.formYear,
     };
     const observer = {
       next: (res: any) => {
@@ -73,6 +82,7 @@ export class ChangePercentageComponent implements OnInit {
           this.id = this.getPercentage[0].id;
           this.percentageForm.patchValue({
             percentage: this.getPercentage[this.getPercentage.length - 1].percentage,
+            formYear: this.getPercentage[this.getPercentage.length - 1].formYear,
           });
         }
         else {
