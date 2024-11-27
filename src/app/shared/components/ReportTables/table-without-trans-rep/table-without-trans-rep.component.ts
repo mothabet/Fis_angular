@@ -7,10 +7,26 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class TableWithoutTransRepComponent implements OnInit{
   @Input() report:any;
+  groupedFields: any[] = [];
+
   ngOnInit(): void {
+    this.groupFieldsByActivityName();
   }
-  getRowSpan(fields: any[], activityName: string): number {
-    // Count how many times the activity (field[8].value) appears in the fields array
-    return fields.filter(field => field[4].value === activityName).length;
+
+  groupFieldsByActivityName(): void {
+    const groupedMap = new Map<string, any[]>();
+
+    for (const field of this.report.fields) {
+      const activityName = field.find((f : any) => f.key === 'activityName').value;
+      if (!groupedMap.has(activityName)) {
+        groupedMap.set(activityName, []);
+      }
+      groupedMap.get(activityName)!.push(field);
+    }
+
+    this.groupedFields = Array.from(groupedMap.entries()).map(([activityName, fields]) => ({
+      activityName,
+      fields
+    }));
   }
 }

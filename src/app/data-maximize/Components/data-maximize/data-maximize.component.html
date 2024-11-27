@@ -1,0 +1,176 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card " style="flex: 1;">
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            تكبير اليانات
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <span class="current-lang">عربى</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="content companies researcher">
+        <div class="header d-flex mb-0">
+            <div class="title">
+                قائمة تكبير البيانات
+            </div>
+            <div class="btns d-flex">
+                <div class="search">
+                    <input (keydown.enter)="dataMaximizeSearch()" [(ngModel)]="searchText" class="form-control"
+                        type="text" name="search" placeholder="البحث">
+                    <i (click)="dataMaximizeSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+                </div>
+                <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+                    <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher"
+                        (click)="openPopup()">
+                        <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
+                        اضافة تكبير بيانات
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">اسم تكبير البيانات</th>
+                        <th class="text-center" scope="col">اسم المؤشر</th>
+                        <th class="text-center" scope="col">السنة</th>
+                        <th style="width: 150px;" class="text-center" scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of dataMaximized">
+                        <td class="text-center">{{item.arName}}</td>
+                        <td class="text-center">{{item.codeName}}</td>
+                        <td class="text-center">{{item.reviewYear}}</td>
+                        <td class="text-center">
+                            <a class="icon">
+                                <img src="../../../../assets/images/eye-outline.png" alt="">
+                            </a>
+                            <button class="icon" (click)="DeleteDataMaxmize(item.id)">
+                                <img src="../../../../assets/images/trash-can-outline.png" alt="">
+                            </button>
+                            <button class="icon" data-bs-toggle="modal" data-bs-target="#addResearcher"
+                                (click)="openUpdatePopup(item.id)">
+                                <img src="../../../../assets/images/pencil-outline.png" alt="">
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="noData">
+                    <tr>
+                        <th colspan="7">
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <br />
+                                <span> لا يوجد بيانات </span>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <!-- end content -->
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination>
+<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
+        <div class="modal-content" style="width: 50%;">
+            <div class="modal-header pb-0">
+                <h5 class="modal-title" id="add">إضافة تكبير بيانات</h5>
+            </div>
+            <span *ngIf="isError"
+                            class="text-danger">{{errorMessage}}</span>
+            <form [formGroup]="dataMaximizeForm" (ngSubmit)="onSave()">
+                <div class="row form-group" style="padding: 10px;">
+                    <!-- Arabic Name -->
+                    <div class="col-sm-12 mb-4">
+                        <input class="form-control input-modal" type="text" formControlName="arName" />
+                        <label style="top: 10px; right: 15px;">الاسم بالعربي</label>
+                        
+                    </div>
+
+                    <!-- English Name -->
+                    <div class="col-sm-12 mb-4">
+                        <input class="form-control input-modal" type="text" formControlName="enName" />
+                        <label style="top: 70px; right: 15px;">English Name</label>
+                        
+                    </div>
+
+                    <!-- Code Name -->
+                    <div class="dropdown mb-4" [class.show]="isDropdownOpen">
+                        <div style="height: 45px !important;">
+                            <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                formControlName="codeName" (click)="toggleFormContentDropdown()"
+                                (input)="filterSubCodes()" />
+                            <ul class="dropdown-menu" [class.show]="isFormContentDropdownOpen"
+                                style="padding: 0 9px; max-height: 120px; width: 94%; text-align: right;">
+                                <li class="dropdown-item" *ngFor="let code of filteredCodes" (click)="selectCode(code)">
+                                    {{ code.arName }}
+                                </li>
+                            </ul>
+                            <label for="searchableDropdown" style="right: 18px; top: 0px; font-size: small;">اختر
+                                المؤشر</label>
+                            
+                        </div>
+                    </div>
+
+
+                    <!-- Review Year -->
+                    <div class="col-sm-12 mb-4">
+                        <select class="form-control" formControlName="reviewYear">
+                            <option value="" disabled selected>Select Year</option>
+                            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                        </select>
+                        <label style="top: 200px; right: 18px">سنة المسح</label>
+                        
+                    </div>
+
+                    <!-- Survey Type -->
+                    <div class="col-sm-12 mb-4">
+                        <select class="form-control" formControlName="type">
+                            <option value="" disabled>نوع المسح</option>
+                            <option value="1">سنوي</option>
+                            <option value="2">ربعي</option>
+                        </select>
+                        <label style="top: 260px; right: 18px">نوع المسح</label>
+                        
+                    </div>
+                </div>
+
+                <div class="modal-footer pt-0">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">اغلاق</button>
+                    <button type="reset" class="btn btn-reset" (click)="dataMaximizeForm.reset()">إعادة ملء</button>
+                    <button type="submit" class="btn btn-save" *ngIf="!isUpdate">حفظ</button>
+                    <button (click)="updateDataMaximize()" type="button" class="btn btn-save" *ngIf="isUpdate"
+                        type="button" class="btn btn-save">
+                        تعديل
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

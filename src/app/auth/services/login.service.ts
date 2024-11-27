@@ -82,7 +82,8 @@ export class LoginService {
       'Governorates',
       'Audit',
       'Wilayat',
-      'HomeMap'
+      'HomeMap',
+      'DataMaximize'
     ];
     return adminRoutes.includes(url);
   }

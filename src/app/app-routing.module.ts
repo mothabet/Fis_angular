@@ -46,6 +46,7 @@ import { WilayatComponent } from './sectors-and-activities/Components/wilayat/wi
 import { HomeMapComponent } from './home/components/home-map/home-map.component';
 import { ChangePercentageComponent } from './home-setting/Components/change-percentage/change-percentage.component';
 import { AuditComponent } from './home/components/audit/audit.component';
+import { DataMaximizeComponent } from './data-maximize/Components/data-maximize/data-maximize.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -91,7 +92,7 @@ const routes: Routes = [
   { path: 'ChangePercentage', component: ChangePercentageComponent, canActivate: [LoginGuard] },
   { path: 'Audit', component: AuditComponent, canActivate: [LoginGuard] },
   { path: 'OmanMaps', component: OmanMapsComponent, canActivate: [LoginGuard] },
-  { path: 'HomeMap', component: HomeMapComponent, canActivate: [LoginGuard] },
+  { path: 'DataMaximize', component: DataMaximizeComponent, canActivate: [LoginGuard] },  { path: 'HomeMap', component: HomeMapComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];

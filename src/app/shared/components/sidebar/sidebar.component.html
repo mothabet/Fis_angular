@@ -77,7 +77,7 @@
         </a>
       </li>
       <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('none'))">
-        <a href="#" class="sidebar-link">
+        <a routerLink="/DataMaximize" class="sidebar-link">
           <i class="fa-solid fa-chart-simple icon"></i>
           <span>تكبير البيانات</span>
         </a>

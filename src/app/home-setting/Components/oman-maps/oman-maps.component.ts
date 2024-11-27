@@ -177,6 +177,9 @@ export class OmanMapsComponent implements OnInit {
       }
     }
   }
+  openPopup(){
+    this.onReset();
+  }
   removeCode(field: any) {
     this.codesList = this.codesList.filter(
       (f: any) => f.name !== (field.name ?? field.arName) && f.arName !== (field.arName ?? field.name)

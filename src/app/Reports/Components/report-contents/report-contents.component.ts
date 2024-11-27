@@ -324,7 +324,7 @@ export class ReportContentsComponent implements OnInit {
     );
   }
   filterCompaniesRep() {
-    
+
     this.filteredCompanies = this.companies.filter(code =>
       code.arName.includes(this.searchCompanyTerm)
     );
@@ -1079,29 +1079,27 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
+    
     if (this.tables.length == 0) {
       this.isTableError = true;
       this.errorMessage = 'يجب تحديد جدول للتقرير'
       return;
     }
-    if (this.tables[0].enTableName == 'TablesReport') {
-      if (this.searchTerm == '' || this.searchTerm == null) {
-        Swal.fire({
-          icon: 'error',
-          title: 'يجب اختيار جدول فلتر واحد',
-          showConfirmButton: true,
-          confirmButtonText: 'اغلاق'
-        });
-        return;
-      }
+    if ((this.tables[1].fields.length == 0 && this.searchYearTerm == '')&& this.tableType == 5) {
+      this.isTableError = true;
+      this.errorMessage = 'يجب تحديد سنة المسح'
+      return; // Stop further execution
     }
-
-    if (!this.reportYearFrom || this.reportYearFrom === undefined && this.tableType != 5) {
+    else {
+      this.isTableError = true;
+      this.errorMessage = ''
+    }
+    if ((!this.reportYearFrom || this.reportYearFrom === undefined) && this.tableType != 5) {
       this.isYearError = true;
       this.errorMessage = 'يجب تحديد سنة البداية'
       return; // Stop further execution
     }
-    if (this.reportYearFrom !== undefined && this.reportYearTo !== undefined && this.tableType != 5) {
+    if ((this.reportYearFrom !== undefined && this.reportYearTo !== undefined) && this.tableType != 5) {
       if ((this.reportYearFrom ?? 0) > (this.reportYearTo ?? 0)) {
         this.isYearError = true;
         this.errorMessage = 'يجب تحديد سنة النهاية اكبر من او يساوي سنة البداية'
@@ -1113,6 +1111,10 @@ export class ReportContentsComponent implements OnInit {
       this.isReportNameError = true;
       this.errorMessage = 'يجب ادخال عنوان الجدول'
       return;
+    }
+    else {
+      this.isReportNameError = false;
+      this.errorMessage = '';
     }
     // if (this.tables.length > 1) {
     //   if (this.tables[1].enTableName == 'Years') {
@@ -1127,14 +1129,14 @@ export class ReportContentsComponent implements OnInit {
     //     }
     //   }
     // }
-
+    
     if (this.tables[0].fields.length == 0 && (this.tables[0].enTableName == 'FormContent' || this.tables[0].enTableName == 'TablesReport')) {
       this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
 
-    if (this.reportYearTo === undefined || this.reportYearTo === null) {
+    if ((this.reportYearTo === undefined || this.reportYearTo === null) && this.tableType != 5) {
       const currentYear = new Date().getFullYear();
       for (let year = this.reportYearFrom!; year <= currentYear; year++) {
         const tableField: ITableFieldDto = {
@@ -1149,7 +1151,7 @@ export class ReportContentsComponent implements OnInit {
     }
 
     // Case 2: reportYearFrom and reportYearTo both have values
-    else if (this.reportYearTo !== undefined && this.reportYearTo > this.reportYearFrom!) {
+    else if ((this.reportYearTo !== undefined && this.reportYearTo > this.reportYearFrom!) && this.tableType != 5) {
       for (let year = this.reportYearFrom; year! <= this.reportYearTo; year!++) {
         const tableField: ITableFieldDto = {
           name: year!.toString(),
@@ -1164,7 +1166,7 @@ export class ReportContentsComponent implements OnInit {
 
 
     // Case 3: reportYearFrom and reportYearTo are equal
-    if (this.reportYearFrom === this.reportYearTo) {
+    if ((this.reportYearFrom === this.reportYearTo) && this.tableType != 5) {
       const tableField: ITableFieldDto = {
         name: this.reportYearFrom!.toString(),
         arName: this.reportYearFrom!.toString(),

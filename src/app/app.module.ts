@@ -19,6 +19,7 @@ import { ReportsModule } from './Reports/reports.module';
 import { SettingsAuthModule } from './settings-auth/settings-auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { HomeSettingModule } from './home-setting/home-setting.module';
+import { DataMaximizeModule } from './data-maximize/data-maximize.module';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { HomeSettingModule } from './home-setting/home-setting.module';
     BrowserModule,
     HomeSettingModule,
     AppRoutingModule,
+    DataMaximizeModule,
     ToastrModule.forRoot({
       timeOut: 2000,
       positionClass: 'toast-top-left',
