@@ -10,6 +10,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 import { IAddDataMaximize } from '../../Dto/DataMaximizeDto';
 import { MaximizeService } from '../../Services/maximize.service';
+import { LaunchYearService } from 'src/app/home-setting/Services/launch-year.service';
 
 @Component({
   selector: 'app-data-maximize',
@@ -38,9 +39,10 @@ export class DataMaximizeComponent {
   // isReviewYearError = false;
   // isTypeError = false;
   isError = false;
-  errorMessage = ''
+  errorMessage = '';
+  launchYear = 0;
   constructor(private sharedService: SharedService, private fb: FormBuilder, private codeHomeService: CodeHomeService,
-    private toastr: ToastrService, private dataMaximizeServices: MaximizeService) { }
+    private toastr: ToastrService, private dataMaximizeServices: MaximizeService, private launchYearServices: LaunchYearService) { }
   ngOnInit(): void {
     this.dataMaximizeForm = this.fb.group({
       arName: ['', Validators.required],
@@ -78,7 +80,7 @@ export class DataMaximizeComponent {
       this.errorMessage = 'يجباختيار سنة المسح';
       return;
     }
-    
+
     if (this.dataMaximizeForm.value.type === 0) {
       this.isError = true;
       this.errorMessage = 'يجب اختيار نوع المسح';
@@ -223,9 +225,26 @@ export class DataMaximizeComponent {
   openPopup() {
     this.onReset(1);
     this.GetAllCodes();
-    const startYear = 2007;
-    const currentYear = new Date().getFullYear();
-    this.years = Array.from({ length: currentYear - startYear + 1 }, (_, i) => startYear + i);
+    this.GetLaunchYear()
+
+  }
+  GetLaunchYear(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.launchYear = res.Data
+          const currentYear = new Date().getFullYear();
+          this.years = Array.from({ length: currentYear - this.launchYear + 1 }, (_, i) => this.launchYear + i);
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.launchYearServices.GetLaunchYear().subscribe(observer);
   }
   openUpdatePopup(id: number) {
     this.showLoader = true;

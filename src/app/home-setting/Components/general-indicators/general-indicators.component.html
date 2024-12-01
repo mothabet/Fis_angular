@@ -15,6 +15,9 @@
         <li>
           <a routerLink="/ChangePercentage">نسبة التغير</a>
         </li>
+        <li>
+          <a routerLink="/YearOfLaunch">تحديد سنة الانطلاق</a>
+        </li>
       </ul>
     </div>
   </div>
@@ -137,7 +140,8 @@
           <button (click)="saveGeneralIndicator()" *ngIf="!isUpdate" type="button" class="btn btn-save">
             حفظ
           </button>
-          <button (click)="updateGeneralIndicator()" type="button" class="btn btn-save" *ngIf="isUpdate" type="button" class="btn btn-save">
+          <button (click)="updateGeneralIndicator()" type="button" class="btn btn-save" *ngIf="isUpdate" type="button"
+            class="btn btn-save">
             تعديل
           </button>
         </div>

@@ -4,6 +4,7 @@ import { GeneralIndicatorsComponent } from './Components/general-indicators/gene
 import { SharedModule } from '../shared/shared.module';
 import { OmanMapsComponent } from './Components/oman-maps/oman-maps.component';
 import { ChangePercentageComponent } from './Components/change-percentage/change-percentage.component';
+import { LaunchYearComponent } from './Components/launch-year/launch-year.component';
 
 
 
@@ -11,7 +12,8 @@ import { ChangePercentageComponent } from './Components/change-percentage/change
   declarations: [
     GeneralIndicatorsComponent,
     OmanMapsComponent,
-    ChangePercentageComponent
+    ChangePercentageComponent,
+    LaunchYearComponent
   ],
   imports: [
     CommonModule,

@@ -83,7 +83,9 @@ export class LoginService {
       'Audit',
       'Wilayat',
       'HomeMap',
-      'DataMaximize'
+      'DataMaximize',
+      'DataMaximizeDetails',
+      'YearOfLaunch'
     ];
     return adminRoutes.includes(url);
   }
