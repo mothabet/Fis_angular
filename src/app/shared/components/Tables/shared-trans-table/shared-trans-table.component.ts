@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
@@ -13,6 +14,7 @@ import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { IFilteredListDto } from 'src/app/shared/Dtos/TablesDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 @Component({
@@ -56,24 +58,41 @@ export class SharedTransTableComponent {
   formData!: IDataDto[];
   checkFormData: boolean = false;
   auditRules: IAuditRule[] = [];
-
+  isDropdownOpen = false;
+  filtered: IDropdownList[] = [];
+  filteredListDto: IFilteredListDto[] = [];
+  @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
+  searchTermCountry:string="";
   constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
     private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private auditRuleHomeService: AuditRuleHomeService) {
-
-
-  }
+    private auditRuleHomeService: AuditRuleHomeService) {}
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
       this.GetSectors();
     });
+  }
+  toggleDropdownCountry(index: number, indexSub: number) {
+    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      f => f.index === `${index}_${indexSub}`
+    );
+    filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+  }
+  filterCountry(searchTerm :string,index: number, indexSub: number) {
+    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      f => f.index === `${index}_${indexSub}`
+    );
+    filteredListDto[0].filtered = this.countries.filter(country =>
+      country.arName.includes(searchTerm)
+    );
+  }
+  selectCountry(subCode:ISubCodeForm,county:IGetCountriesDto){
+    subCode.enName = county.arName
   }
   private getDefaultCoverForm(): ICoverFormDetailsDto {
     return {
@@ -94,6 +113,29 @@ export class SharedTransTableComponent {
       GeneralData: {} as IGeneralDataDto,
       Type: 0,
     };
+  }
+  getFiltered(index: number, indexSub: number): IDropdownList[] {
+    // Filter the list based on index
+    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      f => f.index === `${index}_${indexSub}`
+    );
+    const filtered = filteredListDto[0].filtered;
+    // Map the filtered list to IDropdownList
+    return filtered.map(f => ({
+      id: f.id,            // Map the id correctly
+      arName: f.arName,    // Map arName
+      enName: f.enName,    // Map enName
+      code: f.code         // Map code
+    }));
+  }
+  getFilteredIsDropdownOpen(index: number, indexSub: number): boolean {
+    // Filter the list based on index
+    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      f => f.index === `${index}_${indexSub}`
+    );
+    const isDropdownOpen = filteredListDto[0].isDropdownOpen;
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
   }
   GetTableById(id: number): void {
     this.Loader = true;
@@ -171,7 +213,7 @@ export class SharedTransTableComponent {
     if (status < 3)
       this.BeginningForm();
   }
-  addSubCodeRow(code: ICode) {
+  addSubCodeRow(code: ICode,index:number) {
     const subCode: ISubCodeForm = {
       arName: '',
       codeId: code.Id,
@@ -188,8 +230,18 @@ export class SharedTransTableComponent {
       IsHdd: false,
       valueCheck: false
     }
+    const oldSubLength = code.SubCodes.length;
     code.SubCodes.push(subCode);
+    const newSubLength = code.SubCodes.length;
+    const filteredDto: IFilteredListDto = {
+      filtered: this.countries,
+      index: `${index}_${(newSubLength - 1)}`,
+      isDropdownOpen: false
+    };
+    this.filteredListDto.push(filteredDto);
+    debugger
   }
+  
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -224,9 +276,11 @@ export class SharedTransTableComponent {
       next: (res: any) => {
         if (res.Data) {
           this.countries = res.Data.getCountryDtos;
+          this.filtered = this.countries;
         }
         else {
           this.countries = [];
+          this.filtered  = [];
         }
       },
       error: (err: any) => {

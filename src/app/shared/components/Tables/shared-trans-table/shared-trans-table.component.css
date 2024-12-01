@@ -38,3 +38,40 @@
 tr input[type="number"] {
     width: 115px !important;
 }
+/* Flexbox container for proper alignment */
+td .flex-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap if needed */
+    align-items: center; /* Align items vertically */
+    justify-content: space-between; /* Space out elements evenly */
+    gap: 10px; /* Space between elements */
+  }
+  
+  /* Dropdown styling */
+  .dropdown-menu {
+    width: 100%; /* Make the dropdown take the full width */
+    max-height: 200px; /* Set a max height for scrollable content */
+    overflow-y: auto; /* Add scroll if content exceeds max height */
+    text-align: right; /* Align the text to the right */
+    display: block;
+  }
+  
+  .dropdown-item {
+    display: block; /* Ensure each item appears in a new line */
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1; /* Add hover effect */
+  }
+  
+  button img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  button:hover {
+    opacity: 0.8; /* Add hover effect */
+  }
+  
