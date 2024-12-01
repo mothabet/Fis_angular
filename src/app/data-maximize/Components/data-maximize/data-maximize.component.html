@@ -64,7 +64,7 @@
                         <td class="text-center">{{item.codeName}}</td>
                         <td class="text-center">{{item.reviewYear}}</td>
                         <td class="text-center">
-                            <a class="icon">
+                            <a class="icon" routerLink="/DataMaximizeDetails/{{item.id}}">
                                 <img src="../../../../assets/images/eye-outline.png" alt="">
                             </a>
                             <button class="icon" (click)="DeleteDataMaxmize(item.id)">

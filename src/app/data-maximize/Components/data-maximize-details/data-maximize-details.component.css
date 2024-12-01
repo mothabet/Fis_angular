@@ -1,0 +1,19 @@
+.text-center {
+    text-align: center;
+}
+.content .alert {
+    text-align: center;
+    
+  }
+  .content .alert i {
+    font-size: 100px;
+  }
+  .content .alert span {
+    font-size: 20px;
+  }
+  small{
+    display: block;
+  }
+  #research-btns .btn {
+    width: 160px !important;
+}

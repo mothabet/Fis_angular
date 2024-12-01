@@ -12,10 +12,10 @@
                 <li>
                     <a routerLink="/OmanMaps">خرائط عمان</a>
                 </li>
-                <li routerLinkActive="active">
+                <li >
                     <a routerLink="/ChangePercentage">نسبة التغير العامه</a>
                 </li>
-                <li>
+                <li routerLinkActive="active">
                     <a routerLink="/YearOfLaunch">تحديد سنة الانطلاق</a>
                 </li>
             </ul>
@@ -23,17 +23,13 @@
     </div>
     <div class="modal-content m-2">
         <div class="modal-header p-2">
-            <h5 class="modal-title" id="add">إضافة نسبة التغير</h5>
+            <h5 class="modal-title" id="add">تحديد سنة الانطلاق</h5>
         </div>
-        <form [formGroup]="percentageForm">
+        <form>
             <div class="modal-body pb-1">
                 <div class="row">
                     <div class="form-group col-sm-12 col-md-6 col-xl-4 mb-2">
-                        <input class="form-control input-modal" type="text" formControlName="percentage" />
-                        <label for="inputField">نسبة التغير العامه</label>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-6 col-xl-4 mb-2">
-                        <select name="search" class="form-control" formControlName="formYear">
+                        <select name="search" class="form-control" [(ngModel)]="launchYear">
                             <option *ngFor="let year of years" [value]="year">{{ year }}</option>
                           </select>
                           <label ffor="inputField">سنة المسح</label>

@@ -1,0 +1,123 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<div class="main-content p-4 main card " style="flex: 1;" style="flex: 1; font-family: 'Arial', sans-serif;">
+    <!-- header -->
+    <div class="header d-flex flex-wrap justify-content-between align-items-center">
+        <h4 class="title">
+            تفاصيل تكبير البيانات
+        </h4>
+        <div class="user d-flex justify-content-between align-items-center">
+            <div class="dropdown">
+                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <span class="current-lang">عربى</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
+                </ul>
+            </div>
+            <a href="./notification.html" class="notification  active">
+                <i class="fa-solid fa-bell"></i>
+            </a>
+            <div class="user-img">
+                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    <!-- end-header -->
+    <!-- start content -->
+    <div class="content companies researcher">
+        <div class="header d-flex mb-0">
+            <div class="title text-center col-sm-12">
+                <h2>المؤشر / ({{dataMaximizeDetails.codeName}})</h2>
+                <h2>السنة / ({{dataMaximizeDetails.reviewYear}})</h2>
+            </div>
+        </div>
+    </div>
+    <div class="content companies researcher mt-5" *ngIf="!noData">
+        <div class="header d-flex mb-0">
+            <div class="title col-sm-12">
+                <h2>بيانات سنة {{dataMaximizeDetails.reviewYear}}</h2>
+            </div>
+        </div>
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">رمز القطاع</th>
+                        <th class="text-center" scope="col">اسم القطاع</th>
+                        <th class="text-center" scope="col">اجمالي قبل التكبير</th>
+                        <th class="text-center" scope="col">اجمالي بعد التكبير</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of dataMaximizeDetails.dataMaximizeDetailsItemsDtos"
+                        [hidden]="item.reviewYear === dataMaximizeDetails?.reviewYear">
+                        <td class="text-center">{{ item.sectorCode }}</td>
+                        <td class="text-center">{{ item.sectorName }}</td>
+                        <td class="text-center">{{ item.totalBefore }}</td>
+                        <td class="text-center">{{ item.totalAfter }}</td>
+                    </tr>
+                </tbody>
+                <!-- <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <br />
+                                <span> لا يوجد بيانات </span>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot> -->
+            </table>
+        </div>
+    </div>
+    <div class="content companies researcher mt-5" *ngIf="!noData">
+        <div class="header d-flex mb-0">
+            <div class="title col-sm-12">
+                <h2>بيانات سنة {{dataMaximizeDetails.reviewYear - 1}}</h2>
+            </div>
+        </div>
+        <div class="table-responsive company-table research-table">
+            <table class="table table-borderless">
+                <thead>
+                    <tr class="t-header">
+                        <th class="text-center" scope="col">رمز القطاع</th>
+                        <th class="text-center" scope="col">اسم القطاع</th>
+                        <th class="text-center" scope="col">اجمالي قبل التكبير</th>
+                        <th class="text-center" scope="col">اجمالي بعد التكبير</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of dataMaximizeDetails.dataMaximizeDetailsItemsDtos"
+                        [hidden]="item.reviewYear !== dataMaximizeDetails?.reviewYear">
+                        <td class="text-center">{{ item.sectorCode }}</td>
+                        <td class="text-center">{{ item.sectorName }}</td>
+                        <td class="text-center">{{ item.totalBefore }}</td>
+                        <td class="text-center">{{ item.totalAfter }}</td>
+                    </tr>
+                </tbody>
+                <!-- <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="alert alert-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <br />
+                                <span> لا يوجد بيانات </span>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot> -->
+            </table>
+        </div>
+    </div>
+    <div class="content companies researcher mt-5" *ngIf="noData">
+        <div class="alert alert-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <br />
+            <span> لا يوجد بيانات </span>
+        </div>
+    </div>
+    <!-- end content -->
+</div>

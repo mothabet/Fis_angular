@@ -14,7 +14,10 @@
         </li>
         <li routerLinkActive="active">
           <a routerLink="/ChangePercentage">نسبة التغير العامه</a>
-      </li>
+        </li>
+        <li>
+          <a routerLink="/YearOfLaunch">تحديد سنة الانطلاق</a>
+        </li>
       </ul>
     </div>
   </div>
@@ -26,11 +29,13 @@
       </div>
       <div class="btns d-flex">
         <div class="search">
-          <input class="form-control" (keydown.enter)="omanGovernoratesSearch()" [(ngModel)]="searchText" type="text" name="search" placeholder="البحث">
+          <input class="form-control" (keydown.enter)="omanGovernoratesSearch()" [(ngModel)]="searchText" type="text"
+            name="search" placeholder="البحث">
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector" (click)="openPopup()">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addSector"
+            (click)="openPopup()">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
             اضافة محافظة
           </button>
@@ -79,7 +84,8 @@
   <!-- end content -->
 </div>
 <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
-  (pageChange)="onPageChange($event)"></app-pagination><div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+  (pageChange)="onPageChange($event)"></app-pagination>
+<div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
     <div class="modal-content" style="width: 50%;">
       <div class="modal-header pb-0">
@@ -157,7 +163,8 @@
           <button type="button" class="btn btn-save" *ngIf="!isUpdate" (click)="saveOmanGovernorate()">
             حفظ
           </button>
-          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateGeneralIndicator()" type="button" class="btn btn-save">
+          <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateGeneralIndicator()" type="button"
+            class="btn btn-save">
             تعديل
           </button>
         </div>
