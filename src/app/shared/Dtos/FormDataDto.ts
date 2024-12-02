@@ -22,6 +22,8 @@ export interface IDataDto{
     TableEnName:string|null,
     arName:string|null,
     enName:string|null,
+    arName1:string|null,
+    enName1:string|null,
     IsDisabled:boolean,
     subCodeParentId:number
 }

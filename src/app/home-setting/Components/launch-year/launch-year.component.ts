@@ -42,7 +42,7 @@ export class LaunchYearComponent implements OnInit {
   }
   SavePercentage(): void {
     this.showLoader = true;
-    debugger
+    
     const observer = {
       next: (res: any) => {
         this.showLoader = false;

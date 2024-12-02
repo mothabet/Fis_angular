@@ -609,6 +609,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                 connectedWithType: coverForm.tables[index].formContents[i].code.connectedWithType,
                 arName: coverForm.tables[index].formContents[i].code.arName,
                 enName: coverForm.tables[index].formContents[i].code.enName,
+                arName1: '',
+                enName1: '',
                 IsDisabled: coverForm.tables[index].IsDisabled,
                 subCodeParentId: 0
               };
@@ -630,6 +632,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                   connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+                  arName1: coverForm.tables[index].formContents[i].code.SubCodes[r].arName1,
+                  enName1: coverForm.tables[index].formContents[i].code.SubCodes[r].enName1,
                   IsDisabled: coverForm.tables[index].IsDisabled,
                   subCodeParentId: 0
                 };
@@ -651,6 +655,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                     connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
                     arName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
                     enName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    arName1: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName1,
+                    enName1: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName1,
                     IsDisabled: coverForm.tables[index].IsDisabled,
                     subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
                   };
@@ -790,14 +796,16 @@ export class NavigateTablesTypesComponent implements OnInit {
                 connectedWithType: this.coverForm.tables[index].formContents[i].code.connectedWithType,
                 arName: this.coverForm.tables[index].formContents[i].code.arName,
                 enName: this.coverForm.tables[index].formContents[i].code.enName,
+                arName1: '',
+                enName1:'',
                 IsDisabled: this.coverForm.tables[index].IsDisabled,
                 subCodeParentId: 0
               };
               dataDtosList.push(dataDtos);
               for (let r = 0; r < this.coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
 
-                if (index == 0) {
-
+                if (this.coverForm.tables[index].id == 126) {
+debugger
                 }
                 let dataDtosSub: IDataDto = {
                   TableId: this.coverForm.tables[index].id,
@@ -815,6 +823,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                   connectedWithType: this.coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+                  arName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].arName1,
+                  enName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].enName1,
                   IsDisabled: this.coverForm.tables[index].IsDisabled,
                   subCodeParentId: 0
                 };
@@ -838,6 +848,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                     connectedWithType: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
                     arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
                     enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    arName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName1,
+                    enName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName1,
                     IsDisabled: this.coverForm.tables[index].IsDisabled,
                     subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
                   };
@@ -848,7 +860,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
           }
         }
-
+debugger
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';

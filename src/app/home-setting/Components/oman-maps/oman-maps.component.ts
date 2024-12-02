@@ -170,7 +170,7 @@ export class OmanMapsComponent implements OnInit {
           id: selectedField.Id,
           code: selectedField.code
         };
-        debugger
+        
         // Check if the field already exists in the table's fields array
         this.codesList.push(code);
         this.omanGovernorates.codesId.push(code.id);
@@ -241,7 +241,7 @@ export class OmanMapsComponent implements OnInit {
       next: (res: any) => {
         this.noData = !res.Data || res.Data.length === 0;
         if (res.Data) {
-          debugger
+          
           this.omanGovernarates = res.Data.getOmanMapDtos;
           this.currentPage = res.Data.PageNumber;
           this.isLastPage = res.Data.LastPage;

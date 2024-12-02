@@ -62,10 +62,10 @@ export class SharedTransTableComponent {
   filtered: IDropdownList[] = [];
   filteredListDto: IFilteredListDto[] = [];
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
-  searchTermCountry:string="";
+  searchTermCountry: string = "";
   constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
     private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private auditRuleHomeService: AuditRuleHomeService) {}
+    private auditRuleHomeService: AuditRuleHomeService) { }
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
@@ -77,22 +77,110 @@ export class SharedTransTableComponent {
       this.GetSectors();
     });
   }
-  toggleDropdownCountry(index: number, indexSub: number) {
-    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
-      f => f.index === `${index}_${indexSub}`
-    );
-    filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+  toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
+
+    // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
+    if (filteredIndex === 0) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 1) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 2) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 3) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
   }
-  filterCountry(searchTerm :string,index: number, indexSub: number) {
-    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
-      f => f.index === `${index}_${indexSub}`
-    );
-    filteredListDto[0].filtered = this.countries.filter(country =>
-      country.arName.includes(searchTerm)
-    );
+
+
+  filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
+    
+
+    if (filteredType == "sector") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+
+    }
+    else if (filteredType == "country") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+      if (filteredIndex == 2) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 3) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+
+    }
   }
-  selectCountry(subCode:ISubCodeForm,county:IGetCountriesDto){
-    subCode.enName = county.arName
+  selectCountry(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
+  }
+  selectCountry1(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName1 = county.enName;
+    subCode.arName1 = county.arName;
+  }
+  selectSector(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
   }
   private getDefaultCoverForm(): ICoverFormDetailsDto {
     return {
@@ -114,12 +202,34 @@ export class SharedTransTableComponent {
       Type: 0,
     };
   }
-  getFiltered(index: number, indexSub: number): IDropdownList[] {
+  getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
+    
     // Filter the list based on index
-    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
-      f => f.index === `${index}_${indexSub}`
-    );
-    const filtered = filteredListDto[0].filtered;
+    let filtered: IDropdownList[] = [];
+    if (filteredIndex == 0) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 1) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 2) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 3) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
     // Map the filtered list to IDropdownList
     return filtered.map(f => ({
       id: f.id,            // Map the id correctly
@@ -128,12 +238,135 @@ export class SharedTransTableComponent {
       code: f.code         // Map code
     }));
   }
-  getFilteredIsDropdownOpen(index: number, indexSub: number): boolean {
+  getFilteredIsDropdownOpen(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+    
     // Filter the list based on index
-    const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
-      f => f.index === `${index}_${indexSub}`
-    );
-    const isDropdownOpen = filteredListDto[0].isDropdownOpen;
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 2) {
+      if (this.filteredListDto.length > 2) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_2`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 3) {
+      if (this.filteredListDto.length > 3) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_3`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
+  }
+  getFilteredIsDropdownOpenSector(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+    
+    // Filter the list based on index
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else{
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_1`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else{
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_0`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
     // Map the filtered list to IDropdownList
     return isDropdownOpen;
   }
@@ -145,6 +378,7 @@ export class SharedTransTableComponent {
         this.Loader = false;
         if (res.Data) {
           this.Loader = false;
+
           this.table = res.Data;
           this.table.formContents.forEach((formContent: any) => {
             formContent.values = formContent.values || [0, 0, 0];
@@ -213,7 +447,7 @@ export class SharedTransTableComponent {
     if (status < 3)
       this.BeginningForm();
   }
-  addSubCodeRow(code: ICode,index:number) {
+  addSubCodeRow(code: ICode, index: number, filteredType: string = "") {
     const subCode: ISubCodeForm = {
       arName: '',
       codeId: code.Id,
@@ -228,20 +462,56 @@ export class SharedTransTableComponent {
       IsTrueAndFalse: false,
       IsTransaction: false,
       IsHdd: false,
-      valueCheck: false
+      valueCheck: false,
+      arName1: '',
+      enName1: ''
     }
-    const oldSubLength = code.SubCodes.length;
+
     code.SubCodes.push(subCode);
     const newSubLength = code.SubCodes.length;
-    const filteredDto: IFilteredListDto = {
-      filtered: this.countries,
-      index: `${index}_${(newSubLength - 1)}`,
-      isDropdownOpen: false
-    };
-    this.filteredListDto.push(filteredDto);
-    debugger
+    if (filteredType == "sector") {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+    }
+    else if (filteredType == 'country') {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_2`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_3`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      
+    }
   }
-  
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -280,7 +550,7 @@ export class SharedTransTableComponent {
         }
         else {
           this.countries = [];
-          this.filtered  = [];
+          this.filtered = [];
         }
       },
       error: (err: any) => {
@@ -304,7 +574,9 @@ export class SharedTransTableComponent {
       IsTrueAndFalse: false,
       IsTransaction: false,
       IsHdd: false,
-      valueCheck: false
+      valueCheck: false,
+      arName1: '',
+      enName1: ''
     }
 
     SubCode.subCodes.push(subCode);
@@ -535,7 +807,9 @@ export class SharedTransTableComponent {
                               IsTrueAndFalse: false,
                               IsTransaction: false,
                               IsHdd: false,
-                              valueCheck: false
+                              valueCheck: false,
+                              arName1: item.arName1,
+                              enName1: item.enName1
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -563,7 +837,9 @@ export class SharedTransTableComponent {
                                 IsTrueAndFalse: false,
                                 IsTransaction: false,
                                 IsHdd: false,
-                                valueCheck: item.valueCheck
+                                valueCheck: item.valueCheck,
+                                arName1: item.arName1,
+                                enName1: item.enName1
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
@@ -728,8 +1004,8 @@ export class SharedTransTableComponent {
             }
           }
         }
-        let totalValues = new Array(valuesLength).fill(0); 
-        
+        let totalValues = new Array(valuesLength).fill(0);
+
         // Initialize totalValues based on length of values
         // Add the accumulated sums to the totalValues
         for (let l = 0; l < totalValues.length; l++) {
@@ -743,7 +1019,7 @@ export class SharedTransTableComponent {
         for (let index = 0; index < formContent.values.length; index++) {
           let sum = 0;
           for (let i = 0; i < formContent.code.SubCodes.length; i++) {
-            
+
             if (!formContent.code.SubCodes[i].IsTransaction)
               sum += formContent.code.SubCodes[i].values[index]
           }
@@ -765,7 +1041,7 @@ export class SharedTransTableComponent {
         localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
       }
     }
-    else{
+    else {
       if (this.coverForm.status < 3)
         this.BeginningForm();
     }

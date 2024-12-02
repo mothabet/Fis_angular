@@ -126,7 +126,9 @@ export class SharedOneYearWithPartsComponent {
       IsTrueAndFalse: false,
       IsTransaction:false,
       IsHdd:false,
-      valueCheck: false
+      valueCheck: false,
+      arName1:'',
+      enName1:''
     }
     code.SubCodes.push(subCode);
   }
@@ -370,7 +372,9 @@ export class SharedOneYearWithPartsComponent {
                               IsTrueAndFalse: false,
                               IsTransaction:false,
                               IsHdd: false,
-                              valueCheck: false
+                              valueCheck: false,
+                              arName1:'',
+                              enName1:''
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -398,7 +402,9 @@ export class SharedOneYearWithPartsComponent {
                                 IsTrueAndFalse: false,
                                 IsTransaction:false,
                                 IsHdd: false,
-                                valueCheck: item.valueCheck
+                                valueCheck: item.valueCheck,
+                                arName1:'',
+                                enName1:''
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
@@ -476,7 +482,9 @@ export class SharedOneYearWithPartsComponent {
       IsTrueAndFalse: false,
       IsTransaction:false,
       IsHdd: false,
-      valueCheck: false
+      valueCheck: false,
+      arName1:'',
+      enName1:''
     }
 
     SubCode.subCodes.push(subCode);

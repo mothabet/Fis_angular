@@ -69,7 +69,8 @@ export class AuditComponent {
   GetAllPercentage(): void {
     const observer = {
       next: (res: any) => {
-        debugger
+        
+        
         if (res.Data) {
           this.getPercentage = res.Data;
           this.changePercentage = this.getPercentage[this.getPercentage.length-1].percentage;
