@@ -944,9 +944,14 @@ export class SharedTransTableComponent {
   }
 
   handleParent(subCode: ISubCodeForm, formContent: IGetQuestionDto) {
+    debugger
     if (!subCode.IsTransaction) {
       this.calculateTransaction(subCode, this.coverForm.status);
-
+    }
+    else {
+      if (this.coverForm.status < 3)
+        this.BeginningForm();
+    }
       const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
       if (rule) {
         const ruleParts = rule.Rule.split('=');
@@ -983,7 +988,6 @@ export class SharedTransTableComponent {
         // Reset sums for current formContent
         let indexSums = new Array(valuesLength).fill(0);
         for (let j = 0; j < subCodes.length; j++) {
-          if (!subCodes[j].IsTransaction) {
             let subCodeQuestionCode = Number(subCodes[j].QuestionCode);
             if (numbers.includes(subCodeQuestionCode)) {
               let subCodeValues = subCodes[j].values;
@@ -1002,7 +1006,6 @@ export class SharedTransTableComponent {
                 }
               }
             }
-          }
         }
         let totalValues = new Array(valuesLength).fill(0);
 
@@ -1020,7 +1023,6 @@ export class SharedTransTableComponent {
           let sum = 0;
           for (let i = 0; i < formContent.code.SubCodes.length; i++) {
 
-            if (!formContent.code.SubCodes[i].IsTransaction)
               sum += formContent.code.SubCodes[i].values[index]
           }
           formContent.values[index] = sum
@@ -1040,11 +1042,7 @@ export class SharedTransTableComponent {
         localStorage.removeItem(`coverForm${this.coverForm.id}`);
         localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
       }
-    }
-    else {
-      if (this.coverForm.status < 3)
-        this.BeginningForm();
-    }
+    
   }
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);

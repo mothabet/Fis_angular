@@ -135,7 +135,7 @@
                     حفظ
                 </button>
                 <button
-                    *ngIf="(role == 'Researchers' || (role==='User' && permission.add)) && (coverForm.status <= 6 || coverForm.status == 8)"
+                    *ngIf="(role == 'Researchers' || (role==='User' && permission.add)) && (coverForm.status <= 8)"
                     type="button" class="btn btn-save" (click)="SaveData('Save',+companyId)">
                     <img src="./images/content-save-outline.png" alt="">
                     حفظ
