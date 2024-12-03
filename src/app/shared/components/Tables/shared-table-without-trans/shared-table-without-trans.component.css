@@ -38,3 +38,23 @@
 tr input[type="number"] {
     width: 115px !important;
 }
+
+  /* Dropdown styling */
+  .dropdown-menu {
+    width: 100%; /* Make the dropdown take the full width */
+    max-height: 200px; /* Set a max height for scrollable content */
+    overflow-y: auto; /* Add scroll if content exceeds max height */
+    text-align: right; /* Align the text to the right */
+    display: block;
+  }
+  
+  .dropdown-item {
+    display: block; /* Ensure each item appears in a new line */
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1; /* Add hover effect */
+  }
+  

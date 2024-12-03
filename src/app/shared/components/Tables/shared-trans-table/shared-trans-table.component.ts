@@ -109,8 +109,6 @@ export class SharedTransTableComponent {
       filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
   }
-
-
   filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
     
 
@@ -181,26 +179,6 @@ export class SharedTransTableComponent {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
-  }
-  private getDefaultCoverForm(): ICoverFormDetailsDto {
-    return {
-      id: 0,
-      typeQuarter: 0,
-      tables: [],
-      arName: "",
-      enName: "",
-      arNotes: "",
-      enNotes: "",
-      reviewYear: "",
-      status: 0,
-      quarterCoverData: {} as IQuarterCoverFormDataDto,
-      coverFormData: {} as ICoverFormData,
-      certification: {} as ICertificationDto,
-      codeActivity: "",
-      codeSectorName: "",
-      GeneralData: {} as IGeneralDataDto,
-      Type: 0,
-    };
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
     
@@ -369,6 +347,26 @@ export class SharedTransTableComponent {
     }
     // Map the filtered list to IDropdownList
     return isDropdownOpen;
+  }
+  private getDefaultCoverForm(): ICoverFormDetailsDto {
+    return {
+      id: 0,
+      typeQuarter: 0,
+      tables: [],
+      arName: "",
+      enName: "",
+      arNotes: "",
+      enNotes: "",
+      reviewYear: "",
+      status: 0,
+      quarterCoverData: {} as IQuarterCoverFormDataDto,
+      coverFormData: {} as ICoverFormData,
+      certification: {} as ICertificationDto,
+      codeActivity: "",
+      codeSectorName: "",
+      GeneralData: {} as IGeneralDataDto,
+      Type: 0,
+    };
   }
   GetTableById(id: number): void {
     this.Loader = true;
