@@ -805,7 +805,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               for (let r = 0; r < this.coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
 
                 if (this.coverForm.tables[index].id == 126) {
-debugger
+
                 }
                 let dataDtosSub: IDataDto = {
                   TableId: this.coverForm.tables[index].id,
@@ -860,7 +860,7 @@ debugger
 
           }
         }
-debugger
+
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';

@@ -942,7 +942,7 @@ export class SharedTransTableComponent {
   }
 
   handleParent(subCode: ISubCodeForm, formContent: IGetQuestionDto) {
-    debugger
+    
     if (!subCode.IsTransaction) {
       this.calculateTransaction(subCode, this.coverForm.status);
     }

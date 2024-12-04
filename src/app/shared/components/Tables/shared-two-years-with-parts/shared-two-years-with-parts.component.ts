@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
-import { ISubCode, ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
@@ -30,23 +30,23 @@ export class SharedTwoYearsWithPartsComponent {
   isChecked!: boolean;
   table: IGetTableDto = {
     id: 0,
-      arName: '',
-      enName: '',
-      arHeading: '',
-      enHeading: '',
-      arNotes: '',
-      enNotes: '',
-      Type: '',
-      Order: '',
-      formId: 0,
-      period: 0,
-      IsActive: false,
-      IsTotal: false,
-      totalTitleAr: '',
-      totalTitleEn: '',
-      IsDisabled: false,
-      formContents: [], // Initialize as an empty array
-      tableParts: []    // Initialize as an empty array
+    arName: '',
+    enName: '',
+    arHeading: '',
+    enHeading: '',
+    arNotes: '',
+    enNotes: '',
+    Type: '',
+    Order: '',
+    formId: 0,
+    period: 0,
+    IsActive: false,
+    IsTotal: false,
+    totalTitleAr: '',
+    totalTitleEn: '',
+    IsDisabled: false,
+    formContents: [], // Initialize as an empty array
+    tableParts: []    // Initialize as an empty array
   };
   coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm();
   tablePartsCount = 0;
@@ -57,12 +57,11 @@ export class SharedTwoYearsWithPartsComponent {
   formData!: IDataDto[];
   checkFormData: boolean = false;
   auditRules: IAuditRule[] = [];
-
   filteredListDto: IFilteredListDto[] = [];
   sectors!: IGetActivitiesDto[];
-  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService, 
-    private sharedServices: SharedService,private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private auditRuleHomeService : AuditRuleHomeService) {
+  constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
+    private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
+    private auditRuleHomeService: AuditRuleHomeService) {
 
 
   }
@@ -74,6 +73,7 @@ export class SharedTwoYearsWithPartsComponent {
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
+      this.GetSectors();
     });
   }
   private getDefaultCoverForm(): ICoverFormDetailsDto {
@@ -166,7 +166,6 @@ export class SharedTwoYearsWithPartsComponent {
     };
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
-
   toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
 
     // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
@@ -271,7 +270,7 @@ export class SharedTwoYearsWithPartsComponent {
     subCode.arName = county.arName;
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
-    debugger
+    
     // Filter the list based on index
     let filtered: IDropdownList[] = [];
     if (filteredIndex == 0) {
@@ -534,7 +533,7 @@ export class SharedTwoYearsWithPartsComponent {
         if (res.Data) {
           this.countries = res.Data.getCountryDtos;
         }
-        else{
+        else {
           this.countries = [];
         }
       },
@@ -570,16 +569,16 @@ export class SharedTwoYearsWithPartsComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
+      IsTransaction: false,
       IsHdd: false,
       valueCheck: false,
-      arName1:'',
-      enName1:''
+      arName1: '',
+      enName1: ''
     }
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm, _subCode: ISubCodeForm, indexSub: number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`
@@ -588,10 +587,10 @@ export class SharedTwoYearsWithPartsComponent {
           SubCode.values[i] -= _subCode.values[i];
         }
       }
-      
+
       // إزالة الـsubCode من المصفوفة
       SubCode.subCodes.splice(index, 1);
-      this.handelSupParent(formContent,SubCode,indexSub);
+      this.handelSupParent(formContent, SubCode, indexSub);
     }
   }
   GetFormData() {
@@ -803,11 +802,11 @@ export class SharedTwoYearsWithPartsComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
                               valueCheck: false,
-                              arName1:'',
-                              enName1:''
+                              arName1: item.arName1,
+                              enName1: item.enName1
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -820,7 +819,7 @@ export class SharedTwoYearsWithPartsComponent {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -833,11 +832,11 @@ export class SharedTwoYearsWithPartsComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck,
-                                arName1:'',
-                                enName1:''
+                                arName1: item.arName1,
+                                enName1: item.enName1
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
@@ -890,7 +889,7 @@ export class SharedTwoYearsWithPartsComponent {
       }
     })
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
@@ -900,10 +899,10 @@ export class SharedTwoYearsWithPartsComponent {
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      
+
       formContent.code.SubCodes[index] = subCode;
     }
-    else{
+    else {
       for (let i = 0; i < formContent.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         formContent.values[i] = 0;
@@ -916,12 +915,12 @@ export class SharedTwoYearsWithPartsComponent {
     if (!formContent.values) {
       formContent.values = [];
     }
-  
+
     // Initialize subCode values if not present
     if (!subCode.values) {
       subCode.values = [];
     }
-  
+
     // Calculate the sum of all subCode values for the given index
     let sum = 0;
     formContent.code.SubCodes.forEach((sub: any) => {
@@ -929,13 +928,13 @@ export class SharedTwoYearsWithPartsComponent {
         sum += sub.values[index];
       }
     });
-  
+
     // Update the parent formContent value with the sum
     formContent.values[index] = sum;
-  
+
     // Optionally, update any other logic or status here if needed
   }
-  
+
   handleParent(formContent: IGetQuestionDto) {
     this.changeStatus(this.coverForm.status);
     const rule = this.auditRules.find(r => r.codeParent == formContent.code.QuestionCode && r.Type == "1")
@@ -1002,33 +1001,33 @@ export class SharedTwoYearsWithPartsComponent {
         }
       }
     }
-    else{
-     for (let index = 0; index < formContent.values.length; index++) {
-       let sum = 0;
-       for (let i = 0; i < formContent.code.SubCodes.length; i++) {
-         sum+=formContent.code.SubCodes[i].values[index]
-       }
-       formContent.values[index] = sum
-     }
+    else {
+      for (let index = 0; index < formContent.values.length; index++) {
+        let sum = 0;
+        for (let i = 0; i < formContent.code.SubCodes.length; i++) {
+          sum += formContent.code.SubCodes[i].values[index]
+        }
+        formContent.values[index] = sum
+      }
     }
     let foundFormContent = this.table.formContents.find(f => f.Id == formContent.Id);
     if (foundFormContent) {
-        Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
+      Object.assign(foundFormContent, formContent); // Update the object with new formContent properties
     }
     const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
-              if (storedCoverForm) {
-                this.coverForm = JSON.parse(storedCoverForm);
-              }
-                const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
-                if (tableIndex !== -1) {
-                this.coverForm.tables[tableIndex]=this.table;
-                localStorage.removeItem(`coverForm${this.coverForm.id}`);
-                localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
-              }
+    if (storedCoverForm) {
+      this.coverForm = JSON.parse(storedCoverForm);
+    }
+    const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.table.id);
+    if (tableIndex !== -1) {
+      this.coverForm.tables[tableIndex] = this.table;
+      localStorage.removeItem(`coverForm${this.coverForm.id}`);
+      localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
+    }
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
-      if(formContent.code.QuestionCode !=="7021"){
+      if (formContent.code.QuestionCode !== "7021") {
         sum += (formContent.values[index] || 0);
       }
       return sum;
@@ -1042,7 +1041,7 @@ export class SharedTwoYearsWithPartsComponent {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        
+
         let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
         var coverForm!: ICoverFormDetailsDto
         if (storedTables) {
@@ -1072,13 +1071,13 @@ export class SharedTwoYearsWithPartsComponent {
   }
   clearIfZero(values: any[], index: number): void {
     if (values[index] === 0) {
-        values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
+      values[index] = null; // مسح القيمة إذا كانت تساوي صفرًا
     }
-}
+  }
 
-restoreIfNotPositive(values: number[], index: number): void {
+  restoreIfNotPositive(values: number[], index: number): void {
     if (values[index] === null) {
-        values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
+      values[index] = 0; // إعادة القيمة إلى صفر إذا كانت غير موجبة
     }
-}
+  }
 }

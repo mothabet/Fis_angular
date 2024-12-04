@@ -193,7 +193,7 @@ export class SharedTableWithoutTransComponent {
     subCode.arName = county.arName;
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
-    debugger
+    
     // Filter the list based on index
     let filtered: IDropdownList[] = [];
     if (filteredIndex == 0) {
@@ -805,7 +805,7 @@ export class SharedTableWithoutTransComponent {
                         }
                       }
                       else if (item.level == 3) {
-                        debugger
+                        
                         const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                         if (level1ItemIndex !== -1) {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);

@@ -287,33 +287,67 @@
                                                 style="text-wrap: balance; text-align: left !important;color: #133c8b; padding-left: 25px !important; direction: ltr;">
                                                 {{subCode.enName}} -</td>
                                             <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                                <select class="form-control"
-                                                    style="width: 100% !important; text-align:center"
-                                                    [(ngModel)]="subCode.arName">
-                                                    <option value="">Choose Activity --</option>
-                                                    <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                        {{activity.code}}-{{activity.enName}}</option>
-                                                </select>
+                                                <div class="dropdown"
+                                                    [class.show]="getFilteredIsDropdownOpenSector(index,indexSub,1)"
+                                                    style="width: 95%; position: relative;">
+                                                    <input type="text" id="searchableDropdown"
+                                                        class="form-control input-modal w-100"
+                                                        placeholder="Search for sector"
+                                                        (click)="toggleDropdownCountry(index,indexSub,1)"
+                                                        [(ngModel)]="subCode.enName"
+                                                        (input)="filterCountry(subCode.enName,index,indexSub,'sector',1)" />
+                                                    <ul class="dropdown-menu"
+                                                        *ngIf="getFilteredIsDropdownOpenSector(index,indexSub,1)"
+                                                        style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                        <li *ngFor="let sector of getFiltered(index,indexSub,1)"
+                                                            class="dropdown-item"
+                                                            (click)="selectSector(subCode,sector)">
+                                                            {{ sector.code }}-{{ sector.enName }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                             <td class="text-center" *ngIf="formContent.code.TypeId == 3">
                                                 <div style="display: flex;">
-                                                    <select class="form-control" [(ngModel)]="subCode.enName"
-                                                        (ngModelChange)="onEnCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center">
-                                                        <option value="">Choose Investor Nationality--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.enName">
-                                                            {{ country.enName }}
-                                                        </option>
-                                                    </select>
-                                                    <select class="form-control" [(ngModel)]="subCode.arName"
-                                                        (ngModelChange)="onArCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center;margin: 5px;">
-                                                        <option value="">Choose Source of money--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.arName">
-                                                            {{country.enName}}</option>
-                                                    </select>
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpen(index,indexSub,2)"
+                                                        style="width: 45%; position: relative;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="Search on investor nationality"
+                                                            (click)="toggleDropdownCountry(index,indexSub,2)"
+                                                            [(ngModel)]="subCode.enName"
+                                                            (input)="filterCountry(subCode.enName,index,indexSub,'country',2)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpen(index,indexSub,2)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let country of getFiltered(index,indexSub,2)"
+                                                                class="dropdown-item"
+                                                                (click)="selectCountry(subCode,country)">
+                                                                {{ country.enName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpen(index,indexSub,3)"
+                                                        style="width: 45%; position: relative;margin: 0px 5px;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="Search on Source of money"
+                                                            (click)="toggleDropdownCountry(index,indexSub,3)"
+                                                            [(ngModel)]="subCode.enName1"
+                                                            (input)="filterCountry(subCode.enName1,index,indexSub,'country',3)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpen(index,indexSub,3)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let country of getFiltered(index,indexSub,3)"
+                                                                class="dropdown-item"
+                                                                (click)="selectCountry1(subCode,country)">
+                                                                {{ country.enName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
                                                 </div>
                                             </td>
                                             <td class="text-center" style=" direction: ltr;"
@@ -330,11 +364,13 @@
                                                 <td class="text-center">
                                                     <div style="display: flex;justify-content: center;">
                                                         <input type="text" style="width: 220px !important;"
-                                                            [(ngModel)]="_subCode.arName" [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                            [(ngModel)]="_subCode.arName"
+                                                            [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
                                                             ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
                                                             ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
-                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))"/>
-                                                        <button *ngIf="!((subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))" />
+                                                        <button
+                                                            *ngIf="!((subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
                                                         ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
                                                         ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
                                                         ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029')))"
@@ -360,10 +396,11 @@
                                                 <td class="text-center" style=" direction: ltr;">
                                                     <div style="display: flex;justify-content: center;">
                                                         <input type="text" style="width: 220px !important;"
-                                                            [(ngModel)]="_subCode.enName" [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
+                                                            [(ngModel)]="_subCode.enName"
+                                                            [disabled]="(subCode.QuestionCode=='50324' && (_subCode.QuestionCode=='503241'||_subCode.QuestionCode=='503242'||_subCode.QuestionCode=='503243' 
                                                             ||_subCode.QuestionCode=='503299')) || (subCode.QuestionCode=='5020' && (_subCode.QuestionCode=='5021'
                                                             ||_subCode.QuestionCode=='5022'||_subCode.QuestionCode=='5023' ||_subCode.QuestionCode=='5024'
-                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))"/>
+                                                            ||_subCode.QuestionCode=='5025'||_subCode.QuestionCode=='5029'))" />
                                                     </div>
                                                 </td>
                                             </tr>

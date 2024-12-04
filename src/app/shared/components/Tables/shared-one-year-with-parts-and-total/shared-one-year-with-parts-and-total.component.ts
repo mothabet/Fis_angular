@@ -6,12 +6,14 @@ import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { IDataDto } from 'src/app/shared/Dtos/FormDataDto';
+import { IFilteredListDto } from 'src/app/shared/Dtos/TablesDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 
@@ -34,6 +36,8 @@ export class SharedOneYearWithPartsAndTotalComponent {
   formData!: IDataDto[];
   checkFormData: boolean = false;
   auditRules: IAuditRule[] = [];
+  filteredListDto: IFilteredListDto[] = [];
+  sectors!: IGetActivitiesDto[];
   constructor(private route: ActivatedRoute, private sectorsAndActivitiesServices: SectorAndActivitiesService, private formServices: FormService,
     private sharedServices: SharedService, private auditRuleHomeService: AuditRuleHomeService, private authService: LoginService) {
   }
@@ -45,6 +49,7 @@ export class SharedOneYearWithPartsAndTotalComponent {
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
+      this.GetSectors();
     });
   }
   onArCountryChange(subCode: any) {
@@ -110,27 +115,354 @@ export class SharedOneYearWithPartsAndTotalComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  addSubCodeRow(code: ICode) {
+  GetSectors() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.sectors = res.Data.getSectorsDtos;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
+  }
+  toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
+
+    // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
+    if (filteredIndex === 0) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 1) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 2) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 3) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+  }
+  filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
+
+
+    if (filteredType == "sector") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+
+    }
+    else if (filteredType == "country") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+      if (filteredIndex == 2) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 3) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+
+    }
+  }
+  selectCountry(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
+  }
+  selectCountry1(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName1 = county.enName;
+    subCode.arName1 = county.arName;
+  }
+  selectSector(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
+  }
+  getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
+    
+    // Filter the list based on index
+    let filtered: IDropdownList[] = [];
+    if (filteredIndex == 0) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 1) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 2) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 3) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    // Map the filtered list to IDropdownList
+    return filtered.map(f => ({
+      id: f.id,            // Map the id correctly
+      arName: f.arName,    // Map arName
+      enName: f.enName,    // Map enName
+      code: f.code         // Map code
+    }));
+  }
+  getFilteredIsDropdownOpen(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+
+    // Filter the list based on index
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 2) {
+      if (this.filteredListDto.length > 2) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_2`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 3) {
+      if (this.filteredListDto.length > 3) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_3`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
+  }
+  getFilteredIsDropdownOpenSector(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+
+    // Filter the list based on index
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else {
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_1`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else {
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_0`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
+  }
+  addSubCodeRow(code: ICode, index: number, filteredType: string = "") {
     const subCode: ISubCodeForm = {
       arName: '',
-      codeId: 0,
+      codeId: code.Id,
       enName: '',
       Id: 0,
       QuestionCode: '',
       subCodes: [],
-      values: Array(this.tablePartsCount * 2).fill(0),
+      values: [0, 0],
       connectedWithId: 0,
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
-      IsHdd:false,
+      IsTransaction: false,
+      IsHdd: false,
       valueCheck: false,
-      arName1:'',
-      enName1:''
+      arName1: '',
+      enName1: ''
     }
     code.SubCodes.push(subCode);
+    const newSubLength = code.SubCodes.length;
+    if (filteredType == "sector") {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+    }
+    else if (filteredType == 'country') {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_2`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_3`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+
+    }
   }
+
   GetActivites() {
     const observer = {
       next: (res: any) => {
@@ -410,8 +742,8 @@ export class SharedOneYearWithPartsAndTotalComponent {
                               IsTransaction:false,
                               IsHdd: false,
                               valueCheck: false,
-                              arName1:'',
-                              enName1:''
+                              arName1: item.arName1,
+                              enName1: item.enName1
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -440,8 +772,8 @@ export class SharedOneYearWithPartsAndTotalComponent {
                                 IsTransaction:false,
                                 IsHdd: false,
                                 valueCheck: item.valueCheck,
-                                arName1:'',
-                                enName1:''
+                                arName1: item.arName1,
+                                enName1: item.enName1
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
