@@ -94,5 +94,5 @@ export interface SendCompanyFormsDto {
     companiesDetails:string;
     completedBy:string;
     telephoneNo:string;
-    dateOfCompletion:string;
+    dateOfCompletion:Date;
 }

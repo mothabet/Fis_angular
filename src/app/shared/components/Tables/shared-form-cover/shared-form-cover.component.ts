@@ -144,7 +144,7 @@ export class SharedFormCoverComponent implements OnInit {
   Wilayat: IDropdownList[] = []
   sectorCode: string="";
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService,
-    private auditRuleHomeService: AuditRuleHomeService, private companyHomeServices: CompanyHomeService
+    private auditRuleHomeService: AuditRuleHomeService
     , private sharedService: SharedService, private sharedServices: SharedService, private activeRouter: ActivatedRoute, 
     private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 

@@ -145,10 +145,10 @@
                     ارسال
                 </button>
                 <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Complete)) && (coverForm.status < 7 || coverForm.status == 8)" type="button" class="btn btn-accept"
-                    (click)="CompleteForm()">
+                (click)="SaveData('Complete',+companyId)">
                     إكتمال
                 </button>
-                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Close)) && (coverForm.status <= 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
+                <button *ngIf="(role == 'Researchers' || (role==='User' && permission.Close)) && (coverForm.status < 6 || coverForm.status == 8)" type="button" class="btn btn-exit"
                     (click)="CloseForm()">
                     إغلاق
                 </button>

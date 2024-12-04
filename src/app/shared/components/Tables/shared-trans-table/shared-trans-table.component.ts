@@ -6,11 +6,13 @@ import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule
 import { LoginService } from 'src/app/auth/services/login.service';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
 import { ISubCodeForm } from 'src/app/code/Dtos/SubCodeHomeDto';
+import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ICertificationDto, ICoverFormDetailsDto, IGetActivitiesDto, IGetCountriesDto, IGetFormDto, IQuarterCoverFormDataDto } from 'src/app/Forms/Dtos/FormDto';
 import { IGetQuestionDto } from 'src/app/Forms/Dtos/QuestionDto';
 import { IGetTableDto } from 'src/app/Forms/Dtos/TableDto';
-import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
+import { IGeneralDataDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
 import { FormService } from 'src/app/Forms/Services/form.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 import { ICoverFormData, IDataDto } from 'src/app/shared/Dtos/FormDataDto';
@@ -63,19 +65,186 @@ export class SharedTransTableComponent {
   filteredListDto: IFilteredListDto[] = [];
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   searchTermCountry: string = "";
+  company: ICompany = {
+    activityId: 0,
+    arActivityName: '',
+    enActivityName: '',
+    address: '',
+    arName: '',
+    enName: '',
+    compRegNumber: '',
+    municipalityNumber: '',
+    fax: '',
+    telNumber: '',
+    activity: '',
+    subActivity: '',
+    governorates: '',
+    governoratesId: 0,
+    sectorId: 0,
+    mailBox: '',
+    wilayatId: 0,
+    wilayat: '',
+    embeded: '',
+    webSite: '',
+    postalCode: '',
+    phoneNumber: '',
+    email: '',
+    status: '',
+    id: 0,
+    researcherId: '',
+    accountingPeriod: new Date(),
+    legalType: '',
+    pathImgProfile: '',
+    researcherArName: '',
+    researcherMandateArName: '',
+    activityName: '',
+    sectorName: '',
+    subActivityName: '',
+    institutionHeadquarters: '',
+    completionAccPeriod: new Date(),
+    dateOfWork: new Date(),
+    institutionVlaue: '',
+    sectorCode: '',
+    activityCode: '',
+    subActivityCode: '',
+    companyEmails: []
+  };
+  sectorCode: string="";
+  workData: IWorkDataQuesDto[] = [
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '', isSelect: false },
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '', isSelect: false },
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '', isSelect: false },
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '', isSelect: false },
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '', isSelect: false },
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '', isSelect: false },
+    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '', isSelect: false },
+    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '', isSelect: false },
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '', isSelect: false },
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '', isSelect: false },
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '', isSelect: false },
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '', isSelect: false },
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '', isSelect: false },
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '', isSelect: false },
+    { arName: 'رمز القطاع : ', enName: ' :  sector Code', inputValue: '', isSelect: false },
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)', inputValue: '', isSelect: false },
+  ];
+  generalDataDto: IGeneralDataDto = {
+    ChekInfo: 0,
+    CompanyInfo: this.workData,
+    from: '',
+    to: '',
+    describeMainActivity: '',
+    dataSource: 0,
+    countryId:0
+  };
   constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
     private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private auditRuleHomeService: AuditRuleHomeService) { }
+    private companyServices: CompanyHomeService,private auditRuleHomeService: AuditRuleHomeService) { }
   ngOnInit() {
     this.route.paramMap.subscribe(async params => {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
+      this.GetCompanyById(+this.companyId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
       this.GetSectors();
     });
+  }
+  GetCompanyById(id: number) {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          
+          this.company = res.Data;
+          this.sectorCode = this.company.sectorCode;
+          this.workData.forEach((item) => {
+            if (item.arName.includes('اسم  المنشأة : ')) {
+              item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes("الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ")) {
+
+              item.inputValue = this.company.legalType;
+              item.isSelect = true;
+            }
+            else if (item.arName.includes('الموقع الإلكتروني : ')) {
+
+              item.inputValue = this.company.webSite;
+            }
+            else if (item.arName.includes('رقم الفاكس : ')) {
+
+              item.inputValue = this.company.fax;
+            }
+            else if (item.arName.includes('البريد الالكترونى : ')) {
+
+              item.inputValue = this.company.companyEmails[0].Email;
+            }
+            else if (item.arName.includes('رقم الهاتف : ')) {
+
+              item.inputValue = this.company.phoneNumber;
+            }
+            else if (item.arName.includes('الرمز البريدى : ')) {
+
+              item.inputValue = this.company.postalCode;
+            }
+            else if (item.arName.includes('رقم صندوق البريد : ')) {
+
+              item.inputValue = this.company.mailBox;
+            }
+            else if (item.arName.includes('الولاية : ')) {
+              item.inputValue = this.company.wilayatId.toString();
+              item.isSelect = true;
+
+            }
+            else if (item.arName.includes('المحافظة : ')) {
+
+              item.inputValue = this.company.governoratesId.toString();
+              item.isSelect = true;
+            }
+            else if (item.arName.includes('عنوان المنشاة : ')) {
+
+              item.inputValue = this.company.address;
+            }
+            else if (item.arName.includes('النشاط الثانوى : ')) {
+
+              item.inputValue = this.company.subActivityCode;
+            }
+            else if (item.arName.includes('النشاط الاقتصادى الرئيسى : ')) {
+
+              item.inputValue = this.company.activityCode;
+            }
+            else if (item.arName.includes('رقم الترخيص البلدي : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+            else if (item.arName.includes('رقم السجل التجارى : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+            
+          });
+          let generalData = localStorage.getItem(`generalData`);
+          if (generalData) {
+            this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            this.workData = this.coverForm.GeneralData.CompanyInfo;
+            
+          }
+          else {
+            this.coverForm.GeneralData = this.generalDataDto;
+            this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
+            localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
+          }
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.companyServices.GetCompanyById(id).subscribe(observer);
   }
   toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
 
