@@ -223,7 +223,6 @@ export class ReportContentsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.reports = res.Data;
-          console.log(this.reports)
         }
         else {
           res.Data = []

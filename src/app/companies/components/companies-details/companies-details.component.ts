@@ -166,7 +166,7 @@ export class CompaniesDetailsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.company = res.Data;
-          console.log(this.company)
+
           if (this.company.legalType == "1") {
             this.legalTypeName = "منشاة فردية"
           }

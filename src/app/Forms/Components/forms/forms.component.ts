@@ -1025,7 +1025,6 @@ export class FormsComponent implements OnInit {
           }
           this.resetTable();
           this.GetAllForms(this.yearSelect,this.typeSelect);
-          console.log(res);
           this.Loader = false;
           Swal.fire({
             icon: 'success',
@@ -1043,8 +1042,6 @@ export class FormsComponent implements OnInit {
     } else {
       Object.keys(this.tableForm.controls).forEach(controlName => {
         const control = this.tableForm.get(controlName);
-        console.log(`${controlName} Valid:`, control!.valid);
-        console.log(`${controlName} Errors:`, control!.errors);
       });
       Swal.fire({
         icon: 'error',
@@ -1290,7 +1287,7 @@ export class FormsComponent implements OnInit {
           }
           this.resetQuestion();
           this.GetAllForms(this.yearSelect,this.typeSelect);
-          console.log(res);
+
           this.Loader = false;
           Swal.fire({
             icon: 'success',

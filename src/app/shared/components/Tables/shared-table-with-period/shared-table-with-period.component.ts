@@ -656,7 +656,6 @@ export class SharedTableWithPeriodComponent {
       localStorage.removeItem(`coverForm${this.coverForm.id}`);
       localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
     }
-    console.log(formContent)
   }
   changeStatus(status: number, formContent: IGetQuestionDto, level: number, indexFormContent: number = 0) {
     

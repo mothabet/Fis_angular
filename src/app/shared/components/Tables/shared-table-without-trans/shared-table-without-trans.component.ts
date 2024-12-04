@@ -360,6 +360,70 @@ export class SharedTableWithoutTransComponent {
     // Map the filtered list to IDropdownList
     return isDropdownOpen;
   }
+  addSubCodeRow(code: ICode, index: number, filteredType: string = "") {
+    const subCode: ISubCodeForm = {
+      arName: '',
+      codeId: code.Id,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: [],
+      values: [0, 0],
+      connectedWithId: 0,
+      connectedWithLevel: 0,
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsTransaction: false,
+      IsHdd: false,
+      valueCheck: false,
+      arName1: '',
+      enName1: ''
+    }
+    code.SubCodes.push(subCode);
+    const newSubLength = code.SubCodes.length;
+    if (filteredType == "sector") {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+    }
+    else if (filteredType == 'country') {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_2`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_3`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+
+    }
+  }
+
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
@@ -441,71 +505,7 @@ export class SharedTableWithoutTransComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  addSubCodeRow(code: ICode, index: number, filteredType: string = "") {
-    const subCode: ISubCodeForm = {
-      arName: '',
-      codeId: code.Id,
-      enName: '',
-      Id: 0,
-      QuestionCode: '',
-      subCodes: [],
-      values: [0, 0],
-      connectedWithId: 0,
-      connectedWithLevel: 0,
-      connectedWithType: '',
-      IsTrueAndFalse: false,
-      IsTransaction: false,
-      IsHdd: false,
-      valueCheck: false,
-      arName1: '',
-      enName1: ''
-    }
-    code.SubCodes.push(subCode);
-    debugger
-    const newSubLength = code.SubCodes.length;
-    if (filteredType == "sector") {
-      let filteredDto: IFilteredListDto = {
-        filtered: this.sectors,
-        index: `${index}_${(newSubLength - 1)}_0`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-      filteredDto = {
-        filtered: this.sectors,
-        index: `${index}_${(newSubLength - 1)}_1`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-    }
-    else if (filteredType == 'country') {
-      let filteredDto: IFilteredListDto = {
-        filtered: this.countries,
-        index: `${index}_${(newSubLength - 1)}_0`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-      filteredDto = {
-        filtered: this.countries,
-        index: `${index}_${(newSubLength - 1)}_1`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-      filteredDto = {
-        filtered: this.countries,
-        index: `${index}_${(newSubLength - 1)}_2`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-      filteredDto = {
-        filtered: this.countries,
-        index: `${index}_${(newSubLength - 1)}_3`,
-        isDropdownOpen: false
-      };
-      this.filteredListDto.push(filteredDto);
-
-    }
-  }
-
+  
   removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
     const index = formContent.code.SubCodes.indexOf(subCode);
     if (index !== -1) {

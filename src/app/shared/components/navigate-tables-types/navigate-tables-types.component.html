@@ -121,23 +121,23 @@
                 </button>
                 <button *ngIf="role == 'Company'" type="button" class="btn btn-add" data-bs-toggle="modal"
                     data-bs-target="#addCompany">
-                    <img src="./images/printer-outline.png" alt="">
+                    <img src="../../../../assets/images/printer-outline.png" alt="">
                     طباعة pdf
                 </button>
                 <button *ngIf="role == 'Company'" type="button" class="btn btn-download">
-                    <img src="./images/file-excel-outline.png" alt="">
+                    <img src="../../../../assets/images/file-excel-outline.png" alt="">
                     تنزيل xls
                 </button>
                 <button
                     *ngIf="(role == 'Company' && (coverForm.status <= 5 || coverForm.status == 8) )"
                     type="button" class="btn btn-save" (click)="SaveData('Save',0)">
-                    <img src="./images/content-save-outline.png" alt="">
+                    <img src="../../../../assets/images/content-save-outline.png" alt="">
                     حفظ
                 </button>
                 <button
                     *ngIf="(role == 'Researchers' || (role==='User' && permission.add)) && (coverForm.status <= 8)"
                     type="button" class="btn btn-save" (click)="SaveData('Save',+companyId)">
-                    <img src="./images/content-save-outline.png" alt="">
+                    <img src="../../../../assets/images/content-save-outline.png" alt="">
                     حفظ
                 </button>
                 <button *ngIf="(role == 'Company' || (role==='User' && permission.Approve)) && (coverForm.status <= 5 || coverForm.status == 8)" type="button" class="btn btn-accept"

@@ -529,7 +529,6 @@ export class CodeHomeComponent {
         if (res.Data) {
           
           this.subCode = res.Data;
-          console.log(this.subCode);
           this.enName = this.subCode.enName;
           this.QuestionCode = this.subCode.QuestionCode;
         }

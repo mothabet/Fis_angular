@@ -36,7 +36,7 @@ export class HomeMapComponent implements OnInit{
   }
 
   onRegionClick(regionId: string): void {
-    console.log(`Clicked on region: ${regionId}`);
+
     // يمكنك هنا تنفيذ أي إجراء بناءً على الجزء الذي تم النقر عليه
     alert(`You clicked on ${regionId}`);
   }

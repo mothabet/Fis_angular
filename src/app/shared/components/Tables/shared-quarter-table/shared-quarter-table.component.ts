@@ -194,8 +194,6 @@ export class SharedQuarterTableComponent {
   }
 
   addSubCodeRow(code: ICode) {
-    console.log(this.countries)
-    console.log(this.coverForm)
     const subCode: ISubCodeForm = {
       arName: '',
       codeId: code.Id,
@@ -831,6 +829,5 @@ export class SharedQuarterTableComponent {
       localStorage.removeItem(`coverForm${this.coverForm.id}`);
       localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
     }
-    console.log(formContent)
   }
 }

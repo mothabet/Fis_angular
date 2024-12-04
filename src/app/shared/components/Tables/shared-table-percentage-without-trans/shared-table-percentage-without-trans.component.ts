@@ -653,7 +653,6 @@ export class SharedTablePercentageWithoutTransComponent {
                 localStorage.removeItem(`coverForm${this.coverForm.id}`);
                 localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
               }
-    console.log(formContent)
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
