@@ -51,8 +51,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of dataMaximizeDetails.dataMaximizeDetailsItemsDtos"
-                        [hidden]="item.reviewYear === dataMaximizeDetails?.reviewYear">
+                    <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[0].dataMaximizeDetailsItemsDtos">
                         <td class="text-center">{{ item.sectorCode }}</td>
                         <td class="text-center">{{ item.sectorName }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>
@@ -90,8 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of dataMaximizeDetails.dataMaximizeDetailsItemsDtos"
-                        [hidden]="item.reviewYear !== dataMaximizeDetails?.reviewYear">
+                    <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[1].dataMaximizeDetailsItemsDtos">
                         <td class="text-center">{{ item.sectorCode }}</td>
                         <td class="text-center">{{ item.sectorName }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>

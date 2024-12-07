@@ -49,97 +49,71 @@
     <!-- start content -->
     <div class="content companies report-table" style="margin-bottom: 15px;max-width: 74rem;"
         *ngFor="let report of reports">
-        <div class="header d-flex justify-content-between align-items-center" style="width: 100%;">
-            <div class="mb-2 d-flex flex-column justify-content-center align-items-center text-center"
-                style="width: 90%;">
-                <!-- <div class="mb-2">سلطنة عمان / Sultanate of OMAN</div>
-                <div class="mb-2">National Center for Statistics & Information / المركز الوطني للإحصاء و المعلومات -->
-                <!-- </div> -->
-                <div class="mb-2">{{report.part}}</div>
-                <ng-container *ngIf="report.reportType == 'FormContent' || report.reportType == 'TablesReport'">
-                    <div class="mb-2" *ngFor="let detail of report.reportDetails">
-                        <ng-container *ngIf="detail.EnTableName != 'Years'">
-                            {{ detail.ArTableName }} / (
-                            <span *ngFor="let field of detail.Fields; let i = index">
-                                {{ field.name }}<span *ngIf="i < detail.Fields.length - 1"> , </span>
-                            </span>
-                            )
-                        </ng-container>
-                        <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length > 1">
-                            السنه / (من {{detail.Fields[0].name}} إلى {{detail.Fields[(detail.Fields.length -
-                            1)].name}})
-                        </ng-container>
-                        <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length == 1">
-                            السنه / ({{detail.Fields[0].name}})
-                        </ng-container>
+        <div class="header-container d-flex justify-content-between align-items-center" style="width: 100%;">
+            <!-- الحاوية الأولى -->
+            <div class="header col-sm-3 d-flex flex-column justify-content-center align-items-center text-center"
+                style="padding: 10px;">
+                <div class="mb-2">
+                    <div class="sidebar-logo" id="logo">
+                        <img src="../../../../assets/images/NationalCenterStatisticsLogoList.png" class="img-fluid"
+                            alt="" />
                     </div>
-                </ng-container>
-                <ng-container *ngIf="report.reportType !== 'FormContent' && report.reportType !== 'TablesReport'">
-                    <div *ngIf="report.reportDetails.length > 0">
-                        <span>تقرير عن ({{ report.reportDetails[0].ArTableName }})</span>
-                        <div class="mb-2" *ngIf="report.reportDetails.length > 1">
-                            بحث ب (<span>{{ getArTableNames(report) }}</span>)
-                        </div>
-                        <div class="mb-2" *ngIf="getReportYear(report)">
-                            السنة (<span>{{ getReportYear(report) }}</span>)
-                        </div>
-                    </div>
-                </ng-container>
-
-
-                <!-- <div class="mb-2" *ngIf="report.fields.length> 0 && report.seconedTable != 'Years' && report.reportType == 'FormContent'">
-                    ({{(report.fields[0][3]).value }})
+                    <div class="mb-2">{{report.part}}</div>
                 </div>
-                <div class="mb-2" *ngIf="report.fields.length >0 && report.reportType != 'FormContent'">جدول ({{
-                    (report.fields[0][1]).value }})</div>
-                <div class="mb-2" *ngIf="report.fields.length >0">السنة ({{ (report.fields[0][0]).value }})</div>
-                <div class="mb-2" *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
-                    بحث بالسنة
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep' && report.reportType != 'FormContent'">
-                    الانشطة /
-                    <ng-container *ngFor="let field of getUniqueActivities(report.fields); let isLast = last">
-                        {{ field.value }}<span *ngIf="!isLast"> - </span>
-                    </ng-container>
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'ActivitiesRep' && report.reportType == 'FormContent'">
-                    بحث بالانشطة
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep' && report.reportType != 'FormContent'">
-                    الشركات /
-                    <ng-container *ngFor="let field of getUniqueCompanies(report.fields); let isLast = last">
-                        {{ field.value }}<span *ngIf="!isLast"> - </span>
-                    </ng-container>
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'CompaniesRep' && report.reportType == 'FormContent'">
-                    بحث بالشركات
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep' && report.reportType != 'FormContent'">
-                    القطاعات /
-                    <ng-container *ngFor="let field of getUniqueSectors(report.fields); let isLast = last">
-                        {{ field.value }}<span *ngIf="!isLast"> - </span>
-                    </ng-container>
-                </div>
-
-                <div class="mb-2" *ngIf="report.seconedTable == 'SectorsRep' && report.reportType == 'FormContent'">
-                    بحث بالقطاعات
-                </div> -->
             </div>
 
-            <div class="btns d-flex">
-                <div class="d-flex flex-grow-1 gap-2 btns-group ">
-                    <button type="button" class="btn btn-send" (click)="DeleteReportContent(report.id)">
-                        <i class="fa-solid fa-trash"></i>
+            <!-- الحاوية الثانية -->
+            <div class="header col-sm-9 d-flex justify-content-between align-items-center text-center"
+                style="padding: 10px;">
+                <!-- الديف الخاص بالمحتوى -->
+                <div class="d-flex flex-column justify-content-center align-items-center text-center"
+                    style="flex: 1;background-color: white;">
+                    <ng-container *ngIf="report.reportType == 'FormContent' || report.reportType == 'TablesReport'">
+                        <div class="mb-2" *ngFor="let detail of report.reportDetails">
+                            <ng-container *ngIf="detail.EnTableName != 'Years'">
+                                {{ detail.ArTableName }} / (
+                                <span *ngFor="let field of detail.Fields; let i = index">
+                                    {{ field.name }}<span *ngIf="i < detail.Fields.length - 1"> , </span>
+                                </span>
+                                <span *ngIf="detail.Fields.length == 0">
+                                    كل {{ detail.ArTableName }}
+                                </span>
+                                )
+                            </ng-container>
+                            <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length > 1">
+                                السنه / (من {{detail.Fields[0].name}} إلى {{detail.Fields[(detail.Fields.length -
+                                1)].name}})
+                            </ng-container>
+                            <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length == 1">
+                                السنه / ({{detail.Fields[0].name}})
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="report.reportType !== 'FormContent' && report.reportType !== 'TablesReport'">
+                        <div *ngIf="report.reportDetails.length > 0">
+                            <span>تقرير عن ({{ report.reportDetails[0].ArTableName }})</span>
+                            <div class="mb-2" *ngIf="report.reportDetails.length > 1">
+                                بحث ب (<span>{{ getArTableNames(report) }}</span>)
+                            </div>
+                            <div class="mb-2" *ngIf="getReportYear(report)">
+                                السنة (<span>{{ getReportYear(report) }}</span>)
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <!-- زر الحذف -->
+                <div class="btns">
+                    <button type="button" class="btn btn-send d-flex align-items-center"
+                        (click)="DeleteReportContent(report.id)">
+                        <i class="fa-solid fa-trash me-2"></i>
                         حذف
                     </button>
                 </div>
             </div>
+
         </div>
+
         <div>
             <div class="table-responsive company-table" style="max-height: 400px; overflow-y: auto;">
                 <table class="table table-borderless scrollable-table"
@@ -174,7 +148,7 @@
                 <app-two-years-with-parts-rep [report]="report"
                     *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][10]?.value == 4 || report.fields[0][11]?.value == 4) && (report.fields[0][12]?.value == 'twoYearsWithParts' || report.fields[0][11]?.value == 'twoYearsWithParts')"></app-two-years-with-parts-rep>
                 <app-table-with-periods-rep [report]="report"
-                    *ngIf="report.reportType == 'TablesReport' && (report.fields[0][6]?.value == 5 || report.fields[0][7]?.value == 5) && (report.fields[0][8]?.value == 'period' || report.fields[0][7]?.value == 'period')"></app-table-with-periods-rep>
+                    *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][6]?.value == 5 || report.fields[0][7]?.value == 5) && (report.fields[0][8]?.key == 'tablePeriod' || report.fields[0][7]?.key == 'tablePeriod')"></app-table-with-periods-rep>
                 <app-percentage-without-trans-rep [report]="report"
                     *ngIf="report.reportType == 'TablesReport' && report.fields.length > 0 && (report.fields[0][9]?.value == 6 || report.fields[0][10]?.value == 6) && (report.fields[0][11]?.value == 'percentage' || report.fields[0][10]?.value == 'percentage')"></app-percentage-without-trans-rep>
                 <app-one-year-with-parts-and-total-rep [report]="report"
@@ -205,6 +179,14 @@
                                     *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length > 1">
                                     {{detail.name}}</th>
                             </ng-container>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                {{report.reportDetails[1].Fields[0].name}}
+                            </th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                {{+report.reportDetails[1].Fields[0].name - 1}}
+                            </th>
                         </tr>
                     </thead>
                     <tbody *ngIf="report.seconedTable == 'ActivitiesRep' || report.seconedTable == 'SectorsRep'">
@@ -214,8 +196,19 @@
                             <td>{{ list.activityCode}}</td> <!-- كود النشاط -->
                             <td>{{ list.activityArName }}</td>
                             <!-- النشاط باللغة العربية -->
-                            <td style="text-align: center;" *ngFor="let item of list.years">
-                                {{ item.value }}
+                            <ng-container
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length > 1">
+                                <td style="text-align: center;" *ngFor="let item of list.years">
+                                    {{ item.value }}
+                                </td>
+                            </ng-container>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                {{list.years[0].value}}
+                            </td>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                565483
                             </td>
                         </tr>
                     </tbody>
@@ -226,8 +219,19 @@
                             <td>{{ list.activityArName}}</td> <!-- كود النشاط -->
                             <td>{{ list.activityCode }}</td>
                             <!-- النشاط باللغة العربية -->
-                            <td style="text-align: center;" *ngFor="let item of list.years">
-                                {{ item.value }}
+                            <ng-container
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length > 1">
+                                <td style="text-align: center;" *ngFor="let item of list.years">
+                                    {{ item.value }}
+                                </td>
+                            </ng-container>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                {{list.years[0].value}}
+                            </td>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                565483
                             </td>
                         </tr>
                     </tbody>
@@ -235,19 +239,33 @@
                         <tr *ngFor="let list of transformFields(report.fields,report); let i = index">
                             <td style="text-align: center;" scope="col">{{ i + 1 }}</td>
                             <td style="text-align: center;">{{ list.codeArName }}</td>
-                            <td style="text-align: center;" *ngFor="let item of list.years">
-                                {{ item.value }}
+                            <ng-container
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length > 1">
+                                <td style="text-align: center;" *ngFor="let item of list.years">
+                                    {{ item.value }}
+                                </td>
+                            </ng-container>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                {{list.years[0].value}}
+                            </td>
+                            <td style="text-align: center;"
+                                *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1">
+                                565483
                             </td>
                         </tr>
                     </tbody>
                     <tfoot *ngIf="report.seconedTable == 'Years' && report.reportType == 'FormContent'">
                         <tr>
-                            <td colspan="2" style="text-align: center; font-weight: bold;background-color: #56bfb533;">الإجمالي</td>
+                            <td colspan="2" style="text-align: center; font-weight: bold;background-color: #56bfb533;">
+                                الإجمالي</td>
 
                             <td style="text-align: center;background-color: #56bfb533;"
                                 *ngFor="let total of getColumnTotals(report.fields,report)">
                                 {{ total.total }}
                             </td>
+                            <td *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1"
+                                style="text-align: center;background-color: #56bfb533;">565483</td>
                         </tr>
                     </tfoot>
                     <tfoot *ngIf="report.seconedTable != 'Years'">
@@ -255,12 +273,17 @@
                             <td colspan="4" style="text-align: center;background-color: #56bfb533;"
                                 *ngIf="report.seconedTable != 'Years' && report.seconedTable != 'CompaniesRep'">الإجمالي
                             </td>
-                            <td colspan="2" style="text-align: center;background-color: #56bfb533;" *ngIf="report.seconedTable == 'Years' ">الإجمالي
+                            <td colspan="2" style="text-align: center;background-color: #56bfb533;"
+                                *ngIf="report.seconedTable == 'Years' ">الإجمالي
                             </td>
-                            <td colspan="4" style="text-align: center;background-color: #56bfb533;" *ngIf="report.seconedTable == 'CompaniesRep'">
+                            <td colspan="4" style="text-align: center;background-color: #56bfb533;"
+                                *ngIf="report.seconedTable == 'CompaniesRep'">
                                 الإجمالي
                             </td>
-                            <td style="text-align: center;background-color: #56bfb533;" *ngFor="let total of getColumnTotals(report.fields,report)">{{ total.total }}</td>
+                            <td style="text-align: center;background-color: #56bfb533;"
+                                *ngFor="let total of getColumnTotals(report.fields,report)">{{ total.total }}</td>
+                            <td *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length == 1"
+                                style="text-align: center;background-color: #56bfb533;">565483</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -287,6 +310,7 @@
                                 (ngModelChange)="onReportPartChange($event)">
                             <label style="top: 14px;">اسم محتوى التقرير</label>
                         </div>
+
                         <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
                         <div class="col-sm-4 mb-3">
                             <select [(ngModel)]="tableType" name="tableType" (change)="onTableSelect()"
@@ -682,7 +706,7 @@
 
                 <div class="modal-footer pt-0" style="border-top: none;">
                     <button type="button" id="close" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn" (click)="saveReport()">حفظ</button>
+                    <button type="button" class="btn" (click)="saveReport()">عرض التقرير</button>
                 </div>
             </form>
         </div>

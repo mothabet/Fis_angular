@@ -22,8 +22,38 @@ export class TableWithPeriodsRepComponent implements OnInit {
         this.years.push(+this.report.fields[0][5].value + i);
     }
   }
-  getRowSpan(fields: any[], activityName: string): number {
-    // Count how many times the activity (field[8].value) appears in the fields array
-    return fields.filter(field => field[2].value === activityName).length;
+  getUniqueActivities() {
+    // إنشاء خريطة لتخزين الأنشطة الفريدة
+    const activitiesMap = new Map();
+    // مر على جميع الحقول في report
+    this.report.fields.forEach((fieldGroup: any) => {
+      // استخراج اسم النشاط
+      const activityName = fieldGroup[2]?.value;
+      // تأكد من صحة هذا
+      const field: any = {
+        codeName: fieldGroup[1]?.value,
+        code: fieldGroup[0]?.value,
+      };
+
+      // توليد الحقول الديناميكية بناءً على السنوات
+      this.years.forEach((_, index) => {
+        const adjustedIndex = index + 10; // بدء الفهرس من 10
+        field[`totalCode${index + 1}`] = fieldGroup[adjustedIndex]?.value;
+      });
+      debugger
+      // إضافة الأنشطة إذا كانت جديدة
+      if (!activitiesMap.has(activityName)) {
+        activitiesMap.set(activityName, {
+          activityName: activityName,
+          fields: []
+        });
+      }
+
+      // إضافة الحقول الخاصة بالنشاط
+      activitiesMap.get(activityName).fields.push(field);
+    });
+
+    // تحويل الخريطة إلى مصفوفة وإرجاعها
+    return Array.from(activitiesMap.values());
   }
 }

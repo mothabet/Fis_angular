@@ -9,8 +9,35 @@ export class OneYearWithPartsAndTotalRepComponent implements OnInit {
   @Input() report:any;
   ngOnInit(): void {
   }
-  getRowSpan(fields: any[], activityName: string): number {
-    // Count how many times the activity (field[8].value) appears in the fields array
-    return fields.filter(field => field[6].value === activityName).length;
+  getUniqueActivities() {
+    // إنشاء خريطة لتخزين الأنشطة الفريدة
+    const activitiesMap = new Map();
+    // مر على جميع الحقول في report
+    this.report.fields.forEach((fieldGroup: any) => {
+      debugger
+      // استخراج اسم النشاط
+      const activityName = fieldGroup[6]?.value;
+      // تأكد من صحة هذا
+      const field = {
+        codeName: fieldGroup[5]?.value,
+        code: fieldGroup[4]?.value,
+        totalCode1: fieldGroup[0]?.value,
+        totalCode2: fieldGroup[1]?.value,
+        totalCode3: fieldGroup[2]?.value,
+      };
+
+      // إضافة الأنشطة إذا كانت جديدة
+      if (!activitiesMap.has(activityName)) {
+        activitiesMap.set(activityName, {
+          activityName: activityName,
+          fields: []
+        });
+      }
+      // إضافة الحقول الخاصة بالنشاط
+      activitiesMap.get(activityName).fields.push(field);
+    });
+
+    // تحويل الخريطة إلى مصفوفة وإرجاعها
+    return Array.from(activitiesMap.values());
   }
 }

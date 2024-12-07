@@ -5,28 +5,41 @@ import { Component, Input, OnInit } from '@angular/core';
   templateUrl: './table-without-trans-rep.component.html',
   styleUrls: ['./table-without-trans-rep.component.css']
 })
-export class TableWithoutTransRepComponent implements OnInit{
-  @Input() report:any;
+export class TableWithoutTransRepComponent implements OnInit {
+  @Input() report: any;
   groupedFields: any[] = [];
 
   ngOnInit(): void {
-    this.groupFieldsByActivityName();
   }
 
-  groupFieldsByActivityName(): void {
-    const groupedMap = new Map<string, any[]>();
+  getUniqueActivities() {
+    // إنشاء خريطة لتخزين الأنشطة الفريدة
+    const activitiesMap = new Map();
+    // مر على جميع الحقول في report
+    this.report.fields.forEach((fieldGroup: any) => {
+      debugger
+      // استخراج اسم النشاط
+      const activityName = fieldGroup[4]?.value;
+      // تأكد من صحة هذا
+      const field = {
+        codeName: fieldGroup[3]?.value,
+        code: fieldGroup[2]?.value,
+        totalCode1: fieldGroup[0]?.value,
+        totalCode2: fieldGroup[1]?.value,
+      };
 
-    for (const field of this.report.fields) {
-      const activityName = field.find((f : any) => f.key === 'activityName').value;
-      if (!groupedMap.has(activityName)) {
-        groupedMap.set(activityName, []);
+      // إضافة الأنشطة إذا كانت جديدة
+      if (!activitiesMap.has(activityName)) {
+        activitiesMap.set(activityName, {
+          activityName: activityName,
+          fields: []
+        });
       }
-      groupedMap.get(activityName)!.push(field);
-    }
+      // إضافة الحقول الخاصة بالنشاط
+      activitiesMap.get(activityName).fields.push(field);
+    });
 
-    this.groupedFields = Array.from(groupedMap.entries()).map(([activityName, fields]) => ({
-      activityName,
-      fields
-    }));
+    // تحويل الخريطة إلى مصفوفة وإرجاعها
+    return Array.from(activitiesMap.values());
   }
 }
