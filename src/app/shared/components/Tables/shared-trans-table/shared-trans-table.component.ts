@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
@@ -63,7 +63,6 @@ export class SharedTransTableComponent {
   isDropdownOpen = false;
   filtered: IDropdownList[] = [];
   filteredListDto: IFilteredListDto[] = [];
-  @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   searchTermCountry: string = "";
   company: ICompany = {
     activityId: 0,
@@ -151,6 +150,17 @@ export class SharedTransTableComponent {
       this.GetCountrites();
       this.GetSectors();
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    debugger
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.dropdown')) {
+      this.filteredListDto.forEach(item => {
+        item.isDropdownOpen = false;
+      });
+    }
   }
   GetCompanyById(id: number) {
     this.Loader = true;
