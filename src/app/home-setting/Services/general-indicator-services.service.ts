@@ -56,7 +56,7 @@ export class GeneralIndicatorServicesService {
     return resopnse;
   }
   UpdateOmanMap(id:number,omanGovernorate: IAddOmanMap){
-    debugger
+    
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.put(environment.apiUrl+`OmanMaps/UpdateOmanMap?id=${id}&lang=2`, omanGovernorate, { headers });
      return resopnse;

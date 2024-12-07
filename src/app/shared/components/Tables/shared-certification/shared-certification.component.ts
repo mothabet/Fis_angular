@@ -30,14 +30,15 @@ export class SharedCertificationComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           const certificationData: ICertificationDto = {
             companiesDetails: '',
             completedBy: '',
             telephoneNo: '',
-            dateOfCompletion: '',
+            dateOfCompletion: '', // تعيين التاريخ الحالي كقيمة افتراضية
           };
           this.coverForm = res.Data;
+          debugger
           this.coverForm.certification = certificationData
           this.GetFormData();
         }
@@ -50,7 +51,17 @@ export class SharedCertificationComponent {
     };
     this.formServices.GetFormData(id, +this.companyId, 0).subscribe(observer);
   }
-
+  getDateOnly(dateTimeString: Date): string {
+    if (dateTimeString != null && dateTimeString.toString() != "") {
+      const date = new Date(dateTimeString.toString());
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // إضافة صفر في حالة كان الشهر أقل من 10
+      const day = ('0' + date.getDate()).slice(-2); // إضافة صفر في حالة كان اليوم أقل من 10
+      return `${year}-${month}-${day}`;
+    }
+    else
+      return ""
+  }
   GetFormData() {
     this.Loader = true;
     const observer = {
@@ -58,14 +69,16 @@ export class SharedCertificationComponent {
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
-          var role = res_.roles;
           if (res.Data) {
-            
+            debugger
             let certification = localStorage.getItem(`certification`);
             if (certification) {
               this.coverForm.certification = JSON.parse(certification) as ICertificationDto;
+              this.coverForm.certification.dateOfCompletion = new Date(this.coverForm.certification.dateOfCompletion).toISOString().split('T')[0];
             } else if (res.Data[0].certificationData) {
               this.coverForm.certification = JSON.parse(res.Data[0].certificationData) as ICertificationDto;
+              this.coverForm.certification.dateOfCompletion = new Date(this.coverForm.certification.dateOfCompletion).toISOString().split('T')[0];
+
             }
           }
           this.Loader = false;
@@ -79,9 +92,17 @@ export class SharedCertificationComponent {
     };
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
+  onModelChange(newDate: string) {
+    debugger
+    let certification = localStorage.getItem(`certification`);
 
+    if (certification) {
+      localStorage.removeItem(`certification`);
+    }
+    localStorage.setItem(`certification`, JSON.stringify(this.coverForm.certification));
+  }
   ngOnDestroy() {
-    
+    debugger
     let certification = localStorage.getItem(`certification`);
     if (certification) {
       localStorage.removeItem(`certification`);

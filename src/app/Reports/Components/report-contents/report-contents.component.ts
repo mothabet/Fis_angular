@@ -224,7 +224,6 @@ export class ReportContentsComponent implements OnInit {
         if (res.Data) {
           
           this.reports = res.Data;
-          console.log(this.reports)
         }
         else {
           res.Data = []

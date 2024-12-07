@@ -50,7 +50,7 @@ export class TransTableComponent {
         if (res.Data) {
           this.Loader = false;
           this.table = res.Data;
-          console.log(this.table);
+
         }
       },
       error: (err: any) => {

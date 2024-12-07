@@ -80,15 +80,15 @@ export class NavigateTablesTypesComponent implements OnInit {
     id: 0,
     isName: true,
     settingsAuthId: 0,
-    connectWithCompany:true,
-    addCompaniesGroup:true,
-    copy:true,
-    Instructions:true,
-    FormNotes: true,  
-    AddFormNotes:true,
-    Approve: true, 
-    Complete: true, 
-    Close: true, 
+    connectWithCompany: true,
+    addCompaniesGroup: true,
+    copy: true,
+    Instructions: true,
+    FormNotes: true,
+    AddFormNotes: true,
+    Approve: true,
+    Complete: true,
+    Close: true,
     Open: true
   };
   constructor(private authService: LoginService, private activeRouter: ActivatedRoute,
@@ -106,7 +106,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = tableIdParam ? +tableIdParam : null;
     this.GetFormById(this.formId ?? "0")
     this.GetPermissionByUserId();
-    this.GetAllFormNotesByRole('Researchers' , true);
+    this.GetAllFormNotesByRole('Researchers', true);
   }
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("FormDetails").then(permissions => {
@@ -114,7 +114,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     });
   }
   ngOnChanges() {
-    
+
     const tableIdParam = this.activeRouter.snapshot.paramMap.get('tableId');
     this.tableId = tableIdParam ? +tableIdParam : null;
     const currentRoutePath = this.activeRouter.snapshot.routeConfig?.path;
@@ -123,10 +123,10 @@ export class NavigateTablesTypesComponent implements OnInit {
     } else if (currentRoutePath?.includes('FormDetails') || currentRoutePath?.includes('QuarterFormCover')) {
       this.activeTabIndex = 0;
     }
-    else if (currentRoutePath?.includes('Certification')){
-      this.activeTabIndex  = this.coverForm.tables.length + 2
+    else if (currentRoutePath?.includes('Certification')) {
+      this.activeTabIndex = this.coverForm.tables.length + 2
     }
-    else{
+    else {
 
       const tableIndex = this.coverForm.tables.findIndex(t => t.id == this.tableId);
       if (tableIndex != -1)
@@ -203,11 +203,11 @@ export class NavigateTablesTypesComponent implements OnInit {
       const tabOffsetLeft = activeTab.offsetLeft;
       const tabWidth = activeTab.offsetWidth;
       const containerWidth = container.clientWidth;
-  
+
       // حساب الموضع المطلوب للتمرير لضبط التبويب في المنتصف
       const scrollPosition = tabOffsetLeft - (containerWidth / 2) + (tabWidth / 2);
       container.scrollTo({ left: scrollPosition, behavior: 'smooth' });
-  
+
       // تعيين مؤقت للانتظار حتى انتهاء التمرير
       setTimeout(() => {
         this.Loader = false;
@@ -216,7 +216,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       this.Loader = false;
     }
   }
-  
+
   // Check if a tab is active
   isTabActive(index: number): boolean {
 
@@ -327,7 +327,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       tableParts: []    // Initialize as an empty array
     };
   }
-  
+
   addTableToListInLocalStorage(table: IGetTableDto = this.getDefaultTable()): void {
     let storedTables = localStorage.getItem(`coverForm${this.coverForm.id}`);
     var coverForm!: ICoverFormDetailsDto;
@@ -358,6 +358,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         this.coverForm.status = 7;
         Swal.fire({
@@ -380,6 +381,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
+        debugger
         this.Loader = false;
         this.coverForm.status = 6;
         Swal.fire({
@@ -440,8 +442,10 @@ export class NavigateTablesTypesComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
+          debugger
           this.Loader = false;
           this.coverForm = res.Data;
+          const status = this.coverForm.status;
           // let quarterCoverData = localStorage.getItem(`quarterCoverForm`);
           // if (quarterCoverData)
           //   this.coverForm.quarterCoverData = JSON.parse(quarterCoverData) as IQuarterCoverFormDataDto;
@@ -451,6 +455,10 @@ export class NavigateTablesTypesComponent implements OnInit {
           }
           else {
             this.coverForm = JSON.parse(storedTables);
+            this.coverForm.status = status;
+            localStorage.removeItem(`coverForm${this.coverForm.id}`);
+
+            localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
           }
           this.tableSelecte = this.coverForm.tables;
 
@@ -609,6 +617,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                 connectedWithType: coverForm.tables[index].formContents[i].code.connectedWithType,
                 arName: coverForm.tables[index].formContents[i].code.arName,
                 enName: coverForm.tables[index].formContents[i].code.enName,
+                arName1: '',
+                enName1: '',
                 IsDisabled: coverForm.tables[index].IsDisabled,
                 subCodeParentId: 0
               };
@@ -630,6 +640,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                   connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+                  arName1: coverForm.tables[index].formContents[i].code.SubCodes[r].arName1,
+                  enName1: coverForm.tables[index].formContents[i].code.SubCodes[r].enName1,
                   IsDisabled: coverForm.tables[index].IsDisabled,
                   subCodeParentId: 0
                 };
@@ -651,6 +663,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                     connectedWithType: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
                     arName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
                     enName: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    arName1: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName1,
+                    enName1: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName1,
                     IsDisabled: coverForm.tables[index].IsDisabled,
                     subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
                   };
@@ -768,7 +782,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                   }
                 }
               }
-              
+
               for (let j = 0; j < this.coverForm.tables[index].formContents[i].values.length; j++) {
 
                 let codes = this.coverForm.tables[index].formContents[i].values[j];
@@ -790,13 +804,15 @@ export class NavigateTablesTypesComponent implements OnInit {
                 connectedWithType: this.coverForm.tables[index].formContents[i].code.connectedWithType,
                 arName: this.coverForm.tables[index].formContents[i].code.arName,
                 enName: this.coverForm.tables[index].formContents[i].code.enName,
+                arName1: '',
+                enName1: '',
                 IsDisabled: this.coverForm.tables[index].IsDisabled,
                 subCodeParentId: 0
               };
               dataDtosList.push(dataDtos);
               for (let r = 0; r < this.coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
 
-                if (index == 0) {
+                if (this.coverForm.tables[index].id == 126) {
 
                 }
                 let dataDtosSub: IDataDto = {
@@ -815,6 +831,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                   connectedWithType: this.coverForm.tables[index].formContents[i].code.SubCodes[r].connectedWithType,
                   arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].arName,
                   enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].enName,
+                  arName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].arName1,
+                  enName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].enName1,
                   IsDisabled: this.coverForm.tables[index].IsDisabled,
                   subCodeParentId: 0
                 };
@@ -838,6 +856,8 @@ export class NavigateTablesTypesComponent implements OnInit {
                     connectedWithType: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].connectedWithType,
                     arName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName,
                     enName: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName,
+                    arName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].arName1,
+                    enName1: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].enName1,
                     IsDisabled: this.coverForm.tables[index].IsDisabled,
                     subCodeParentId: coverForm.tables[index].formContents[i].code.SubCodes[r].Id
                   };
@@ -852,6 +872,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
+        debugger
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
@@ -862,15 +883,16 @@ export class NavigateTablesTypesComponent implements OnInit {
 
         const observer = {
           next: (res: any) => {
+            debugger
             this.GetFormById(this.formId);
-            this.Loader = false;
             if (btnType === "Open") {
-
+              this.coverForm.status = 8;
               const button = document.getElementById('btnOpenFormModel');
               if (button) {
                 button.click();
               }
             }
+            this.Loader = false;
             Swal.fire({
               icon: 'success',
               title: res.Message,
@@ -959,14 +981,14 @@ export class NavigateTablesTypesComponent implements OnInit {
     };
     this.formNotesService.AddFormNotes(Model).subscribe(observer);
   }
-  GetAllFormNotesByRole(role: string , isFirst:boolean = false): void {
+  GetAllFormNotesByRole(role: string, isFirst: boolean = false): void {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.addFormNotesDto = res.Data.getFormNotesDtos
           this.add = true
-          
+
           if (!isFirst) {
             if (role != '') {
               const button = document.getElementById('ViewFormNotesBtn');

@@ -24,7 +24,7 @@ export class ChangePercentageComponent implements OnInit {
       this.years.push(year);
     }
     this.GetAllPercentage();
-    debugger
+    
     this.percentageForm = this.fb.group({
       percentage: [0, Validators.required],
       formYear: [this.currentYear, Validators.required],

@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class QuarterTableRepComponent implements OnInit{
   @Input() report:any;
   ngOnInit(): void {
-    console.log(this.report.fields[0])
+
   }
   getRowSpan(fields: any[], activityName: string): number {
     // Count how many times the activity (field[8].value) appears in the fields array

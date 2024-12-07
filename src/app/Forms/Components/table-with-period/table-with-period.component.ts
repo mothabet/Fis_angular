@@ -65,7 +65,7 @@ export class TableWithPeriodComponent implements OnInit {
           this.Loader = false;
           this.table = res.Data;
         }
-        console.log(this.table)
+
       },
       error: (err: any) => {
         this.sharedServices.handleError(err);

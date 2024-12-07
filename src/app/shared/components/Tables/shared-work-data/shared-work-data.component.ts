@@ -155,6 +155,7 @@ export class SharedWorkDataComponent implements OnInit {
         if (res.Data) {
           
           this.company = res.Data;
+          
           this.workData.forEach((item) => {
             if (item.arName.includes('اسم  المنشأة : ')) {
               item.inputValue = this.company.arName;
@@ -280,6 +281,13 @@ export class SharedWorkDataComponent implements OnInit {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             
             this.workData = this.coverForm.GeneralData.CompanyInfo;
+            this.workData = this.workData.map(item => {
+              if (item.arName == 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ') {
+                
+                item.isSelect = true;
+              }
+              return item;
+            });
             this.GetWilayat(+this.workData[6].inputValue);
             
           }
@@ -288,6 +296,13 @@ export class SharedWorkDataComponent implements OnInit {
               this.coverForm.GeneralData = JSON.parse(res.Data[0].GeneralData);
               
               this.workData = this.coverForm.GeneralData.CompanyInfo;
+              this.workData = this.workData.map(item => {
+                if (item.arName == 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ') {
+                  
+                  item.isSelect = true;
+                }
+                return item;
+              });
               this.GetWilayat(+this.workData[6].inputValue);
 
             }

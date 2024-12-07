@@ -52,10 +52,21 @@
                                                     اجمالي <i class="fa-solid fa-circle-question"></i>
                                                 </span>
                                             </ng-container>
-                                            <button *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4"
-                                                class="add-button" (click)="addSubCodeRow(formContent.code)">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
+                                            <ng-container
+                                                *ngIf="formContent.code.TypeId != 1 && formContent.code.TypeId != 4">
+                                                <button *ngIf="formContent.code.TypeId == 2" class="add-button"
+                                                    (click)="addSubCodeRow(formContent.code,index,'sector')">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                                <button *ngIf="formContent.code.TypeId == 3" class="add-button"
+                                                    (click)="addSubCodeRow(formContent.code,index,'country')">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                                <button *ngIf="formContent.code.TypeId == 5" class="add-button"
+                                                    (click)="addSubCodeRow(formContent.code,index)">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </ng-container>
                                         </div>
                                     </td>
                                     <td *ngIf="formContent.code.TypeId == 4" [attr.colspan]="table.tableParts.length/2">
@@ -128,17 +139,29 @@
                                                     title="الإجمالي لهذا المؤشر موضح بالحقول باللون الاخضر">
                                                     اجمالي <i class="fa-solid fa-circle-question"></i>
                                                 </span>
-                                            </td>
-                                            <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                            </td><td class="text-center" *ngIf="formContent.code.TypeId == 2">
                                                 <div style="display: flex;">
-                                                    <select class="form-control"
-                                                        style="text-align:center; width: 95% !important;"
-                                                        [(ngModel)]="subCode.arName">
-                                                        <option value="">اختيار نشاط--</option>
-                                                        <option *ngFor="let activity of activities"
-                                                            value="{{activity.id}}">
-                                                            {{activity.code}}-{{activity.arName}}</option>
-                                                    </select>
+
+                                                    <!-- Searchable Dropdown -->
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpenSector(index,indexSub,0)"
+                                                        style="width: 95%; position: relative;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="ابحث عن قطاع"
+                                                            (click)="toggleDropdownCountry(index,indexSub,0)"
+                                                            [(ngModel)]="subCode.arName"
+                                                            (input)="filterCountry(subCode.arName,index,indexSub,'sector',0)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpenSector(index,indexSub,0)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let sector of getFiltered(index,indexSub,0)"
+                                                                class="dropdown-item"
+                                                                (click)="selectSector(subCode,sector)">
+                                                                {{ sector.code }}-{{ sector.arName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                     <button (click)="removeSubCodeRow(formContent, subCode)"
                                                         style="background-color: white; border:none;">
                                                         <img src=".././../../../assets/images/trash-can-outline.png"
@@ -147,29 +170,59 @@
                                                 </div>
                                             </td>
                                             <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                                <div style="display: flex;">
-                                                    <select class="form-control" [(ngModel)]="subCode.arName"
-                                                        (ngModelChange)="onArCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center;margin: 5px;">
-                                                        <option value="">اختيار مصدر المال--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.arName">
-                                                            {{country.arName}}</option>
-                                                    </select>
-                                                    <select class="form-control" [(ngModel)]="subCode.enName"
-                                                        (ngModelChange)="onEnCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center">
-                                                        <option value="">اختيار جنسية المستثمر--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.enName">
-                                                            {{ country.arName }}
-                                                        </option>
-                                                    </select>
+                                                <div
+                                                    style="display: flex; align-items: center; justify-content: space-between; gap: 0px; flex-wrap: wrap;">
+
+                                                    <!-- Arabic Name Dropdown -->
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpen(index,indexSub,0)"
+                                                        style="width: 43%; position: relative;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="ابحث عن مصدر المال"
+                                                            (click)="toggleDropdownCountry(index,indexSub,0)"
+                                                            [(ngModel)]="subCode.arName1"
+                                                            (input)="filterCountry(subCode.arName1,index,indexSub,'country',0)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpen(index,indexSub,0)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let country of getFiltered(index,indexSub,0)"
+                                                                class="dropdown-item"
+                                                                (click)="selectCountry1(subCode,country)">
+                                                                {{ country.arName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <!-- Searchable Dropdown -->
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpen(index,indexSub,1)"
+                                                        style="width: 43%; position: relative;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="ابحث عن جنسية المستثمر"
+                                                            (click)="toggleDropdownCountry(index,indexSub,1)"
+                                                            [(ngModel)]="subCode.arName"
+                                                            (input)="filterCountry(subCode.arName,index,indexSub,'country',1)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpen(index,indexSub,1)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let country of getFiltered(index,indexSub,1)"
+                                                                class="dropdown-item"
+                                                                (click)="selectCountry(subCode,country)">
+                                                                {{ country.arName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+                                                    <!-- Delete Button -->
                                                     <button (click)="removeSubCodeRow(formContent, subCode)"
-                                                        style="background-color: white; border:none;">
+                                                        style="background-color: transparent; border: none; padding: 5px;">
                                                         <img src=".././../../../assets/images/trash-can-outline.png"
-                                                            class="img-fluid">
+                                                            class="img-fluid" alt="Remove"
+                                                            style="width: 20px; height: 20px;">
                                                     </button>
+
                                                 </div>
                                             </td>
                                             <td class="text-center" *ngIf="formContent.code.TypeId == 5">
@@ -216,36 +269,70 @@
                                             <td class="text-start" *ngIf="formContent.code.TypeId == 1"
                                                 style="text-wrap: balance; text-align: center !important; color: #00af9d; direction: ltr;">
                                                 {{subCode.enName}}</td>
-                                            <td class="text-center" *ngIf="formContent.code.TypeId == 2">
-                                                <select class="form-control"
-                                                    style="width: 100% !important; text-align:center"
-                                                    [(ngModel)]="subCode.arName">
-                                                    <option value="">Choose Activity --</option>
-                                                    <option *ngFor="let activity of activities" value="{{activity.id}}">
-                                                        {{activity.code}}-{{activity.enName}}</option>
-                                                </select>
-                                            </td>
-                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
-                                                <div style="display: flex;">
-                                                    <select class="form-control" [(ngModel)]="subCode.arName"
-                                                        (ngModelChange)="onArCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center;margin: 5px;">
-                                                        <option value="">Choose Source of money--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.arName">
-                                                            {{country.enName}}</option>
-                                                    </select>
-                                                    <select class="form-control" [(ngModel)]="subCode.enName"
-                                                        (ngModelChange)="onEnCountryChange(subCode)"
-                                                        style="width: 47% !important; text-align:center">
-                                                        <option value="">Choose Investor Nationality--</option>
-                                                        <option *ngFor="let country of countries"
-                                                            [value]="country.enName">
-                                                            {{country.code}}-{{ country.enName }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                            </td>
+                                                <td class="text-center" *ngIf="formContent.code.TypeId == 2">
+                                                    <div class="dropdown"
+                                                        [class.show]="getFilteredIsDropdownOpenSector(index,indexSub,1)"
+                                                        style="width: 95%; position: relative;">
+                                                        <input type="text" id="searchableDropdown"
+                                                            class="form-control input-modal w-100"
+                                                            placeholder="Search for sector"
+                                                            (click)="toggleDropdownCountry(index,indexSub,1)"
+                                                            [(ngModel)]="subCode.enName"
+                                                            (input)="filterCountry(subCode.enName,index,indexSub,'sector',1)" />
+                                                        <ul class="dropdown-menu"
+                                                            *ngIf="getFilteredIsDropdownOpenSector(index,indexSub,1)"
+                                                            style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                            <li *ngFor="let sector of getFiltered(index,indexSub,1)"
+                                                                class="dropdown-item"
+                                                                (click)="selectSector(subCode,sector)">
+                                                                {{ sector.code }}-{{ sector.enName }}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                                    <div style="display: flex;">
+                                                        <div class="dropdown"
+                                                            [class.show]="getFilteredIsDropdownOpen(index,indexSub,2)"
+                                                            style="width: 45%; position: relative;">
+                                                            <input type="text" id="searchableDropdown"
+                                                                class="form-control input-modal w-100"
+                                                                placeholder="Search on investor nationality"
+                                                                (click)="toggleDropdownCountry(index,indexSub,2)"
+                                                                [(ngModel)]="subCode.enName"
+                                                                (input)="filterCountry(subCode.enName,index,indexSub,'country',2)" />
+                                                            <ul class="dropdown-menu"
+                                                                *ngIf="getFilteredIsDropdownOpen(index,indexSub,2)"
+                                                                style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                                <li *ngFor="let country of getFiltered(index,indexSub,2)"
+                                                                    class="dropdown-item"
+                                                                    (click)="selectCountry(subCode,country)">
+                                                                    {{ country.enName }}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="dropdown"
+                                                            [class.show]="getFilteredIsDropdownOpen(index,indexSub,3)"
+                                                            style="width: 45%; position: relative;margin: 0px 5px;">
+                                                            <input type="text" id="searchableDropdown"
+                                                                class="form-control input-modal w-100"
+                                                                placeholder="Search on Source of money"
+                                                                (click)="toggleDropdownCountry(index,indexSub,3)"
+                                                                [(ngModel)]="subCode.enName1"
+                                                                (input)="filterCountry(subCode.enName1,index,indexSub,'country',3)" />
+                                                            <ul class="dropdown-menu"
+                                                                *ngIf="getFilteredIsDropdownOpen(index,indexSub,3)"
+                                                                style="width: 100%; max-height: 200px; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 1; display: blick;">
+                                                                <li *ngFor="let country of getFiltered(index,indexSub,3)"
+                                                                    class="dropdown-item"
+                                                                    (click)="selectCountry1(subCode,country)">
+                                                                    {{ country.enName }}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+    
+                                                    </div>
+                                                </td>
                                             <td class="text-center" style=" direction: ltr;"
                                                 *ngIf="formContent.code.TypeId == 5">
                                                 <div style="display: flex;justify-content: center;">

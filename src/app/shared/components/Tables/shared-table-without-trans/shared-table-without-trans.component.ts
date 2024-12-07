@@ -14,7 +14,11 @@ import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
-import { IGeneralDataDto } from 'src/app/Forms/Dtos/WorkDataDto';
+import { IGeneralDataDto, IWorkDataQuesDto } from 'src/app/Forms/Dtos/WorkDataDto';
+import { IFilteredListDto } from 'src/app/shared/Dtos/TablesDto';
+import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
+import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
+import { ICompany } from 'src/app/companies/Dtos/CompanyHomeDto';
 @Component({
   selector: 'app-shared-table-without-trans',
   templateUrl: './shared-table-without-trans.component.html',
@@ -27,23 +31,23 @@ export class SharedTableWithoutTransComponent {
   isChecked!: boolean;
   table: IGetTableDto = {
     id: 0,
-      arName: '',
-      enName: '',
-      arHeading: '',
-      enHeading: '',
-      arNotes: '',
-      enNotes: '',
-      Type: '',
-      Order: '',
-      formId: 0,
-      period: 0,
-      IsActive: false,
-      IsTotal: false,
-      totalTitleAr: '',
-      totalTitleEn: '',
-      IsDisabled: false,
-      formContents: [], // Initialize as an empty array
-      tableParts: []    // Initialize as an empty array
+    arName: '',
+    enName: '',
+    arHeading: '',
+    enHeading: '',
+    arNotes: '',
+    enNotes: '',
+    Type: '',
+    Order: '',
+    formId: 0,
+    period: 0,
+    IsActive: false,
+    IsTotal: false,
+    totalTitleAr: '',
+    totalTitleEn: '',
+    IsDisabled: false,
+    formContents: [], // Initialize as an empty array
+    tableParts: []    // Initialize as an empty array
   };
   coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm();
   countries!: IGetCountriesDto[];
@@ -51,10 +55,84 @@ export class SharedTableWithoutTransComponent {
   companyId!: string;
   formData!: IDataDto[];
   auditRules: IAuditRule[] = [];
-  expenses :number[] = [0,0];
+  expenses: number[] = [0, 0];
+  filteredListDto: IFilteredListDto[] = [];
+  sectors!: IGetActivitiesDto[];
+  company: ICompany = {
+    activityId: 0,
+    arActivityName: '',
+    enActivityName: '',
+    address: '',
+    arName: '',
+    enName: '',
+    compRegNumber: '',
+    municipalityNumber: '',
+    fax: '',
+    telNumber: '',
+    activity: '',
+    subActivity: '',
+    governorates: '',
+    governoratesId: 0,
+    sectorId: 0,
+    mailBox: '',
+    wilayatId: 0,
+    wilayat: '',
+    embeded: '',
+    webSite: '',
+    postalCode: '',
+    phoneNumber: '',
+    email: '',
+    status: '',
+    id: 0,
+    researcherId: '',
+    accountingPeriod: new Date(),
+    legalType: '',
+    pathImgProfile: '',
+    researcherArName: '',
+    researcherMandateArName: '',
+    activityName: '',
+    sectorName: '',
+    subActivityName: '',
+    institutionHeadquarters: '',
+    completionAccPeriod: new Date(),
+    dateOfWork: new Date(),
+    institutionVlaue: '',
+    sectorCode: '',
+    activityCode: '',
+    subActivityCode: '',
+    companyEmails: []
+  };
+  sectorCode: string = "";
+  workData: IWorkDataQuesDto[] = [
+    { arName: 'اسم  المنشأة : ', enName: ' :  Name of  Enterprise', inputValue: '', isSelect: false },
+    { arName: 'رقم السجل التجارى : ', enName: ' :  Commercial Registration No', inputValue: '', isSelect: false },
+    { arName: 'رقم الترخيص البلدي : ', enName: ' :  Municipality Number', inputValue: '', isSelect: false },
+    { arName: 'النشاط الاقتصادى الرئيسى : ', enName: ' :  Main Economic Activity', inputValue: '', isSelect: false },
+    { arName: 'النشاط الثانوى : ', enName: ' :  Secondary Activity', inputValue: '', isSelect: false },
+    { arName: 'عنوان المنشاة : ', enName: ' :  Address and Location', inputValue: '', isSelect: false },
+    { arName: 'المحافظة : ', enName: ' :  Region', inputValue: '', isSelect: false },
+    { arName: 'الولاية : ', enName: ' :  Wilayat', inputValue: '', isSelect: false },
+    { arName: 'رقم صندوق البريد : ', enName: ' :  P.O.Box', inputValue: '', isSelect: false },
+    { arName: 'الرمز البريدى : ', enName: ' :  Postal Code', inputValue: '', isSelect: false },
+    { arName: 'رقم الهاتف : ', enName: ' :  Telephone No', inputValue: '', isSelect: false },
+    { arName: 'رقم الفاكس : ', enName: ' :  Fax No', inputValue: '', isSelect: false },
+    { arName: 'البريد الالكترونى : ', enName: ' :  Email', inputValue: '', isSelect: false },
+    { arName: 'الموقع الإلكتروني : ', enName: ' :  Website', inputValue: '', isSelect: false },
+    { arName: 'رمز القطاع : ', enName: ' :  sector Code', inputValue: '', isSelect: false },
+    { arName: 'الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ', enName: ' :  The Legal Type of Organization (tick approprate reponse)', inputValue: '', isSelect: false },
+  ];
+  generalDataDto: IGeneralDataDto = {
+    ChekInfo: 0,
+    CompanyInfo: this.workData,
+    from: '',
+    to: '',
+    describeMainActivity: '',
+    dataSource: 0,
+    countryId: 0
+  };
   constructor(private route: ActivatedRoute, private authService: LoginService, private formServices: FormService,
     private sharedServices: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
-    private auditRuleHomeService: AuditRuleHomeService) {
+    private companyServices: CompanyHomeService, private auditRuleHomeService: AuditRuleHomeService) {
 
 
   }
@@ -63,13 +141,456 @@ export class SharedTableWithoutTransComponent {
       this.formId = params.get('formId')!;
       this.tableId = params.get('tableId')!;
       this.companyId = params.get('companyId')!;
-      // Sequentially await each method to ensure proper execution order      
+      this.GetCompanyById(+this.companyId);
       this.GetFormById(+this.formId);
       this.GetActivites();
       this.GetCountrites();
-
+      this.GetSectors();
     });
   }
+  GetCompanyById(id: number) {
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+
+          this.company = res.Data;
+          this.sectorCode = this.company.sectorCode;
+          this.workData.forEach((item) => {
+            if (item.arName.includes('اسم  المنشأة : ')) {
+              item.inputValue = this.company.arName;
+            }
+            else if (item.arName.includes("الكيان القانونى للمنشأة ( يرجى وضع اشارة صح على حالةالمنشأة) : ")) {
+
+              item.inputValue = this.company.legalType;
+              item.isSelect = true;
+            }
+            else if (item.arName.includes('الموقع الإلكتروني : ')) {
+
+              item.inputValue = this.company.webSite;
+            }
+            else if (item.arName.includes('رقم الفاكس : ')) {
+
+              item.inputValue = this.company.fax;
+            }
+            else if (item.arName.includes('البريد الالكترونى : ')) {
+
+              item.inputValue = this.company.companyEmails[0].Email;
+            }
+            else if (item.arName.includes('رقم الهاتف : ')) {
+
+              item.inputValue = this.company.phoneNumber;
+            }
+            else if (item.arName.includes('الرمز البريدى : ')) {
+
+              item.inputValue = this.company.postalCode;
+            }
+            else if (item.arName.includes('رقم صندوق البريد : ')) {
+
+              item.inputValue = this.company.mailBox;
+            }
+            else if (item.arName.includes('الولاية : ')) {
+              item.inputValue = this.company.wilayatId.toString();
+              item.isSelect = true;
+
+            }
+            else if (item.arName.includes('المحافظة : ')) {
+
+              item.inputValue = this.company.governoratesId.toString();
+              item.isSelect = true;
+            }
+            else if (item.arName.includes('عنوان المنشاة : ')) {
+
+              item.inputValue = this.company.address;
+            }
+            else if (item.arName.includes('النشاط الثانوى : ')) {
+
+              item.inputValue = this.company.subActivityCode;
+            }
+            else if (item.arName.includes('النشاط الاقتصادى الرئيسى : ')) {
+
+              item.inputValue = this.company.activityCode;
+            }
+            else if (item.arName.includes('رقم الترخيص البلدي : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+            else if (item.arName.includes('رقم السجل التجارى : ')) {
+
+              item.inputValue = this.company.compRegNumber;
+            }
+
+          });
+          let generalData = localStorage.getItem(`generalData`);
+          if (generalData) {
+            this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
+            this.workData = this.coverForm.GeneralData.CompanyInfo;
+
+          }
+          else {
+            this.coverForm.GeneralData = this.generalDataDto;
+            this.coverForm.GeneralData.CompanyInfo = this.workData as IWorkDataQuesDto[];
+            localStorage.setItem(`generalData`, JSON.stringify(this.coverForm.GeneralData));
+          }
+        }
+        this.Loader = false;
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.companyServices.GetCompanyById(id).subscribe(observer);
+  }
+  GetSectors() {
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.sectors = res.Data.getSectorsDtos;
+        }
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
+  }
+
+  toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
+
+    // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
+    if (filteredIndex === 0) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 1) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 2) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+    else if (filteredIndex === 3) {
+      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+
+      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+    }
+  }
+  filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
+
+
+    if (filteredType == "sector") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.sectors.filter(sector =>
+          sector.arName.includes(searchTerm) || sector.code.includes(searchTerm.toUpperCase()) || sector.code.includes(searchTerm.toLowerCase())
+        );
+      }
+
+    }
+    else if (filteredType == "country") {
+      if (filteredIndex == 0) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 1) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+      if (filteredIndex == 2) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm)
+        );
+      }
+      else if (filteredIndex == 3) {
+        let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        filteredListDto[0].filtered = this.countries.filter(country =>
+          country.arName.includes(searchTerm));
+      }
+
+    }
+  }
+  selectCountry(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
+  }
+  selectCountry1(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName1 = county.enName;
+    subCode.arName1 = county.arName;
+  }
+  selectSector(subCode: ISubCodeForm, county: any) {
+
+    subCode.enName = county.enName;
+    subCode.arName = county.arName;
+  }
+  getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
+
+    // Filter the list based on index
+    let filtered: IDropdownList[] = [];
+    if (filteredIndex == 0) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_0`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 1) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_1`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 2) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_2`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    if (filteredIndex == 3) {
+      let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+        f => f.index === `${index}_${indexSub}_3`
+      );
+      filtered = filteredListDto[0].filtered;
+    }
+    // Map the filtered list to IDropdownList
+    return filtered.map(f => ({
+      id: f.id,            // Map the id correctly
+      arName: f.arName,    // Map arName
+      enName: f.enName,    // Map enName
+      code: f.code         // Map code
+    }));
+  }
+  getFilteredIsDropdownOpen(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+
+    // Filter the list based on index
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 2) {
+      if (this.filteredListDto.length > 2) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_2`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_2`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 3) {
+      if (this.filteredListDto.length > 3) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_3`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.countries,
+          index: `${index}_${indexSub}_3`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
+  }
+  getFilteredIsDropdownOpenSector(index: number, indexSub: number, filteredIndex: number = 0): boolean {
+
+    // Filter the list based on index
+    let isDropdownOpen = false;
+    if (filteredIndex === 1) {
+      if (this.filteredListDto.length > 1) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_1`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else {
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_1`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_1`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    else if (filteredIndex === 0) {
+      if (this.filteredListDto.length > 0) {
+        const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+          f => f.index === `${index}_${indexSub}_0`
+        );
+        if (filteredListDto.length > 0)
+          isDropdownOpen = filteredListDto[0].isDropdownOpen;
+        else {
+          let filteredDto: IFilteredListDto = {
+            filtered: this.sectors,
+            index: `${index}_${indexSub}_0`,
+            isDropdownOpen: false
+          };
+          this.filteredListDto.push(filteredDto);
+        }
+      }
+      else {
+        let filteredDto: IFilteredListDto = {
+          filtered: this.sectors,
+          index: `${index}_${indexSub}_0`,
+          isDropdownOpen: false
+        };
+        this.filteredListDto.push(filteredDto);
+      }
+    }
+    // Map the filtered list to IDropdownList
+    return isDropdownOpen;
+  }
+  addSubCodeRow(code: ICode, index: number, filteredType: string = "") {
+    const subCode: ISubCodeForm = {
+      arName: '',
+      codeId: code.Id,
+      enName: '',
+      Id: 0,
+      QuestionCode: '',
+      subCodes: [],
+      values: [0, 0],
+      connectedWithId: 0,
+      connectedWithLevel: 0,
+      connectedWithType: '',
+      IsTrueAndFalse: false,
+      IsTransaction: false,
+      IsHdd: false,
+      valueCheck: false,
+      arName1: '',
+      enName1: ''
+    }
+    code.SubCodes.push(subCode);
+    const newSubLength = code.SubCodes.length;
+    if (filteredType == "sector") {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.sectors,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+    }
+    else if (filteredType == 'country') {
+      let filteredDto: IFilteredListDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_0`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_1`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_2`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+      filteredDto = {
+        filtered: this.countries,
+        index: `${index}_${(newSubLength - 1)}_3`,
+        isDropdownOpen: false
+      };
+      this.filteredListDto.push(filteredDto);
+
+    }
+  }
+
   onArCountryChange(subCode: any) {
     const selectedCountry = this.countries.find(country => country.arName === subCode.arCountry);
     if (selectedCountry) {
@@ -110,7 +631,7 @@ export class SharedTableWithoutTransComponent {
                   subCode.subCodes.forEach((subSubCode: any) => {
                     // Initialize subCode `values` array if it doesn't exist
                     subSubCode.values = subSubCode.values || [0, 0];
-    
+
                     // Ensure the `values` array has the correct length and initial values
                     subSubCode.values[0] = subSubCode.values[0] || 0; // lastYear
                     subSubCode.values[1] = subSubCode.values[1] || 0; // nextYear
@@ -140,7 +661,7 @@ export class SharedTableWithoutTransComponent {
           this.Loader = false;
           this.coverForm = res.Data;
           this.handleByExpenses(this.coverForm);
-          
+
           this.GetTableById(+this.tableId);
         }
       },
@@ -151,26 +672,7 @@ export class SharedTableWithoutTransComponent {
     };
     this.formServices.GetFormById(id, '', +this.companyId).subscribe(observer);
   }
-  addSubCodeRow(code: ICode) {
-    const subCode: ISubCodeForm = {
-      arName: '',
-      codeId: code.Id,
-      enName: '',
-      Id: 0,
-      QuestionCode: '',
-      subCodes: [],
-      values: [0, 0],
-      connectedWithId: 0,
-      connectedWithLevel: 0,
-      connectedWithType: '',
-      IsTrueAndFalse: false,
-      IsTransaction:false,
-      IsHdd: false,
-      valueCheck: false
-    }
-    code.SubCodes.push(subCode);
-  }
-  
+
   removeSubCodeRow(formContent: IGetQuestionDto, subCode: ISubCodeForm): void {
     const index = formContent.code.SubCodes.indexOf(subCode);
     if (index !== -1) {
@@ -224,14 +726,16 @@ export class SharedTableWithoutTransComponent {
       connectedWithLevel: 0,
       connectedWithType: '',
       IsTrueAndFalse: false,
-      IsTransaction:false,
+      IsTransaction: false,
       IsHdd: false,
-      valueCheck: false
+      valueCheck: false,
+      arName1: '',
+      enName1: ''
     }
 
     SubCode.subCodes.push(subCode);
   }
-  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm,_subCode:ISubCodeForm,indexSub:number): void {
+  removeSubCodeFromSubRow(formContent: IGetQuestionDto, SubCode: ISubCodeForm, _subCode: ISubCodeForm, indexSub: number): void {
     const index = SubCode.subCodes.indexOf(_subCode);
     if (index !== -1) {
       // طرح القيم المقابلة في مصفوفة `value`
@@ -240,13 +744,13 @@ export class SharedTableWithoutTransComponent {
           SubCode.values[i] -= _subCode.values[i];
         }
       }
-      
+
       // إزالة الـsubCode من المصفوفة
       SubCode.subCodes.splice(index, 1);
-      this.handelSupParent(formContent,SubCode,indexSub);
+      this.handelSupParent(formContent, SubCode, indexSub);
     }
   }
-  
+
   GetFormData() {
     this.Loader = true;
     forkJoin([
@@ -261,6 +765,7 @@ export class SharedTableWithoutTransComponent {
               let res_ = this.authService.decodedToken(isLoggedIn);
               var role = res_.roles;
               if (res.Data) {
+                debugger
                 if (res.Data.length > 0) {
                   const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
                     // Check if the TableId already exists in the accumulator
@@ -337,7 +842,7 @@ export class SharedTableWithoutTransComponent {
                               if (subCode.subCodes) {
                                 subCode.subCodes.forEach((_subCode: any) => {
                                   // Initialize subCode `values` array if it doesn't exist
-                                  _subCode.values = _subCode.values || [0, 0, 0];
+                                  _subCode.values = _subCode.values || [0, 0];
 
                                   // Ensure the `values` array has the correct length and initial values
                                   _subCode.values[0] = _subCode.values[0] || 0; // lastYear
@@ -456,9 +961,11 @@ export class SharedTableWithoutTransComponent {
                               connectedWithLevel: 0,
                               connectedWithType: '',
                               IsTrueAndFalse: false,
-                              IsTransaction:false,
+                              IsTransaction: false,
                               IsHdd: false,
-                              valueCheck: false
+                              valueCheck: false,
+                              arName1: item.arName1,
+                              enName1: item.enName1,
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -466,12 +973,13 @@ export class SharedTableWithoutTransComponent {
                         }
                       }
                       else if (item.level == 3) {
+                        debugger
                         const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                         if (level1ItemIndex !== -1) {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
                           if (subCodeIndex !== -1) {
                             if (this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].IsHdd == true) {
-                              
+
                               const subCode: ISubCodeForm = {
                                 arName: item.arName,
                                 codeId: item.codeId,
@@ -484,15 +992,24 @@ export class SharedTableWithoutTransComponent {
                                 connectedWithLevel: item.connectedWithLevel,
                                 connectedWithType: item.connectedWithType,
                                 IsTrueAndFalse: false,
-                                IsTransaction:false,
+                                IsTransaction: false,
                                 IsHdd: false,
-                                valueCheck: item.valueCheck
+                                valueCheck: item.valueCheck,
+                                arName1: item.arName1,
+                                enName1: item.enName1,
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
                                 );
                               if (!subCodeExists)
                                 this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes.push(subCode);
+                              else {
+                                debugger
+                                const sIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes.
+                                  findIndex(sC => sC.arName === subCode.arName && sC.Id === subCode.codeId && sC.enName === subCode.enName);
+                                if (sIndex != -1)
+                                  this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes[sIndex].values = subCode.values;
+                              }
                             }
                           }
                         }
@@ -500,6 +1017,7 @@ export class SharedTableWithoutTransComponent {
                       }
                     });
                   });
+                  debugger
                   localStorage.removeItem(`coverForm${this.coverForm.id}`);
                   localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
                 }
@@ -510,6 +1028,7 @@ export class SharedTableWithoutTransComponent {
                 // this.modifyInputById(this.coverForm.typeQuarter);
                 return;
               }
+              debugger
               const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);
@@ -563,7 +1082,7 @@ export class SharedTableWithoutTransComponent {
 
     // Optionally, update any other logic or status here if needed
   }
-  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm,index:number) {
+  handelSupParent(formContent: IGetQuestionDto, subCode: ISubCodeForm, index: number) {
     // Ensure subCode has subCodes to process
     if (subCode.subCodes && subCode.subCodes.length > 0) {
       // Iterate over the values array of the parent subCode
@@ -573,10 +1092,10 @@ export class SharedTableWithoutTransComponent {
           return sum + (_subCode.values[i] || 0); // Ensure to handle undefined values safely
         }, 0); // Start the summation from 0
       }
-      
+
       formContent.code.SubCodes[index] = subCode;
     }
-    else{
+    else {
       for (let i = 0; i < formContent.values.length; i++) {
         // Sum up the corresponding values from the subCodes
         formContent.values[i] = 0;
@@ -672,7 +1191,7 @@ export class SharedTableWithoutTransComponent {
       localStorage.removeItem(`coverForm${this.coverForm.id}`);
       localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
     }
-    this.changeStatus(formContent,this.coverForm.status,this.coverForm);
+    this.changeStatus(formContent, this.coverForm.status, this.coverForm);
   }
   getSumOfValues(index: number): number {
     return this.table.formContents.reduce((sum, formContent) => {
@@ -700,7 +1219,7 @@ export class SharedTableWithoutTransComponent {
     };
   }
   handleByExpenses(coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm(),) {
-    
+
     const table: IGetTableDto | undefined = coverForm?.tables?.find(t => t.id === +this.tableId);
     const formContent_5031: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5031");
     const formContent_5032: IGetQuestionDto | undefined = table?.formContents.find(f => f.code.QuestionCode == "5032");
@@ -741,11 +1260,11 @@ export class SharedTableWithoutTransComponent {
     }
   }
   changeStatus(
-    formContent: IGetQuestionDto, 
-    status: number, 
-    coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm(), 
-  ) { 
-    
+    formContent: IGetQuestionDto,
+    status: number,
+    coverForm: ICoverFormDetailsDto = this.getDefaultCoverForm(),
+  ) {
+
     if (formContent.code.QuestionCode === "5031" || formContent.code.QuestionCode === "5032" || formContent.code.QuestionCode === "501" || formContent.code.QuestionCode === "5070") {
       this.handleByExpenses(coverForm);
     }
@@ -753,7 +1272,7 @@ export class SharedTableWithoutTransComponent {
       this.BeginningForm();
     }
   }
-  
+
   BeginningForm(): void {
     this.Loader = true;
     const observer = {

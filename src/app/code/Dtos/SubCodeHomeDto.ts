@@ -20,7 +20,9 @@ export interface ISubCode{
 export interface ISubCodeForm{
     Id:number,
     arName: string,
+    arName1: string,
     enName: string,
+    enName1: string,
     QuestionCode:string,
     codeId :number
     subCodes:ISubCodeForm[]

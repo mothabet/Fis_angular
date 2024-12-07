@@ -144,7 +144,7 @@ export class SharedFormCoverComponent implements OnInit {
   Wilayat: IDropdownList[] = []
   sectorCode: string="";
   constructor(private authService: LoginService, private companyServices: CompanyHomeService, private formServices: FormService,
-    private auditRuleHomeService: AuditRuleHomeService, private companyHomeServices: CompanyHomeService
+    private auditRuleHomeService: AuditRuleHomeService
     , private sharedService: SharedService, private sharedServices: SharedService, private activeRouter: ActivatedRoute, 
     private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
@@ -396,7 +396,9 @@ export class SharedFormCoverComponent implements OnInit {
                               IsTrueAndFalse: false,
                               IsTransaction: false,
                               IsHdd: false,
-                              valueCheck: false
+                              valueCheck: false,
+                              arName1:'',
+                              enName1:''
                             }
                             this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.push(subCode)
 
@@ -424,7 +426,9 @@ export class SharedFormCoverComponent implements OnInit {
                                 IsTrueAndFalse: false,
                                 IsTransaction: false,
                                 IsHdd: false,
-                                valueCheck: item.valueCheck
+                                valueCheck: item.valueCheck,
+                                arName1:'',
+                                enName1:''
                               }
                               const subCodeExists = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes
                                 .some(existingSubCode => existingSubCode.arName === subCode.arName && existingSubCode.enName === subCode.enName
