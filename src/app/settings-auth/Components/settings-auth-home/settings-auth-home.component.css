@@ -29,4 +29,6 @@
       overflow-y: auto;
       padding-right: 10px; /* Optional: space for scrollbar */
     }
-    
+    label{
+      font-size: 25px;
+    }
