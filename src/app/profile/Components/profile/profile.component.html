@@ -1,0 +1,56 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'الاعدادات الشخصيه'"></app-top-screen>
+
+  <!-- start content -->
+  <div class="content companies researcher d-flex justify-content-center align-items-center">
+    <div class="card shadow-sm p-4" style="width: 400px; text-align: center;">
+      <h3 class="mb-4">الإعدادات الشخصية</h3>
+      
+      <!-- صندوق الصورة -->
+      <div class="image-box position-relative mx-auto" style="width: 100px; height: 100px; border: 1px solid gray; border-radius: 50%; overflow: hidden;">
+        <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
+        <img
+          [src]="selectedImageUrl || 'https://via.placeholder.com/100'"
+          alt="صورة المستخدم"
+          class="img-fluid w-100 h-100"
+          style="object-fit: cover;"
+        />
+        
+        <!-- زر تغيير الصورة -->
+        <button
+          class="change-image-btn position-absolute top-50 start-50 translate-middle bg-transparent border-0 p-0"
+          style="cursor: pointer; display: flex; flex-direction: column; align-items: center;"
+          (click)="triggerImageUpload()"
+          (mouseover)="hovering=true"
+          (mouseleave)="hovering=false"
+        >
+          <img
+            src="../../../../assets/images/edit-icon.png"
+            alt="تغيير الصورة"
+            *ngIf="hovering"
+            style="width: 20px; height: 20px;"
+          />
+          <span *ngIf="hovering" style="font-size: 12px; color: gray;">تغيير الصورة</span>
+        </button>
+        
+        <!-- Input لاختيار الصور -->
+        <input
+          type="file"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+          hidden
+          #imageInput
+        />
+      </div>
+  
+      <!-- زر تغيير كلمة المرور -->
+      <div class="mt-4">
+        <button class="btn btn-danger w-100">تغيير كلمة المرور</button>
+      </div>
+    </div>
+  </div>
+  
+  
+</div>

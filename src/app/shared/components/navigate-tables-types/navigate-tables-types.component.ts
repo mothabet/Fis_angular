@@ -358,7 +358,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         this.coverForm.status = 7;
         Swal.fire({
@@ -381,7 +381,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         this.coverForm.status = 6;
         Swal.fire({
@@ -442,7 +442,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
+          
           this.Loader = false;
           this.coverForm = res.Data;
           const status = this.coverForm.status;
@@ -872,7 +872,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
-        debugger
+        
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,
@@ -883,7 +883,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
         const observer = {
           next: (res: any) => {
-            debugger
+            
             this.GetFormById(this.formId);
             if (btnType === "Open") {
               this.coverForm.status = 8;

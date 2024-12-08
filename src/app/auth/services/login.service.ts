@@ -85,7 +85,8 @@ export class LoginService {
       'HomeMap',
       'DataMaximize',
       'DataMaximizeDetails',
-      'YearOfLaunch'
+      'YearOfLaunch',
+      'Profile'
     ];
     return adminRoutes.includes(url);
   }
@@ -126,7 +127,8 @@ export class LoginService {
       'OmanMaps',
       'ChangePercentage',
       'Governorates',
-      'Wilayat'
+      'Wilayat',
+      'Profile'
     ];
     return adminRoutes.includes(url);
   }

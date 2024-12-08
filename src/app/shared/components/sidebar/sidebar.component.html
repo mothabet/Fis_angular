@@ -134,12 +134,12 @@
               <span>محتوي الاستماره</span>
             </a>
           </li>
-          <!-- <li class="sidebar-item" *ngIf="checkPermission('none')">
-            <a href="./settings-requesting.html" class="sidebar-link inactive">
+          <li class="sidebar-item" *ngIf="checkPermission('none')">
+            <a routerLink="/Profile" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>
-              <span>الطلبات</span>
+              <span>الإعدادات الشخصيه</span>
             </a>
-          </li> -->
+          </li>
           <li class="sidebar-item" *ngIf="checkPermission('Messages')">
             <a routerLink="/Messages" class="sidebar-link inactive">
               <i class="fa-solid fa-envelope icon inactive"></i>

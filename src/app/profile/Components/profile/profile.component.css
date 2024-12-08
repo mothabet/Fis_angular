@@ -1,0 +1,19 @@
+.image-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .change-image-btn {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .change-image-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  

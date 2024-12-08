@@ -20,6 +20,7 @@ import { SettingsAuthModule } from './settings-auth/settings-auth.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { HomeSettingModule } from './home-setting/home-setting.module';
 import { DataMaximizeModule } from './data-maximize/data-maximize.module';
+import { ProfileModule } from './profile/profile.module';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DataMaximizeModule } from './data-maximize/data-maximize.module';
     CopmanyGeneralInformationModule,
     BrowserModule,
     HomeSettingModule,
+    ProfileModule,
     AppRoutingModule,
     DataMaximizeModule,
     ToastrModule.forRoot({
