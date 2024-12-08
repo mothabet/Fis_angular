@@ -222,6 +222,7 @@ export class ReportContentsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          
           this.reports = res.Data;
         }
         else {
@@ -378,7 +379,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.Id // Initialize value as needed
         };
 
-        table.fields.push(tableField);
+        table.fields[0]=tableField;
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -430,6 +431,7 @@ export class ReportContentsComponent implements OnInit {
     // Perform any additional logic, like setting a FormControl value
   }
   selectYearRep(event: Event, table: ITableDto, year: any) {
+    
     this.searchYearTerm = year.arName;
     this.isYearsDropdownOpen = false;
 
@@ -447,8 +449,10 @@ export class ReportContentsComponent implements OnInit {
           filter: null, // Initialize as null or a valid default value
           value: selectedField.id // Initialize value as needed
         };
-
-        table.fields.push(tableField);
+        if (this.tables[0].enTableName == 'TablesReport')
+          table.fields[0] = tableField;
+        else
+          table.fields.push(tableField);
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -517,7 +521,6 @@ export class ReportContentsComponent implements OnInit {
         const observer = {
           next: (res: any) => {
             this.GetReports();
-            this.showLoader = false;
           },
           error: (err: any) => {
 
@@ -1078,13 +1081,13 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
-    
+
     if (this.tables.length == 0) {
       this.isTableError = true;
       this.errorMessage = 'يجب تحديد جدول للتقرير'
       return;
     }
-    if ((this.tables[1].fields.length == 0 && this.searchYearTerm == '')&& this.tableType == 5) {
+    if ((this.tables[1].fields.length == 0 && this.searchYearTerm == '') && this.tableType == 5) {
       this.isTableError = true;
       this.errorMessage = 'يجب تحديد سنة المسح'
       return; // Stop further execution
@@ -1128,8 +1131,13 @@ export class ReportContentsComponent implements OnInit {
     //     }
     //   }
     // }
-    
-    if (this.tables[0].fields.length == 0 && (this.tables[0].enTableName == 'FormContent' || this.tables[0].enTableName == 'TablesReport')) {
+
+    if (this.tables[0].fields.length == 0 && (this.tables[0].enTableName == 'FormContent')) {
+      this.isContenterror = true;
+      this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
+      return
+    }
+    if ((this.tables[0].fields.length == 0 && this.searchTerm == '')&& this.tables[0].enTableName == 'TablesReport') {
       this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
@@ -1176,13 +1184,13 @@ export class ReportContentsComponent implements OnInit {
       this.tables[1].fields.push(tableField);
     }
 
-    if (this.tables.length == 3) {
-      if (this.tables[2].fields.length == 0 && (this.tables[0].enTableName == 'FormContent' || this.tables[0].enTableName == 'TablesReport')) {
-        this.isYearError = true;
-        this.errorMessage = `يجب الاختيار من ${this.tables[2].arTableName}`
-        return
-      }
-    }
+    // if (this.tables.length == 3) {
+    //   if (this.tables[2].fields.length == 0 && (this.tables[0].enTableName == 'FormContent' || this.tables[0].enTableName == 'TablesReport')) {
+    //     this.isYearError = true;
+    //     this.errorMessage = `يجب الاختيار من ${this.tables[2].arTableName}`
+    //     return
+    //   }
+    // }
     this.report.query = this.fbuildJoinQuery(this.tables, this.stringFilterItems, this.numberFilterItems);
     this.report.reportId = +this.reportId;
 
@@ -1483,7 +1491,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-
+    debugger
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1813,6 +1821,7 @@ export class ReportContentsComponent implements OnInit {
   }
   createYearRepQuery(tables: ITableDto[]): string {
     let query = ''
+    debugger
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1836,13 +1845,13 @@ export class ReportContentsComponent implements OnInit {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
           arName: '',
-          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.type,
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
           filter: null, // Initialize as null or a valid default value
           value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
         };
         tables[0].fields[0] = tableField
       }
-
+      debugger
       if (tables[0].fields[0].dataType == '0')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
@@ -1868,18 +1877,26 @@ export class ReportContentsComponent implements OnInit {
           whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL)`;
         }
       }
+
       // Handle conditions based on tables[1] (Years)
       if (tables.length > 1 && tables[1].enTableName == 'Years') {
         if (tables[1].fields && tables[1].fields.length > 0) {
-          tables[1].fields.forEach((field, fieldIndex) => {
-            if (field.name) {
+          // tables[1].fields.forEach((field, fieldIndex) => {
+          //   if (field.name) {
+          //     // Add the condition for f.reviewYear
+          //     const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+          //     // Append this to the whereClause as well
+          //     whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+          //   }
+          // });
+            if (this.searchYearTerm!=='') {
               // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+              const reviewYearCondition = `f.reviewYear = N'${this.searchYearTerm}'`;
 
               // Append this to the whereClause as well
               whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
             }
-          });
         }
       }
       // Final query with WHERE clause
@@ -1935,6 +1952,22 @@ export class ReportContentsComponent implements OnInit {
             whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
           }
         }
+        else {
+          // Use filteredActivities.arName
+          if (this.filteredActivities && this.filteredActivities.length > 0) {
+            const activityConditions: string[] = this.filteredActivities
+              .filter(activity => activity.arName)
+              .map(activity => `ac.arName = N'${activity.arName}'`);
+
+            // Join all activity conditions with OR
+            const combinedActivityCondition = activityConditions.length > 0 ? `(${activityConditions.join(" OR ")})` : "";
+
+            // Append to whereClause
+            if (combinedActivityCondition) {
+              whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
+            }
+          }
+        }
       }
 
       // Final query with WHERE clause
@@ -1966,7 +1999,7 @@ export class ReportContentsComponent implements OnInit {
       else if (tables[0].fields[0].dataType == '4')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '5')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period as tablePeriod FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,ac.arName as activityName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId`; // or any other filters
       else if (tables[0].fields[0].dataType == '7')
@@ -2071,6 +2104,22 @@ export class ReportContentsComponent implements OnInit {
           // Append the combined condition to whereClause
           if (combinedCompanyCondition) {
             whereClause += whereClause ? ` and ${combinedCompanyCondition}` : ` WHERE ${combinedCompanyCondition}`;
+          }
+        }
+        else {
+          // Use filteredCompanies.arName
+          if (this.filteredCompanies && this.filteredCompanies.length > 0) {
+            const companyConditions: string[] = this.filteredCompanies
+              .filter(company => company.arName)
+              .map(company => `c.arName = N'${company.arName}'`);
+
+            // Join all activity conditions with OR
+            const combinedActivityCondition = companyConditions.length > 0 ? `(${companyConditions.join(" OR ")})` : "";
+
+            // Append to whereClause
+            if (combinedActivityCondition) {
+              whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
+            }
           }
         }
       }
@@ -2208,6 +2257,22 @@ export class ReportContentsComponent implements OnInit {
           // Append the combined condition to whereClause
           if (combinedSectorCondition) {
             whereClause += whereClause ? ` and ${combinedSectorCondition}` : ` WHERE ${combinedSectorCondition}`;
+          }
+        }
+        else {
+          // Use filteredSectors.arName
+          if (this.filteredSectors && this.filteredSectors.length > 0) {
+            const sectorConditions: string[] = this.filteredSectors
+              .filter(activity => activity.arName)
+              .map(activity => `s.arName = N'${activity.arName}'`);
+
+            // Join all activity conditions with OR
+            const combinedActivityCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
+
+            // Append to whereClause
+            if (combinedActivityCondition) {
+              whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
+            }
           }
         }
       }

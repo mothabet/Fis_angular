@@ -10,10 +10,10 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
+                                نهاية عام {{report.fields[0][8].value - 1}} Year-end
                             </th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value}} Year-end
+                                نهاية عام {{report.fields[0][8].value}} Year-end
                             </th>
                         </tr>
                         <tr class="t-header">
@@ -48,10 +48,10 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
+                                نهاية عام {{report.fields[0][9].value - 1}} Year-end
                             </th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value}} Year-end
+                                نهاية عام {{report.fields[0][9].value}} Year-end
                             </th>
                         </tr>
                         <tr class="t-header">
@@ -68,61 +68,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
-                                style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
-                            </th>
-                            <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table table-borderless" *ngIf="report.seconedTable == 'CompaniesRep'">
-                    <thead>
-                        <tr class="t-header">
-                            <th scope="col" style="text-align: center;">الشركة</th>
-                            <th class="text-center" scope="col">المؤشر</th>
-                            <th class="text-center" scope="col">الرمز Code</th>
-                            <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
-                            </th>
-                            <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value}} Year-end
-                            </th>
-                        </tr>
-                        <tr class="t-header">
-                            <th scope="col"></th>
-                            <th class="text-center" scope="col"></th>
-                            <th class="text-center" scope="col"></th>
-                            <!-- Subheader 1 -->
-                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
-                            <!-- Subheader 2 -->
-                            <th class="text-center" scope="col">عمانيOmani</th>
-                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
-                            <!-- Subheader 2 -->
-                            <th class="text-center" scope="col">عمانيOmani</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
-                                style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
-                            </th>
-                            <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
-                        </tr>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr class="t-header" *ngFor="let field of activity.fields; let i = index" scope="col">
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode3 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode4 }}</td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
                 <table class="table table-borderless" *ngIf="report.seconedTable == 'SectorsRep'">
@@ -132,10 +91,10 @@
                             <th class="text-center" scope="col">المؤشر</th>
                             <th class="text-center" scope="col">الرمز Code</th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value - 1}} Year-end
+                                نهاية عام {{report.fields[0][9].value - 1}} Year-end
                             </th>
                             <th class="text-center" scope="col" [attr.colspan]="2">
-                                نهاية عام {{report.fields[0][0].value}} Year-end
+                                نهاية عام {{report.fields[0][9].value}} Year-end
                             </th>
                         </tr>
                         <tr class="t-header">
@@ -152,19 +111,63 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
-                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
-                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
-                                style="vertical-align: middle; text-align: center;">
-                                {{field[6].value}}
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr class="t-header" *ngFor="let field of activity.fields; let i = index" scope="col">
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode3 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode4 }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'CompaniesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الشركة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value - 1}} Year-end
                             </th>
-                            <td style="text-align: center;">{{field[5].value}}</td>
-                            <td style="text-align: center;">{{field[4].value}}</td>
-                            <td style="text-align: center;">{{field[0].value}}</td>
-                            <td style="text-align: center;">{{field[1].value}}</td>
-                            <td style="text-align: center;">{{field[2].value}}</td>
-                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value}} Year-end
+                            </th>
                         </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr class="t-header" *ngFor="let field of activity.fields; let i = index" scope="col">
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode3 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode4 }}</td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>
