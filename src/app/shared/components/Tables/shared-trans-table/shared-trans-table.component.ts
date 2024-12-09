@@ -353,16 +353,25 @@ export class SharedTransTableComponent {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectCountry1(subCode: ISubCodeForm, county: any) {
 
     subCode.enName1 = county.enName;
     subCode.arName1 = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectSector(subCode: ISubCodeForm, county: any) {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
     
