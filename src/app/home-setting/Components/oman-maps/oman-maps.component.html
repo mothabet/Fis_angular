@@ -18,8 +18,40 @@
         <li>
           <a routerLink="/YearOfLaunch">تحديد سنة الانطلاق</a>
         </li>
+        <!-- <li>
+          <a routerLink="/OmanMapSetting">إعدادات خرائط عمان</a>
+        </li> -->
       </ul>
     </div>
+  </div>
+  <div class="modal-content m-2">
+    <div class="modal-header p-2">
+      <h5 class="modal-title" id="add">إعدادات خرائط عمان</h5>
+    </div>
+    <form>
+      <div class="modal-body pb-1">
+        <div class="row">
+          <div class="form-group col-sm-12 col-md-6 col-xl-4 mb-2">
+            <select *ngIf="years.length > 0" name="reviewYear" class="form-control" [(ngModel)]="reviewYear">
+              <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+            </select>
+            <label ffor="inputField">سنة المسح</label>
+          </div>
+          <div class="form-group col-sm-12 col-md-6 col-xl-4 mb-2">
+            <select *ngIf="reviewType !== undefined" name="reviewType" class="form-control" [(ngModel)]="reviewType">
+              <option [value]="1">سنوي</option>
+              <option [value]="2">ربعي</option>
+            </select>
+            <label ffor="inputField">نوع المسح</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer pt-0">
+        <button type="button" class="btn btn-success" (click)="SaveMapSetting()">
+          حفظ
+        </button>
+      </div>
+    </form>
   </div>
   <!-- start content -->
   <div class="content companies researcher">

@@ -174,6 +174,18 @@
                                 كود القطاع </th>
                             <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'SectorsRep'">
                                 القطاع</th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'GovernoratesRep'">
+                                كود المحافظة </th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'GovernoratesRep'">
+                                المحافظة</th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'WilayatRep'">
+                                كود الولاية </th>
+                            <th style="text-align: center;" scope="col"
+                                *ngIf="report.seconedTable == 'WilayatRep'">
+                                الولاية</th>
                             <ng-container *ngFor="let detail of report.reportDetails[1].Fields">
                                 <th style="text-align: center;" scope="col"
                                     *ngIf="report.reportDetails[1].EnTableName == 'Years' && report.reportDetails[1].Fields.length > 1">
@@ -189,7 +201,8 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody *ngIf="report.seconedTable == 'ActivitiesRep' || report.seconedTable == 'SectorsRep'">
+                    <tbody *ngIf="report.seconedTable == 'ActivitiesRep' || report.seconedTable == 'SectorsRep' 
+                        || report.seconedTable == 'GovernoratesRep' || report.seconedTable == 'WilayatRep'">
                         <tr *ngFor="let list of transActivityFields(report.fields,report); let i = index">
                             <td style="text-align: center;" scope="col">{{i+1}}</td>
                             <td style="text-align: center;">{{ list.codeArName }}</td>
@@ -359,7 +372,8 @@
                                 </div>
                                 <div class="card-body" *ngIf="table.enTableName != 'FormContent' && table.enTableName != 'TablesReport' && 
                                 table.enTableName != 'ActivitiesRep' && table.enTableName != 'CompaniesRep' && table.enTableName != 'SectorsRep'
-                                && table.enTableName != 'Countries' && table.enTableName != 'Years'">
+                                && table.enTableName != 'Countries' && table.enTableName != 'Years'
+                                && table.enTableName != 'WilayatRep' && table.enTableName != 'GovernoratesRep'">
                                     <div class="d-flex align-items-center">
                                         <!-- Checkbox aligned on the left -->
                                         <div class="d-flex align-items-center mb-3">
@@ -512,7 +526,8 @@
                                 </div>
                                 <div class="card-body" *ngIf="table.enTableName == 'FormContent' || table.enTableName == 'TablesReport'  
                                 || table.enTableName == 'ActivitiesRep' || table.enTableName == 'SectorsRep' 
-                                || table.enTableName == 'CompaniesRep' || table.enTableName == 'Countries'">
+                                || table.enTableName == 'CompaniesRep' || table.enTableName == 'Countries'
+                                || table.enTableName == 'GovernoratesRep' || table.enTableName == 'WilayatRep'">
                                     <button *ngIf="i!=0" class="icon" (click)="removeTable(table)"
                                         style="border: none; background-color: transparent">
                                         <img src="../../../../assets/images/trash-can-outline.png" alt="" />
@@ -660,6 +675,39 @@
                                                 </li>
                                             </ul>
                                             <label for="inputField">اختر الشركة</label>
+                                        </div>
+                                        <div class="dropdown" [class.show]="isDropdownOpen"
+                                            *ngIf="table.enTableName == 'GovernoratesRep'">
+                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                                placeholder="Search..." [(ngModel)]="searchGovernorateTerm"
+                                                name="searchGovernorateTerm" (click)="toggleGovernorateDropdown()"
+                                                (input)="filterGovernoratesRep()" />
+                                            <ul class="dropdown-menu" [class.show]="isGovernorateDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 100%;
+                                      text-align: right;">
+                                                <li class="dropdown-item"
+                                                    *ngFor="let governorate of filteredGovernorates"
+                                                    (click)="selectGovernorateRep($event, tables[2],governorate)">
+                                                    {{governorate.arName}}
+                                                </li>
+                                            </ul>
+                                            <label for="inputField">اختر المحافظة</label>
+                                        </div>
+                                        <div class="dropdown" [class.show]="isDropdownOpen"
+                                            *ngIf="table.enTableName == 'WilayatRep'">
+                                            <input type="text" id="searchableDropdown" class="form-control input-modal"
+                                                placeholder="Search..." [(ngModel)]="searchWilayatTerm"
+                                                name="searchWilayatTerm" (click)="toggleWilayatDropdown()"
+                                                (input)="filterWilayatRep()" />
+                                            <ul class="dropdown-menu" [class.show]="isWilayatDropdownOpen" style="padding: 0 9px; max-height: 120px;
+                                      width: 100%;
+                                      text-align: right;">
+                                                <li class="dropdown-item" *ngFor="let wilaya of filteredWilayat"
+                                                    (click)="selectWilayatRep($event, tables[2],wilaya)">
+                                                    {{wilaya.arName}}
+                                                </li>
+                                            </ul>
+                                            <label for="inputField">اختر الولاية</label>
                                         </div>
                                     </div>
                                     <div class="field-container"

@@ -85,7 +85,8 @@ export class LoginService {
       'HomeMap',
       'DataMaximize',
       'DataMaximizeDetails',
-      'YearOfLaunch'
+      'YearOfLaunch',
+      // 'OmanMapSetting'
     ];
     return adminRoutes.includes(url);
   }

@@ -18,6 +18,9 @@
         <li>
           <a routerLink="/YearOfLaunch">تحديد سنة الانطلاق</a>
         </li>
+        <!-- <li>
+          <a routerLink="/OmanMapSetting">إعدادات خرائط عمان</a>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -91,61 +94,107 @@
 <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
   (pageChange)="onPageChange($event)"></app-pagination>
 <div class="modal company-modal fade" id="addSector" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
-    <div class="modal-content" style="width: 60%;">
-      <div class="modal-header pb-0">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
         <h5 class="modal-title" id="add">إضافة مؤشرات عامة</h5>
       </div>
-      <form>
-        <div class="modal-body pb-1">
-          <div class="row">
-            <div class="dropdown" [class.show]="isDropdownOpen">
-              <div style="height: 85px !important;width: 100%;">
-                <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
-                  [(ngModel)]="searchTerm" name="searchTerm" (click)="toggleDropdown()" (input)="filterFormContent()" />
-                <ul class="dropdown-menu" [class.show]="isDropdownOpen"
-                  style="padding: 0 9px; max-height: 120px;width: 95%;text-align: right;">
-                  <li class="dropdown-item" *ngFor="let formContent of filteredFormContents"
-                    (click)="selectFormContent($event,formContent)">
-                    {{formContent.arName}}
-                  </li>
-                </ul>
-                <span *ngIf="isFormContentError" style="color: red;margin-bottom: 15px;">{{errorMessage}}</span>
-                <label for="inputField">اختر المؤشر</label>
-              </div>
-            </div>
-            <div class="col-sm-6 mb-3">
-              <select [(ngModel)]="yearFrom" name="yearFrom" class="form-select" style="width: 100%;">
-                <option selected [ngValue]="0" disabled>اختر السنه</option>
-                <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
-              </select>
-              <label style="top: 104px;">السنه من</label>
-              <!-- Error message if reportYearFrom is not selected -->
-              <span *ngIf="isYearError" style="color: red;">{{errorMessage}}</span>
-            </div>
-            <div class="col-sm-6 mb-3">
-              <select [(ngModel)]="yearTo" name="yearTo" class="form-select add-report-select" style="width: 100%;">
-                <option selected [ngValue]="0" disabled>اختر السنه</option>
-                <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
-              </select>
-              <label style="top: 104px;right: 250px">السنه إلى</label>
-              <!-- Error message if yearFrom is not selected -->
-            </div>
+      <div class="modal-body">
+        <!-- اختيار المؤشر -->
+        <div class="dropdown" [class.show]="isDropdownOpen">
+          <div style="height: 35px !important;width: 100%;">
+            <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+              [(ngModel)]="searchTerm" name="searchTerm" (click)="toggleDropdown()" (input)="filterFormContent()" />
+            <ul class="dropdown-menu" [class.show]="isDropdownOpen"
+              style="padding: 0 9px; max-height: 120px;width: 95%;text-align: right;">
+              <li class="dropdown-item" *ngFor="let formContent of filteredFormContents"
+                (click)="selectFormContent($event,formContent)">
+                {{formContent.arName}}
+              </li>
+            </ul>
+            <label for="inputField">اختر المؤشر</label>
           </div>
         </div>
-        <div class="modal-footer pt-0">
-          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
-            إلغاء
+        <span *ngIf="isFormContentError" style="color: red; margin-bottom: 15px;">{{ codeErrorMessage }}</span>
+        <div class="dropdown mt-3" [class.show]="isSectorsDropdownOpen" *ngIf="selectSector">
+          <div style="height: 35px !important;width: 100%;">
+            <input type="text" id="searchableDropdown" class="form-control input-modal" placeholder="Search..."
+              [(ngModel)]="sectorsSearchTerm" name="sectorsSearchTerm" (click)="sectorsToggleDropdown()"
+              (input)="filterSectors()" />
+            <ul class="dropdown-menu" [class.show]="isSectorsDropdownOpen"
+              style="padding: 0 9px; max-height: 120px;width: 95%;text-align: right;">
+              <li class="dropdown-item" *ngFor="let sector of filteredSectors" (click)="SelectSector($event,sector)">
+                {{sector.arName}}
+              </li>
+            </ul>
+            <label for="inputField">اختر القطاع</label>
+          </div>
+        </div>
+        <span *ngIf="isSectorError" style="color: red; margin-bottom: 15px;">{{ sectorErrorMessage }}</span>
+        <div class="form-check mt-3" style="display: flex; align-items: center;">
+          <label style="position: relative;background: none;margin-top:15px;" for="selectSector"
+            class="form-check-label">اختيار
+            القطاع</label>
+          <input type="checkbox" id="selectSector" class="form-check-input" [(ngModel)]="selectSector"
+            style="margin-right: 15px;" />
+        </div>
+        <!-- إضافة أزرار نوع الرسم البياني -->
+        <div class="chart-buttons">
+          <button type="button" class="chart-btn" [class.active]="chartType === 1" (click)="setChartType(1)">
+            <img src="assets/images/chart-bar.png" alt="" />
+            <span>مجمعة</span>
           </button>
-          <button (click)="saveGeneralIndicator()" *ngIf="!isUpdate" type="button" class="btn btn-save">
-            حفظ
+          <button type="button" class="chart-btn" [class.active]="chartType === 2" (click)="setChartType(2)">
+            <img src="assets/images/chart-waterfall.png" alt="" />
+            <span>نقاط</span>
           </button>
-          <button (click)="updateGeneralIndicator()" type="button" class="btn btn-save" *ngIf="isUpdate" type="button"
-            class="btn btn-save">
-            تعديل
+          <button type="button" class="chart-btn" [class.active]="chartType === 3" (click)="setChartType(3)">
+            <img src="assets/images/circle.png" alt="" />
+            <span>دائري</span>
           </button>
         </div>
-      </form>
+        <span *ngIf="isChartTypeError" style="color: red; margin-bottom: 15px;">{{ chartErrorMessage }}</span>
+
+        <!-- اختيار السنوات -->
+        <div class="row">
+          <div class="col-sm-6 select-container" *ngIf="!selectSector">
+            <select [(ngModel)]="yearFrom" name="yearFrom" class="form-select">
+              <option selected [ngValue]="0" disabled>اختر السنه</option>
+              <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+            </select>
+            <label>السنه من</label>
+          </div>
+          <div class="col-sm-12 select-container" *ngIf="selectSector">
+            <select [(ngModel)]="yearFrom" name="yearFrom" class="form-select">
+              <option selected [ngValue]="0" disabled>اختر السنه</option>
+              <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+            </select>
+            <label>اختر السنة </label>
+          </div>
+          <div class="col-sm-6 select-container" *ngIf="!selectSector">
+            <select [(ngModel)]="yearTo" name="yearTo" class="form-select">
+              <option selected [ngValue]="0" disabled>اختر السنه</option>
+              <option *ngFor="let year of years" [ngValue]="year">{{ year }}</option>
+            </select>
+            <label>السنه إلى</label>
+          </div>
+        </div>
+        <span *ngIf="isYearError" style="color: red; margin-bottom: 15px;">{{ yearErrorMessage }}</span>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="onReset()">
+          إلغاء
+        </button>
+        <button (click)="saveGeneralIndicator()" *ngIf="!isUpdate" type="button" class="btn btn-save">
+          حفظ
+        </button>
+        <button (click)="updateGeneralIndicator()" type="button" class="btn btn-save" *ngIf="isUpdate" type="button"
+          class="btn btn-save">
+          تعديل
+        </button>
+      </div>
     </div>
   </div>
 </div>

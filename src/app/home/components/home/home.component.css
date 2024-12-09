@@ -3,3 +3,10 @@ canvas {
     height: 250px; /* Adjust height for better visual appeal */
     margin: 0 auto; /* Center the canvas inside the card */
   }
+  .chartjs-render-monitor {
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: center;
+  }
+  
+  

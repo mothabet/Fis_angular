@@ -49,6 +49,7 @@ import { AuditComponent } from './home/components/audit/audit.component';
 import { DataMaximizeComponent } from './data-maximize/Components/data-maximize/data-maximize.component';
 import { DataMaximizeDetailsComponent } from './data-maximize/Components/data-maximize-details/data-maximize-details.component';
 import { LaunchYearComponent } from './home-setting/Components/launch-year/launch-year.component';
+import { OmanMapSettingComponent } from './home-setting/Components/oman-map-setting/oman-map-setting.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -97,6 +98,7 @@ const routes: Routes = [
   { path: 'DataMaximize', component: DataMaximizeComponent, canActivate: [LoginGuard] },  { path: 'HomeMap', component: HomeMapComponent, canActivate: [LoginGuard] },
   { path: 'DataMaximizeDetails/:id', component: DataMaximizeDetailsComponent, canActivate: [LoginGuard] },
   { path: 'YearOfLaunch', component: LaunchYearComponent, canActivate: [LoginGuard] },
+  // { path: 'OmanMapSetting', component: OmanMapSettingComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }
 ];
