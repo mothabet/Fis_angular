@@ -603,6 +603,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
               let dataDtos: IDataDto = {
                 TableId: coverForm.tables[index].id,
+                TableType: this.coverForm.tables[index].Type,
                 TableArName: coverForm.tables[index].arName,
                 TableEnName: coverForm.tables[index].enName,
                 questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
@@ -626,6 +627,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
                 let dataDtosSub: IDataDto = {
                   TableId: coverForm.tables[index].id,
+                  TableType: this.coverForm.tables[index].Type,
                   TableArName: coverForm.tables[index].arName,
                   TableEnName: coverForm.tables[index].enName,
                   questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
@@ -649,6 +651,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 for (let z = 0; z < coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes.length; z++) {
                   let dataDtosSub: IDataDto = {
                     TableId: coverForm.tables[index].id,
+                    TableType: this.coverForm.tables[index].Type,
                     TableArName: coverForm.tables[index].arName,
                     TableEnName: coverForm.tables[index].enName,
                     questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
@@ -790,6 +793,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
               let dataDtos: IDataDto = {
                 TableId: this.coverForm.tables[index].id,
+                TableType: this.coverForm.tables[index].Type,
                 TableArName: this.coverForm.tables[index].arName,
                 TableEnName: this.coverForm.tables[index].enName,
                 questionId: this.coverForm.tables[index].formContents[i].code.QuestionCode,
@@ -817,6 +821,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 }
                 let dataDtosSub: IDataDto = {
                   TableId: this.coverForm.tables[index].id,
+                  TableType: this.coverForm.tables[index].Type,
                   TableArName: this.coverForm.tables[index].arName,
                   TableEnName: this.coverForm.tables[index].enName,
                   questionId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
@@ -842,6 +847,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
                   let dataDtosSub: IDataDto = {
                     TableId: this.coverForm.tables[index].id,
+                    TableType: this.coverForm.tables[index].Type,
                     TableArName: this.coverForm.tables[index].arName,
                     TableEnName: this.coverForm.tables[index].enName,
                     questionId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
@@ -872,7 +878,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
-        
+        debugger
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,

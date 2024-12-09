@@ -11,11 +11,13 @@ export class ProfileComponent {
   hovering: boolean = false; // حالة التمرير فوق زر تغيير الصورة
 
   triggerImageUpload(): void {
+    debugger
     const imageInput = document.querySelector('#imageInput') as HTMLInputElement;
     imageInput?.click(); // فتح نافذة اختيار الصور
   }
 
   onImageSelected(event: Event): void {
+    debugger
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const reader = new FileReader();
