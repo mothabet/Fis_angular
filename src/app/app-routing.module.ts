@@ -49,7 +49,7 @@ import { AuditComponent } from './home/components/audit/audit.component';
 import { DataMaximizeComponent } from './data-maximize/Components/data-maximize/data-maximize.component';
 import { DataMaximizeDetailsComponent } from './data-maximize/Components/data-maximize-details/data-maximize-details.component';
 import { LaunchYearComponent } from './home-setting/Components/launch-year/launch-year.component';
-import { OmanMapSettingComponent } from './home-setting/Components/oman-map-setting/oman-map-setting.component';
+import { ProfileComponent } from './profile/Components/profile/profile.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -82,6 +82,7 @@ const routes: Routes = [
   { path: 'Researcher', component: ResearcherHomeComponent , canActivate: [LoginGuard]},
   { path: 'Researcher-Details/:researcherId', component: ResearcherDetailsComponent, canActivate: [LoginGuard] },
   { path: 'Auditing-Rules', component: AuditingRulesHomeComponent, canActivate: [LoginGuard] },
+  { path: 'Profile', component: ProfileComponent, canActivate: [LoginGuard] },
   { path: 'Codes', component: CodeHomeComponent, canActivate: [LoginGuard] },
   { path: 'Messages', component: HomemessagesComponent, canActivate: [LoginGuard] },
   { path: 'SettingsAuth', component: SettingsAuthHomeComponent, canActivate: [LoginGuard] },

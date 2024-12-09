@@ -300,37 +300,43 @@ export class SharedOneYearWithPartsAndTotalComponent {
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
   toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
-
+    let filteredListDto: IFilteredListDto[] = [];
+    let isDropdownOpen : boolean = true;
+    
     // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
     if (filteredIndex === 0) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_0`
       );
-
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 1) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto= this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_1`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 2) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_2`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 3) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_3`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
+    filteredListDto[0].isDropdownOpen = isDropdownOpen;
   }
+  
   filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
 
 
@@ -391,17 +397,27 @@ export class SharedOneYearWithPartsAndTotalComponent {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectCountry1(subCode: ISubCodeForm, county: any) {
 
     subCode.enName1 = county.enName;
     subCode.arName1 = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectSector(subCode: ISubCodeForm, county: any) {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
+  
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
     
     // Filter the list based on index

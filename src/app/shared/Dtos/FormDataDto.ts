@@ -8,6 +8,7 @@ export interface IAddFormDataDto {
 }
 export interface IDataDto{
     TableId:number,
+    TableType:string,
     questionId:string|number,
     codes : number[]
     level : number,

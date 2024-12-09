@@ -257,36 +257,41 @@ export class SharedTableWithoutTransComponent {
   }
 
   toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
-
+    let filteredListDto: IFilteredListDto[] = [];
+    let isDropdownOpen : boolean = true;
+    
     // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
     if (filteredIndex === 0) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_0`
       );
-
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 1) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto= this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_1`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 2) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_2`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 3) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_3`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
+    filteredListDto[0].isDropdownOpen = isDropdownOpen;
   }
   filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
 
@@ -348,16 +353,25 @@ export class SharedTableWithoutTransComponent {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectCountry1(subCode: ISubCodeForm, county: any) {
 
     subCode.enName1 = county.enName;
     subCode.arName1 = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectSector(subCode: ISubCodeForm, county: any) {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
 
@@ -765,7 +779,7 @@ export class SharedTableWithoutTransComponent {
               let res_ = this.authService.decodedToken(isLoggedIn);
               var role = res_.roles;
               if (res.Data) {
-                debugger
+                
                 if (res.Data.length > 0) {
                   const groupedTables = res.Data[0].dataDtos.reduce((acc: any, item: any) => {
                     // Check if the TableId already exists in the accumulator
@@ -973,7 +987,7 @@ export class SharedTableWithoutTransComponent {
                         }
                       }
                       else if (item.level == 3) {
-                        debugger
+                        
                         const level1ItemIndex = this.coverForm.tables[tableIndex].formContents.findIndex(fc => fc.codeId === item.parentCodeId);
                         if (level1ItemIndex !== -1) {
                           const subCodeIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes.findIndex(subCode => subCode.Id === item.subCodeParentId);
@@ -1004,7 +1018,7 @@ export class SharedTableWithoutTransComponent {
                               if (!subCodeExists)
                                 this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes.push(subCode);
                               else {
-                                debugger
+                                
                                 const sIndex = this.coverForm.tables[tableIndex].formContents[level1ItemIndex].code.SubCodes[subCodeIndex].subCodes.
                                   findIndex(sC => sC.arName === subCode.arName && sC.Id === subCode.codeId && sC.enName === subCode.enName);
                                 if (sIndex != -1)
@@ -1017,7 +1031,7 @@ export class SharedTableWithoutTransComponent {
                       }
                     });
                   });
-                  debugger
+                  
                   localStorage.removeItem(`coverForm${this.coverForm.id}`);
                   localStorage.setItem(`coverForm${this.coverForm.id}`, JSON.stringify(this.coverForm));
                 }
@@ -1028,7 +1042,7 @@ export class SharedTableWithoutTransComponent {
                 // this.modifyInputById(this.coverForm.typeQuarter);
                 return;
               }
-              debugger
+              
               const storedCoverForm = localStorage.getItem(`coverForm${this.coverForm.id}`);
               if (storedCoverForm) {
                 this.coverForm = JSON.parse(storedCoverForm);

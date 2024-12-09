@@ -358,7 +358,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         this.coverForm.status = 7;
         Swal.fire({
@@ -381,7 +381,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.Loader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.Loader = false;
         this.coverForm.status = 6;
         Swal.fire({
@@ -442,7 +442,7 @@ export class NavigateTablesTypesComponent implements OnInit {
       next: (res: any) => {
         this.Loader = false;
         if (res.Data) {
-          debugger
+          
           this.Loader = false;
           this.coverForm = res.Data;
           const status = this.coverForm.status;
@@ -603,6 +603,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
               let dataDtos: IDataDto = {
                 TableId: coverForm.tables[index].id,
+                TableType: this.coverForm.tables[index].Type,
                 TableArName: coverForm.tables[index].arName,
                 TableEnName: coverForm.tables[index].enName,
                 questionId: coverForm.tables[index].formContents[i].code.QuestionCode,
@@ -626,6 +627,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               for (let r = 0; r < coverForm.tables[index].formContents[i].code.SubCodes.length; r++) {
                 let dataDtosSub: IDataDto = {
                   TableId: coverForm.tables[index].id,
+                  TableType: this.coverForm.tables[index].Type,
                   TableArName: coverForm.tables[index].arName,
                   TableEnName: coverForm.tables[index].enName,
                   questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
@@ -649,6 +651,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 for (let z = 0; z < coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes.length; z++) {
                   let dataDtosSub: IDataDto = {
                     TableId: coverForm.tables[index].id,
+                    TableType: this.coverForm.tables[index].Type,
                     TableArName: coverForm.tables[index].arName,
                     TableEnName: coverForm.tables[index].enName,
                     questionId: coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
@@ -790,6 +793,7 @@ export class NavigateTablesTypesComponent implements OnInit {
               }
               let dataDtos: IDataDto = {
                 TableId: this.coverForm.tables[index].id,
+                TableType: this.coverForm.tables[index].Type,
                 TableArName: this.coverForm.tables[index].arName,
                 TableEnName: this.coverForm.tables[index].enName,
                 questionId: this.coverForm.tables[index].formContents[i].code.QuestionCode,
@@ -817,6 +821,7 @@ export class NavigateTablesTypesComponent implements OnInit {
                 }
                 let dataDtosSub: IDataDto = {
                   TableId: this.coverForm.tables[index].id,
+                  TableType: this.coverForm.tables[index].Type,
                   TableArName: this.coverForm.tables[index].arName,
                   TableEnName: this.coverForm.tables[index].enName,
                   questionId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].QuestionCode,
@@ -842,6 +847,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
                   let dataDtosSub: IDataDto = {
                     TableId: this.coverForm.tables[index].id,
+                    TableType: this.coverForm.tables[index].Type,
                     TableArName: this.coverForm.tables[index].arName,
                     TableEnName: this.coverForm.tables[index].enName,
                     questionId: this.coverForm.tables[index].formContents[i].code.SubCodes[r].subCodes[z].QuestionCode,
@@ -883,7 +889,7 @@ export class NavigateTablesTypesComponent implements OnInit {
 
         const observer = {
           next: (res: any) => {
-            debugger
+            
             this.GetFormById(this.formId);
             if (btnType === "Open") {
               this.coverForm.status = 8;

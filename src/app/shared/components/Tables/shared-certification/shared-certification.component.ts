@@ -38,7 +38,7 @@ export class SharedCertificationComponent {
             dateOfCompletion: '', // تعيين التاريخ الحالي كقيمة افتراضية
           };
           this.coverForm = res.Data;
-          debugger
+          
           this.coverForm.certification = certificationData
           this.GetFormData();
         }
@@ -70,7 +70,7 @@ export class SharedCertificationComponent {
         if (isLoggedIn != "") {
           let res_ = this.authService.decodedToken(isLoggedIn);
           if (res.Data) {
-            debugger
+            
             let certification = localStorage.getItem(`certification`);
             if (certification) {
               this.coverForm.certification = JSON.parse(certification) as ICertificationDto;
@@ -93,7 +93,7 @@ export class SharedCertificationComponent {
     this.formServices.GetFormData(+this.formId, +this.companyId, 0).subscribe(observer);
   }
   onModelChange(newDate: string) {
-    debugger
+    
     let certification = localStorage.getItem(`certification`);
 
     if (certification) {
@@ -102,7 +102,7 @@ export class SharedCertificationComponent {
     localStorage.setItem(`certification`, JSON.stringify(this.coverForm.certification));
   }
   ngOnDestroy() {
-    debugger
+    
     let certification = localStorage.getItem(`certification`);
     if (certification) {
       localStorage.removeItem(`certification`);

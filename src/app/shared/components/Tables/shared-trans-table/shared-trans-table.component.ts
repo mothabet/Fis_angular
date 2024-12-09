@@ -154,7 +154,7 @@ export class SharedTransTableComponent {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event): void {
-    debugger
+    
     const clickedElement = event.target as HTMLElement;
     if (!clickedElement.closest('.dropdown')) {
       this.filteredListDto.forEach(item => {
@@ -257,36 +257,41 @@ export class SharedTransTableComponent {
     this.companyServices.GetCompanyById(id).subscribe(observer);
   }
   toggleDropdownCountry(index: number, indexSub: number, filteredIndex: number = 0) {
-
+    let filteredListDto: IFilteredListDto[] = [];
+    let isDropdownOpen : boolean = true;
+    
     // تحقق من طول المصفوفة لتغيير العنصر المطلوب فقط
     if (filteredIndex === 0) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_0`
       );
-
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 1) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto= this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_1`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 2) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_2`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
     else if (filteredIndex === 3) {
-      const filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
+      filteredListDto = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_3`
       );
 
-      filteredListDto[0].isDropdownOpen = !filteredListDto[0].isDropdownOpen;
+      isDropdownOpen = !filteredListDto[0].isDropdownOpen;
     }
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
+    filteredListDto[0].isDropdownOpen = isDropdownOpen;
   }
   filterCountry(searchTerm: string, index: number, indexSub: number, filteredType: string = "", filteredIndex: number = 0) {
     
@@ -348,52 +353,61 @@ export class SharedTransTableComponent {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectCountry1(subCode: ISubCodeForm, county: any) {
 
     subCode.enName1 = county.enName;
     subCode.arName1 = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   selectSector(subCode: ISubCodeForm, county: any) {
 
     subCode.enName = county.enName;
     subCode.arName = county.arName;
+    this.filteredListDto.forEach(item => {
+      item.isDropdownOpen = false;
+    });
   }
   getFiltered(index: number, indexSub: number, filteredIndex: number = 0): IDropdownList[] {
     
     // Filter the list based on index
     let filtered: IDropdownList[] = [];
+    let returnFilteredListDto: IFilteredListDto[] = [];
     if (filteredIndex == 0) {
       let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_0`
       );
-      filtered = filteredListDto[0].filtered;
+      returnFilteredListDto = filteredListDto;
     }
     if (filteredIndex == 1) {
       let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_1`
       );
       filtered = filteredListDto[0].filtered;
+      returnFilteredListDto = filteredListDto;
     }
     if (filteredIndex == 2) {
       let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_2`
       );
       filtered = filteredListDto[0].filtered;
+      returnFilteredListDto = filteredListDto;
+
     }
     if (filteredIndex == 3) {
       let filteredListDto: IFilteredListDto[] = this.filteredListDto.filter(
         f => f.index === `${index}_${indexSub}_3`
       );
       filtered = filteredListDto[0].filtered;
+      returnFilteredListDto = filteredListDto;
     }
     // Map the filtered list to IDropdownList
-    return filtered.map(f => ({
-      id: f.id,            // Map the id correctly
-      arName: f.arName,    // Map arName
-      enName: f.enName,    // Map enName
-      code: f.code         // Map code
-    }));
+    return returnFilteredListDto[0].filtered;
   }
   getFilteredIsDropdownOpen(index: number, indexSub: number, filteredIndex: number = 0): boolean {
     
