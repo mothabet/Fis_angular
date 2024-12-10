@@ -13,7 +13,7 @@ import { AuditComponent } from './components/audit/audit.component';
     HomeComponent,
     CompanyHomeComponent,
     HomeMapComponent,
-    AuditComponent
+    AuditComponent,
   ],
   imports: [
     CommonModule,

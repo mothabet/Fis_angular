@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { HomeService } from '../../Services/home.service';
+import { MapSettingService } from 'src/app/home-setting/Services/map-setting.service';
 
 @Component({
   selector: 'app-home-map',
@@ -12,13 +13,32 @@ export class HomeMapComponent implements OnInit{
   showLoader: boolean = false;
   govData:any;
   hasData: boolean = false;
+  reviewYear : number= 0;
+  reviewType : number =0;
 
-
-  constructor(private sharedService: SharedService, private homeServices: HomeService) {
+  constructor(private sharedService: SharedService, private homeServices: HomeService,private mapSettingServices:MapSettingService) {
     
   }
   ngOnInit(){
-    
+    this.GetMapSetting();
+  }
+  GetMapSetting(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          debugger
+          this.reviewYear = res.Data.reviewYear;
+          this.reviewType = res.Data.reviewType;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.mapSettingServices.GetMapSetting().subscribe(observer);
   }
   onSvgLoad(event: any): void {
     const svgDoc = event.target.contentDocument;
@@ -34,13 +54,11 @@ export class HomeMapComponent implements OnInit{
       });
     }
   }
-
   onRegionClick(regionId: string): void {
 
     // يمكنك هنا تنفيذ أي إجراء بناءً على الجزء الذي تم النقر عليه
     alert(`You clicked on ${regionId}`);
   }
-
   showGovernorate(governorate: string): void {
     this.selectedGovernorate = governorate;
     this.GetMapGovData(governorate)

@@ -1,34 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/shared/services/shared.service';
-import { LaunchYearService } from '../../Services/launch-year.service';
 import Swal from 'sweetalert2';
+import { LaunchYearService } from '../../Services/launch-year.service';
+import { MapSettingService } from '../../Services/map-setting.service';
 
 @Component({
-  selector: 'app-launch-year',
-  templateUrl: './launch-year.component.html',
-  styleUrls: ['./launch-year.component.css']
+  selector: 'app-oman-map-setting',
+  templateUrl: './oman-map-setting.component.html',
+  styleUrls: ['./oman-map-setting.component.css']
 })
-export class LaunchYearComponent implements OnInit {
+export class OmanMapSettingComponent {
   showLoader: boolean = false;
-  id: number = 0;
   years: number[] = [];
   currentYear: number = 0;
-  launchYear :number = 0;
-  constructor(private fb: FormBuilder, private sharedService: SharedService,private launchYearServices : LaunchYearService) { }
+  reviewYear :number = 0;
+  reviewType :number = 0;
+  constructor(private fb: FormBuilder, private sharedService: SharedService,private mapSettingServices : MapSettingService) { }
   ngOnInit(): void {
     this.currentYear = new Date().getFullYear(); // Get the current year
     for (let year = 2007; year <= this.currentYear; year++) {
       this.years.push(year);
     }
-    this.GetLaunchYear();
+    this.GetMapSetting();
   }
-  GetLaunchYear(): void {
+  GetMapSetting(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.launchYear = res.Data
+          this.reviewYear = res.Data.reviewYear;
+          this.reviewType = res.Data.reviewType;
         }
         this.showLoader = false;
       },
@@ -37,11 +39,14 @@ export class LaunchYearComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.launchYearServices.GetLaunchYear().subscribe(observer);
+    this.mapSettingServices.GetMapSetting().subscribe(observer);
   }
-  SavePercentage(): void {
+  SaveMapSetting(): void {
     this.showLoader = true;
-    
+    const model = {
+      reviewYear : this.reviewYear,
+      reviewType : this.reviewType
+    }
     const observer = {
       next: (res: any) => {
         this.showLoader = false;
@@ -59,6 +64,6 @@ export class LaunchYearComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.launchYearServices.AddLaunchYear(+this.launchYear).subscribe(observer);
+    this.mapSettingServices.SaveMapSetting(model).subscribe(observer);
   }
 }

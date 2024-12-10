@@ -7,6 +7,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
 import { IAddGeneralIndicator } from '../../Dtos/GeneralIndicatorDto';
 import { GeneralIndicatorServicesService } from '../../Services/general-indicator-services.service';
+import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
 @Component({
   selector: 'app-general-indicators',
@@ -15,17 +16,27 @@ import { GeneralIndicatorServicesService } from '../../Services/general-indicato
 })
 export class GeneralIndicatorsComponent implements OnInit {
   isDropdownOpen = false;
+  isSectorsDropdownOpen = false;
   searchTerm: string = '';
-  errorMessage: string = '';
+  sectorsSearchTerm: string = '';
+  codeErrorMessage: string = '';
+  chartErrorMessage: string = '';
+  sectorErrorMessage: string = '';
+  yearErrorMessage: string = '';
   filteredFormContents: ICode[] = [];
   codes: ICode[] = [];
+  sectors: IDropdownList[] = []
+  filteredSectors: IDropdownList[] = []
   yearFrom: number | undefined;
   yearTo: number | undefined;
   years: number[] = [
     2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017,
     2018, 2019, 2020, 2021, 2022, 2023, 2024
   ];
+  selectSector : boolean = false;
   isYearError: boolean = false;
+  isChartTypeError: boolean = false;
+  isSectorError: boolean = false;
   isFormContentError: boolean = false;
   showLoader: boolean = false;
   noData: boolean = false;
@@ -37,7 +48,8 @@ export class GeneralIndicatorsComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 0;
   searchText: string = '';
-  constructor(private sharedService: SharedService, private codeHomeService: CodeHomeService, private generalIndicatorServices: GeneralIndicatorServicesService) {
+  chartType: number = 0; // القيمة الافتراضية
+  constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService, private codeHomeService: CodeHomeService, private generalIndicatorServices: GeneralIndicatorServicesService) {
 
   }
   ngOnInit() {
@@ -45,12 +57,21 @@ export class GeneralIndicatorsComponent implements OnInit {
   }
   addGeneralIndicator() {
     this.GetAllCodes();
+    this.GetSectors();
   }
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
+  sectorsToggleDropdown() {
+    this.isSectorsDropdownOpen = !this.isSectorsDropdownOpen;
+  }
   filterFormContent() {
     this.filteredFormContents = this.codes.filter(code =>
+      code.arName.includes(this.searchTerm)
+    );
+  }
+  filterSectors() {
+    this.filteredSectors = this.sectors.filter(code =>
       code.arName.includes(this.searchTerm)
     );
   }
@@ -58,11 +79,15 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
   }
+  SelectSector(event: Event, code: any) {
+    this.sectorsSearchTerm = code.arName;
+    this.isSectorsDropdownOpen = false;
+  }
   GetAllCodes(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        
+        debugger
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.filteredFormContents = res.Data.getCodeDtos;
@@ -80,32 +105,51 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.codeHomeService.GetAllCodes(0).subscribe(observer);
   }
   saveGeneralIndicator() {
+    debugger
     if (this.searchTerm == '' || this.searchTerm == undefined) {
       this.isFormContentError = true;
-      this.errorMessage = 'يجب اختيار مؤشر'
+      this.codeErrorMessage = 'يجب اختيار مؤشر'
       return
     }
     else {
       this.isFormContentError = false;
-      this.errorMessage = ''
+      this.codeErrorMessage = ''
+    }
+    if (this.chartType == 0) {
+      this.isChartTypeError = true;
+      this.chartErrorMessage = 'يجب اختيار نوع الإحصاء'
+      return
+    }
+    else {
+      this.isChartTypeError = false;
+      this.chartErrorMessage = ''
+    }
+    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined)) {
+      this.isSectorError = true;
+      this.sectorErrorMessage = 'يجب اختيار القطاع '
+      return
+    }
+    else {
+      this.isSectorError = false;
+      this.sectorErrorMessage = ''
     }
     if (this.yearFrom == 0 || this.yearFrom == undefined) {
       this.isYearError = true;
-      this.errorMessage = 'يجب اختيار سنة البداية'
+      this.yearErrorMessage = 'يجب اختيار سنة البداية'
       return
     }
     else {
       this.isYearError = false;
-      this.errorMessage = ''
+      this.yearErrorMessage = ''
     }
     if ((this.yearTo != undefined) && this.yearFrom > this.yearTo) {
       this.isYearError = true;
-      this.errorMessage = 'يجب اختيار سنة البداية اقل من سنة النهاية'
+      this.yearErrorMessage = 'يجب اختيار سنة البداية اقل من سنة النهاية'
       return
     }
     else {
       this.isYearError = false;
-      this.errorMessage = ''
+      this.yearErrorMessage = ''
     }
     if (this.yearTo == undefined || this.yearTo == null)
       this.yearTo = 0;
@@ -113,7 +157,11 @@ export class GeneralIndicatorsComponent implements OnInit {
       codeId: this.codes.find(code => code.arName === this.searchTerm)?.Id!,
       codeName: this.searchTerm,
       yearFrom: this.yearFrom,
-      yearTo: this.yearTo
+      yearTo: this.yearTo,
+      chartType : this.chartType,
+      sectorName : this.sectorsSearchTerm,
+      isSector : this.selectSector,
+      sectorId : this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
     };
     const observer = {
       next: (res: any) => {
@@ -143,6 +191,9 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.searchTerm = '';
     this.yearFrom = undefined;
     this.yearTo = undefined;
+    this.chartType =0;
+    this.selectSector = false;
+    this.sectorsSearchTerm = '';
   }
   GetGeneralIndicators(page: number, textSearch: string = '') {
     this.showLoader = true;
@@ -203,6 +254,9 @@ export class GeneralIndicatorsComponent implements OnInit {
       }
     });
   }
+  setChartType(type: number): void {
+    this.chartType = type;
+  }
   onPageChange(page: number) {
     this.currentPage = page;
     this.GetGeneralIndicators(page);
@@ -215,11 +269,15 @@ export class GeneralIndicatorsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+          this.chartType = res.Data.chartType;
           this.searchTerm = res.Data.codeName;
           this.yearFrom = res.Data.yearFrom;
           this.yearTo = res.Data.yearTo;
+          this.selectSector = res.Data.isSector;
+          this.sectorsSearchTerm = res.Data.sectorName;
           this.id = res.Data.id;
+          this.GetAllCodes();
+          this.GetSectors();
         }
         this.isUpdate = true;
         this.showLoader = false;
@@ -235,28 +293,50 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.showLoader = true;
     if (this.searchTerm == '' || this.searchTerm == undefined) {
       this.isFormContentError = true;
-      this.errorMessage = 'يجب اختيار مؤشر'
+      this.codeErrorMessage = 'يجب اختيار مؤشر'
       return
     }
     else {
       this.isFormContentError = false;
-      this.errorMessage = ''
+      this.codeErrorMessage = ''
+    }
+    if (this.chartType == 0) {
+      this.isChartTypeError = true;
+      this.chartErrorMessage = 'يجب اختيار نوع الإحصاء'
+      return
+    }
+    else {
+      this.isChartTypeError = false;
+      this.chartErrorMessage = ''
+    }
+    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined)) {
+      this.isSectorError = true;
+      this.sectorErrorMessage = 'يجب اختيار القطاع '
+      return
+    }
+    else {
+      this.isSectorError = false;
+      this.sectorErrorMessage = ''
     }
     if (this.yearFrom == 0 || this.yearFrom == undefined) {
       this.isYearError = true;
-      this.errorMessage = 'يجب اختيار سنة البداية'
+      this.yearErrorMessage = 'يجب اختيار سنة البداية'
       return
     }
     else {
       this.isYearError = false;
-      this.errorMessage = ''
+      this.yearErrorMessage = ''
     }
 
     const Model: IAddGeneralIndicator = {
       codeId: this.codes.find(code => code.arName === this.searchTerm)?.Id!,
       codeName: this.searchTerm,
       yearFrom: this.yearFrom,
-      yearTo: this.yearTo!
+      yearTo: this.yearTo!,
+      chartType:this.chartType,
+      sectorName : this.sectorsSearchTerm,
+      isSector : this.selectSector,
+      sectorId : this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
     };
     const observer = {
       next: (res: any) => {
@@ -280,5 +360,22 @@ export class GeneralIndicatorsComponent implements OnInit {
       },
     };
     this.generalIndicatorServices.UpdateGeneralIndicator(this.id, Model).subscribe(observer);
+  }
+  GetSectors(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.sectors = res.Data.getSectorsDtos;
+          this.filteredSectors = res.Data.getSectorsDtos;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
   }
 }

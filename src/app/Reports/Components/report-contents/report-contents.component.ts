@@ -92,6 +92,8 @@ export class ReportContentsComponent implements OnInit {
   isCountryDropdownOpen = false;
   isYearsDropdownOpen = false;
   isCompanyDropdownOpen = false;
+  isGovernorateDropdownOpen = false;
+  isWilayatDropdownOpen = false;
   isSectorDropdownOpen = false;
   searchTerm: string = '';
   searchFormContentTerm: string = '';
@@ -99,6 +101,8 @@ export class ReportContentsComponent implements OnInit {
   searchCountryTerm: string = '';
   searchYearTerm: string = '';
   searchCompanyTerm: string = '';
+  searchGovernorateTerm: string = '';
+  searchWilayatTerm: string = '';
   searchSectorTerm: string = '';
   filteredCodes: ICode[] = [];
   report: IAddReportPartDto = {
@@ -146,9 +150,11 @@ export class ReportContentsComponent implements OnInit {
   ];
   tableRepTables: IReportFilterDto[] = [
     { id: 1, arName: 'الانشطة', enName: 'ActivitiesRep' },
-    // { id: 2, arName: 'الدول', enName: 'Countries' },
+    { id: 2, arName: 'الدول', enName: 'Countries' },
     { id: 3, arName: 'القطاعات', enName: 'SectorsRep' },
     { id: 4, arName: 'الشركات', enName: 'CompaniesRep' },
+    { id: 3, arName: 'المحافظات', enName: 'GovernoratesRep' },
+    { id: 4, arName: 'الولايات', enName: 'WilayatRep' },
   ];
   codes: ICode[] = [];
   tablesRep: IGetTableRep[] = [];
@@ -159,6 +165,8 @@ export class ReportContentsComponent implements OnInit {
   activities: IDropdownList[] = []
   countries: IDropdownList[] = []
   companies: IDropdownList[] = []
+  governorates: IDropdownList[] = []
+  wilayat: IDropdownList[] = []
   sectors: IDropdownList[] = []
   years: IDropdownList[] = [
     { id: 1, arName: '2007', enName: '2007', code: '' },
@@ -185,6 +193,8 @@ export class ReportContentsComponent implements OnInit {
   filteredSectors: IDropdownList[] = [];
   filteredCompanies: IDropdownList[] = [];
   filteredYears: IDropdownList[] = this.years;
+  filteredGovernorates: IDropdownList[] = [];
+  filteredWilayat: IDropdownList[] = [];
   errorMessage: string = '';
   isTableError: boolean = false;
   isYearError: boolean = false;
@@ -222,7 +232,7 @@ export class ReportContentsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          
+
           this.reports = res.Data;
         }
         else {
@@ -300,6 +310,12 @@ export class ReportContentsComponent implements OnInit {
   toggleCompanyDropdown() {
     this.isCompanyDropdownOpen = !this.isCompanyDropdownOpen;
   }
+  toggleGovernorateDropdown() {
+    this.isGovernorateDropdownOpen = !this.isGovernorateDropdownOpen;
+  }
+  toggleWilayatDropdown() {
+    this.isWilayatDropdownOpen = !this.isWilayatDropdownOpen;
+  }
   toggleSectorDropdown() {
     this.isSectorDropdownOpen = !this.isYearsDropdownOpen;
   }
@@ -327,6 +343,18 @@ export class ReportContentsComponent implements OnInit {
 
     this.filteredCompanies = this.companies.filter(code =>
       code.arName.includes(this.searchCompanyTerm)
+    );
+  }
+  filterGovernoratesRep() {
+
+    this.filteredGovernorates = this.governorates.filter(code =>
+      code.arName.includes(this.searchGovernorateTerm)
+    );
+  }
+  filterWilayatRep() {
+
+    this.filteredWilayat = this.wilayat.filter(code =>
+      code.arName.includes(this.searchWilayatTerm)
     );
   }
   filterSectorRep() {
@@ -379,7 +407,7 @@ export class ReportContentsComponent implements OnInit {
           value: selectedField.Id // Initialize value as needed
         };
 
-        table.fields[0]=tableField;
+        table.fields[0] = tableField;
       }
     }
     // Perform any additional logic, like setting a FormControl value
@@ -431,7 +459,7 @@ export class ReportContentsComponent implements OnInit {
     // Perform any additional logic, like setting a FormControl value
   }
   selectYearRep(event: Event, table: ITableDto, year: any) {
-    
+
     this.searchYearTerm = year.arName;
     this.isYearsDropdownOpen = false;
 
@@ -462,6 +490,54 @@ export class ReportContentsComponent implements OnInit {
     this.isCompanyDropdownOpen = false;
 
     const selectedField = this.companies.find(field => field.arName === company.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          arName: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectGovernorateRep(event: Event, table: ITableDto, governorate: any) {
+    this.searchGovernorateTerm = governorate.arName;
+    this.isGovernorateDropdownOpen = false;
+
+    const selectedField = this.governorates.find(field => field.arName === governorate.arName);
+
+    if (selectedField && table) {
+      // Check if the field already exists in the table's fields array
+      const fieldExists = table.fields.some(field => field.name === selectedField.arName);
+
+      if (!fieldExists) {
+        const tableField: ITableFieldDto = {
+          name: selectedField.arName,
+          arName: selectedField.arName,
+          dataType: null,
+          filter: null, // Initialize as null or a valid default value
+          value: selectedField.id // Initialize value as needed
+        };
+
+        table.fields.push(tableField);
+      }
+    }
+    // Perform any additional logic, like setting a FormControl value
+  }
+  selectWilayatRep(event: Event, table: ITableDto, wilayat: any) {
+    this.searchWilayatTerm = wilayat.arName;
+    this.isWilayatDropdownOpen = false;
+
+    const selectedField = this.wilayat.find(field => field.arName === wilayat.arName);
 
     if (selectedField && table) {
       // Check if the field already exists in the table's fields array
@@ -1137,7 +1213,7 @@ export class ReportContentsComponent implements OnInit {
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
-    if ((this.tables[0].fields.length == 0 && this.searchTerm == '')&& this.tables[0].enTableName == 'TablesReport') {
+    if ((this.tables[0].fields.length == 0 && this.searchTerm == '') && this.tables[0].enTableName == 'TablesReport') {
       this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
@@ -1276,9 +1352,10 @@ export class ReportContentsComponent implements OnInit {
   }
   appendTable(): void {
     if (this.selectedTable) {
-
+      debugger
       if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries'
         || this.selectedTable.enName == 'SectorsRep' || this.selectedTable.enName == 'CompaniesRep'
+        || this.selectedTable.enName == 'GovernoratesRep' || this.selectedTable.enName == 'WilayatRep'
       ) {
         if (this.tables.length > 2) {
           const tableDto: ITableDto = {
@@ -1318,6 +1395,7 @@ export class ReportContentsComponent implements OnInit {
           arTableName: this.selectedTable.arName,
           fields: []  // Initial empty fields array
         };
+        debugger
         const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
         if (!tableExists) {
           this.tables.push(tableDto);
@@ -1355,6 +1433,10 @@ export class ReportContentsComponent implements OnInit {
         this.GetSectors();
       else if (this.selectedTable.enName == 'CompaniesRep')
         this.GetCompanies();
+      else if (this.selectedTable.enName == 'GovernoratesRep')
+        this.GetGovernorates();
+      else if (this.selectedTable.enName == 'WilayatRep')
+        this.GetWilayat();
       this.closeModal();
     }
   }
@@ -1425,15 +1507,17 @@ export class ReportContentsComponent implements OnInit {
   transActivityFields(fields: any[], report: any): any[] {
     // Step 1: Group the fields by 'codeArName'
     const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportActivityField }, fieldArray: any[]) => {
+      debugger
       const questionCode = fieldArray[0].value;
       const codeArName = fieldArray[1].value;
       const codeEnName = fieldArray[2].value;
       const reviewYear = fieldArray[3].value;
       const activityArName = fieldArray[4].value;
-      const activityCode = fieldArray[6].value;
+      let activityCode = fieldArray[6].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
       const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
-
+      if(report.seconedTable == 'GovernoratesRep' || report.seconedTable == 'WilayatRep')
+        activityCode = fieldArray[5].value;
       // استخدم مفتاح مركب يجمع بين codeArName و activityCode
       const compositeKey = `${codeArName}_${activityCode}`;
 
@@ -1763,6 +1847,12 @@ export class ReportContentsComponent implements OnInit {
       else if (tables[2].enTableName == 'Countries') {
         query = this.countryFilterQuery(tables);
       }
+      else if (tables[2].enTableName == 'GovernoratesRep') {
+        query = this.governorateFilterQuery(tables,1);
+      }
+      else if (tables[2].enTableName == 'WilayatRep') {
+        query = this.wilayatFilterQuery(tables,1);
+      }
       return query;
     }
     else {
@@ -1890,13 +1980,13 @@ export class ReportContentsComponent implements OnInit {
           //     whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
           //   }
           // });
-            if (this.searchYearTerm!=='') {
-              // Add the condition for f.reviewYear
-              const reviewYearCondition = `f.reviewYear = N'${this.searchYearTerm}'`;
+          if (this.searchYearTerm !== '') {
+            // Add the condition for f.reviewYear
+            const reviewYearCondition = `f.reviewYear = N'${this.searchYearTerm}'`;
 
-              // Append this to the whereClause as well
-              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
-            }
+            // Append this to the whereClause as well
+            whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+          }
         }
       }
       // Final query with WHERE clause
@@ -2366,6 +2456,312 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
   }
+  governorateFilterQuery(tables: ITableDto[], isFormContentRep: number = 0): string {
+    if (isFormContentRep == 1) {
+      let query = ''
+      this.report.seconedTable = tables[2].enTableName;
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear,g.arName governorateName , g.code as govCode FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId inner join formDatas fd on f.id = fd.FormId inner join companies c on c.UserId = fd.UserId inner join governorates g on g.id = c.governoratesid`; // or any other filters
+      let whereClause = '';
+      // Handle fields from tables[0]
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
+
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
+
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
+        }
+      }
+      if (tables.length > 1 && tables[2].enTableName === 'GovernoratesRep') {
+        if (tables[2].fields && tables[2].fields.length > 0) {
+          // Collect conditions for each field name in an array
+          const sectorConditions: string[] = tables[2].fields
+            .filter(field => field.name)  // Only include fields with a name
+            .map(field => `g.arName = N'${field.name}'`);
+
+          // Join all conditions with OR and wrap in parentheses for clarity
+          const combinedSectorCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
+
+          // Append the combined condition to whereClause
+          if (combinedSectorCondition) {
+            whereClause += whereClause ? ` and ${combinedSectorCondition}` : ` WHERE ${combinedSectorCondition}`;
+          }
+        }
+        else {
+          // Use filteredSectors.arName
+          if (this.filteredSectors && this.filteredSectors.length > 0) {
+            const sectorConditions: string[] = this.filteredSectors
+              .filter(activity => activity.arName)
+              .map(activity => `g.arName = N'${activity.arName}'`);
+
+            // Join all activity conditions with OR
+            const combinedActivityCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
+
+            // Append to whereClause
+            if (combinedActivityCondition) {
+              whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
+            }
+          }
+        }
+      }
+
+      // Final query with WHERE clause
+      // let group = ` GROUP BY s.arName,s.code,f.reviewyear,JSON_VALUE(j.value, '$.arName')`
+      // query += whereClause + group;
+      query += whereClause;
+      return query;
+    }
+    else {
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          arName: '',
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
+      }
+      let query = ''
+      if (tables[0].fields[0].dataType == '0')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '1')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '2')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '3')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '4')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      let whereClause = '';
+
+      // Handle fields from tables[0]
+      // if (tables[0].fields && tables[0].fields.length > 0) {
+      //   tables[0].fields.forEach((field, fieldIndex) => {
+      //     if (field.name) {
+      //       // Build the condition for arName
+      //       const condition = `t.arName = N'${field.name}'`;
+
+      //       // Append condition to whereClause
+      //       whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
+      //     }
+      //   });
+      // }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+        }
+      }
+      // Handle conditions based on tables[1] (Years)
+      if (tables.length > 1 && tables[1].enTableName == 'Years') {
+        if (tables[1].fields && tables[1].fields.length > 0) {
+          tables[1].fields.forEach((field, fieldIndex) => {
+            if (field.name) {
+              // Add the condition for f.reviewYear
+              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+              // Append this to the whereClause as well
+              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+            }
+          });
+        }
+      }
+      if (tables[2].fields && tables[2].fields.length > 0) {
+        let whereCompany = '';
+        tables[2].fields.forEach((field, fieldIndex) => {
+          if (field.name) {
+            // Add the condition for f.reviewYear
+            const companyCondition = `s.arName = N'${field.name}'`;
+
+
+            whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;
+            // Append this to the whereClause as well
+          }
+        });
+        whereClause += `${whereCompany})`;
+      }
+      // Final query with WHERE clause
+      // let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+      // query += whereClause + group;
+      query += whereClause;
+      return query;
+    }
+  }
+  wilayatFilterQuery(tables: ITableDto[], isFormContentRep: number = 0): string {
+    if (isFormContentRep == 1) {
+      let query = ''
+      this.report.seconedTable = tables[2].enTableName;
+      query = `SELECT distinct codes.questionCode,codes.arName as codeArName,codes.enName as codeEnName ,f.reviewYear,w.arName wilayatName , w.code as wilayatCode FROM codes inner join formContents fc on fc.codeid = codes.id inner join tables t on t.id = fc.tableId inner join forms f on f.id = t.formId inner join formDatas fd on f.id = fd.FormId inner join companies c on c.UserId = fd.UserId inner join wilayats w on w.id = c.wilayatid`; // or any other filters
+      let whereClause = '';
+      // Handle fields from tables[0]
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (w.IsDeleted != 1 OR w.IsDeleted IS NULL)`
+        const fieldConditions = tables[0].fields
+          .filter(field => field.name) // Filter out fields that don't have a name
+          .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
+          .join(' OR '); // Join the conditions with 'OR'
+
+        if (fieldConditions) {
+          whereClause += ` AND (${fieldConditions})`; // Append the field conditions to the WHERE clause
+        }
+
+        // Check if reportYearFrom and reportYearTo have values and filter on f.reviewYear
+        if (this.reportYearFrom && this.reportYearTo) {
+          if (this.reportYearFrom === this.reportYearTo) {
+            whereClause += ` AND f.reviewYear = ${this.reportYearFrom}`;
+          } else {
+            whereClause += ` AND f.reviewYear >= ${this.reportYearFrom} AND f.reviewYear <= ${this.reportYearTo}`;
+          }
+        } else if (this.reportYearFrom && !this.reportYearTo) {
+          whereClause += ` AND f.reviewYear >= ${this.reportYearFrom}`;
+        } else if (!this.reportYearFrom && this.reportYearTo) {
+          whereClause += ` AND f.reviewYear <= ${this.reportYearTo}`;
+        }
+      }
+      if (tables.length > 1 && tables[2].enTableName === 'WilayatRep') {
+        if (tables[2].fields && tables[2].fields.length > 0) {
+          // Collect conditions for each field name in an array
+          const sectorConditions: string[] = tables[2].fields
+            .filter(field => field.name)  // Only include fields with a name
+            .map(field => `w.arName = N'${field.name}'`);
+
+          // Join all conditions with OR and wrap in parentheses for clarity
+          const combinedSectorCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
+
+          // Append the combined condition to whereClause
+          if (combinedSectorCondition) {
+            whereClause += whereClause ? ` and ${combinedSectorCondition}` : ` WHERE ${combinedSectorCondition}`;
+          }
+        }
+        else {
+          // Use filteredSectors.arName
+          if (this.filteredSectors && this.filteredSectors.length > 0) {
+            const sectorConditions: string[] = this.filteredSectors
+              .filter(activity => activity.arName)
+              .map(activity => `w.arName = N'${activity.arName}'`);
+
+            // Join all activity conditions with OR
+            const combinedActivityCondition = sectorConditions.length > 0 ? `(${sectorConditions.join(" OR ")})` : "";
+
+            // Append to whereClause
+            if (combinedActivityCondition) {
+              whereClause += whereClause ? ` and ${combinedActivityCondition}` : ` WHERE ${combinedActivityCondition}`;
+            }
+          }
+        }
+      }
+
+      // Final query with WHERE clause
+      // let group = ` GROUP BY s.arName,s.code,f.reviewyear,JSON_VALUE(j.value, '$.arName')`
+      // query += whereClause + group;
+      query += whereClause;
+      return query;
+    }
+    else {
+      if (tables[0].fields.length == 0) {
+        const tableField: ITableFieldDto = {
+          name: this.searchTerm,
+          arName: '',
+          dataType: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.Type,
+          filter: null, // Initialize as null or a valid default value
+          value: (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id // Initialize value as needed
+        };
+        tables[0].fields[0] = tableField
+      }
+      let query = ''
+      if (tables[0].fields[0].dataType == '0')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '1')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '2')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '3')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '4')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '5')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '6')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      else if (tables[0].fields[0].dataType == '7')
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+      let whereClause = '';
+
+      // Handle fields from tables[0]
+      // if (tables[0].fields && tables[0].fields.length > 0) {
+      //   tables[0].fields.forEach((field, fieldIndex) => {
+      //     if (field.name) {
+      //       // Build the condition for arName
+      //       const condition = `t.arName = N'${field.name}'`;
+
+      //       // Append condition to whereClause
+      //       whereClause += whereClause ? ` or ${condition}` : ` WHERE JSON_VALUE(c.value, '$.TableArName') = N'${field.name}' AND JSON_VALUE(c.value, '$.level') = '1' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND ${condition}`;
+      //     }
+      //   });
+      // }
+      if (tables[0].fields && tables[0].fields.length > 0) {
+        if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
+          const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+        }
+      }
+      // Handle conditions based on tables[1] (Years)
+      if (tables.length > 1 && tables[1].enTableName == 'Years') {
+        if (tables[1].fields && tables[1].fields.length > 0) {
+          tables[1].fields.forEach((field, fieldIndex) => {
+            if (field.name) {
+              // Add the condition for f.reviewYear
+              const reviewYearCondition = `f.reviewYear = N'${field.name}'`;
+
+              // Append this to the whereClause as well
+              whereClause += whereClause ? ` and ${reviewYearCondition}` : ` WHERE ${reviewYearCondition}`;
+            }
+          });
+        }
+      }
+      if (tables[2].fields && tables[2].fields.length > 0) {
+        let whereCompany = '';
+        tables[2].fields.forEach((field, fieldIndex) => {
+          if (field.name) {
+            // Add the condition for f.reviewYear
+            const companyCondition = `s.arName = N'${field.name}'`;
+
+
+            whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;
+            // Append this to the whereClause as well
+          }
+        });
+        whereClause += `${whereCompany})`;
+      }
+      // Final query with WHERE clause
+      // let group = ` GROUP BY f.reviewYear,ac.arName,JSON_VALUE(c.value, '$.TableArName'),f.arName,JSON_VALUE(c.value, '$.arName'),JSON_VALUE(c.value, '$.questionId'),t.type,t.period;`
+      // query += whereClause + group;
+      query += whereClause;
+      return query;
+    }
+  }
   countryFilterQuery(tables: ITableDto[]): string {
     let query = ''
     if (tables[0].fields[0].dataType == '0')
@@ -2562,6 +2958,48 @@ export class ReportContentsComponent implements OnInit {
       },
     };
     this.companyService.GetCompanies('', 0).subscribe(observer);
+  }
+  GetGovernorates() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.governorates = res.Data.getGovernoratesDto;
+          this.filteredGovernorates = res.Data.getGovernoratesDto;
+        }
+        else {
+          this.governorates = [];
+          this.filteredGovernorates = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
+  }
+  GetWilayat() {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.wilayat = res.Data.getWilayaDtos;
+          this.filteredWilayat = res.Data.getWilayaDtos;
+        }
+        else {
+          this.wilayat = [];
+          this.filteredWilayat = [];
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.sectorsAndActivitiesServices.GetWilayats(0, 0, '').subscribe(observer);
   }
   GetSectors() {
     this.showLoader = true;

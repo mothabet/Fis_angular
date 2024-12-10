@@ -25,7 +25,17 @@
       </li>
     </ul>
   </div>
-
+  <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto">
+    <span style="display: block;"  *ngIf="reviewType === 1">
+      <i class="fa-regular fa-bell"></i> نوع المسح (سنوي)
+    </span>
+    <span style="display: block;" *ngIf="reviewType === 2">
+      <i class="fa-regular fa-bell"></i> نوع المسح (ربعي)
+    </span>
+    <span style="display: block;">
+      <i class="fa-regular fa-bell"></i> البيانات في الجدول تعبر عن المسح لسنة ({{reviewYear}})
+    </span>
+  </div>
   <!-- main content -->
   <div class="p-4 main card main-content" style="flex: 1;">
     <!-- tab content -->
@@ -42,20 +52,20 @@
             <a class="pointer point-2" (click)="showGovernorate('الوسطى')">
               الوسطى
             </a>
-            <a class="pointer point-3" (click)="showGovernorate('البريمي')">
-              البريمي
+            <a class="pointer point-3" (click)="showGovernorate('الظاهرة')">
+              الظاهرة
             </a>
             <a class="pointer point-4" (click)="showGovernorate('الدخلية')">
               الدخلية
             </a>
-            <a class="pointer point-5" (click)="showGovernorate('جنوب الشرقية')">
-              جنوب الشرقية
-            </a>
-            <a class="pointer point-6" (click)="showGovernorate('شمال الشرقية')">
+            <a class="pointer point-5" (click)="showGovernorate('شمال الشرقية')">
               شمال الشرقية
             </a>
-            <a class="pointer point-7" (click)="showGovernorate('الدخلية')">
-              الدخلية
+            <a class="pointer point-6" (click)="showGovernorate('جنوب الشرقية')">
+              جنوب الشرقية
+            </a>
+            <a class="pointer point-7" (click)="showGovernorate('البريمي')">
+              البريمي
             </a>
             <a class="pointer point-8" (click)="showGovernorate('شمال الباطنة')">
               شمال الباطنة

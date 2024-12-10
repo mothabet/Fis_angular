@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { OmanMapsComponent } from './Components/oman-maps/oman-maps.component';
 import { ChangePercentageComponent } from './Components/change-percentage/change-percentage.component';
 import { LaunchYearComponent } from './Components/launch-year/launch-year.component';
+import { OmanMapSettingComponent } from './Components/oman-map-setting/oman-map-setting.component';
 
 
 
@@ -13,7 +14,8 @@ import { LaunchYearComponent } from './Components/launch-year/launch-year.compon
     GeneralIndicatorsComponent,
     OmanMapsComponent,
     ChangePercentageComponent,
-    LaunchYearComponent
+    LaunchYearComponent,
+    OmanMapSettingComponent
   ],
   imports: [
     CommonModule,

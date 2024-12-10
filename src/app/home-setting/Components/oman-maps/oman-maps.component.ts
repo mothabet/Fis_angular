@@ -6,6 +6,7 @@ import { SharedService } from 'src/app/shared/services/shared.service';
 import { IAddOmanMap } from '../../Dtos/GeneralIndicatorDto';
 import Swal from 'sweetalert2';
 import { GeneralIndicatorServicesService } from '../../Services/general-indicator-services.service';
+import { MapSettingService } from '../../Services/map-setting.service';
 
 @Component({
   selector: 'app-oman-maps',
@@ -41,13 +42,22 @@ export class OmanMapsComponent implements OnInit {
   isLastPage: boolean = false;
   totalPages: number = 0;
   searchText: string = '';
-  constructor(private codeHomeService: CodeHomeService, private generalIndicatorServices: GeneralIndicatorServicesService, private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) {
+  currentYear: number = 0;
+  reviewYear :number = 0;
+  reviewType :number = 0;
+  years: number[] = [];
+  constructor(private codeHomeService: CodeHomeService,private mapSettingServices : MapSettingService, private generalIndicatorServices: GeneralIndicatorServicesService, private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService) {
 
   }
   ngOnInit(): void {
     this.GetGovernorates();
     this.GetAllCodes();
     this.GetOmanGovernorate(1, '')
+    this.currentYear = new Date().getFullYear(); // Get the current year
+    for (let year = 2007; year <= this.currentYear; year++) {
+      this.years.push(year);
+    }
+    this.GetMapSetting();
   }
   GetGovernorates() {
     this.showLoader = true;
@@ -65,6 +75,48 @@ export class OmanMapsComponent implements OnInit {
       },
     };
     this.sectorsAndActivitiesServices.GetGovernorates(0, '').subscribe(observer);
+  }
+  GetMapSetting(): void {
+    this.showLoader = true;
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.reviewYear = res.Data.reviewYear;
+          this.reviewType = res.Data.reviewType;
+        }
+        this.showLoader = false;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.mapSettingServices.GetMapSetting().subscribe(observer);
+  }
+  SaveMapSetting(): void {
+    this.showLoader = true;
+    const model = {
+      reviewYear : this.reviewYear,
+      reviewType : this.reviewType
+    }
+    const observer = {
+      next: (res: any) => {
+        this.showLoader = false;
+        if (res) {
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.mapSettingServices.SaveMapSetting(model).subscribe(observer);
   }
   toggleGovenorateDropdown() {
     this.isGovernorateDropdownOpen = !this.isGovernorateDropdownOpen;

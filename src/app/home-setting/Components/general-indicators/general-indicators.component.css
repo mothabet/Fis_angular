@@ -61,3 +61,167 @@ tfoot tr th .alert {
   .show {
     display: block;
   }
+  .company-modal .modal-content {
+    width: 70%; /* تحسين العرض */
+    max-width: 900px; /* تحديد الحد الأقصى للعرض */
+    margin: auto;
+    border-radius: 12px; /* حواف ناعمة */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .company-modal .modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .company-modal label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    margin-top: 5px;
+  }
+  .dropdown {
+    position: relative;
+    width: 100%;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1050;
+    display: none; /* الافتراضي */
+    float: left;
+    min-width: 100%;
+    padding: 0.5rem 0;
+    margin: 0;
+    font-size: 14px;
+    text-align: right;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    max-height: 200px; /* التحكم بالارتفاع */
+    overflow-y: auto; /* إضافة التمرير */
+  }
+  
+  .dropdown-item {
+    padding: 8px 16px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1;
+  }
+  .chart-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* زيادة المسافة بين الأزرار */
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .chart-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 85px;
+    height: 85px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .chart-btn img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  
+  .chart-btn.active {
+    border-color: #007bff;
+    background-color: #e7f1ff;
+    color: #007bff;
+  }
+  
+  .chart-btn:hover {
+    background-color: #f0f8ff;
+    border-color: #007bff;
+    color: #007bff;
+  }
+  .select-container {
+    position: relative;
+    margin-bottom: 15px;
+  }
+  
+  .select-container select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+  
+  .select-container select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .select-container label {
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background-color: #fff;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #555;
+  }
+  @media (max-width: 768px) {
+    .company-modal .modal-content {
+      width: 90%; /* تقليل العرض على الشاشات الصغيرة */
+    }
+  
+    .chart-buttons {
+      flex-wrap: wrap; /* السماح بتكديس الأزرار */
+      gap: 10px;
+    }
+  
+    .chart-btn {
+      width: 70px;
+      height: 70px;
+      font-size: 12px;
+    }
+  
+    .chart-btn img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  .dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .dropdown-item {
+    cursor: pointer;
+  }
+  
+  .show {
+    display: block;
+  }
+          
