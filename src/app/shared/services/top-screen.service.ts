@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 export class TopScreenService {
   private researcherId: string = '';
   private imageUrlSubject = new BehaviorSubject<string>(''); // Initialize with a default or empty value
+  private arName = new BehaviorSubject<string>(''); // Initialize with a default or empty value
   constructor(private sharedService:SharedService,private http:HttpClient) { }
 
   setResearcherId(id: string): void {
@@ -19,17 +20,23 @@ export class TopScreenService {
   getResearcherId(): string {
     return this.researcherId;
   }
-  updatePassword(password:string){
+  updatePassword(formData: FormData){
     var headers= this.sharedService.getHeaders();
-     var resopnse = this.http.put(environment.apiUrl+`Auth/updatePassword?passWord=${password}&lang=2`, '', { headers });
+     var resopnse = this.http.put(
+      environment.apiUrl + `Auth/updatePassword?lang=2`,
+      formData,
+      { headers }
+    );
      return resopnse;
    }
 
   // Observable to expose the current image URL
   currentImageUrl = this.imageUrlSubject.asObservable();
+  currentArName = this.arName.asObservable();
 
   // Method to update the image URL
-  updateImageUrl(url: string) {
+  updateImageUrl(url: string,arName:string) {
     this.imageUrlSubject.next(url);
+    this.arName.next(arName);
   }
 }

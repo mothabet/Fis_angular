@@ -346,11 +346,11 @@ export class CompaniesDetailsComponent implements OnInit {
 
     const observer = {
       next: (res: any) => {
-        const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data}`;
+        const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
         this.selectedImageUrl = newImageUrl;
 
         // Update the shared image URL in the service
-        this.topScreenServices.updateImageUrl(newImageUrl);
+        this.topScreenServices.updateImageUrl(newImageUrl,res.Data.arName);
         this.showLoader = false;
 
       },

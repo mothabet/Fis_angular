@@ -40,7 +40,7 @@ export class TableWithPeriodsRepComponent implements OnInit {
         const adjustedIndex = index + 10; // بدء الفهرس من 10
         field[`totalCode${index + 1}`] = fieldGroup[adjustedIndex]?.value;
       });
-      debugger
+      
       // إضافة الأنشطة إذا كانت جديدة
       if (!activitiesMap.has(activityName)) {
         activitiesMap.set(activityName, {

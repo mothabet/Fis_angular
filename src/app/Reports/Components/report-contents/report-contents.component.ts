@@ -1491,7 +1491,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    debugger
+    
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1821,7 +1821,7 @@ export class ReportContentsComponent implements OnInit {
   }
   createYearRepQuery(tables: ITableDto[]): string {
     let query = ''
-    debugger
+    
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1851,7 +1851,7 @@ export class ReportContentsComponent implements OnInit {
         };
         tables[0].fields[0] = tableField
       }
-      debugger
+      
       if (tables[0].fields[0].dataType == '0')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')

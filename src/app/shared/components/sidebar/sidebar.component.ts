@@ -20,6 +20,7 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);
     this.role = res.roles;

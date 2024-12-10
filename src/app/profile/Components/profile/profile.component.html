@@ -1,0 +1,77 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+    <app-top-screen [title]="'الاعدادات الشخصيه'"></app-top-screen>
+
+    <!-- start content -->
+    <div class="content companies researcher d-flex justify-content-center align-items-center">
+        <div class="card p-4" style="width: 400px; text-align: center; border: none; outline: none;">
+            <h3 class="mb-4">الإعدادات الشخصية</h3>
+            <form [formGroup]="profileForm">
+
+                <!-- صندوق الصورة -->
+                <div class="image-box position-relative mx-auto"
+                    style="width: 100px; height: 100px; border: none; border-radius: 50%; overflow: hidden;">
+                    <!-- عرض الصورة المختارة أو الصورة الافتراضية -->
+                    <img [src]="selectedImageUrl || 'https://via.placeholder.com/100'" alt="صورة المستخدم"
+                        class="img-fluid w-100 h-100" style="object-fit: cover;cursor: pointer;"
+                        (click)="triggerImageUpload()" />
+
+                    <!-- Input لاختيار الصور -->
+                    <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden id="imageInput" />
+                </div>
+                <div class="form-group mb-2">
+                    <input class="form-control input-modal" type="text" [(ngModel)]="profileForm.value.arName"
+                        formControlName="arName" />
+                    <label for="inputField">الاسم بالكامل</label>
+
+                    <div *ngIf="
+            profileForm.controls['arName'].invalid &&
+            (profileForm.controls['arName'].dirty ||
+              profileForm.controls['arName'].touched)
+          ">
+                        <small *ngIf="profileForm.controls['arName'].errors?.['required']" class="text-danger">
+                            يجب ادخال الاسم بالكامل.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group mb-2">
+                    <input class="form-control input-modal" type="text" formControlName="enName" />
+                    <label for="inputField">English Full Name</label>
+
+                    <div *ngIf="
+            profileForm.controls['enName'].invalid &&
+            (profileForm.controls['enName'].dirty ||
+              profileForm.controls['enName'].touched)
+          ">
+                        <small *ngIf="profileForm.controls['enName'].errors?.['required']" class="text-danger">
+                            English full name is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group mb-2" id="researcherPass">
+                    <input class="form-control input-modal" type="text"
+                        [(ngModel)]="profileForm.value.password" formControlName="password" name="password" />
+                    <label for="inputField">كلمة المرور</label>
+                    <div *ngIf="
+          profileForm.controls['password'].invalid &&
+            (profileForm.controls['password'].dirty ||
+            profileForm.controls['password'].touched)
+          ">
+                        <small *ngIf="profileForm.controls['password'].errors?.['required']" class="text-danger">
+                            يجب ادخال الرقم السري
+                        </small>
+                    </div>
+                    <button type="button" id="reload" (click)="generateRandomCredentials()">
+                        <img src="../../../../assets/images/refresh.png" alt="" />
+                    </button>
+                </div>
+                <!-- زر تغيير كلمة المرور -->
+                <div class="mt-4">
+                    <button class="btn w-100" style="background: #00af9d;color: #fff;" (click)="updatePassword()">تعديل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

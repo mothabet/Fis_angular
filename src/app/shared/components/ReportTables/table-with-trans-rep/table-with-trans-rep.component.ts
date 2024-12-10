@@ -17,7 +17,7 @@ export class TableWithTransRepComponent implements OnInit {
     const activitiesMap = new Map();
     // مر على جميع الحقول في report
     this.report.fields.forEach((fieldGroup: any) => {
-      debugger
+      
       // استخراج اسم النشاط
       const activityName = fieldGroup[5]?.value;
       // تأكد من صحة هذا

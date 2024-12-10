@@ -12,7 +12,7 @@ export class TwoYearsWithPartsRepComponent {
     const activitiesMap = new Map();
     // مر على جميع الحقول في report
     this.report.fields.forEach((fieldGroup: any) => {
-      debugger
+      
       // استخراج اسم النشاط
       const activityName = fieldGroup[6]?.value;
       // تأكد من صحة هذا

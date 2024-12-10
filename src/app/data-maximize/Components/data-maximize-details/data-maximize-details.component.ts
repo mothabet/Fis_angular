@@ -28,7 +28,7 @@ export class DataMaximizeDetailsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           if(res.Data.dataMazimizeYearDtos[0].dataMaximizeDetailsItemsDtos && res.Data.dataMazimizeYearDtos[1].dataMaximizeDetailsItemsDtos){
             this.dataMaximizeDetails = res.Data;
             this.noData = false;
