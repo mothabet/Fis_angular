@@ -151,6 +151,82 @@
                         </tr>
                     </tbody>
                 </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'GovernoratesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">المحافظة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">30.012.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.09.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.06.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.03.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">Year End {{+report.fields[0][0].value}} Position</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields ;let i =index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][11].value !== report.fields[i-1][11].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[11].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[11].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[9].value}}</td>
+                            <td style="text-align: center;">{{ (+field[9].value) - (+field[8].value) }}</td>
+                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{ (+field[8].value) - (+field[7].value) }}</td>
+                            <td style="text-align: center;">{{field[7].value}}</td>
+                            <td style="text-align: center;">{{ (+field[7].value) - (+field[6].value) }}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
+                            <td style="text-align: center;">{{ (+field[6].value) - (+field[5].value) }}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'WilayatRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الولاية</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">30.012.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.09.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.06.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">30.03.{{+report.fields[0][0].value + 1}} Position</th>
+                            <th class="text-center" scope="col">Transactions</th>
+                            <th class="text-center" scope="col">Year End {{+report.fields[0][0].value}} Position</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields ;let i =index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][11].value !== report.fields[i-1][11].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[11].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[11].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[3].value}}</td>
+                            <td style="text-align: center;">{{field[9].value}}</td>
+                            <td style="text-align: center;">{{ (+field[9].value) - (+field[8].value) }}</td>
+                            <td style="text-align: center;">{{field[8].value}}</td>
+                            <td style="text-align: center;">{{ (+field[8].value) - (+field[7].value) }}</td>
+                            <td style="text-align: center;">{{field[7].value}}</td>
+                            <td style="text-align: center;">{{ (+field[7].value) - (+field[6].value) }}</td>
+                            <td style="text-align: center;">{{field[6].value}}</td>
+                            <td style="text-align: center;">{{ (+field[6].value) - (+field[5].value) }}</td>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 

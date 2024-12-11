@@ -232,8 +232,8 @@ export class ReportContentsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-
           this.reports = res.Data;
+          console.log(this.reports);
         }
         else {
           res.Data = []
@@ -1352,7 +1352,7 @@ export class ReportContentsComponent implements OnInit {
   }
   appendTable(): void {
     if (this.selectedTable) {
-      debugger
+      
       if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries'
         || this.selectedTable.enName == 'SectorsRep' || this.selectedTable.enName == 'CompaniesRep'
         || this.selectedTable.enName == 'GovernoratesRep' || this.selectedTable.enName == 'WilayatRep'
@@ -1395,7 +1395,7 @@ export class ReportContentsComponent implements OnInit {
           arTableName: this.selectedTable.arName,
           fields: []  // Initial empty fields array
         };
-        debugger
+        
         const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
         if (!tableExists) {
           this.tables.push(tableDto);
@@ -1507,7 +1507,7 @@ export class ReportContentsComponent implements OnInit {
   transActivityFields(fields: any[], report: any): any[] {
     // Step 1: Group the fields by 'codeArName'
     const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportActivityField }, fieldArray: any[]) => {
-      debugger
+      
       const questionCode = fieldArray[0].value;
       const codeArName = fieldArray[1].value;
       const codeEnName = fieldArray[2].value;
@@ -1575,7 +1575,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    debugger
+    
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1911,7 +1911,7 @@ export class ReportContentsComponent implements OnInit {
   }
   createYearRepQuery(tables: ITableDto[]): string {
     let query = ''
-    debugger
+    
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1925,6 +1925,12 @@ export class ReportContentsComponent implements OnInit {
       }
       else if (tables[2].enTableName == 'Countries') {
         query = this.countryFilterQuery(tables);
+      }
+      else if (tables[2].enTableName == 'GovernoratesRep') {
+        query = this.governorateFilterQuery(tables);
+      }
+      else if (tables[2].enTableName == 'WilayatRep') {
+        query = this.wilayatFilterQuery(tables);
       }
       return query;
     }
@@ -1941,7 +1947,7 @@ export class ReportContentsComponent implements OnInit {
         };
         tables[0].fields[0] = tableField
       }
-      debugger
+      
       if (tables[0].fields[0].dataType == '0')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
@@ -2527,6 +2533,7 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else {
+      
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
@@ -2539,21 +2546,21 @@ export class ReportContentsComponent implements OnInit {
       }
       let query = ''
       if (tables[0].fields[0].dataType == '0')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '5')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType ,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '7')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,g.arName as governorateName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join governorates g on c.governoratesId = g.id`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
@@ -2571,7 +2578,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL)`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2593,7 +2600,7 @@ export class ReportContentsComponent implements OnInit {
         tables[2].fields.forEach((field, fieldIndex) => {
           if (field.name) {
             // Add the condition for f.reviewYear
-            const companyCondition = `s.arName = N'${field.name}'`;
+            const companyCondition = `g.arName = N'${field.name}'`;
 
 
             whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;
@@ -2680,6 +2687,7 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else {
+      
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
@@ -2692,21 +2700,21 @@ export class ReportContentsComponent implements OnInit {
       }
       let query = ''
       if (tables[0].fields[0].dataType == '0')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '2')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '3')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '4')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '5')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType ,t.period FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '6')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '7')
-        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,s.arName as sectionName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join activities ac on ac.id = c.activityId inner join categories cat on ac.categoryId = cat.id inner join groups g on g.id = cat.groupId inner join section sec on sec.id =g.sectionid inner join sectors s on s.id = sec.sectorId`; // or any other filters
+        query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,w.arName as wilayaeName ,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType  FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id inner join companies c on c.id = cf.companyid inner join wilayats w on c.wilayatId = w.id`; // or any other filters
       let whereClause = '';
 
       // Handle fields from tables[0]
@@ -2724,7 +2732,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (w.IsDeleted != 1 OR w.IsDeleted IS NULL)`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2746,7 +2754,7 @@ export class ReportContentsComponent implements OnInit {
         tables[2].fields.forEach((field, fieldIndex) => {
           if (field.name) {
             // Add the condition for f.reviewYear
-            const companyCondition = `s.arName = N'${field.name}'`;
+            const companyCondition = `w.arName = N'${field.name}'`;
 
 
             whereCompany += whereCompany ? ` or ${companyCondition}` : ` AND (${companyCondition}`;

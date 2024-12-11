@@ -170,6 +170,92 @@
                         </ng-container>
                     </tbody>
                 </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'GovernoratesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">المحافظة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value - 1}} Year-end
+                            </th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr class="t-header" *ngFor="let field of activity.fields; let i = index" scope="col">
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode3 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode4 }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'WilayatRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الولاية</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value - 1}} Year-end
+                            </th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][9].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                            <th class="text-center" scope="col">غير عماني Non-Omani</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">عمانيOmani</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr class="t-header" *ngFor="let field of activity.fields; let i = index" scope="col">
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode3 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode4 }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
             </div>
         </div>
 

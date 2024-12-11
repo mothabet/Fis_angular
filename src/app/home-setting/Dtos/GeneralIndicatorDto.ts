@@ -13,3 +13,7 @@ export interface IAddOmanMap{
     wilayatId :number[];
     codesId :number[];
 }
+export interface ISectorDto{
+    name :number;
+    code :number[];
+}

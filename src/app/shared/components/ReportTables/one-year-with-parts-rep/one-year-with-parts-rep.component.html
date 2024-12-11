@@ -147,6 +147,80 @@
                         </tr>
                     </tbody>
                 </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'GovernoratesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">المحافظة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col">الإجمالي</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][8].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[6].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'WilayatRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الولاية</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col">الإجمالي</th>
+                            <th class="text-center" scope="col" [attr.colspan]="2">
+                                نهاية عام {{report.fields[0][8].value}} Year-end
+                            </th>
+                        </tr>
+                        <tr class="t-header">
+                            <th scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <th class="text-center" scope="col"></th>
+                            <!-- Subheader 1 -->
+                            <th class="text-center" scope="col">مدفوعPayments</th>
+                            <!-- Subheader 2 -->
+                            <th class="text-center" scope="col">مستلمReceipts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="t-header" *ngFor="let field of report.fields; let i = index" scope="col">
+                            <th *ngIf="i === 0 || report.fields[i][6].value !== report.fields[i-1][6].value"
+                                [attr.rowspan]="getRowSpan(report.fields, field[6].value)"
+                                style="vertical-align: middle; text-align: center;">
+                                {{field[6].value}}
+                            </th>
+                            <td style="text-align: center;">{{field[5].value}}</td>
+                            <td style="text-align: center;">{{field[4].value}}</td>
+                            <td style="text-align: center;">{{field[0].value}}</td>
+                            <td style="text-align: center;">{{field[1].value}}</td>
+                            <td style="text-align: center;">{{field[2].value}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 

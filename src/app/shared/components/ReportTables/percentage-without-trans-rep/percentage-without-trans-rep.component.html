@@ -138,6 +138,82 @@
                         </tr>
                     </tfoot>
                 </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'GovernoratesRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">المحافظة</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col">نهاية عام {{ report[0]?.reviewYear }} Year-end</th>
+                            <th class="text-center" scope="col">نهاية عام {{ (+report[0]?.reviewYear) - 1 }} Year-end
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr *ngFor="let field of activity.fields; let i = index">
+                                <!-- عرض اسم النشاط في العمود الأول في منتصف الخانة باستخدام rowspan -->
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                    <tfoot *ngIf="report.fields.length == 0">
+                        <tr>
+                            <th colspan="7">
+                                <div class="alert alert-warning">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <br />
+                                    <span> لا يوجد بيانات </span>
+                                </div>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <table class="table table-borderless" *ngIf="report.seconedTable == 'WilayatRep'">
+                    <thead>
+                        <tr class="t-header">
+                            <th scope="col" style="text-align: center;">الولاية</th>
+                            <th class="text-center" scope="col">المؤشر</th>
+                            <th class="text-center" scope="col">الرمز Code</th>
+                            <th class="text-center" scope="col">نهاية عام {{ report[0]?.reviewYear }} Year-end</th>
+                            <th class="text-center" scope="col">نهاية عام {{ (+report[0]?.reviewYear) - 1 }} Year-end
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let activity of getUniqueActivities()">
+                            <tr *ngFor="let field of activity.fields; let i = index">
+                                <!-- عرض اسم النشاط في العمود الأول في منتصف الخانة باستخدام rowspan -->
+                                <td *ngIf="i === 0" [attr.rowspan]="activity.fields.length"
+                                    style="vertical-align: middle; text-align: center;">
+                                    {{ activity.activityName }}
+                                </td>
+                                <td style="text-align: center;">{{ field.codeName }}</td>
+                                <td style="text-align: center;">{{ field.code }}</td>
+                                <td style="text-align: center;">{{ field.totalCode1 }}</td>
+                                <td style="text-align: center;">{{ field.totalCode2 }}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                    <tfoot *ngIf="report.fields.length == 0">
+                        <tr>
+                            <th colspan="7">
+                                <div class="alert alert-warning">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <br />
+                                    <span> لا يوجد بيانات </span>
+                                </div>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
 

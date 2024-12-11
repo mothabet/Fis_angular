@@ -112,7 +112,7 @@
                 {{formContent.arName}}
               </li>
             </ul>
-            <label for="inputField">اختر المؤشر</label>
+            <label for="inputField" style="font-size: 11px;top: -8px;">اختر المؤشر</label>
           </div>
         </div>
         <span *ngIf="isFormContentError" style="color: red; margin-bottom: 15px;">{{ codeErrorMessage }}</span>
@@ -127,7 +127,16 @@
                 {{sector.arName}}
               </li>
             </ul>
-            <label for="inputField">اختر القطاع</label>
+            <label for="inputField" style="font-size: 11px;top: -8px;">اختر القطاع</label>
+          </div>
+          <div class="field-container mt-2" style="padding-left: 5px; padding-top: 5px; max-height: 60px; overflow-y: auto;background-color: white;" *ngIf="sectorsSelected.length > 0">
+            <div class="field-item" *ngFor="let sector of sectorsSelected; let i = index">
+              <!-- Bind field properties to the input element -->
+              <span style="text-align: right; min-width: 384px;" class="field-text col-2">{{sector.name}}</span>
+              <button class="icon" (click)="removeSector(sector)" style="border: none; background-color: transparent">
+                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+              </button>
+            </div>
           </div>
         </div>
         <span *ngIf="isSectorError" style="color: red; margin-bottom: 15px;">{{ sectorErrorMessage }}</span>

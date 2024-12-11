@@ -5,7 +5,7 @@ import { IDropdownList } from 'src/app/companies/Dtos/SharedDto';
 import { ITableDto, ITableFieldDto } from 'src/app/Reports/Dtos/ReportDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import Swal from 'sweetalert2';
-import { IAddGeneralIndicator } from '../../Dtos/GeneralIndicatorDto';
+import { IAddGeneralIndicator, ISectorDto } from '../../Dtos/GeneralIndicatorDto';
 import { GeneralIndicatorServicesService } from '../../Services/general-indicator-services.service';
 import { SectorAndActivitiesService } from 'src/app/sectors-and-activities/Services/sector-and-activities.service';
 
@@ -24,6 +24,7 @@ export class GeneralIndicatorsComponent implements OnInit {
   sectorErrorMessage: string = '';
   yearErrorMessage: string = '';
   filteredFormContents: ICode[] = [];
+  sectorsSelected: ISectorDto[] = []
   codes: ICode[] = [];
   sectors: IDropdownList[] = []
   filteredSectors: IDropdownList[] = []
@@ -33,7 +34,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017,
     2018, 2019, 2020, 2021, 2022, 2023, 2024
   ];
-  selectSector : boolean = false;
+  selectSector: boolean = false;
   isYearError: boolean = false;
   isChartTypeError: boolean = false;
   isSectorError: boolean = false;
@@ -72,22 +73,36 @@ export class GeneralIndicatorsComponent implements OnInit {
   }
   filterSectors() {
     this.filteredSectors = this.sectors.filter(code =>
-      code.arName.includes(this.searchTerm)
+      code.arName.includes(this.sectorsSearchTerm)
     );
   }
   selectFormContent(event: Event, code: any) {
     this.searchTerm = code.arName;
     this.isDropdownOpen = false;
   }
-  SelectSector(event: Event, code: any) {
-    this.sectorsSearchTerm = code.arName;
+  SelectSector(event: Event, sector: any) {
+    // تحقق إذا كان القطاع موجودًا بالفعل
+    const sectorExists = this.sectorsSelected.some(
+      (selectedSector) => selectedSector.name === sector.arName
+    );
+
+    if (!sectorExists) {
+      // إذا لم يكن موجودًا، أضفه إلى القائمة
+      this.sectorsSelected.push({
+        name: sector.arName,
+        code: sector.code // تحويل code إلى مصفوفة أرقام
+      });
+    }
+
+    // تحديث البحث وغلق القائمة
+    this.sectorsSearchTerm = sector.arName;
     this.isSectorsDropdownOpen = false;
   }
   GetAllCodes(): void {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+
         if (res.Data) {
           this.codes = res.Data.getCodeDtos;
           this.filteredFormContents = res.Data.getCodeDtos;
@@ -105,7 +120,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.codeHomeService.GetAllCodes(0).subscribe(observer);
   }
   saveGeneralIndicator() {
-    debugger
+
     if (this.searchTerm == '' || this.searchTerm == undefined) {
       this.isFormContentError = true;
       this.codeErrorMessage = 'يجب اختيار مؤشر'
@@ -124,7 +139,7 @@ export class GeneralIndicatorsComponent implements OnInit {
       this.isChartTypeError = false;
       this.chartErrorMessage = ''
     }
-    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined)) {
+    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined) && this.sectorsSelected.length == 0) {
       this.isSectorError = true;
       this.sectorErrorMessage = 'يجب اختيار القطاع '
       return
@@ -158,10 +173,10 @@ export class GeneralIndicatorsComponent implements OnInit {
       codeName: this.searchTerm,
       yearFrom: this.yearFrom,
       yearTo: this.yearTo,
-      chartType : this.chartType,
-      sectorName : this.sectorsSearchTerm,
-      isSector : this.selectSector,
-      sectorId : this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
+      chartType: this.chartType,
+      sectorName: JSON.stringify(this.sectorsSelected),
+      isSector: this.selectSector,
+      sectorId: this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
     };
     const observer = {
       next: (res: any) => {
@@ -191,7 +206,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     this.searchTerm = '';
     this.yearFrom = undefined;
     this.yearTo = undefined;
-    this.chartType =0;
+    this.chartType = 0;
     this.selectSector = false;
     this.sectorsSearchTerm = '';
   }
@@ -274,7 +289,8 @@ export class GeneralIndicatorsComponent implements OnInit {
           this.yearFrom = res.Data.yearFrom;
           this.yearTo = res.Data.yearTo;
           this.selectSector = res.Data.isSector;
-          this.sectorsSearchTerm = res.Data.sectorName;
+          if (res.Data.sectorName != '')
+            this.sectorsSelected = JSON.parse(res.Data.sectorName);
           this.id = res.Data.id;
           this.GetAllCodes();
           this.GetSectors();
@@ -309,7 +325,7 @@ export class GeneralIndicatorsComponent implements OnInit {
       this.isChartTypeError = false;
       this.chartErrorMessage = ''
     }
-    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined)) {
+    if (this.selectSector == true && (this.sectorsSearchTerm == '' || this.sectorsSearchTerm == undefined) && this.sectorsSelected.length == 0) {
       this.isSectorError = true;
       this.sectorErrorMessage = 'يجب اختيار القطاع '
       return
@@ -333,10 +349,10 @@ export class GeneralIndicatorsComponent implements OnInit {
       codeName: this.searchTerm,
       yearFrom: this.yearFrom,
       yearTo: this.yearTo!,
-      chartType:this.chartType,
-      sectorName : this.sectorsSearchTerm,
-      isSector : this.selectSector,
-      sectorId : this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
+      chartType: this.chartType,
+      sectorName: JSON.stringify(this.sectorsSelected),
+      isSector: this.selectSector,
+      sectorId: this.sectors.find(sector => sector.arName === this.sectorsSearchTerm)?.id!
     };
     const observer = {
       next: (res: any) => {
@@ -344,6 +360,7 @@ export class GeneralIndicatorsComponent implements OnInit {
         if (button) {
           button.click();
         }
+        debugger
         this.onReset();
         this.GetGeneralIndicators(1);
         this.showLoader = false;
@@ -366,6 +383,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          debugger
           this.sectors = res.Data.getSectorsDtos;
           this.filteredSectors = res.Data.getSectorsDtos;
         }
@@ -377,5 +395,14 @@ export class GeneralIndicatorsComponent implements OnInit {
       },
     };
     this.sectorsAndActivitiesServices.GetSectors(0, '').subscribe(observer);
+  }
+  removeSector(sector: any) {
+    // Find the matching table in tables array based on enTableName
+    const _sector = this.sectorsSelected.find((s: any) => s.name === sector.name);
+    if (_sector) {
+      // Filter out the field with matching name in the fields array of the found table
+      this.sectorsSelected = this.sectorsSelected.filter((f: any) => f.name !== sector.name);
+    }
+
   }
 }
