@@ -179,17 +179,17 @@
                                                     </button>
                                                 </div>
                                             </td>
-                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3 || formContent.code.TypeId == 6">
                                                 <div
                                                     style="align-items: center; justify-content: space-between; gap: 0px; flex-wrap: wrap;">
 
                                                     <!-- Arabic Name Dropdown -->
-                                                    <div class="dropdown"
+                                                    <div class="dropdown" *ngIf="formContent.code.TypeId != 6"
                                                         [class.show]="getFilteredIsDropdownOpen(index,indexSub,0)"
                                                         style="width: 130px; position: absolute;">
                                                         <input type="text" id="searchableDropdown"
                                                             class="form-control input-modal w-100"
-                                                            placeholder="ابحث عن مصدر المال"
+                                                            placeholder="مصدر المال"
                                                             (click)="toggleDropdownCountry(index,indexSub,0)"
                                                             [(ngModel)]="subCode.arName1"
                                                             (input)="filterCountry(subCode.arName1,index,indexSub,'country',0)" />
@@ -209,7 +209,7 @@
                                                         style="position: absolute; width: 130px; right: 140px;">
                                                         <input type="text" id="searchableDropdown"
                                                             class="form-control input-modal w-100"
-                                                            placeholder="ابحث عن جنسية المستثمر"
+                                                            placeholder="جنسية المستثمر"
                                                             (click)="toggleDropdownCountry(index,indexSub,1)"
                                                             [(ngModel)]="subCode.arName"
                                                             (input)="filterCountry(subCode.arName,index,indexSub,'country',1)" />
@@ -308,14 +308,14 @@
                                                 </div>
                                             </td>
                                             
-                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3">
+                                            <td class="text-center" *ngIf="formContent.code.TypeId == 3 || formContent.code.TypeId == 6">
                                                 <div>
-                                                    <div class="dropdown"
+                                                    <div class="dropdown" *ngIf="formContent.code.TypeId != 6"
                                                         [class.show]="getFilteredIsDropdownOpen(index,indexSub,2)"
                                                         style="width: 140px; position: absolute; left: 160px;">
                                                         <input type="text" id="searchableDropdown"
                                                             class="form-control input-modal w-100"
-                                                            placeholder="Search on investor nationality"
+                                                            placeholder="investor nationality"
                                                             (click)="toggleDropdownCountry(index,indexSub,2)"
                                                             [(ngModel)]="subCode.enName"
                                                             (input)="filterCountry(subCode.enName,index,indexSub,'country',2)" />
@@ -334,7 +334,7 @@
                                                         style="width: 140px; position: absolute;left: 10px; margin: 0px 5px;">
                                                         <input type="text" id="searchableDropdown"
                                                             class="form-control input-modal w-100"
-                                                            placeholder="Search on Source of money"
+                                                            placeholder="Source of money"
                                                             (click)="toggleDropdownCountry(index,indexSub,3)"
                                                             [(ngModel)]="subCode.enName1"
                                                             (input)="filterCountry(subCode.enName1,index,indexSub,'country',3)" />
