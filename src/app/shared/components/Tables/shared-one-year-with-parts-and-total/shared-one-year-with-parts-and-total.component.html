@@ -19,7 +19,7 @@
                             <th class="text-center">
                                 المجموع
                             </th>
-                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">نهاية عام Year-end
+                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount" *ngIf="tablePartsCount>0">نهاية عام Year-end
                                 {{coverForm.reviewYear}}</th>
                             <th class="text-center" scope="col" colspan="">الرمز Code</th>
                             <th class="text-start" scope="col" colspan="" style="min-width: 250px;">{{table.enHeading}}
