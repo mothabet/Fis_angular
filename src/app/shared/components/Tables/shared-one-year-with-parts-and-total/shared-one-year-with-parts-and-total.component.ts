@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
@@ -400,6 +400,16 @@ export class SharedOneYearWithPartsAndTotalComponent {
     this.filteredListDto.forEach(item => {
       item.isDropdownOpen = false;
     });
+  }
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.dropdown')) {
+      this.filteredListDto.forEach(item => {
+        item.isDropdownOpen = false;
+      });
+    }
   }
   selectCountry1(subCode: ISubCodeForm, county: any) {
 
