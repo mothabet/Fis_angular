@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { CompanyHomeService } from 'src/app/companies/services/companyHome.service';
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
 import { environment } from 'src/environments/environment.development';
+import { ProfileService } from 'src/app/profile/Services/profile.service';
 
 @Component({
   selector: 'app-top-screen',
@@ -23,15 +24,15 @@ export class TopScreenComponent implements OnInit {
   Loader = false;
   selectedImageUrl!: string
   constructor(private topScreenServices: TopScreenService, private loginService: LoginService, private router: Router,
-    private sharedService: SharedService, private authService: LoginService, private formBuilder: FormBuilder
+    private sharedService: SharedService, private profileService: ProfileService, private formBuilder: FormBuilder
     , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService
   ) { }
   ngOnInit(): void {
+    
     this.Loader = true
-    const isLoggedIn = this.authService.getToken();
-    let result = this.authService.decodedToken(isLoggedIn);
+    const isLoggedIn = this.loginService.getToken();
+    let result = this.loginService.decodedToken(isLoggedIn);
     this.role = result.roles;
-    this.arName = result.arName;
     this.researcherId = this.topScreenServices.getResearcherId();
     this.passwordForm = this.formBuilder.group({
       password: ['', Validators.required],
@@ -44,9 +45,18 @@ export class TopScreenComponent implements OnInit {
       this.Loader = true;
       this.GetProfileResearcherByUserId();
     }
+    else if(this.role == 'Admin'){
+      this.Loader = true;
+      this.GetProfileByUserId();
+    }
     this.topScreenServices.currentImageUrl.subscribe((url: string) => {
       this.selectedImageUrl = url; // Update the image URL
     });
+    this.topScreenServices.currentArName.subscribe((arName: string) => {
+      this.arName = arName; // Update the image URL
+    });
+    this.arName = result.arName;
+
   }
   LogOut() {
 
@@ -64,14 +74,17 @@ export class TopScreenComponent implements OnInit {
   updatePassword(): void {
     this.Loader = true;
     if (this.passwordForm.valid) {
+      const formData = new FormData();
+      formData.append('passWord', this.passwordForm.value.password);
+
       const observer = {
         next: (res: any) => {
           const button = document.getElementById('btnCancel1');
           if (button) {
             button.click();
           }
-          const isLoggedIn = this.authService.getToken();
-          let result = this.authService.decodedToken(isLoggedIn);
+          const isLoggedIn = this.loginService.getToken();
+          let result = this.loginService.decodedToken(isLoggedIn);
           this.role = result.roles;
           this.arName = this.arName;
           this.Loader = false;
@@ -87,7 +100,7 @@ export class TopScreenComponent implements OnInit {
           this.Loader = false;
         },
       };
-      this.topScreenServices.updatePassword(this.passwordForm.value.password).subscribe(observer);
+      this.topScreenServices.updatePassword(formData).subscribe(observer);
     } else {
       Swal.fire({
         icon: 'success',
@@ -128,5 +141,20 @@ export class TopScreenComponent implements OnInit {
     };
     this.researcherServices.GetProfileResearcherByUserId().subscribe(observer);
   }
-
+  GetProfileByUserId() {
+    
+    const observer = {
+      next: (res: any) => {
+        
+        if (res.Data) {
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.profileService.GetProfileByUserId().subscribe(observer);
+  }
 }

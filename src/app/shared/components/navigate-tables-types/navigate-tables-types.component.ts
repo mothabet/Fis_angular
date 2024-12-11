@@ -878,7 +878,7 @@ export class NavigateTablesTypesComponent implements OnInit {
         let coverFormData = localStorage.getItem(`quarterCoverForm`) || localStorage.getItem(`coverFormData`) || '';
         let certification = localStorage.getItem(`certification`) || '';
         let generalData = localStorage.getItem(`generalData`) || '';
-        debugger
+        
         let addFormDataDto: IAddFormDataDto = {
           dataDtos: dataDtosList,
           FormId: this.coverForm.id,

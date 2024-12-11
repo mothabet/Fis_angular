@@ -1,4 +1,11 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoginService } from 'src/app/auth/services/login.service';
+import { SharedService } from 'src/app/shared/services/shared.service';
+import { TopScreenService } from 'src/app/shared/services/top-screen.service';
+import { environment } from 'src/environments/environment.development';
+import Swal from 'sweetalert2';
+import { ProfileService } from '../../Services/profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,26 +14,116 @@ import { Component } from '@angular/core';
 })
 export class ProfileComponent {
   showLoader: boolean = false;
-  selectedImageUrl: string | null = null; // مصدر الصورة المختارة
-  hovering: boolean = false; // حالة التمرير فوق زر تغيير الصورة
-
+  selectedImage: File | null = null;
+  selectedImageUrl!: string; hovering: boolean = false; // حالة التمرير فوق زر تغيير الصورة
+  profileForm!: FormGroup;
+  constructor(
+    private formBuilder: FormBuilder,
+    private topScreenServices: TopScreenService,
+    private profileService: ProfileService,
+    private loginService: LoginService,
+    private sharedService: SharedService,
+  ) { }
+  ngOnInit(): void {
+    this.profileForm = this.formBuilder.group({
+      password: ['', Validators.required],
+      arName: ['', Validators.required],
+      enName: ['', Validators.required],
+    });
+    this.GetProfileByUserId();
+  }
   triggerImageUpload(): void {
-    debugger
     const imageInput = document.querySelector('#imageInput') as HTMLInputElement;
     imageInput?.click(); // فتح نافذة اختيار الصور
   }
 
-  onImageSelected(event: Event): void {
-    debugger
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImageUrl = e.target.result; // تحديث مصدر الصورة
-      };
-      reader.readAsDataURL(input.files[0]);
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.selectedImageUrl = e.target.result; // تحديث مصدر الصورة
+    };
+    if (file) {
+      this.selectedImageUrl = URL.createObjectURL(file); // Generate a preview URL
+      this.selectedImage = file; // Store the selected file for upload
     }
   }
 
+  generateRandomCredentials(): void {
+    this.showLoader = true;
+    this.profileForm.patchValue({
+      password: this.sharedService.generateRandomString(12) // Generate a 12 character password
+    });
+    this.showLoader = false;
+  }
+  updatePassword(): void {
+    this.showLoader = true; if (!this.selectedImage) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب اختيار صوره',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+      return;
+    }
+    if (this.profileForm.valid) {
+      const formData = new FormData();
+      formData.append('passWord', this.profileForm.value.password);
+      formData.append('arName', this.profileForm.value.arName);
+      formData.append('enName', this.profileForm.value.enName);
+      formData.append('imageDto', this.selectedImage, this.selectedImage.name);
 
+      const observer = {
+        next: (res: any) => {
+          const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
+          this.selectedImageUrl = newImageUrl;
+          this.topScreenServices.updateImageUrl(newImageUrl,res.Data.arName);
+          this.loginService.deleteToken();
+          this.loginService.saveToken(res.Data.token)
+          this.showLoader = false;
+          Swal.fire({
+            icon: 'success',
+            title: res.Message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        },
+        error: (err: any) => {
+          this.sharedService.handleError(err);
+          this.showLoader = false;
+        },
+      };
+      this.topScreenServices.updatePassword(formData).subscribe(observer);
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'يجب ادخال البيانات بشكل صحيح',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      this.showLoader = false;
+    }
+  }
+  GetProfileByUserId() {
+    
+    const observer = {
+      next: (res: any) => {
+        if (res.Data) {
+          this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
+          this.profileForm.patchValue({
+            password: res.Data.password,
+            arName: res.Data.arName,
+            enName: res.Data.enName,
+          });
+        }
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+        this.showLoader = false;
+      },
+    };
+    this.profileService.GetProfileByUserId().subscribe(observer);
+  }
 }

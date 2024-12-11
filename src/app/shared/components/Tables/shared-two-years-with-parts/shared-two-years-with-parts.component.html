@@ -16,9 +16,9 @@
                     <thead>
                         <tr class="t-header boldBorderRow">
                             <th scope="col" colspan="" style="min-width: 250px;">{{table.arHeading}}</th>
-                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">خلال During
+                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount"  *ngIf="tablePartsCount>0">خلال During
                                 {{coverForm.reviewYear}}</th>
-                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount">خلال During
+                            <th class="text-center" scope="col" [attr.colspan]="tablePartsCount" *ngIf="tablePartsCount>0">خلال During
                                 {{+coverForm.reviewYear - 1}}</th>
                             <th class="text-center" scope="col" colspan="">الرمز Code</th>
                             <th class="text-start" scope="col" colspan="" style="min-width: 250px;">{{table.enHeading}}

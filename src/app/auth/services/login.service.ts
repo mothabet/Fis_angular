@@ -5,6 +5,7 @@ import { ILogin } from '../Dtos/AuthDto';
 import { environment } from 'src/environments/environment.development';
 import * as CryptoJS from 'crypto-js';
 import { jwtDecode } from 'jwt-decode';
+import { SharedService } from 'src/app/shared/services/shared.service';
 @Injectable({
   providedIn: 'root'
 })
