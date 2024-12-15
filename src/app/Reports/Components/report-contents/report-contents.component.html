@@ -180,11 +180,9 @@
                             <th style="text-align: center;" scope="col"
                                 *ngIf="report.seconedTable == 'GovernoratesRep'">
                                 المحافظة</th>
-                            <th style="text-align: center;" scope="col"
-                                *ngIf="report.seconedTable == 'WilayatRep'">
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'WilayatRep'">
                                 كود الولاية </th>
-                            <th style="text-align: center;" scope="col"
-                                *ngIf="report.seconedTable == 'WilayatRep'">
+                            <th style="text-align: center;" scope="col" *ngIf="report.seconedTable == 'WilayatRep'">
                                 الولاية</th>
                             <ng-container *ngFor="let detail of report.reportDetails[1].Fields">
                                 <th style="text-align: center;" scope="col"
@@ -358,7 +356,29 @@
                             <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px', 'right': '19rem' }">السنه
                                 الى</label>
                         </div>
-
+                        <div class="col-sm-4 mb-3"
+                            *ngIf="tableType == 2 || tableType == 4">
+                            <select [(ngModel)]="reviewType" name="reviewType" class="form-select add-report-select"
+                                style="width: 100%;">
+                                <option [ngValue]="" disabled>نوع المسح</option>
+                                <option [ngValue]="1">سنوي</option>
+                                <option [ngValue]="2">ربعي</option>
+                            </select>
+                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px', 'right': '37rem' }">نوع
+                                المسح</label>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="tableType == 5">
+                        <div class="col-sm-4 mb-3">
+                            <select [(ngModel)]="reviewType" name="reviewType" class="form-select add-report-select"
+                                style="width: 100%;">
+                                <option [ngValue]="" disabled>نوع المسح</option>
+                                <option [ngValue]="1">سنوي</option>
+                                <option [ngValue]="2">ربعي</option>
+                            </select>
+                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px' }">نوع
+                                المسح</label>
+                        </div>
                     </div>
                     <!-- Scrollable Cards Section -->
                     <div class="d-flex overflow-auto" *ngIf="tables && tables.length > 0"
