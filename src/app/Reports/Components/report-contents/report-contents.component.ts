@@ -200,6 +200,7 @@ export class ReportContentsComponent implements OnInit {
   isYearError: boolean = false;
   isContenterror: boolean = false;
   isReportNameError: boolean = false;
+  reviewType : number = 0;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private reportServices: ReportService, private companyService: CompanyHomeService
     , private formServices: FormService,
