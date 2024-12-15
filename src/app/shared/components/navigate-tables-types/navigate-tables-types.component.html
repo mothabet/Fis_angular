@@ -1,6 +1,7 @@
 <div class="header-nav" style="margin-bottom: 20px">
     <app-loader *ngIf="Loader"></app-loader>
-    <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto"  *ngIf="this.addFormNotesDto.length > 0 && role == 'Company'"><i class="fa-regular fa-bell"></i>يوجد ملاحظات من الباحث</div>
+    <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto"  *ngIf="this.addFormNotesDto.length > 0 && (role == 'Company')"><i class="fa-regular fa-bell"></i>يوجد ملاحظات من الباحث</div>
+    <div class="alert alert-warning p-1 col-md-6 col-xl-4 text-center mx-auto"  *ngIf="this.addFormNotesDto.length > 0 && (role=='Researchers')"><i class="fa-regular fa-bell"></i>يوجد ملاحظات من الاداره</div>
     <button type="button" class="btn btn-send" data-bs-toggle="modal" data-bs-target="#ViewFormNotes" id="ViewFormNotesBtn" hidden >
       <img src="../../../../assets/images/list-box-outline.png" alt="">
   </button>
@@ -215,6 +216,7 @@
                   <th scope="col">رقم</th>
                   <th class="text-center" scope="col">الملاحظه</th>
                   <th class="text-center" scope="col">Comment</th>
+                  <th class="text-center" scope="col" *ngIf="role == 'Researchers'">الحاله</th>
                   <th class="text-center" scope="col"></th>
                 </tr>
               </thead>
@@ -223,10 +225,16 @@
                 <tr *ngFor="let item of addFormNotesDto; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td class="text-center">
-                    <textarea type="text" rows="2" class="form-control" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" ></textarea>
+                    <textarea type="text" rows="2" [disabled]="item.isRead" class="form-control" [value]="item.arName" (input)="updateFormNotes(i, 'arName', $event)" ></textarea>
                   </td>
                   <td class="text-center">
-                    <textarea type="text" rows="2" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
+                    <textarea type="text" rows="2" [disabled]="item.isRead" class="form-control" [value]="item.enName" (input)="updateFormNotes(i, 'enName', $event)" ></textarea>
+                  </td>
+                  <td class="text-center" *ngIf="role == 'Researchers' && item.isRead">
+                    تم التأكيد <i class="fa-solid fa-check"></i>
+                  </td>
+                  <td class="text-center" *ngIf="role == 'Researchers' && !item.isRead">
+                    لم تم التأكيد
                   </td>
                   <td class="text-center">
                     <button class="icon" (click)="removeItem(i)" style="border: none; background-color: transparent">
@@ -274,17 +282,24 @@
                   <th scope="col">رقم</th>
                   <th class="text-center" scope="col">الملاحظه</th>
                   <th class="text-center" scope="col">Comment</th>
+                  <th class="text-center" scope="col" *ngIf="role == 'Company'">الحاله</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr *ngFor="let item of addFormNotesDto; let i = index">
+                <tr *ngFor="let item of getFormNotesDto; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td class="text-center">
                     {{item.arName}}
                   </td>
                   <td class="text-center">
                     {{item.enName}}
+                  </td>
+                  <td class="text-center" *ngIf="role == 'Company' && !item.isRead">
+                    <button class="btn btn-add mx-auto" (click)="UpdateReadNote('Researchers',item.id)">تأكيد</button>
+                  </td>
+                  <td class="text-center" *ngIf="role == 'Company' && item.isRead">
+                    تم التأكيد
                   </td>
                  
                 </tr>

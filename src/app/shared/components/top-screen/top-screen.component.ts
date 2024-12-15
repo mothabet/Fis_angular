@@ -9,6 +9,7 @@ import { CompanyHomeService } from 'src/app/companies/services/companyHome.servi
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
 import { environment } from 'src/environments/environment.development';
 import { ProfileService } from 'src/app/profile/Services/profile.service';
+import { NotificationsService } from 'src/app/notifications/Services/notifications.service';
 
 @Component({
   selector: 'app-top-screen',
@@ -22,10 +23,11 @@ export class TopScreenComponent implements OnInit {
   role: string = "";
   arName: string = "";
   Loader = false;
-  selectedImageUrl!: string
+  selectedImageUrl!: string;
+  notificationCount:number = 0;
   constructor(private topScreenServices: TopScreenService, private loginService: LoginService, private router: Router,
     private sharedService: SharedService, private profileService: ProfileService, private formBuilder: FormBuilder
-    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService
+    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService, private notificationsService: NotificationsService,
   ) { }
   ngOnInit(): void {
     
@@ -56,12 +58,24 @@ export class TopScreenComponent implements OnInit {
       this.arName = arName; // Update the image URL
     });
     this.arName = result.arName;
-
+    this.GetNotificationsCountByUserId();
   }
   LogOut() {
 
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
+  }
+  GetNotificationsCountByUserId(): void {
+    const observer = {
+      next: (res: any) => {
+        
+        this.notificationCount = res.Data;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.notificationsService.GetNotificationsCountByUserId().subscribe(observer);
   }
   generateRandomCredentials(): void {
     this.Loader = true;

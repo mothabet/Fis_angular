@@ -39,4 +39,5 @@ export class TopScreenService {
     this.imageUrlSubject.next(url);
     this.arName.next(arName);
   }
+  
 }

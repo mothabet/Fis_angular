@@ -34,13 +34,13 @@ export class ProfileComponent {
   }
   triggerImageUpload(): void {
     const imageInput = document.querySelector('#imageInput') as HTMLInputElement;
-    debugger
+    
     imageInput?.click(); // فتح نافذة اختيار الصور
   }
 
 
   onImageSelected(event: any) {
-    debugger
+    
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -114,7 +114,7 @@ export class ProfileComponent {
     return fileName.replace(/_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, '');
   }
   GetProfileByUserId() {
-    debugger
+    
     const observer = {
       next: (res: any) => {
         if (res.Data) {

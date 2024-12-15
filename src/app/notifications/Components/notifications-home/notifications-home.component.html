@@ -1,0 +1,46 @@
+<app-loader *ngIf="showLoader"></app-loader>
+<!-- main content -->
+<div class="p-4 main card" style="flex: 1">
+  <app-top-screen [title]="'الاشعارات'"></app-top-screen>
+  <div class="content companies researcher">
+    <div class="header d-flex mb-0">
+      <div class="title">قائمة الاشعارات</div>
+    </div>
+
+    <div class="table-responsive company-table research-table">
+      <table class="table table-borderless">
+        <thead>
+          <tr class="t-header">
+            <th scope="col">#</th>
+            <th class="text-center" scope="col">العنوان</th>
+            <th class="text-center" scope="col">التفاصيل</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of getAllNotificationDto; let i = index">
+            <td>
+              {{ i + 1 }}
+            </td>
+            <td class="text-center">{{ item.address }}</td>
+            <td class="text-center">{{ item.details }}</td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="noData">
+          <tr>
+            <th colspan="7">
+              <div class="alert alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <br />
+                <span> لا يوجد بيانات </span>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <!-- end content -->
+</div>
+<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+  (pageChange)="onPageChange($event)"></app-pagination>

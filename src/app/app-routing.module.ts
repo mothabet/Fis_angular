@@ -50,6 +50,7 @@ import { DataMaximizeComponent } from './data-maximize/Components/data-maximize/
 import { DataMaximizeDetailsComponent } from './data-maximize/Components/data-maximize-details/data-maximize-details.component';
 import { LaunchYearComponent } from './home-setting/Components/launch-year/launch-year.component';
 import { ProfileComponent } from './profile/Components/profile/profile.component';
+import { NotificationsHomeComponent } from './notifications/Components/notifications-home/notifications-home.component';
 
 const routes: Routes = [
   { path: 'Sections', component: SectionComponent, canActivate: [LoginGuard] },
@@ -99,6 +100,7 @@ const routes: Routes = [
   { path: 'DataMaximize', component: DataMaximizeComponent, canActivate: [LoginGuard] },  { path: 'HomeMap', component: HomeMapComponent, canActivate: [LoginGuard] },
   { path: 'DataMaximizeDetails/:id', component: DataMaximizeDetailsComponent, canActivate: [LoginGuard] },
   { path: 'YearOfLaunch', component: LaunchYearComponent, canActivate: [LoginGuard] },
+  { path: 'Notification', component: NotificationsHomeComponent, canActivate: [LoginGuard] },
   // { path: 'OmanMapSetting', component: OmanMapSettingComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'Login', pathMatch: 'full' }, // Redirect to Home if no specific path is provided
   { path: '**', redirectTo: 'Login', pathMatch: 'full' }

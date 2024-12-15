@@ -17,7 +17,7 @@ export class PercentageWithoutTransRepComponent implements OnInit {
       
       // استخراج اسم النشاط
       const activityName = fieldGroup[5]?.value;
-      debugger
+      
       // تأكد من صحة هذا
       const field = {
         codeName: fieldGroup[4]?.value,

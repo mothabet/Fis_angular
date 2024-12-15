@@ -11,7 +11,7 @@ import { IAddFormDataDto, ICoverFormData, IDataDto } from '../../Dtos/FormDataDt
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
 import { forkJoin } from 'rxjs';
-import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto } from '../../Dtos/NavigateDto';
+import { IAddFormNotesDto, IAddInstructionsDto, IAddListFormNotesDto, IGetFormNotesDto, IUpdateFormNoteDto } from '../../Dtos/NavigateDto';
 import { FormNotesService } from 'src/app/form-notes/services/form-notes.service';
 import { InstructionsService } from 'src/app/instructions/services/instructions.service';
 import { PermissionsService } from 'src/app/permissions/services/permissions.service';
@@ -64,6 +64,7 @@ export class NavigateTablesTypesComponent implements OnInit {
   quarterCoverForm !: IQuarterCoverFormDataDto;
   auditRules: IAuditRule[] = [];
   addFormNotesDto: IAddFormNotesDto[] = [];
+  getFormNotesDto: IGetFormNotesDto[] = [];
   addInstructions: IAddInstructionsDto[] = [];
   add: boolean = true;
   selecteTableIds: Set<number> = new Set<number>();
@@ -106,7 +107,10 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.tableId = tableIdParam ? +tableIdParam : null;
     this.GetFormById(this.formId ?? "0")
     this.GetPermissionByUserId();
-    this.GetAllFormNotesByRole('Researchers', true);
+    if(this.role== 'Researchers')
+      this.GetAllFormNotesByRole('Admin', true);
+    else if(this.role== 'Company')
+      this.GetAllFormNotesByRole('Researchers', true);
   }
   GetPermissionByUserId() {
     this.permissionsService.FunctionGetPermissionByUserId("FormDetails").then(permissions => {
@@ -927,6 +931,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     this.addFormNotesDto.push({
       arName: '',
       enName: '',
+      isRead:false
     });
   }
   areAllFieldsFilled(): boolean {
@@ -992,7 +997,9 @@ export class NavigateTablesTypesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          this.addFormNotesDto = res.Data.getFormNotesDtos
+          debugger
+          this.getFormNotesDto = res.Data.getFormNotesDtos;
+          this.addFormNotesDto = res.Data.getFormNotesDtos;
           this.add = true
 
           if (!isFirst) {
@@ -1111,6 +1118,26 @@ export class NavigateTablesTypesComponent implements OnInit {
       };
       this.instructionsService.GetTableInstructions(role, this.formId, this.table.id, 0).subscribe(observer);
     }
+  }
+  UpdateReadNote(role:string,id:number){
+    this.Loader = true;
+    const observer = {
+      next: (res: any) => {
+        this.GetAllFormNotesByRole(role,true)
+        this.Loader = false;
+        Swal.fire({
+          icon: 'success',
+          title: res.Message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      },
+      error: (err: any) => {
+        this.sharedServices.handleError(err);
+        this.Loader = false;
+      },
+    };
+    this.formNotesService.UpdateReadNote(id).subscribe(observer);
   }
   onCheckboxChangeCompany(companyId: number, event: Event) {
 
