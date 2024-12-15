@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IAuditRule } from 'src/app/auditing-rules/Dtos/CodeHomeDto';
 import { AuditRuleHomeService } from 'src/app/auditing-rules/Services/audit-rule-home.service';
@@ -1119,6 +1119,16 @@ export class SharedOneYearWithPartsComponent {
       }
     }
     this.handleParent(formContent);
+  }
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.dropdown')) {
+      this.filteredListDto.forEach(item => {
+        item.isDropdownOpen = false;
+      });
+    }
   }
   handleParent(formContent: IGetQuestionDto) {
     this.changeStatus(this.coverForm.status);

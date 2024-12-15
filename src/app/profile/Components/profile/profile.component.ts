@@ -26,7 +26,7 @@ export class ProfileComponent {
   ) { }
   ngOnInit(): void {
     this.profileForm = this.formBuilder.group({
-      password: ['', Validators.required],
+      password: [''],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
     });
@@ -34,11 +34,13 @@ export class ProfileComponent {
   }
   triggerImageUpload(): void {
     const imageInput = document.querySelector('#imageInput') as HTMLInputElement;
+    debugger
     imageInput?.click(); // فتح نافذة اختيار الصور
   }
 
 
   onImageSelected(event: any) {
+    debugger
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -74,11 +76,12 @@ export class ProfileComponent {
       formData.append('arName', this.profileForm.value.arName);
       formData.append('enName', this.profileForm.value.enName);
       formData.append('imageDto', this.selectedImage, this.selectedImage.name);
-
       const observer = {
         next: (res: any) => {
           const newImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
           this.selectedImageUrl = newImageUrl;
+          this.selectedImage = new File([],res.Data.imageDto);
+
           this.topScreenServices.updateImageUrl(newImageUrl,res.Data.arName);
           this.loginService.deleteToken();
           this.loginService.saveToken(res.Data.token)
@@ -106,12 +109,17 @@ export class ProfileComponent {
       this.showLoader = false;
     }
   }
+  cleanFileName(fileName: string): string {
+    // استخدم التعبير العادي لإزالة الجزء الزائد بناءً على النمط
+    return fileName.replace(/_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/, '');
+  }
   GetProfileByUserId() {
-    
+    debugger
     const observer = {
       next: (res: any) => {
         if (res.Data) {
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
+          this.selectedImage = new File([],res.Data.imageDto);
           this.profileForm.patchValue({
             password: res.Data.password,
             arName: res.Data.arName,

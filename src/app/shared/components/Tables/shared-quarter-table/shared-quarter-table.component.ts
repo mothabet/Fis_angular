@@ -491,6 +491,7 @@ export class SharedQuarterTableComponent {
       item.isDropdownOpen = false;
     });
   }
+  
   selectSector(subCode: ISubCodeForm, county: any) {
 
     subCode.enName = county.enName;

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { ICode } from 'src/app/code/Dtos/CodeHomeDto';
@@ -443,6 +443,16 @@ export class SharedTwoYearsWithPartsComponent {
     this.filteredListDto.forEach(item => {
       item.isDropdownOpen = false;
     });
+  }
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.dropdown')) {
+      this.filteredListDto.forEach(item => {
+        item.isDropdownOpen = false;
+      });
+    }
   }
   selectSector(subCode: ISubCodeForm, county: any) {
 
