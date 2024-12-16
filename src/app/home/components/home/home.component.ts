@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.generalIndicatorsCharts = res.Data;
-          debugger
+          
           // تعديل البيانات لإضافة السنوات المفقودة
           this.generalIndicatorsCharts.forEach((chart: any) => {
             const endYear = chart.yearTo === 0 ? currentYear : chart.yearTo;
@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit {
           // إنشاء الرسوم البيانية
           setTimeout(() => {
             this.generalIndicatorsCharts.forEach((chart: any, index: number) => {
-              debugger
+              
               this.createChart(chart, index);  // تمرير chart و index إلى دالة createChart
             });
 

@@ -87,7 +87,8 @@ export class LoginService {
       'DataMaximize',
       'DataMaximizeDetails',
       'YearOfLaunch',
-      'Profile'
+      'Profile',
+      'Notification'
     ];
     return adminRoutes.includes(url);
   }
@@ -129,7 +130,8 @@ export class LoginService {
       'ChangePercentage',
       'Governorates',
       'Wilayat',
-      'Profile'
+      'Profile',
+      'Notification'
     ];
     return adminRoutes.includes(url);
   }
@@ -150,7 +152,8 @@ export class LoginService {
       'TwoYearsWithParts',
       'FormDetails',
       'Companies-Details',
-      'SharedTwoYearsWithParts'
+      'SharedTwoYearsWithParts',
+      'Notification'
     ];
     return companyRoutes.includes(url);
   }
@@ -172,7 +175,8 @@ export class LoginService {
       'Researcher-Details',
       'SharedTwoYearsWithParts',
       'Companies-Details',
-      'Companies-Researcher'
+      'Companies-Researcher',
+      'Notification'
     ];
     return researcherRoutes.includes(url);
   }

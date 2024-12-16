@@ -9,6 +9,7 @@ import { CompanyHomeService } from 'src/app/companies/services/companyHome.servi
 import { ResearcherHomeService } from 'src/app/researcher/services/researcher-home.service';
 import { environment } from 'src/environments/environment.development';
 import { ProfileService } from 'src/app/profile/Services/profile.service';
+import { NotificationsService } from 'src/app/notifications/Services/notifications.service';
 
 @Component({
   selector: 'app-top-screen',
@@ -22,10 +23,11 @@ export class TopScreenComponent implements OnInit {
   role: string = "";
   arName: string = "";
   Loader = false;
-  selectedImageUrl!: string
+  selectedImageUrl!: string;
+  notificationCount:number = 0;
   constructor(private topScreenServices: TopScreenService, private loginService: LoginService, private router: Router,
     private sharedService: SharedService, private profileService: ProfileService, private formBuilder: FormBuilder
-    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService
+    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService, private notificationsService: NotificationsService,
   ) { }
   ngOnInit(): void {
     
@@ -35,8 +37,8 @@ export class TopScreenComponent implements OnInit {
     this.role = result.roles;
     this.researcherId = this.topScreenServices.getResearcherId();
     this.passwordForm = this.formBuilder.group({
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
     if (this.role == 'Company') {
       this.GetCompanyByUserId();
@@ -56,12 +58,24 @@ export class TopScreenComponent implements OnInit {
       this.arName = arName; // Update the image URL
     });
     this.arName = result.arName;
-
+    this.GetNotificationsCountByUserId();
   }
   LogOut() {
 
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
+  }
+  GetNotificationsCountByUserId(): void {
+    const observer = {
+      next: (res: any) => {
+        
+        this.notificationCount = res.Data;
+      },
+      error: (err: any) => {
+        this.sharedService.handleError(err);
+      },
+    };
+    this.notificationsService.GetNotificationsCountByUserId().subscribe(observer);
   }
   generateRandomCredentials(): void {
     this.Loader = true;
@@ -72,6 +86,15 @@ export class TopScreenComponent implements OnInit {
     this.Loader = false;
   }
   updatePassword(): void {
+    if (this.passwordForm.get('password')?.invalid) {
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
     this.Loader = true;
     if (this.passwordForm.valid) {
       const formData = new FormData();
@@ -103,8 +126,8 @@ export class TopScreenComponent implements OnInit {
       this.topScreenServices.updatePassword(formData).subscribe(observer);
     } else {
       Swal.fire({
-        icon: 'success',
-        title: 'يجب ادخال البيانات بشكل صحيح',
+        icon: 'error',
+        title: 'يجب ان تكون كلمة المرور وتأكيد كلمة المرور متطابقين',
         showConfirmButton: false,
         timer: 2000
       });

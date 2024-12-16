@@ -21,6 +21,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { HomeSettingModule } from './home-setting/home-setting.module';
 import { DataMaximizeModule } from './data-maximize/data-maximize.module';
 import { ProfileModule } from './profile/profile.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ProfileModule } from './profile/profile.module';
     BrowserModule,
     HomeSettingModule,
     ProfileModule,
+    NotificationsModule,
     AppRoutingModule,
     DataMaximizeModule,
     ToastrModule.forRoot({

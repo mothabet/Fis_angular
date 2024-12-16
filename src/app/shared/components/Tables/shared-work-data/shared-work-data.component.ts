@@ -274,9 +274,8 @@ export class SharedWorkDataComponent implements OnInit {
         const isLoggedIn = this.authService.getToken();
         if (isLoggedIn != "") {
           
-          let res_ = this.authService.decodedToken(isLoggedIn);
-          var role = res_.roles;
           let generalData = localStorage.getItem(`generalData`);
+          
           if (generalData) {
             this.coverForm.GeneralData = JSON.parse(generalData) as IGeneralDataDto;
             

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IAddFormNotesDto, IAddListFormNotesDto } from 'src/app/shared/Dtos/NavigateDto';
+import { IAddListFormNotesDto, IUpdateFormNoteDto } from 'src/app/shared/Dtos/NavigateDto';
 import { SharedService } from 'src/app/shared/services/shared.service';
 import { environment } from 'src/environments/environment.development';
 
@@ -14,6 +14,12 @@ export class FormNotesService {
     
     var headers= this.sharedService.getHeaders();
      var resopnse = this.http.post(environment.apiUrl+`FormNotes/AddFormNotes?lang=2`, Model, { headers });
+     return resopnse;
+   }
+   UpdateReadNote(id:number){
+    
+    var headers= this.sharedService.getHeaders();
+     var resopnse = this.http.put(environment.apiUrl+`FormNotes/UpdateReadNote?lang=2&&id=${id}`, null, { headers });
      return resopnse;
    }
    GetAllFormNotesByRole(role:string,formId:string,companyId:string,pageNumber:number, textSearch : string ='',withNull:boolean = true){

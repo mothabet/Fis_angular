@@ -360,7 +360,7 @@ export class GeneralIndicatorsComponent implements OnInit {
         if (button) {
           button.click();
         }
-        debugger
+        
         this.onReset();
         this.GetGeneralIndicators(1);
         this.showLoader = false;
@@ -383,7 +383,7 @@ export class GeneralIndicatorsComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.sectors = res.Data.getSectorsDtos;
           this.filteredSectors = res.Data.getSectorsDtos;
         }

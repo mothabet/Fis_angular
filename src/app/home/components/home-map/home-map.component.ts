@@ -27,7 +27,7 @@ export class HomeMapComponent implements OnInit{
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.reviewYear = res.Data.reviewYear;
           this.reviewType = res.Data.reviewType;
         }
