@@ -22,7 +22,7 @@ export interface ICompany {
     postalCode: string,
     phoneNumber: string,
     email: string,
-    status: string,
+    status: boolean,
     id: number,
     researcherId:string
     accountingPeriod: Date,

@@ -66,7 +66,7 @@ export class SharedTableWithPeriodComponent {
     postalCode: '',
     phoneNumber: '',
     email: '',
-    status: '',
+    status: true,
     id: 0,
     researcherId: '',
     accountingPeriod: new Date(),

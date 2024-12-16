@@ -31,7 +31,7 @@ export class NotificationsHomeComponent {
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         this.noData = !res.Data.getNotificationsDtos || res.Data.getNotificationsDtos.length === 0;
         if (res.Data.getNotificationsDtos) {
           this.getAllNotificationDto = res.Data.getNotificationsDtos;

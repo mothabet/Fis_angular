@@ -997,7 +997,7 @@ export class NavigateTablesTypesComponent implements OnInit {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
-          debugger
+          
           this.getFormNotesDto = res.Data.getFormNotesDtos;
           this.addFormNotesDto = res.Data.getFormNotesDtos;
           this.add = true
