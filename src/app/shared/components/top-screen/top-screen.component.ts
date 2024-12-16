@@ -37,8 +37,8 @@ export class TopScreenComponent implements OnInit {
     this.role = result.roles;
     this.researcherId = this.topScreenServices.getResearcherId();
     this.passwordForm = this.formBuilder.group({
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
     });
     if (this.role == 'Company') {
       this.GetCompanyByUserId();
@@ -86,6 +86,15 @@ export class TopScreenComponent implements OnInit {
     this.Loader = false;
   }
   updatePassword(): void {
+    if (this.passwordForm.get('password')?.invalid) {
+          Swal.fire({
+            icon: 'error',
+            title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
+            showConfirmButton: true,
+            confirmButtonText: 'اغلاق'
+          });
+          return;
+        }
     this.Loader = true;
     if (this.passwordForm.valid) {
       const formData = new FormData();
@@ -117,8 +126,8 @@ export class TopScreenComponent implements OnInit {
       this.topScreenServices.updatePassword(formData).subscribe(observer);
     } else {
       Swal.fire({
-        icon: 'success',
-        title: 'يجب ادخال البيانات بشكل صحيح',
+        icon: 'error',
+        title: 'يجب ان تكون كلمة المرور وتأكيد كلمة المرور متطابقين',
         showConfirmButton: false,
         timer: 2000
       });

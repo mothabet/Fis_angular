@@ -6,6 +6,7 @@ import { TopScreenService } from 'src/app/shared/services/top-screen.service';
 import { environment } from 'src/environments/environment.development';
 import Swal from 'sweetalert2';
 import { ProfileService } from '../../Services/profile.service';
+import { IGetProfile } from '../../Dtos/ProfileDto';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +18,12 @@ export class ProfileComponent {
   selectedImage: File | null = null;
   selectedImageUrl!: string; hovering: boolean = false; // حالة التمرير فوق زر تغيير الصورة
   profileForm!: FormGroup;
+  getProfile : IGetProfile = {
+    arName:'',
+    enName:'',
+    imageDto:'',
+    password:''
+  }
   constructor(
     private formBuilder: FormBuilder,
     private topScreenServices: TopScreenService,
@@ -26,7 +33,7 @@ export class ProfileComponent {
   ) { }
   ngOnInit(): void {
     this.profileForm = this.formBuilder.group({
-      password: [''],
+      password: ['', [Validators.minLength(6)]],
       arName: ['', Validators.required],
       enName: ['', Validators.required],
     });
@@ -60,7 +67,17 @@ export class ProfileComponent {
     this.showLoader = false;
   }
   updatePassword(): void {
-    this.showLoader = true; if (!this.selectedImage) {
+    if (this.profileForm.get('password')?.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+      return;
+    }
+    if (!this.selectedImage) {
       Swal.fire({
         icon: 'error',
         title: 'يجب اختيار صوره',
@@ -70,8 +87,24 @@ export class ProfileComponent {
       this.showLoader = false;
       return;
     }
+    if(this.profileForm.value.password == '' && this.getProfile.password !=''){
+      this.profileForm.value.password = this.getProfile.password;
+    }
+    else if(this.profileForm.value.password == '' && this.getProfile.password ==''){
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      this.showLoader = false;
+      return;
+    }
     if (this.profileForm.valid) {
+      this.showLoader = true; 
       const formData = new FormData();
+      debugger
+      
       formData.append('passWord', this.profileForm.value.password);
       formData.append('arName', this.profileForm.value.arName);
       formData.append('enName', this.profileForm.value.enName);
@@ -118,6 +151,7 @@ export class ProfileComponent {
     const observer = {
       next: (res: any) => {
         if (res.Data) {
+          this.getProfile = res.Data;
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
           this.selectedImage = new File([],res.Data.imageDto);
           this.profileForm.patchValue({
