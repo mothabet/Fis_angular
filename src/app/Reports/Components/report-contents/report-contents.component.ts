@@ -200,7 +200,7 @@ export class ReportContentsComponent implements OnInit {
   isYearError: boolean = false;
   isContenterror: boolean = false;
   isReportNameError: boolean = false;
-  reviewType : number = 0;
+  reviewType: number = 0;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private reportServices: ReportService, private companyService: CompanyHomeService
     , private formServices: FormService,
@@ -1214,6 +1214,12 @@ export class ReportContentsComponent implements OnInit {
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
+    if (this.reviewType == undefined || this.reviewType == 0 && (this.tables[0].enTableName == 'FormContent' ||
+      this.tables[0].enTableName == 'TablesReport' || this.tables[0].enTableName == 'Forms')) {
+      this.isYearError = true;
+      this.errorMessage = 'يجب اختيار نوع المسح'
+      return
+    }
     if ((this.tables[0].fields.length == 0 && this.searchTerm == '') && this.tables[0].enTableName == 'TablesReport') {
       this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
@@ -1353,7 +1359,7 @@ export class ReportContentsComponent implements OnInit {
   }
   appendTable(): void {
     if (this.selectedTable) {
-      
+
       if (this.selectedTable.enName == 'ActivitiesRep' || this.selectedTable.enName == 'Countries'
         || this.selectedTable.enName == 'SectorsRep' || this.selectedTable.enName == 'CompaniesRep'
         || this.selectedTable.enName == 'GovernoratesRep' || this.selectedTable.enName == 'WilayatRep'
@@ -1396,7 +1402,7 @@ export class ReportContentsComponent implements OnInit {
           arTableName: this.selectedTable.arName,
           fields: []  // Initial empty fields array
         };
-        
+
         const tableExists = this.tables.some(table => table.enTableName === this.selectedTable!.enName);
         if (!tableExists) {
           this.tables.push(tableDto);
@@ -1442,15 +1448,16 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   transformFields(fields: any[], report: any): any[] {
-    // Step 1: Group the fields by 'codeArName'
+    // Step 1: Group the fields by 'codeArName' using reduce
     const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportField }, fieldArray: any[]) => {
       const questionCode = fieldArray[0].value;
       const codeArName = fieldArray[1].value;
       const codeEnName = fieldArray[2].value;
       const reviewYear = fieldArray[3].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
-      const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
-      // Check if the group already exists
+      const totalCode2Key = `totalCode2_${reviewYear}`;
+      
+      // Initialize the group if it does not exist
       if (!acc[codeArName]) {
         acc[codeArName] = {
           questionCode,
@@ -1459,56 +1466,67 @@ export class ReportContentsComponent implements OnInit {
           years: []
         };
       }
-
-      // Add the year and totalCode
-      if (totalCode) {
-        acc[codeArName].years.push({
-          reviewYear: Number(reviewYear),
-          totalCode: Number(totalCode)
-        });
+  
+      // Find the totalCode and totalCode2 for the year
+      const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
+      const totalCode2 = fieldArray.find(f => f.key === totalCode2Key)?.value;
+  
+      // Add year information with totalCode and totalCode2 (if applicable)
+      const yearData: any = {
+        reviewYear: Number(reviewYear),
+        totalCode: totalCode ? Number(totalCode) : 0
+      };
+  
+      if (report.reportType === 'FormContent') {
+        yearData.totalCode2 = totalCode2 ? Number(totalCode2) : 0;  // Only add totalCode2 if FormContent
       }
 
+      debugger
+      // Add yearData for the respective year under the correct codeArName
+      acc[codeArName].years.push(yearData);
+  
       return acc;
     }, {}));
-
-    // Step 2: Append missing years from report.reportDetails[1].Fields with a value of 0
-    let fieldsInReport = groupedReport as ReportField[];
-
-    // Define the years range to add (e.g., 2021, 2022)
-    const yearsToAdd = [2022, 2021];
-    // Use inline type annotation for fieldDetail
+  
+    // Step 2: Ensure missing years are added
+    const fieldsInReport = groupedReport as ReportField[];
+  
+    // Loop through the years and ensure missing years are added with 0 for totalCode and totalCode2 (if FormContent)
     report.reportDetails[1].Fields.forEach((fieldDetail: any) => {
       fieldsInReport.forEach((field) => {
-        const yearExists = field.years.some(year => year.reviewYear === Number(fieldDetail.arName));
-
-        // Check if the year exists, and if not, add it
-        if (!yearExists) {
-          const missingYear = Number(fieldDetail.value);
-          // Avoid adding '0' and only add years in 'yearsToAdd' if they don't already exist
-          if (missingYear > 0 && !field.years.some(year => year.reviewYear === missingYear)) {
-            field.years.push({
-              reviewYear: missingYear,
-              totalCode: 0
-            });
+        const missingYear = Number(fieldDetail.value); // The year to check for
+        const yearExists = field.years.some(year => year.reviewYear === missingYear);
+        debugger
+        // Add the missing year if it does not exist and has a valid value
+        if (!yearExists && missingYear > 0) {
+          const missingYearData: any = {
+            reviewYear: missingYear,
+            totalCode: 0
+          };
+          if (report.reportType === 'FormContent') {
+            missingYearData.totalCode2 = 0;  // Add totalCode2 if FormContent
           }
+          field.years.push(missingYearData);
         }
       });
     });
-    // Step 3: Ensure the years array is sorted by 'reviewYear'
+  
+    // Step 3: Sort the 'years' array within each field group by reviewYear
     fieldsInReport.forEach(field => {
       field.years.sort((a, b) => a.reviewYear - b.reviewYear);
-
+  
+      // Apply further processing if required
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
-
     });
-
+    debugger
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
+  
   transActivityFields(fields: any[], report: any): any[] {
     // Step 1: Group the fields by 'codeArName'
     const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportActivityField }, fieldArray: any[]) => {
-      
+
       const questionCode = fieldArray[0].value;
       const codeArName = fieldArray[1].value;
       const codeEnName = fieldArray[2].value;
@@ -1517,7 +1535,7 @@ export class ReportContentsComponent implements OnInit {
       let activityCode = fieldArray[6].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
       const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
-      if(report.seconedTable == 'GovernoratesRep' || report.seconedTable == 'WilayatRep')
+      if (report.seconedTable == 'GovernoratesRep' || report.seconedTable == 'WilayatRep')
         activityCode = fieldArray[5].value;
       // استخدم مفتاح مركب يجمع بين codeArName و activityCode
       const compositeKey = `${codeArName}_${activityCode}`;
@@ -1550,7 +1568,6 @@ export class ReportContentsComponent implements OnInit {
     let fieldsInReport = groupedReport as ReportField[];
 
     // Define the years range to add (e.g., 2021, 2022)
-    const yearsToAdd = [2022, 2021];
     // Use inline type annotation for fieldDetail
     report.reportDetails[1].Fields.forEach((fieldDetail: any) => {
       fieldsInReport.forEach((field) => {
@@ -1576,7 +1593,7 @@ export class ReportContentsComponent implements OnInit {
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
 
     });
-    
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
@@ -1806,14 +1823,14 @@ export class ReportContentsComponent implements OnInit {
       else if (tables[0].enTableName == 'Forms') {
         if (this.reportYearFrom && this.reportYearTo) {
           if (this.reportYearFrom === this.reportYearTo) {
-            whereClause = whereClause === '' ? `where Forms.reviewYear = ${this.reportYearFrom}` : whereClause + ` and Forms.reviewYear = ${this.reportYearFrom}`
+            whereClause = whereClause === '' ? `where Forms.reviewYear = ${this.reportYearFrom} and Forms.type = ${this.reviewType}` : whereClause + ` and Forms.reviewYear = ${this.reportYearFrom} and Forms.type = ${this.reviewType}`
           } else {
-            whereClause = whereClause === '' ? `where Forms.reviewYear >= ${this.reportYearFrom} AND Forms.reviewYear <= ${this.reportYearTo}` : whereClause + ` AND Forms.reviewYear >= ${this.reportYearFrom} AND Forms.reviewYear <= ${this.reportYearTo}`
+            whereClause = whereClause === '' ? `where Forms.reviewYear >= ${this.reportYearFrom} AND Forms.reviewYear <= ${this.reportYearTo} and Forms.type = ${this.reviewType}` : whereClause + ` AND Forms.reviewYear >= ${this.reportYearFrom} AND Forms.reviewYear <= ${this.reportYearTo} and Forms.type = ${this.reviewType}`
           }
         } else if (this.reportYearFrom && !this.reportYearTo) {
-          whereClause = whereClause === '' ? `where Forms.reviewYear >= ${this.reportYearFrom}` : whereClause + ` AND Forms.reviewYear >= ${this.reportYearFrom}`
+          whereClause = whereClause === '' ? `where Forms.reviewYear >= ${this.reportYearFrom} and Forms.type = ${this.reviewType}` : whereClause + ` AND Forms.reviewYear >= ${this.reportYearFrom} and Forms.type = ${this.reviewType}`
         } else if (!this.reportYearFrom && this.reportYearTo) {
-          whereClause = whereClause === '' ? `where Forms.reviewYear <= ${this.reportYearTo}` : whereClause + ` AND Forms.reviewYear <= ${this.reportYearTo}`
+          whereClause = whereClause === '' ? `where Forms.reviewYear <= ${this.reportYearTo} and Forms.type = ${this.reviewType}` : whereClause + ` AND Forms.reviewYear <= ${this.reportYearTo} and Forms.type = ${this.reviewType}`
         }
       }
       // Final query with SELECT, FROM, JOIN, and WHERE
@@ -1849,10 +1866,10 @@ export class ReportContentsComponent implements OnInit {
         query = this.countryFilterQuery(tables);
       }
       else if (tables[2].enTableName == 'GovernoratesRep') {
-        query = this.governorateFilterQuery(tables,1);
+        query = this.governorateFilterQuery(tables, 1);
       }
       else if (tables[2].enTableName == 'WilayatRep') {
-        query = this.wilayatFilterQuery(tables,1);
+        query = this.wilayatFilterQuery(tables, 1);
       }
       return query;
     }
@@ -1912,7 +1929,7 @@ export class ReportContentsComponent implements OnInit {
   }
   createYearRepQuery(tables: ITableDto[]): string {
     let query = ''
-    
+
     if (tables.length == 3) {
       this.report.seconedTable = tables[2].enTableName;
       if (tables[2].enTableName == 'ActivitiesRep') {
@@ -1948,7 +1965,7 @@ export class ReportContentsComponent implements OnInit {
         };
         tables[0].fields[0] = tableField
       }
-      
+
       if (tables[0].fields[0].dataType == '0')
         query = `SELECT distinct(codes.QuestionCode) AS questionCode,codes.arName AS codeName,t.id as tableId, f.id as formId,f.reviewYear,t.arName AS tablesName,t.type As tableType FROM formContents fc INNER JOIN codes ON codes.id = fc.codeid INNER JOIN Tables t ON t.id = fc.tableId INNER JOIN forms f ON f.id = t.formId inner join CompanyForms cf on cf.formId = f.id`; // or any other filters
       else if (tables[0].fields[0].dataType == '1')
@@ -1971,7 +1988,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
 
@@ -2011,7 +2028,7 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and f.type = ${this.reviewType}`
         const fieldConditions = tables[0].fields
           .filter(field => field.name) // Filter out fields that don't have a name
           .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
@@ -2118,7 +2135,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2164,7 +2181,7 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and f.type = ${this.reviewType}`
         const fieldConditions = tables[0].fields
           .filter(field => field.name) // Filter out fields that don't have a name
           .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
@@ -2272,7 +2289,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2318,7 +2335,7 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) AND (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL) AND (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) AND (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) AND (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL) AND (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) AND (s.IsDeleted != 1 OR s.IsDeleted IS NULL) and f.type = ${this.reviewType}`
         const fieldConditions = tables[0].fields
           .filter(field => field.name) // Filter out fields that don't have a name
           .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
@@ -2425,7 +2442,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (ac.IsDeleted != 1 OR ac.IsDeleted IS NULL) and (cat.IsDeleted != 1 OR cat.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and (sec.IsDeleted != 1 OR sec.IsDeleted IS NULL) and (s.IsDeleted != 1 OR s.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2471,7 +2488,7 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL)`
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and f.type = ${this.reviewType}`
         const fieldConditions = tables[0].fields
           .filter(field => field.name) // Filter out fields that don't have a name
           .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
@@ -2534,7 +2551,7 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else {
-      
+
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
@@ -2579,7 +2596,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (g.IsDeleted != 1 OR g.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
       // Handle conditions based on tables[1] (Years)
@@ -2625,7 +2642,7 @@ export class ReportContentsComponent implements OnInit {
       let whereClause = '';
       // Handle fields from tables[0]
       if (tables[0].fields && tables[0].fields.length > 0) {
-        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (w.IsDeleted != 1 OR w.IsDeleted IS NULL)`
+        whereClause = ` WHERE (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) and (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) and(t.IsDeleted != 1 OR t.IsDeleted IS NULL) and (f.IsDeleted != 1 OR f.IsDeleted IS NULL) and (fd.IsDeleted != 1 OR fd.IsDeleted IS NULL) AND (c.IsDeleted != 1 OR c.IsDeleted IS NULL) AND (w.IsDeleted != 1 OR w.IsDeleted IS NULL) and f.type = ${this.reviewType}`
         const fieldConditions = tables[0].fields
           .filter(field => field.name) // Filter out fields that don't have a name
           .map(field => `codes.arName = N'${field.name}'`) // Map the fields to conditions
@@ -2688,7 +2705,7 @@ export class ReportContentsComponent implements OnInit {
       return query;
     }
     else {
-      
+
       if (tables[0].fields.length == 0) {
         const tableField: ITableFieldDto = {
           name: this.searchTerm,
@@ -2733,7 +2750,7 @@ export class ReportContentsComponent implements OnInit {
       if (tables[0].fields && tables[0].fields.length > 0) {
         if (this.searchTerm && this.searchTerm != '' && this.searchTerm != null) {
           const id = (this.filteredTables.find(table => table.arName === this.searchTerm) as any)?.id;
-          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (w.IsDeleted != 1 OR w.IsDeleted IS NULL)`;
+          whereClause += ` WHERE t.id = N'${id}' AND (t.IsDeleted != 1 OR t.IsDeleted IS NULL) AND (fc.IsDeleted != 1 OR fc.IsDeleted IS NULL) AND (codes.IsDeleted != 1 OR codes.IsDeleted IS NULL) AND (f.IsDeleted != 1 OR f.IsDeleted IS NULL) AND (cf.IsDeleted != 1 OR cf.IsDeleted IS NULL) and (c.IsDeleted != 1 OR c.IsDeleted IS NULL) and (w.IsDeleted != 1 OR w.IsDeleted IS NULL) and f.type = ${this.reviewType}`;
         }
       }
       // Handle conditions based on tables[1] (Years)
