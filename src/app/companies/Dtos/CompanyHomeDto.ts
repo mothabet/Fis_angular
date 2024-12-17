@@ -89,7 +89,7 @@ export interface IAddCompanyByExcel{
     compRegNumber:string,
     governorate:string,
     wilaya:string,
-    activity:string,
+    activityId:number,
     email:string,
     phoneNumber:string
 }
