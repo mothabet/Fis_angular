@@ -159,7 +159,7 @@ export class CompanyResearcherHomeComponent {
         enName: row['اسم المنشآه انجليزية']?.toString() ?? '', // Use the header 'اسم المنشآه انجليزية'
         compRegNumber: row['السجل التجاري ']?.toString() ?? '',  // Use the header 'السجل التجاري '
         governorate: row['المحافظة ']?.toString() ?? '',  // Use the header 'المحافظة '
-        activityId: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
+        activityCode: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
         wilaya: row['الولاية']?.toString() ?? '',        // Use the header 'الولاية'
         phoneNumber: row['هاتف']?.toString() ?? '',            // Use the header 'هاتف'
       }));

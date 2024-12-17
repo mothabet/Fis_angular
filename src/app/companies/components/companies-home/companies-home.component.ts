@@ -317,7 +317,7 @@ export class CompaniesHomeComponent implements OnInit {
         enName: row['اسم المنشآه انجليزية']?.toString() ?? '', // Use the header 'اسم المنشآه انجليزية'
         compRegNumber: row['السجل التجاري ']?.toString() ?? '',  // Use the header 'السجل التجاري '
         governorate: row['المحافظة ']?.toString() ?? '',  // Use the header 'المحافظة '
-        activityId: isNaN(Number(row['النشاط'])) ? 0 : Number(row['النشاط']), // Check if 'activityId' is a number
+        activityCode: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
         wilaya: row['الولاية']?.toString() ?? '',        // Use the header 'الولاية'
         phoneNumber: row['هاتف']?.toString() ?? '',            // Use the header 'هاتف'
       }));
