@@ -14,6 +14,7 @@ export class DataMaximizeDetailsComponent implements OnInit {
   showLoader: boolean = false;
   noData: boolean = false;
   id: number = 0;
+  type: number = 0;
   dataMaximizeDetails: any = {};
   constructor(private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private dataMaximizeServices: MaximizeService,
@@ -21,10 +22,11 @@ export class DataMaximizeDetailsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.id = +this.activeRouter.snapshot.paramMap.get('id')!;
-    this.GetDataMaximizeDetails(this.id);
+    this.GetDataMaximizeDetails(1);
   }
-  GetDataMaximizeDetails(page: number, textSearch: string = ''): void {
+  GetDataMaximizeDetails(type:number): void {
     this.showLoader = true;
+    this.type = type;
     const observer = {
       next: (res: any) => {
         if (res.Data) {
@@ -48,6 +50,6 @@ export class DataMaximizeDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.dataMaximizeServices.GetDataMaximizeDetails(this.id).subscribe(observer);
+    this.dataMaximizeServices.GetDataMaximizeDetails(this.id,type).subscribe(observer);
   }
 }

@@ -30,9 +30,9 @@ export class MaximizeService {
     var resopnse = this.http.get(environment.apiUrl + `DataMaxmize/GetDataMaxmize?id=${id}&lang=2`, { headers });
     return resopnse;
   }
-  GetDataMaximizeDetails(id: number) {
+  GetDataMaximizeDetails(id: number,type:number) {
     var headers = this.sharedService.getHeaders();
-    var resopnse = this.http.get(environment.apiUrl + `DataMaxmize/GetDataMaximizeDetails?id=${id}&lang=2`, { headers });
+    var resopnse = this.http.get(environment.apiUrl + `DataMaxmize/GetDataMaximizeDetails?id=${id}&lang=2&type=${type}`, { headers });
     return resopnse;
   }
   UpdateDataMaxmize(id: number, reportDto: IAddDataMaximize) {

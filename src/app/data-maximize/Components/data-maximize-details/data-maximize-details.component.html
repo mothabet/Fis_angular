@@ -34,7 +34,21 @@
             </div>
         </div>
     </div>
+
     <div class="content companies researcher mt-5" *ngIf="!noData">
+        <div class="header-nav companies-details" style="padding: 11px;color: black;">
+            <ul>
+                <li [class.active]="type === 1" (click)="GetDataMaximizeDetails(1)">
+                    <a>تكبير بالقطاعات</a>
+                </li>
+                <li [class.active]="type === 2" (click)="GetDataMaximizeDetails(2)">
+                    <a>تكبير بالشركات</a>
+                </li>
+                <li [class.active]="type === 3" (click)="GetDataMaximizeDetails(3)">
+                    <a>تكبير بالأنشطة</a>
+                </li>
+            </ul>
+        </div>
         <div class="header d-flex mb-0">
             <div class="title col-sm-12">
                 <h2>بيانات سنة {{dataMaximizeDetails.reviewYear}}</h2>
@@ -44,15 +58,18 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">رمز القطاع</th>
-                        <th class="text-center" scope="col">اسم القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">رمز القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">اسم القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">رمز النشاط</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">اسم النشاط</th>
+                        <th class="text-center" scope="col" *ngIf="type == 2">اسم الشركة</th>
                         <th class="text-center" scope="col">اجمالي قبل التكبير</th>
                         <th class="text-center" scope="col">اجمالي بعد التكبير</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[0].dataMaximizeDetailsItemsDtos">
-                        <td class="text-center">{{ item.sectorCode }}</td>
+                        <td class="text-center" *ngIf="type == 1 || type == 3">{{ item.sectorCode }}</td>
                         <td class="text-center">{{ item.sectorName }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>
                         <td class="text-center">{{ item.totalAfter }}</td>
@@ -82,15 +99,18 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">رمز القطاع</th>
-                        <th class="text-center" scope="col">اسم القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">رمز القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">اسم القطاع</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">رمز النشاط</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">اسم النشاط</th>
+                        <th class="text-center" scope="col" *ngIf="type == 2">اسم الشركة</th>
                         <th class="text-center" scope="col">اجمالي قبل التكبير</th>
                         <th class="text-center" scope="col">اجمالي بعد التكبير</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[1].dataMaximizeDetailsItemsDtos">
-                        <td class="text-center">{{ item.sectorCode }}</td>
+                        <td class="text-center" *ngIf="type == 1 || type == 3">{{ item.sectorCode }}</td>
                         <td class="text-center">{{ item.sectorName }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>
                         <td class="text-center">{{ item.totalAfter }}</td>
