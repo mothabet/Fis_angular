@@ -50,6 +50,7 @@ export class ResearcherDetailsComponent implements OnInit {
   companiesCount: number = 0;
   companies!: ICompany[];
   companiesSelect!: ICompany[];
+  companiesResearcher!: ICompany[];
   text: string = '';
   messages: IMessage[] = [];
   selectedMessage!: IMessage;
@@ -169,7 +170,9 @@ export class ResearcherDetailsComponent implements OnInit {
           this.researcher = res.Data;
           this.noData = !res.Data.companies.getCompaniesDtos || res.Data.companies.getCompaniesDtos.length === 0;
           this.companies = res.Data.companies.getCompaniesDtos;
-          this.companiesSelect = this.companies.filter(c=>c.researcherArName === "");
+          
+          this.companiesResearcher = this.companies.filter(c=>c.status == true);
+          this.companiesSelect = this.companiesResearcher.filter(c=>c.researcherArName === "");
           this.currentPage = res.Data.companies.PageNumber;
           this.isLastPage = res.Data.companies.LastPage;
           this.totalPages = res.Data.companies.TotalCount;
@@ -364,7 +367,7 @@ export class ResearcherDetailsComponent implements OnInit {
     this.isAllSelected = event.target.checked;
     if (this.isAllSelected) {
       // اختيار جميع الشركات
-      this.selectedCompanyIds = this.companies.map(company => company.id);
+      this.selectedCompanyIds = this.companiesResearcher.map(company => company.id);
     } else {
       // إلغاء تحديد جميع الشركات
       this.selectedCompanyIds = [];
@@ -378,7 +381,7 @@ export class ResearcherDetailsComponent implements OnInit {
   
   // تحديث حالة اختيار الكل بناءً على الشركات المختارة
   updateSelectAllState(): void {
-    const allSelected = this.companies.length > 0 && this.companies.every(company => this.selectedCompanyIds.includes(company.id));
+    const allSelected = this.companiesResearcher.length > 0 && this.companiesResearcher.every(company => this.selectedCompanyIds.includes(company.id));
     this.isAllSelected = allSelected;
   }
 

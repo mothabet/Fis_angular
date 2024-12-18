@@ -20,7 +20,7 @@ export class NotificationsService {
     return resopnse;
   }
   UpdateToReadNotificationByUserId() {
-    debugger
+    
     var headers = this.sharedService.getHeaders();
     var resopnse = this.http.put(environment.apiUrl + `Notifications/UpdateToReadNotificationByUserId?lang=2`,null, { headers });
     return resopnse;

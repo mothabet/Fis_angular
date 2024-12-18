@@ -176,7 +176,9 @@ export class LoginService {
       'SharedTwoYearsWithParts',
       'Companies-Details',
       'Companies-Researcher',
-      'Notification'
+      'Notification',
+      'CopmanyMessages',
+      'CopmanyGeneralInformation',
     ];
     return researcherRoutes.includes(url);
   }

@@ -22,7 +22,7 @@ export interface ICompany {
     postalCode: string,
     phoneNumber: string,
     email: string,
-    status: string,
+    status: boolean,
     id: number,
     researcherId:string
     accountingPeriod: Date,
@@ -89,7 +89,7 @@ export interface IAddCompanyByExcel{
     compRegNumber:string,
     governorate:string,
     wilaya:string,
-    activity:string,
+    activityCode:string,
     email:string,
     phoneNumber:string
 }

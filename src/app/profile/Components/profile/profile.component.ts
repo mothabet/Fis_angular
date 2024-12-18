@@ -103,7 +103,7 @@ export class ProfileComponent {
     if (this.profileForm.valid) {
       this.showLoader = true; 
       const formData = new FormData();
-      debugger
+      
       
       formData.append('passWord', this.profileForm.value.password);
       formData.append('arName', this.profileForm.value.arName);

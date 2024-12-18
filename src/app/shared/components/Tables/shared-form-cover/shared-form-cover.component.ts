@@ -102,7 +102,7 @@ export class SharedFormCoverComponent implements OnInit {
     postalCode: '',
     phoneNumber: '',
     email: '',
-    status: '',
+    status: true,
     id: 0,
     researcherId: '',
     accountingPeriod: new Date(),

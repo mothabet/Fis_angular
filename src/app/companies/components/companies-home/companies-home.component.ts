@@ -301,6 +301,7 @@ export class CompaniesHomeComponent implements OnInit {
     const reader: FileReader = new FileReader();
 
     reader.onload = (e: any) => {
+      this.showLoader = true;
       const bstr: string = e.target.result;
       const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 
@@ -316,7 +317,7 @@ export class CompaniesHomeComponent implements OnInit {
         enName: row['اسم المنشآه انجليزية']?.toString() ?? '', // Use the header 'اسم المنشآه انجليزية'
         compRegNumber: row['السجل التجاري ']?.toString() ?? '',  // Use the header 'السجل التجاري '
         governorate: row['المحافظة ']?.toString() ?? '',  // Use the header 'المحافظة '
-        activity: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
+        activityCode: row['النشاط']?.toString() ?? '',       // Use the header 'النشاط'
         wilaya: row['الولاية']?.toString() ?? '',        // Use the header 'الولاية'
         phoneNumber: row['هاتف']?.toString() ?? '',            // Use the header 'هاتف'
       }));
@@ -324,6 +325,7 @@ export class CompaniesHomeComponent implements OnInit {
       this.companyHomeServices.AddCompanyByExcel(this.addCompanyByExcel).subscribe({
         next: (res: any) => {
           this.GetCompanies('', 1);
+          this.showLoader = false;
           Swal.fire({
             icon: 'success',
             title: res.Message,
@@ -332,6 +334,7 @@ export class CompaniesHomeComponent implements OnInit {
           });
         },
         error: (err: any) => {
+          this.showLoader = false;
           this.sharedService.handleError(err);
         }
       });
