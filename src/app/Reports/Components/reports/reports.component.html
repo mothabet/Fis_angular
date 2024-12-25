@@ -68,9 +68,9 @@
                             <div class="Gnotactive">غير نشط</div>
                         </td>
                         <td class="text-center">
-                            <a routerLink="/ReportContents/{{report.id}}" class="icon">
-                                <img src="../../../../assets/images/eye-outline.png" alt="">
-                            </a>
+                            <a [routerLink]="['/ReportContents', report.id]" target="_blank" class="icon">
+                                <img src="assets/images/eye-outline.png" alt="">
+                            </a>                            
                             <button class="icon">
                                 <img src="../../../../assets/images/trash-can-outline.png"
                                     (click)="DeleteReport(report.id)" alt="">
