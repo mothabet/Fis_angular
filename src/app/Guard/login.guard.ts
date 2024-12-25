@@ -14,6 +14,7 @@ export class LoginGuard {
     , private permissionsService: PermissionsService, private sharedService: SharedService) { }
 
   canActivate(route: any): boolean {
+    debugger
     const isLoggedIn = this.authService.getToken();
     if (isLoggedIn != "") {
       let res = this.authService.decodedToken(isLoggedIn);

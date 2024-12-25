@@ -38,11 +38,11 @@
                     <i class="fa-solid fa-plus mx-1"></i>
                     إنشاء تفاصيل التقرير
                 </button>
-                <!-- <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download"
+                <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download"
                     (click)="printExcel()">
                     <img src="../../../../assets/images/list-box-outline.png" alt="" />
                     استخراج تقرير
-                </button> -->
+                </button>
             </div>
         </div>
     </div>
@@ -90,14 +90,18 @@
                         </div>
                     </ng-container>
                     <ng-container *ngIf="report.reportType !== 'FormContent' && report.reportType !== 'TablesReport'">
-                        <div *ngIf="report.reportDetails.length > 0">
-                            <span>تقرير عن ({{ report.reportDetails[0].ArTableName }})</span>
-                            <div class="mb-2" *ngIf="report.reportDetails.length > 1">
-                                بحث ب (<span>{{ getArTableNames(report) }}</span>)
-                            </div>
-                            <div class="mb-2" *ngIf="getReportYear(report)">
-                                السنة (<span>{{ getReportYear(report) }}</span>)
-                            </div>
+                        <span>تقرير عن ({{ report.reportDetails[0].ArTableName }})</span>
+                        <div class="mb-2" *ngIf="report.reportDetails.length > 1">
+                            بحث ب (<span>{{ getArTableNames(report) }}</span>)
+                        </div>
+                        <div *ngFor="let detail of report.reportDetails">
+                            <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length > 1">
+                                السنه / (من {{detail.Fields[0].name}} إلى {{detail.Fields[(detail.Fields.length -
+                                1)].name}})
+                            </ng-container>
+                            <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length == 1">
+                                السنه / ({{detail.Fields[0].name}})
+                            </ng-container>
                         </div>
                     </ng-container>
                 </div>
@@ -312,6 +316,8 @@
                 <h5 class="modal-title" id="add">إنشاء محتوى التقرير</h5>
             </div>
             <form>
+                <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
+
                 <div class="modal-body">
                     <div class="row">
                         <!-- First three fields on the same row -->
@@ -322,7 +328,6 @@
                             <label style="top: 14px;">اسم محتوى التقرير</label>
                         </div>
 
-                        <span *ngIf="isReportNameError" style="color: red;">{{errorMessage}}</span>
                         <div class="col-sm-4 mb-3">
                             <select [(ngModel)]="tableType" name="tableType" (change)="onTableSelect()"
                                 class="form-select add-report-select" style="width: 100%;">
@@ -343,7 +348,7 @@
                                 <option selected [ngValue]="0" disabled>اختر السنه</option>
                                 <option *ngFor="let year of years" [ngValue]="year.arName">{{year.arName}}</option>
                             </select>
-                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px' }">السنه من</label>
+                            <label [ngStyle]="{ 'top': isReportNameError ? '70px' : '70px' }">السنه من</label>
                             <!-- Error message if reportYearFrom is not selected -->
                             <span *ngIf="isYearError" style="color: red;">{{errorMessage}}</span>
                         </div>
@@ -353,18 +358,17 @@
                                 <option selected [ngValue]="0" disabled>اختر السنه</option>
                                 <option *ngFor="let year of years" [ngValue]="year.arName">{{year.arName}}</option>
                             </select>
-                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px', 'right': '19rem' }">السنه
+                            <label [ngStyle]="{ 'top': isReportNameError ? '70px' : '70px', 'right': '19rem' }">السنه
                                 الى</label>
                         </div>
-                        <div class="col-sm-4 mb-3"
-                            *ngIf="tableType == 2 || tableType == 4">
+                        <div class="col-sm-4 mb-3" *ngIf="tableType == 2 || tableType == 4">
                             <select [(ngModel)]="reviewType" name="reviewType" class="form-select add-report-select"
                                 style="width: 100%;">
                                 <option [ngValue]="" disabled>نوع المسح</option>
                                 <option [ngValue]="1">سنوي</option>
                                 <option [ngValue]="2">ربعي</option>
                             </select>
-                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px', 'right': '37rem' }">نوع
+                            <label [ngStyle]="{ 'top': isReportNameError ? '70px' : '70px', 'right': '37rem' }">نوع
                                 المسح</label>
                         </div>
                     </div>
@@ -376,7 +380,7 @@
                                 <option [ngValue]="1">سنوي</option>
                                 <option [ngValue]="2">ربعي</option>
                             </select>
-                            <label [ngStyle]="{ 'top': isReportNameError ? '90px' : '70px' }">نوع
+                            <label [ngStyle]="{ 'top': isReportNameError ? '70px' : '70px' }">نوع
                                 المسح</label>
                         </div>
                     </div>

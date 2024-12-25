@@ -234,7 +234,6 @@ export class ReportContentsComponent implements OnInit {
       next: (res: any) => {
         if (res.Data) {
           this.reports = res.Data;
-          console.log(this.reports);
         }
         else {
           res.Data = []
@@ -1158,11 +1157,16 @@ export class ReportContentsComponent implements OnInit {
     }
   }
   saveReport() {
-
+    this.errorMessage = '';
+    debugger
     if (this.tables.length == 0) {
       this.isTableError = true;
       this.errorMessage = 'يجب تحديد جدول للتقرير'
       return;
+    }
+    else {
+      this.isTableError = false;
+      this.errorMessage = '';
     }
     if ((this.tables[1].fields.length == 0 && this.searchYearTerm == '') && this.tableType == 5) {
       this.isTableError = true;
@@ -1170,13 +1174,17 @@ export class ReportContentsComponent implements OnInit {
       return; // Stop further execution
     }
     else {
-      this.isTableError = true;
+      this.isTableError = false;
       this.errorMessage = ''
     }
     if ((!this.reportYearFrom || this.reportYearFrom === undefined) && this.tableType != 5) {
       this.isYearError = true;
       this.errorMessage = 'يجب تحديد سنة البداية'
       return; // Stop further execution
+    }
+    else {
+      this.isYearError = false;
+      this.errorMessage = '';
     }
     if ((this.reportYearFrom !== undefined && this.reportYearTo !== undefined) && this.tableType != 5) {
       if ((this.reportYearFrom ?? 0) > (this.reportYearTo ?? 0)) {
@@ -1185,7 +1193,10 @@ export class ReportContentsComponent implements OnInit {
         return; // Stop further execution
       }
     }
-
+    else {
+      this.isYearError = false;
+      this.errorMessage = '';
+    }
     if (this.report.part == '' || this.report.part == null || this.report.part == undefined) {
       this.isReportNameError = true;
       this.errorMessage = 'يجب ادخال عنوان الجدول'
@@ -1214,18 +1225,29 @@ export class ReportContentsComponent implements OnInit {
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
+    else {
+      this.isContenterror = false;
+      this.errorMessage = '';
+    }
     if (this.reviewType == undefined || this.reviewType == 0 && (this.tables[0].enTableName == 'FormContent' ||
       this.tables[0].enTableName == 'TablesReport' || this.tables[0].enTableName == 'Forms')) {
       this.isYearError = true;
       this.errorMessage = 'يجب اختيار نوع المسح'
       return
     }
+    else {
+      this.isYearError = false;
+      this.errorMessage = '';
+    }
     if ((this.tables[0].fields.length == 0 && this.searchTerm == '') && this.tables[0].enTableName == 'TablesReport') {
       this.isContenterror = true;
       this.errorMessage = `يجب الاختيار من ${this.tables[0].arTableName}`
       return
     }
-
+    else {
+      this.isContenterror = false;
+      this.errorMessage = '';
+    }
     if ((this.reportYearTo === undefined || this.reportYearTo === null) && this.tableType != 5) {
       const currentYear = new Date().getFullYear();
       for (let year = this.reportYearFrom!; year <= currentYear; year++) {
@@ -1456,7 +1478,7 @@ export class ReportContentsComponent implements OnInit {
       const reviewYear = fieldArray[3].value;
       const totalCodeKey = `totalCode_${reviewYear}`;
       const totalCode2Key = `totalCode2_${reviewYear}`;
-      
+
       // Initialize the group if it does not exist
       if (!acc[codeArName]) {
         acc[codeArName] = {
@@ -1466,37 +1488,37 @@ export class ReportContentsComponent implements OnInit {
           years: []
         };
       }
-  
+
       // Find the totalCode and totalCode2 for the year
       const totalCode = fieldArray.find(f => f.key === totalCodeKey)?.value;
       const totalCode2 = fieldArray.find(f => f.key === totalCode2Key)?.value;
-  
+
       // Add year information with totalCode and totalCode2 (if applicable)
       const yearData: any = {
         reviewYear: Number(reviewYear),
         totalCode: totalCode ? Number(totalCode) : 0
       };
-  
+
       if (report.reportType === 'FormContent') {
         yearData.totalCode2 = totalCode2 ? Number(totalCode2) : 0;  // Only add totalCode2 if FormContent
       }
 
-      debugger
+
       // Add yearData for the respective year under the correct codeArName
       acc[codeArName].years.push(yearData);
-  
+
       return acc;
     }, {}));
-  
+
     // Step 2: Ensure missing years are added
     const fieldsInReport = groupedReport as ReportField[];
-  
+
     // Loop through the years and ensure missing years are added with 0 for totalCode and totalCode2 (if FormContent)
     report.reportDetails[1].Fields.forEach((fieldDetail: any) => {
       fieldsInReport.forEach((field) => {
         const missingYear = Number(fieldDetail.value); // The year to check for
         const yearExists = field.years.some(year => year.reviewYear === missingYear);
-        debugger
+
         // Add the missing year if it does not exist and has a valid value
         if (!yearExists && missingYear > 0) {
           const missingYearData: any = {
@@ -1510,19 +1532,19 @@ export class ReportContentsComponent implements OnInit {
         }
       });
     });
-  
+
     // Step 3: Sort the 'years' array within each field group by reviewYear
     fieldsInReport.forEach(field => {
       field.years.sort((a, b) => a.reviewYear - b.reviewYear);
-  
+
       // Apply further processing if required
       field.years = [...this.processYears(report.reportDetails[1].Fields, field.years)];
     });
-    debugger
+
     // Step 4: Return the transformed report
     return fieldsInReport;
   }
-  
+
   transActivityFields(fields: any[], report: any): any[] {
     // Step 1: Group the fields by 'codeArName'
     const groupedReport = Object.values(fields.reduce((acc: { [key: string]: ReportActivityField }, fieldArray: any[]) => {
