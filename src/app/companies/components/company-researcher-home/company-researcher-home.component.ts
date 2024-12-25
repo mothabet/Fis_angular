@@ -487,6 +487,7 @@ export class CompanyResearcherHomeComponent {
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
         activityName: this.activityName,
+        arActivityName: this.activityName,
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
@@ -719,7 +720,7 @@ export class CompanyResearcherHomeComponent {
               wilayatId: this.company.wilayatId,
               status: this.company.status,
               facilityType: this.company.facilityType,
-              activityName: this.company.activityName,
+              activityName: this.company.arActivityName,
               sectorName: this.company.sectorName,
               subActivityName: this.company.subActivityName,
             });
@@ -760,6 +761,7 @@ export class CompanyResearcherHomeComponent {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
+    debugger
     if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
@@ -841,6 +843,7 @@ export class CompanyResearcherHomeComponent {
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
         activityName: this.activityName,
+        arActivityName: this.activityName,
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }

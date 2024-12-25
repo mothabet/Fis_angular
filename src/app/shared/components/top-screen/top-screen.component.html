@@ -1,110 +1,109 @@
 <!-- header -->
 <div class="header d-flex flex-wrap justify-content-between align-items-center">
-    <h4 class="title">
-        {{title}}
-    </h4>
-    <div class="user d-flex justify-content-between align-items-center">
-        <button routerLink="/Researcher-Details/{{researcherId}}" style="border: 1px solid;" type="button" class="btn " data-bs-toggle="modal" *ngIf="role == 'Researchers'">
-            الصفحة الرئيسية
-        </button>
-        <div class="dropdown">
-            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
-                EN
-                <!-- <i class="fa-solid fa-chevron-down"></i> -->
-            </button>
-            <!-- <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+  <h4 class="title">
+    {{title}}
+  </h4>
+  <div class="user d-flex justify-content-between align-items-center">
+    <button routerLink="/Researcher-Details/{{researcherId}}" style="border: 1px solid;" type="button" class="btn "
+      data-bs-toggle="modal" *ngIf="role == 'Researchers'">
+      الصفحة الرئيسية
+    </button>
+    <div class="dropdown">
+      <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false"
+        (click)="changeLang('en')" *ngIf="this.savedLang == 'ar'">
+        EN
+        <!-- <i class="fa-solid fa-chevron-down"></i> -->
+      </button>
+      <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false"
+        (click)="changeLang('ar')" *ngIf="this.savedLang == 'en'">
+        AR
+        <!-- <i class="fa-solid fa-chevron-down"></i> -->
+      </button>
+      <!-- <ul class="dropdown-menu" aria-labelledby="dropdownlang">
                 <li><a class="dropdown-item" href="#">En</a></li>
             </ul> -->
-        </div>
-        <a routerLink="/Notification" class="notification active position-relative">
-          <i class="fa-solid fa-bell"></i>
-          <span *ngIf="notificationCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{ notificationCount }}
-              <span class="visually-hidden">unread notifications</span>
-          </span>
-      </a>
-        <div class="user-img">
-            <img [src]="selectedImageUrl || '.././../../../assets/images/avatar.PNG'" class="img-fluid">
-        </div>
-        <div class="dropdown">
+    </div>
+    <a routerLink="/Notification" class="notification active position-relative">
+      <i class="fa-solid fa-bell"></i>
+      <span *ngIf="notificationCount > 0"
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{ notificationCount }}
+        <span class="visually-hidden">unread notifications</span>
+      </span>
+    </a>
+    <div class="user-img">
+      <img [src]="selectedImageUrl || '.././../../../assets/images/avatar.PNG'" class="img-fluid">
+    </div>
+    <div class="dropdown">
 
-            <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="current-lang">أهلا بك {{arName}}</span>
-                <i class="fa-solid fa-chevron-down"></i>
+      <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="current-lang">{{savedLang === 'ar' ? 'اهلا بك' : 'Welcome'}} {{arName}}</span>
+        <i class="fa-solid fa-chevron-down"></i>
 
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                <li><a class="dropdown-item second-lang" href="#">الملف الشخصي </a></li>
-                <li><a class="dropdown-item second-lang" data-bs-toggle="modal" data-bs-target="#companyLink1" *ngIf="role == 'Researchers' || role == 'Company'">تعديل كلمة المرور</a></li>
-                <li><a class="dropdown-item second-lang" (click)="LogOut()">تسجيل الخروج</a></li>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownlang">
+        <li><a class="dropdown-item second-lang" href="#">الملف الشخصي </a></li>
+        <li><a class="dropdown-item second-lang" data-bs-toggle="modal" data-bs-target="#companyLink1"
+            *ngIf="role == 'Researchers' || role == 'Company'">تعديل كلمة المرور</a></li>
+        <li><a class="dropdown-item second-lang" (click)="LogOut()">تسجيل الخروج</a></li>
 
-            </ul>
-
-        </div>
+      </ul>
 
     </div>
+
+  </div>
 </div>
 <div class="modal company-modal fade" id="companyLink1" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header pb-0">
-            <h5 class="modal-title" id="add"></h5>
-          </div>
-          <form [formGroup]="passwordForm">
-            <div class="modal-body pb-1">
-              <div class="row">
-                <div class="form-group col-sm-6 mb-2" id="researcherPass">
-                  <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
-                    [(ngModel)]="passwordForm.value.password" formControlName="password" name="password" />
-                    <label for="inputField">كلمة المرور</label>
-                    <div
-                    *ngIf="
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <h5 class="modal-title" id="add"></h5>
+      </div>
+      <form [formGroup]="passwordForm">
+        <div class="modal-body pb-1">
+          <div class="row">
+            <div class="form-group col-sm-6 mb-2" id="researcherPass">
+              <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
+                [(ngModel)]="passwordForm.value.password" formControlName="password" name="password" />
+              <label for="inputField">كلمة المرور</label>
+              <div *ngIf="
                     passwordForm.controls['password'].invalid &&
                       (passwordForm.controls['password'].dirty ||
                       passwordForm.controls['password'].touched)
-                    "
-                  >
-                    <small
-                      *ngIf="passwordForm.controls['password'].errors?.['required']"
-                      class="text-danger"
-                    >
-                      يجب ادخال الرقم السري
-                    </small>
-                  </div>
-                  <button type="button" id="reload" (click)="generateRandomCredentials()">
-                    <img src="../../../../assets/images/refresh.png" alt="" />
-                  </button>
-                </div>
-                <div class="form-group col-sm-6 mb-2" id="researcherPass">
-                    <input class="form-control input-modal" type="text" placeholder="تأكيد كلمة المرور"
-                      [(ngModel)]="passwordForm.value.confirmPassword" formControlName="confirmPassword" name="password" />
-                      <label for="inputField">تأكيد كلمة المرور</label>
-                      <div
-                      *ngIf="
+                    ">
+                <small *ngIf="passwordForm.controls['password'].errors?.['required']" class="text-danger">
+                  يجب ادخال الرقم السري
+                </small>
+              </div>
+              <button type="button" id="reload" (click)="generateRandomCredentials()">
+                <img src="../../../../assets/images/refresh.png" alt="" />
+              </button>
+            </div>
+            <div class="form-group col-sm-6 mb-2" id="researcherPass">
+              <input class="form-control input-modal" type="text" placeholder="تأكيد كلمة المرور"
+                [(ngModel)]="passwordForm.value.confirmPassword" formControlName="confirmPassword" name="password" />
+              <label for="inputField">تأكيد كلمة المرور</label>
+              <div *ngIf="
                       passwordForm.controls['password'].invalid &&
                         (passwordForm.controls['password'].dirty ||
                         passwordForm.controls['password'].touched)
-                      "
-                    >
-                      <small
-                        *ngIf="passwordForm.controls['password'].errors?.['required']"
-                        class="text-danger"
-                      >
-                        يجب تأكيد الرقم السري
-                      </small>
-                    </div>
-                  </div>
+                      ">
+                <small *ngIf="passwordForm.controls['password'].errors?.['required']" class="text-danger">
+                  يجب تأكيد الرقم السري
+                </small>
               </div>
             </div>
-            <div class="modal-footer pt-0">
-              <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel1">
-                إلغاء
-              </button>
-              <button type="button" class="btn btn-save" (click)="updatePassword()">
-                حفظ
-              </button>
-            </div>
-          </form>
-      </div>
+          </div>
+        </div>
+        <div class="modal-footer pt-0">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel1">
+            إلغاء
+          </button>
+          <button type="button" class="btn btn-save" (click)="updatePassword()">
+            حفظ
+          </button>
+        </div>
+      </form>
     </div>
   </div>
+</div>

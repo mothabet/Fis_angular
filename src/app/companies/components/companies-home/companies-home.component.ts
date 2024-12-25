@@ -108,11 +108,13 @@ export class CompaniesHomeComponent implements OnInit {
   filteredSubACtivity: IDropdownList[] = [];
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
   @ViewChild('dropdownContainerSub') dropdownContainerSub!: ElementRef;
+  savedLang: string = '';
 
   constructor(private formBuilder: FormBuilder, private companyHomeServices: CompanyHomeService
     , private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private permissionsService: PermissionsService) { }
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
     this.companyForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
@@ -134,15 +136,15 @@ export class CompaniesHomeComponent implements OnInit {
       legalType: [''],
       institutionVlaue: [''],
       institutionHeadquarters: [''],
-      sectorId: [{value:'',disabled:true}, Validators.required],
-      sectorName: [{value:'',disabled:true}, Validators.required],
-      sectorCode: [{value:'',disabled:true}, Validators.required],
+      sectorId: ['', Validators.required],
+      sectorName: ['', Validators.required],
+      sectorCode: ['', Validators.required],
       activityCode: [''],
       activityId: ['', Validators.required],
-      activityName: [{value:'',disabled:true}, Validators.required],
+      activityName: ['', Validators.required],
       subActivityId: [''],
       subActivityCode: [''],
-      subActivityName: [{value:'',disabled:true},],
+      subActivityName: [''],
       governoratesId: [0],
       wilayatId: [0],
       status: [true],
@@ -684,6 +686,7 @@ export class CompaniesHomeComponent implements OnInit {
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
         activityName: this.activityName,
+        arActivityName: this.activityName,
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }
@@ -895,7 +898,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            
+            debugger
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -922,7 +925,7 @@ export class CompaniesHomeComponent implements OnInit {
               wilayatId: this.company.wilayatId,
               status: this.company.status,
               facilityType: this.company.facilityType,
-              activityName: this.company.activityName,
+              activityName: this.company.arActivityName,
               sectorName: this.company.sectorName,
               subActivityName: this.company.subActivityName,
               sectorCode:res.Data.sectorCode,
@@ -979,6 +982,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
+    debugger
     if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',
@@ -1060,6 +1064,7 @@ export class CompaniesHomeComponent implements OnInit {
         companyEmails: this.companyForm.value.compEmails,
         facilityType: this.companyForm.value.facilityType,
         activityName: this.activityName,
+        arActivityName: this.activityName,
         sectorName: this.sectorName,
         subActivityName: this.subActivityName,
       }

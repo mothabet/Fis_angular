@@ -9,30 +9,33 @@ import { IGetPermissionDto } from '../permissions/Dtos/PermissionDto';
   providedIn: 'root'
 })
 export class LoginGuard {
-  permissions : IGetPermissionDto[] = [];
+  permissions: IGetPermissionDto[] = [];
   constructor(private router: Router, private authService: LoginService
     , private permissionsService: PermissionsService, private sharedService: SharedService) { }
 
   canActivate(route: any): boolean {
+    debugger
     const isLoggedIn = this.authService.getToken();
     if (isLoggedIn != "") {
       let res = this.authService.decodedToken(isLoggedIn);
       const role = res.roles;
       const url: string = route.url[0].path;
+      const savedLang = localStorage.getItem('language') || 'ar';
       if (!(this.authService.isTableRoute(url))) {
         localStorage.clear();
+        localStorage.setItem('language', savedLang);
       }
-      if ((role === "User" && this.authService.isUserRoute(url)) || (role === "Researchers" &&  (this.authService.isUserRoute(url) || this.authService.isResearcherRoute(url)))) {
+      if ((role === "User" && this.authService.isUserRoute(url)) || (role === "Researchers" && (this.authService.isUserRoute(url) || this.authService.isResearcherRoute(url)))) {
         const observer = {
           next: (_res: any) => {
-            
+
             if (_res.Data) {
               this.permissions = _res.Data;
               const permissionCheck = this.permissions.find(r => r.enName === url);
               if (permissionCheck && permissionCheck.isName) {
                 return true;
               }
-              else if (!permissionCheck && this.authService.isTableRoute(url)){
+              else if (!permissionCheck && this.authService.isTableRoute(url)) {
                 return true;
               }
               else if (role === 'Researchers' && (this.authService.isResearcherRoute(url))) {
@@ -59,12 +62,12 @@ export class LoginGuard {
         this.permissionsService.GetPermissionByUserId(res.id).subscribe(observer);
         return true
       }
-      else if ((role === "User" ||role==='Researchers') && !(this.authService.isUserRoute(url))) {
+      else if ((role === "User" || role === 'Researchers') && !(this.authService.isUserRoute(url))) {
         this.router.navigate(['/Home']);
         return true;
       }
       else {
-        
+
         if (role === 'Admin' && this.authService.isAdminRoute(url)) {
           return true;
         }
@@ -72,10 +75,10 @@ export class LoginGuard {
           this.router.navigate(['/Home']);
           return true;
         }
-        else if ((role === 'User'||role==='Researchers') && this.authService.isAdminRoute(url)) {
+        else if ((role === 'User' || role === 'Researchers') && this.authService.isAdminRoute(url)) {
           return true;
         }
-        else if ((role === 'User'||role==='Researchers') && !(this.authService.isAdminRoute(url))) {
+        else if ((role === 'User' || role === 'Researchers') && !(this.authService.isAdminRoute(url))) {
           this.router.navigate(['/Home']);
           return true;
         }

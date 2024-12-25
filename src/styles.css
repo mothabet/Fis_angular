@@ -6,7 +6,6 @@
 label {
   position: absolute;
   top: 0;
-  right: 15px;
   transform: translateY(-50%);
   transition: all 0.2s ease-in-out;
   pointer-events: none;
@@ -14,6 +13,17 @@ label {
   padding: 0 5px;
 }
 
+/* Default direction (e.g., Arabic - RTL) */
+label[dir="rtl"] {
+  right: 15px;
+}
+
+/* English (LTR) layout */
+label[dir="ltr"] {
+  left: 15px;
+}
+
+/* Input styling */
 input {
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -21,16 +31,19 @@ input {
   box-sizing: border-box;
 }
 
+/* Focus or non-placeholder-shown input */
 input:focus + label,
 input:not(:placeholder-shown) + label {
   top: 0;
   transform: translateY(-50%) scale(0.75);
 }
+
 select:focus + label,
 select:not(:placeholder-shown) + label {
   top: 0;
   transform: translateY(-50%) scale(0.75);
 }
+
 td{
   min-width: 65px;
   text-wrap: balance !important;
@@ -51,4 +64,15 @@ td{
 }
 .modal-content{
   background-color: #e6f3f1 !important;
+}
+/* التصميم للغة العربية (من اليمين لليسار) */
+.rtl-layout {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* التصميم للغة الإنجليزية (من اليسار لليمين) */
+.ltr-layout {
+  direction: ltr !important;
+  text-align: left !important;
 }

@@ -53,6 +53,7 @@ export interface ICompaniesPDF {
 
 export interface IAddCompany {
     activityName:string,
+    arActivityName:string,
     sectorName:string,
     subActivityName:string,
     userName: string,

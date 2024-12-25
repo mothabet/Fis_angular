@@ -1,0 +1,135 @@
+{
+    "shared": {
+        "sidebar": {
+            "home": "Home",
+            "currentForms": "current forms",
+            "researchersAndSupervisor": "Researchers And Supervisor",
+            "researcherProfile": "Researcher's Profile",
+            "companies": "Companies",
+            "researcherCompanies": "Researcher's Companies",
+            "reports": "Reports",
+            "dataMaximize": "Data Maximize",
+            "prevForm": "Previous Form",
+            "Form": "Form",
+            "annualForms": "Annual Forms",
+            "quarterlyForms": "Quarterly Forms",
+            "auditingRules": "Auditing Rules",
+            "setting": "Setting",
+            "codes": "Form Content",
+            "settingProfile": "Profile's Setting",
+            "messages": "Messages",
+            "permissions": "Permissions",
+            "activitiesAndSectors": "Activities And Sectors",
+            "generalIndicators": "General Indicators"
+        },
+        "words": {
+            "fromDate": "From Date",
+            "toDate": "To Date",
+            "search": "Search",
+            "downloadPdf": "Download PDF",
+            "number": "Number",
+            "name": "Name",
+            "email": "Email",
+            "phoneNumber": "Phone Number",
+            "landline": "Landline",
+            "status": "Status",
+            "notData": "No data available.",
+            "adminData": "Admin's Data",
+            "adminName": "Admin's Name",
+            "address": "Address"
+        },
+        "form": {
+            "username": "User Name",
+            "password": "PassWord",
+            "phoneCode": "Phone Code"
+        },
+        "button": {
+            "close": "Close",
+            "save": "Save",
+            "edit": "Update",
+            "delete": "Delete",
+            "downloadPdf": "Download PDF",
+            "Refill": "Refill"
+        }
+    },
+    "homePage": {
+        "title": "Home",
+        "generalIndicators": "General Indicators",
+        "omanMap": "Oman Map",
+        "audit": "Audit"
+    },
+    "researcherPage": {
+        "title": "Researcher",
+        "addResearcher": "Add Researcher",
+        "updateResearcher": "Update Researcher",
+        "ListResearchers": "List Of Researchers",
+        "reasearcherName": "Reasearcher's Name"
+    },
+    "researcherDetailsPage": {
+        "title": "Researcher's Details",
+        "previousMandates": "Previous Mandates",
+        "delegationResearchers": "Delegation Of Researchers",
+        "sendForm": "Send Form",
+        "TotalNumberCompanies": "Total Number Of Companies",
+        "checkAll": "Check All"
+    },
+    "companyPage": {
+        "title": "Company",
+        "companies": "Companies",
+        "companyName": "Company Name",
+        "commercialRegistrationNumber": "Commercial Registration Number",
+        "commercialRegistration": "Commercial Registration",
+        "companyNumber": "Company Number",
+        "companyAddress": "Company Address",
+        "companyType": "Company Type",
+        "LinkToCompany": "Link To The Company",
+        "ListCompanies": "List Of Companies",
+        "addCompany": "Add Company",
+        "addGroupCompany": "Add a group of companies",
+        "municipalLicense": "Municipal License",
+        "fax": "Fax",
+        "mailbox": "Mailbox",
+        "zipCode": "Zip Code",
+        "InstitutionsResidence": "Institution's Residence",
+        "chooseYear":"Choose Year",
+        "DateCommencementWork":"Date of commencement of work",
+        "Website":"Website",
+        "SelectLegalForm":"Select the legal form",
+        "LegalForm":"Legal form",
+        "CapitalValue":"Capital value",
+        "ClassificationEstablishment":"Classification of the establishment",
+        "StartFiscalYear":"Start of the fiscal year",
+        "EndFiscalYear":"End of the fiscal year"
+    },
+    "formsPage": {
+        "forms": "Forms",
+        "formName": "Form's Name",
+        "chooseForm": "Choose Form"
+    },
+    "Message": {
+        "chooseMessage": "Choose Message",
+        "message": "Message"
+    },
+    "sector": {
+        "sectorCode": "Sector Code",
+        "sectorName": "Sector Name"
+    },
+    "activity": {
+        "activityCode": "Activity Code",
+        "activity": "Activity",
+        "activityMainCode": "Activity Main Code",
+        "activityMainNumber": "Activity Main Number",
+        "activityMain": "Activity Main",
+        "secondaryActivityCode": "Secondary Activity Code",
+        "secondaryActivityNumber": "Secondary Activity Number",
+        "secondaryActivity": "Secondary Activity"
+    },
+    "Governorate": {
+        "chooseGovernorate": "اختر المحافظه",
+        "Governorate": "المحافظه"
+    },
+    "State": {
+        "State": "ولايه",
+        "chooseState": "اختر الولايه"
+    }
+}

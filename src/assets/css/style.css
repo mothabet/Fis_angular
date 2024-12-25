@@ -1739,7 +1739,6 @@ a.sidebar-link span {
 #researcherPass button {
     position: absolute;
     top: 5px;
-    left: 15px;
     border: none;
     background: transparent;
 }
@@ -1747,7 +1746,14 @@ a.sidebar-link span {
 #research-btns .btn {
     width: 140px !important;
 }
-
+.buttonLtr{
+    left: 15px;
+    right: auto;
+}
+.buttonRtl{
+    right: 15px;
+    left: auto;
+}
 tbody,
 td,
 tfoot,

@@ -1,0 +1,134 @@
+{
+    "shared": {
+        "sidebar": {
+            "home": "الرئيسيه",
+            "currentForms": "الاستمارات الحاليه",
+            "researchersAndSupervisor": "الباحثين او المشرف",
+            "researcherProfile": "ملف الباحث",
+            "companies": "الشركات",
+            "researcherCompanies": "شركات الباحث",
+            "reports": "التقارير",
+            "dataMaximize": "تكبير البيانات",
+            "PrevForm": "الاستمارات السابقه",
+            "Form": "تصميم الاستمارات",
+            "annualForms": "استمارات سنويه",
+            "quarterlyForms": "استمارات ربعيه",
+            "auditingRules": "قواعد التدقيق",
+            "setting": "الاعدادات",
+            "codes": "محتوي الاستماره",
+            "settingProfile": "الاعدادات الشخصيه",
+            "messages": "الرسائل",
+            "permissions": "الصلاحيات",
+            "activitiesAndSectors": "الانشطه و القطاعات",
+            "generalIndicators": "المؤشرات العامه"
+        },
+        "words": {
+            "fromDate": "من تاريخ",
+            "toDate": "الي تاريخ",
+            "search": "بحث",
+            "number": "الرقم",
+            "name": "الاسم",
+            "email": "البريد الالكترونى",
+            "phoneNumber": "رقم الهاتف",
+            "landline": "الهاتف الثابت",
+            "status": "الحاله",
+            "notData": "لا يوجد بيانات",
+            "adminData": "بيانات المسؤول",
+            "adminName": "اسم المسؤول",
+            "address": "العنوان"
+        },
+        "form": {
+            "username": "اسم المستخدم",
+            "password": "كلمة المرور",
+            "phoneCode": "كود الهاتف"
+        },
+        "button": {
+            "close": "الغاء",
+            "save": "حفظ",
+            "edit": "تعديل",
+            "delete": "حذف",
+            "downloadPdf": "تنزيل PDF",
+            "Refill": "اعادة الملء"
+        }
+    },
+    "homePage": {
+        "title": "الرئيسيه",
+        "generalIndicators": "المؤشرات العامه",
+        "omanMap": "خريطة عمان",
+        "audit": "تدقيق"
+    },
+    "researcherPage": {
+        "title": "الباحثين",
+        "addResearcher": "إضافة باحث",
+        "updateResearcher": "تعديل باحث",
+        "ListResearchers": "قائمة الباحثين",
+        "reasearcherName": "اسم الباحث"
+    },
+    "researcherDetailsPage": {
+        "title": "تفاصيل الباحث",
+        "previousMandates": "تفويضات سابقه",
+        "delegationResearchers": "تفويض باحثين",
+        "sendForm": "ارسال استماره",
+        "TotalNumberCompanies": "إجمالي عدد الشركات",
+        "checkAll": "اختيار الكل"
+    },
+    "companyPage": {
+        "title": "الشركه",
+        "companies": "الشركات",
+        "companyName": "اسم الشركه",
+        "commercialRegistrationNumber": "رقم السجل التجارى",
+        "commercialRegistration": "السجل التجارى",
+        "companyNumber": "رقم الشركه",
+        "companyAddress": "عنوان الشركه",
+        "companyType": "نوع الشركه",
+        "LinkToCompany": "ربط بالشركه",
+        "ListCompanies": "قائمة الشركات",
+        "addCompany": "اضافة شركه",
+        "addGroupCompany": "اضافة مجموعة شركات",
+        "municipalLicense": "الترخيص البلدي",
+        "fax": "فاكس",
+        "mailbox": "صندوق البريد",
+        "zipCode": "الرمز البريدي",
+        "InstitutionsResidence": "مقر اقامة المؤسسه",
+        "chooseYear":"اختر السنه",
+        "DateCommencementWork":"تاريخ مزاولة العمل",
+        "Website":"الموقع الإلكتروني",
+        "SelectLegalForm":"اختر الشكل القانوني",
+        "LegalForm":"الشكل القانوني",
+        "CapitalValue":"قيمة رأس المال",
+        "ClassificationEstablishment":"تصنيف المنشأه",
+        "StartFiscalYear":"بداية السنة المالية",
+        "EndFiscalYear":"نهاية السنة المالية"
+    },
+    "formsPage": {
+        "forms": "الاستمارات",
+        "formName": "اسم الاستماره",
+        "chooseForm": "اختار الاستماره"
+    },
+    "Message": {
+        "chooseMessage": "اختار الرساله",
+        "message": "الرساله"
+    },
+    "sector": {
+        "sectorCode": "رمز القطاع",
+        "sectorName": "اسم القطاع"
+    },
+    "activity": {
+        "activityCode": "كود النشاط",
+        "activity": "النشاط",
+        "activityMainCode": "رمز النشاط الرئيسي",
+        "activityMainNumber": "رقم النشاط الرئيسي",
+        "activityMain": "النشاط الرئيسي",
+        "secondaryActivityCode": "رمز النشاط الثانوى",
+        "secondaryActivityNumber": "رقم النشاط الثانوى",
+        "secondaryActivity": "النشاط الثانوى"
+    },
+    "Governorate": {
+        "chooseGovernorate": "اختر المحافظه",
+        "Governorate": "المحافظه"
+    },
+    "State": {
+        "State": "ولايه",
+        "chooseState": "اختر الولايه"
+    }
+}

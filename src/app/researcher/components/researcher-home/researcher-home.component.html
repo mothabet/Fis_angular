@@ -1,385 +1,410 @@
-<app-loader *ngIf="showLoader"></app-loader>
-<!-- main content -->
-<div class="p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'الباحثين'"></app-top-screen>
-  <!--start total -->
-  <!-- start filter section -->
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+<div [ngClass]="{'rtl-layout': savedLang === 'ar', 'ltr-layout': savedLang === 'en'}">
+  <app-loader *ngIf="showLoader"></app-loader>
+  <!-- main content -->
+  <div class="p-4 main card" style="flex: 1">
+    <app-top-screen [title]="'researcherPage.title' |translate"></app-top-screen>
+    <!--start total -->
+    <!-- start filter section -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-    <div class="first-section search d-flex align-items-center">
-      <!-- <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
+      <div class="first-section search d-flex align-items-center">
+        <!-- <input class="form-control" type="text" name="search" placeholder="بحث متقدم">
       <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
 
       <div class="form-check form-switch me-3">
           <input class="form-check-input" type="checkbox" id="seeAll">
           <label class="form-check-label text-nowrap" for="seeAll">عرض الكل</label>
       </div> -->
-    </div>
+      </div>
 
-    <div class="last-section  d-flex align-items-center">
-      <!-- <button class="btn">
+      <div class="last-section  d-flex align-items-center">
+        <!-- <button class="btn">
           <img src="./images/Combined Shape.png" alt="">
       </button> -->
-      <div class="form-group mx-1">
-        <input type="date" id="fromDate" [(ngModel)]="fromDate" class="form-control" />
-        <label for="inputField">من تاريخ :</label>
-      </div>
-      <div class="form-group mx-1">
-        <input type="date" id="toDate" [(ngModel)]="toDate" class="form-control" />
-        <label for="inputField">الي تاريخ</label>
-      </div>
-      <button class="btn mx-1" style="border-radius: 8px;
+        <div class="form-group mx-1">
+          <input type="date" id="fromDate" [(ngModel)]="fromDate" class="form-control" />
+          <label for="inputField">{{'shared.words.fromDate' |translate}}</label>
+        </div>
+        <div class="form-group mx-1">
+          <input type="date" id="toDate" [(ngModel)]="toDate" class="form-control" />
+          <label for="inputField">{{'shared.words.toDate' |translate}}</label>
+        </div>
+        <button class="btn mx-1" style="border-radius: 8px;
       color: white;
       font-size: 12px;
       background-color: #133C8B;
       " (click)="GetFormsStatistics()">
-        بحث </button>
+          {{'shared.words.search' |translate}} </button>
+      </div>
+
     </div>
+    <!-- end filter section -->
 
-  </div>
-  <!-- end filter section -->
+    <div class="row totals">
 
-  <div class="row totals">
+      <ng-container *ngFor="let static of filteredFormStatics">
+        <ng-container *ngIf="static.name !='إجمالي عدد الاستمارات التي تم الانتهاء من تعبئتها'">
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
 
-    <ng-container *ngFor="let static of filteredFormStatics">
-      <ng-container *ngIf="static.name !='إجمالي عدد الاستمارات التي تم الانتهاء من تعبئتها'">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics"
+              style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
+              <div class="header py-3">
+                <div class="total-num">
+                  {{static.count}}
+                </div>
+                <div class="total-title">
+                  {{ savedLang === 'ar' ? static.name : static.enName }}
+                </div>
 
-          <div class="card company text-center" data-bs-toggle="modal" data-bs-target="#formsStatics"
-            style="cursor: pointer;" (click)="GetFormsByStatus(static.id)">
-            <div class="header py-3">
-              <div class="total-num">
-                {{static.count}}
               </div>
-              <div class="total-title">
-                {{static.name}}
-              </div>
-
             </div>
+
           </div>
-
-        </div>
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </div>
-  <!--end total -->
-  <!-- start content -->
-  <div class="content companies researcher">
-    <div class="header d-flex mb-0">
-      <div class="title">قائمة الباحثين</div>
-      <div class="btns d-flex">
-        <div class="search">
-          <input (keydown.enter)="researcherSearch()" [(ngModel)]="searchText" class="form-control" type="text"
-            name="search" placeholder="البحث">
-          <i (click)="researcherSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-        </div>
-        <div class="d-flex gap-1 flex-grow-1" id="research-btns">
-          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher" *ngIf="permission.add">
-            <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addResearcherBtn" />
-            إضافة باحث
-          </button>
-          <button (click)="printPdf()" type="button" class="btn btn-download" *ngIf="permission.download">
-            <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            تنزيل PDF
-          </button>
+    </div>
+    <!--end total -->
+    <!-- start content -->
+    <div class="content companies researcher">
+      <div class="header d-flex mb-0">
+        {{'researcherPage.ListResearchers' |translate}}
+        <div class="title"></div>
+        <div class="btns d-flex">
+          <div class="search">
+            <input (keydown.enter)="researcherSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+              name="search" placeholder="{{'shared.words.search' |translate}}">
+            <i (click)="researcherSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div>
+          <div class="d-flex gap-1 flex-grow-1" id="research-btns">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher"
+              *ngIf="permission.add">
+              <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addResearcherBtn" />
+              {{'researcherPage.addResearcher' |translate}}
+            </button>
+            <button (click)="printPdf()" type="button" class="btn btn-download" *ngIf="permission.download">
+              <img src="../../../../assets/images/list-box-outline.png" alt="" />
+              {{'shared.button.downloadPdf' |translate}}
+            </button>
+          </div>
         </div>
       </div>
+
+      <div class="table-responsive company-table research-table">
+        <table class="table table-borderless">
+          <thead>
+            <tr class="t-header">
+              <th scope="col">{{'shared.words.number' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.name' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.email' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.phoneNumber' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.status' |translate}}</th>
+              <th class="text-center" scope="col"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of researchers; let i = index">
+              <td>
+                {{ i + 1 }}
+              </td>
+              <td class="text-center">{{ item.arName }}</td>
+              <td class="text-center">{{ item.email }}</td>
+              <td class="text-center">{{ item.phone }}</td>
+              <td class="text-center">
+                <ng-container *ngIf="item.status; else inactive">
+                  <div class="active"> {{ savedLang === 'ar' ? 'نشط' : 'Active' }} </div>
+                </ng-container>
+                <ng-template #inactive>
+                  <div class="notactive"> {{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }} </div>
+                </ng-template>
+              </td>
+              <td class="text-center">
+                <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)"
+                  *ngIf="permission.connectWithCompany">
+                  <img src="../../../../assets/images/link.png" alt="" />
+                </a>
+                <a routerLink="/Researcher-Details/{{item.id}}" class="icon" *ngIf="permissionResearcherDetails.isName">
+                  <img src="../../../../assets/images/eye-outline.png" alt="" />
+                </a>
+                <button class="icon" (click)="showAlert(item.id)" *ngIf="permission.delete">
+                  <img src="../../../../assets/images/trash-can-outline.png" alt="" />
+                </button>
+                <button class="icon" (click)="editResearcher(item.id)" *ngIf="permission.edit">
+                  <img src="../../../../assets/images/pencil-outline.png" alt="" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot *ngIf="noData">
+            <tr>
+              <th colspan="7">
+                <div class="alert alert-warning">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <br />
+                  <span> {{'shared.words.notData' |translate}} </span>
+                </div>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
+    <!-- end content -->
+  </div>
+  <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination>
+  <!--start modal -->
 
-    <div class="table-responsive company-table research-table">
-      <table class="table table-borderless">
-        <thead>
-          <tr class="t-header">
-            <th scope="col">رقم</th>
-            <th class="text-center" scope="col">الاسم</th>
-            <th class="text-center" scope="col">البريد الإلكتروني</th>
-            <th class="text-center" scope="col">رقم الهاتف</th>
-            <th class="text-center" scope="col">الحالة</th>
-            <th class="text-center" scope="col"></th>
-          </tr>
-        </thead>
+  <!--start add researcher modal -->
+  <div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header pb-0">
+          <h5 class="modal-title" id="add" *ngIf="add">
+            {{'researcherPage.addResearcher' |translate}}
+          </h5>
+          <h5 class="modal-title" id="edit" *ngIf="!add">
+            {{'researcherPage.updateResearcher' |translate}}
+          </h5>
+        </div>
+        <form [formGroup]="researcherForm">
+          <div class="modal-body pb-1">
+            <div class="row">
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.userName"
+                  formControlName="userName" name="username" />
+                <label for="inputField">
+                  {{'shared.form.username' |translate}}
 
-        <tbody>
-          <tr *ngFor="let item of researchers; let i = index">
-            <td>
-              {{ i + 1 }}
-            </td>
-            <td class="text-center">{{ item.arName }}</td>
-            <td class="text-center">{{ item.email }}</td>
-            <td class="text-center">{{ item.phone }}</td>
-            <td class="text-center">
-              <ng-container *ngIf="item.status; else inactive">
-                <div class="active"> نشط </div>
-              </ng-container>
-              <ng-template #inactive>
-                <div class="notactive"> غير نشط </div>
-              </ng-template>
-            </td>
-            <td class="text-center">
-              <a class="icon" data-bs-toggle="modal" data-bs-target="#companyLink" (click)="OpenCompany(item.id)" *ngIf="permission.connectWithCompany">
-                <img src="../../../../assets/images/link.png" alt="" />
-              </a>
-              <a routerLink="/Researcher-Details/{{item.id}}" class="icon" *ngIf="permissionResearcherDetails.isName">
-                <img src="../../../../assets/images/eye-outline.png" alt="" />
-              </a>
-              <button class="icon" (click)="showAlert(item.id)" *ngIf="permission.delete">
-                <img src="../../../../assets/images/trash-can-outline.png" alt="" />
-              </button>
-              <button class="icon" (click)="editResearcher(item.id)" *ngIf="permission.edit">
-                <img src="../../../../assets/images/pencil-outline.png" alt="" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot *ngIf="noData">
-          <tr>
-            <th colspan="7">
-              <div class="alert alert-warning">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <br />
-                <span> لا يوجد بيانات </span>
+                </label>
               </div>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-  </div>
-  <!-- end content -->
-</div>
-<app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [emptyData]="noData" [pagesCount]="totalPages"
-  (pageChange)="onPageChange($event)"></app-pagination>
-<!--start modal -->
-
-<!--start add researcher modal -->
-<div class="modal company-modal fade" id="addResearcher" tabindex="-1" aria-labelledby="add" aria-hidden="true"
-  data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add" *ngIf="add">إضافة باحث</h5>
-        <h5 class="modal-title" id="edit" *ngIf="!add">تعديل الباحث</h5>
-      </div>
-      <form [formGroup]="researcherForm">
-        <div class="modal-body pb-1">
-          <div class="row">
-            <div class="form-group col-sm-6 mb-2">
-              <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.userName"
-                formControlName="userName" name="username" />
-              <label for="inputField">اسم المستخدم</label>
-            </div>
-            <div class="form-group col-sm-6 mb-2" id="researcherPass">
-              <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
-                [(ngModel)]="researcherForm.value.password" formControlName="password" name="password" />
-              <label for="inputField">كلمة المرور</label>
-              <div *ngIf="
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'" id="researcherPass">
+                <input class="form-control input-modal" type="text" placeholder="كلمة المرور"
+                  [(ngModel)]="researcherForm.value.password" formControlName="password" name="password" />
+                <label for="inputField">
+                  {{'shared.form.password' |translate}}
+                </label>
+                <div *ngIf="
                 researcherForm.controls['password'].invalid &&
                   (researcherForm.controls['password'].dirty ||
                   researcherForm.controls['password'].touched)
                 ">
-                <small *ngIf="researcherForm.controls['password'].errors?.['required']" class="text-danger">
-                  يجب ادخال الرقم السري
-                </small>
+                  <small *ngIf="researcherForm.controls['password'].errors?.['required']" class="text-danger">
+                    يجب ادخال الرقم السري
+                  </small>
+                </div>
+                <button type="button" id="reload" (click)="generateRandomCredentials()" *ngIf="add" 
+                [ngClass]="savedLang === 'ar' ? 'buttonLtr' : 'buttonRtl'">
+                  <img src="../../../../assets/images/refresh.png" alt="" />
+                </button>
               </div>
-              <button type="button" id="reload" (click)="generateRandomCredentials()" *ngIf="add">
-                <img src="../../../../assets/images/refresh.png" alt="" />
-              </button>
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.arName"
-                formControlName="arName" />
-              <label for="inputField">الاسم بالكامل</label>
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal" type="text" [(ngModel)]="researcherForm.value.arName"
+                  formControlName="arName" />
+                <label for="inputField">الاسم بالكامل</label>
 
-              <div *ngIf="
+                <div *ngIf="
                   researcherForm.controls['arName'].invalid &&
                   (researcherForm.controls['arName'].dirty ||
                     researcherForm.controls['arName'].touched)
                 ">
-                <small *ngIf="researcherForm.controls['arName'].errors?.['required']" class="text-danger">
-                  يجب ادخال الاسم بالكامل.
-                </small>
+                  <small *ngIf="researcherForm.controls['arName'].errors?.['required']" class="text-danger">
+                    يجب ادخال الاسم بالكامل.
+                  </small>
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="enName" />
-              <label for="inputField">English Full Name</label>
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal" type="text" formControlName="enName" />
+                <label for="inputField">English Full Name</label>
 
-              <div *ngIf="
+                <div *ngIf="
                   researcherForm.controls['enName'].invalid &&
                   (researcherForm.controls['enName'].dirty ||
                     researcherForm.controls['enName'].touched)
                 ">
-                <small *ngIf="researcherForm.controls['enName'].errors?.['required']" class="text-danger">
-                  English full name is required.
-                </small>
+                  <small *ngIf="researcherForm.controls['enName'].errors?.['required']" class="text-danger">
+                    English full name is required.
+                  </small>
+                </div>
               </div>
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <select class="form-control" style="width: 100%" formControlName="status"
-                [(ngModel)]="researcherForm.value.status">
-                <option [ngValue]="true">نشط</option>
-                <option [ngValue]="false">غير نشط</option>
-              </select>
-              <label for="inputField">الحاله</label>
-              <div *ngIf="
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <select class="form-control" style="width: 100%" formControlName="status"
+                  [(ngModel)]="researcherForm.value.status">
+                  <option [ngValue]="true">{{ savedLang === 'ar' ? 'نشط' : 'Active' }}</option>
+                  <option [ngValue]="false">{{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }}</option>
+                </select>
+                <label for="inputField">
+                  {{'shared.words.status' |translate}}
+                </label>
+                <div *ngIf="
                   researcherForm.controls['status'].invalid &&
                   (researcherForm.controls['status'].dirty ||
                     researcherForm.controls['status'].touched)
                 ">
-                <small *ngIf="researcherForm.controls['status'].errors?.['required']" class="text-danger">
-                  Status is required.
-                </small>
+                  <small *ngIf="researcherForm.controls['status'].errors?.['required']" class="text-danger">
+                    Status is required.
+                  </small>
+                </div>
               </div>
-            </div>
-            <div class="form-group col-10 col-sm-4 mb-2">
-              <input class="form-control input-modal" type="text" formControlName="phone" maxlength="8" minlength="8"
-                pattern="[0-9]*" (input)="onlyNumber($event)" />
-              <label for="inputField">رقم الهاتف</label>
+              <div class="form-group col-10 col-sm-4 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal" type="text" formControlName="phone" maxlength="8" minlength="8"
+                  pattern="[0-9]*" (input)="onlyNumber($event)" />
+                <label for="inputField">
+                  {{'shared.words.phoneNumber' |translate}}
+                </label>
 
-              <div *ngIf="
+                <div *ngIf="
                   researcherForm.controls['phone'].touched &&
                   researcherForm.controls['phone'].dirty &&
                   researcherForm.controls['phone'].value !== '' &&
                   researcherForm.controls['phone'].invalid
                 ">
-                <small *ngIf="researcherForm.controls['phone'].errors?.['minlength']" class="text-danger">
-                  يجب ان يكون رقم الهاتف 8 ارقام.
-                </small>
+                  <small *ngIf="researcherForm.controls['phone'].errors?.['minlength']" class="text-danger">
+                    يجب ان يكون رقم الهاتف 8 ارقام.
+                  </small>
+                </div>
               </div>
-            </div>
-            <div class="form-group col-2 mb-2">
-              <input class="form-control input-modal input-disabled" type="text" value="{{ phoneCode }}" />
-              <label for="inputField">كود الهاتف</label>
+              <div class="form-group col-2 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal input-disabled" type="text" value="{{ phoneCode }}" />
+                <label for="inputField">
+                  {{'shared.form.phoneCode' |translate}}
+                </label>
 
-            </div>
-            <div class="form-group col-sm-6 mb-2">
-              <input class="form-control input-modal" type="email" [(ngModel)]="researcherForm.value.email"
-                formControlName="email" />
-              <label for="inputField">عنوان البريد الاليكتروني</label>
-              <div *ngIf="
+              </div>
+              <div class="form-group col-sm-6 mb-2" [attr.dir]="savedLang === 'en' ? 'ltr' : 'rtl'">
+                <input class="form-control input-modal" type="email" [(ngModel)]="researcherForm.value.email"
+                  formControlName="email" />
+                <label for="inputField">
+                  {{'shared.words.email' |translate}}
+                </label>
+                <div *ngIf="
                   researcherForm.controls['email'].invalid &&
                   (researcherForm.controls['email'].dirty ||
                     researcherForm.controls['email'].touched)
                 ">
-                <small *ngIf="researcherForm.controls['email'].errors?.['required']" class="text-danger">
-                  يجب ادخال البريد الاليكتروني.
-                </small>
-                <small *ngIf="researcherForm.controls['email'].errors?.['email']" class="text-danger">
-                  البريد الاليكتروني غير صحيح.
-                </small>
+                  <small *ngIf="researcherForm.controls['email'].errors?.['required']" class="text-danger">
+                    يجب ادخال البريد الاليكتروني.
+                  </small>
+                  <small *ngIf="researcherForm.controls['email'].errors?.['email']" class="text-danger">
+                    البريد الاليكتروني غير صحيح.
+                  </small>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer pt-0">
-          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="reset()">
-            إلغاء
-          </button>
-          <button type="button" class="btn btn-reset" (click)="resetForm()">
-            إعادة ملء
-          </button>
-          <button type="button" class="btn btn-save" (click)="saveResearcher()" *ngIf="add"
-            [disabled]="!researcherForm.valid">
-            حفظ
-          </button>
-          <button type="button" class="btn btn-save" (click)="updateResearcher()" *ngIf="!add"
-            [disabled]="!researcherForm.valid">
-            تعديل
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!--end add researcher modal -->
-
-<!--start linked company modal -->
-<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
-        <h5>ربط بالشركة</h5>
-        <div class="search">
-          <input class="form-control" type="text" name="search" placeholder="البحث" [(ngModel)]="searchText"
-            (keydown.enter)="companiesSearch()" />
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-        </div>
-      </div>
-      <div class="table-responsive company-modal-table mx-2">
-        <table class="table table-borderless">
-          <thead>
-            <tr class="t-header">
-              <th scope="col">اسم الشركة</th>
-              <th class="text-center" scope="col">رقم السجل التجاري</th>
-              <th class="text-center" scope="col">رقم الشركة</th>
-              <th class="text-center" scope="col">رمز النشاط</th>
-              <th class="text-center" scope="col">النشاط</th>
-              <th class="text-center" scope="col">اسم الباحث</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let company of companies">
-              <td>
-                <input type="checkbox" (change)="onCheckboxChange(company.id, $event)"
-                  [checked]="company.id == id || selectedCompanyIds.has(company.id)"
-                  *ngIf="!(selectedCompanyIdsIsResearcher.has(company.id)) || !(selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id))" />
-                <i class="fa fa-close delete-icon"
-                  *ngIf="selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id)"></i>
-
-                {{ company.arName }}
-              </td>
-              <td class="text-center">{{ company.compRegNumber }}</td>
-              <td class="text-center">{{ company.id }}</td>
-              <td class="text-center">{{ company.activityId }}</td>
-              <td class="text-center">{{ company.arActivityName }}</td>
-              <td class="text-center">{{ company.researcherArName }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcher"
-          (click)="resetForm()">إلغاء</button>
-        <button type="button" class="btn btn-add" (click)="saveSelectedCompanies()">حفظ</button>
+          <div class="modal-footer pt-0">
+            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="reset()">
+              {{'shared.button.close' |translate}}
+            </button>
+            <button type="button" class="btn btn-reset" (click)="resetForm()">
+              {{'shared.button.Refill' |translate}}
+            </button>
+            <button type="button" class="btn btn-save" (click)="saveResearcher()" *ngIf="add"
+              [disabled]="!researcherForm.valid">
+              {{'shared.button.save' |translate}}
+            </button>
+            <button type="button" class="btn btn-save" (click)="updateResearcher()" *ngIf="!add"
+              [disabled]="!researcherForm.valid">
+              {{'shared.button.edit' |translate}}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
+  <!--end add researcher modal -->
 
-<!--end linked company modal -->
-<div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
-        <h5 class="modal-title order-2 ms-auto" id="sendForm">الاستمارات</h5>
-      </div>
-      <div class="table-responsive company-modal-table mx-2">
-        <table class="table table-borderless">
-          <thead>
-            <tr class="t-header">
-              <th scope="col"></th>
-              <th scope="col" style="text-align: center;">اسم الشركة</th>
-              <th scope="col" style="text-align: center;">اسم الإستمارة</th>
-              <th scope="col" style="text-align: center;">اسم الباحث</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let form of formsStaticsStatus; let i = index">
-              <td class="text-center">{{i+1}}</td>
-              <td class="text-center">{{form.companyName}}</td>
-              <td class="text-center">{{form.formName}}</td>
-              <td class="text-center">{{form.researcherArName}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer pt-0" style="border-top: none">
-        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
-          إلغاء
-        </button>
+  <!--start linked company modal -->
+  <div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
+          <h5>{{'companyPage.LinkToCompany' |translate}}</h5>
+          <div class="search">
+            <input class="form-control" type="text" name="search"  placeholder="{{'shared.words.search' |translate}}" [(ngModel)]="searchText"
+              (keydown.enter)="companiesSearch()" />
+            <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="table-responsive company-modal-table mx-2">
+          <table class="table table-borderless">
+            <thead>
+              <tr class="t-header">
+                <th scope="col">{{'companyPage.companyName' |translate}}</th>
+                <th class="text-center" scope="col">{{'companyPage.commercialRegistrationNumber' |translate}}</th>
+                <th class="text-center" scope="col">{{'companyPage.companyNumber' |translate}}</th>
+                <th class="text-center" scope="col">{{'activity.activityCode' |translate}}</th>
+                <th class="text-center" scope="col">{{'activity.activity' |translate}}</th>
+                <th class="text-center" scope="col">{{'companyPage.reasearcherName' |translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let company of companies">
+                <td>
+                  <input type="checkbox" (change)="onCheckboxChange(company.id, $event)"
+                    [checked]="company.id == id || selectedCompanyIds.has(company.id)"
+                    *ngIf="!(selectedCompanyIdsIsResearcher.has(company.id)) || !(selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id))" />
+                  <i class="fa fa-close delete-icon"
+                    *ngIf="selectedCompanyIdsIsResearcher.has(company.id) && !selectedCompanyIds.has(company.id)"></i>
+
+                  {{ company.arName }}
+                </td>
+                <td class="text-center">{{ company.compRegNumber }}</td>
+                <td class="text-center">{{ company.id }}</td>
+                <td class="text-center">{{ company.activityId }}</td>
+                <td class="text-center">{{ company.arActivityName }}</td>
+                <td class="text-center">{{ company.researcherArName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancelCompanyResearcher"
+            (click)="resetForm()">
+            {{'shared.button.close' |translate}}
+          </button>
+          <button type="button" class="btn btn-add" (click)="saveSelectedCompanies()">حفظ</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <!--end linked company modal -->
+  <div class="modal company-modal fade" id="formsStatics" tabindex="-1" aria-labelledby="formsStatics_"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header pb-1 d-flex justify-content-between align-items-center">
+          <h5 class="modal-title order-2 ms-auto" id="sendForm">{{'formsPage.forms' |translate}}</h5>
+        </div>
+        <div class="table-responsive company-modal-table mx-2">
+          <table class="table table-borderless">
+            <thead>
+              <tr class="t-header">
+                <th scope="col"></th>
+                <th scope="col" style="text-align: center;">{{'companyPage.companyName' |translate}}</th>
+                <th scope="col" style="text-align: center;">{{'formsPage.formName' |translate}}</th>
+                <th scope="col" style="text-align: center;">{{'researcherPage.reasearcherName' |translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let form of formsStaticsStatus; let i = index">
+                <td class="text-center">{{i+1}}</td>
+                <td class="text-center">{{form.companyName}}</td>
+                <td class="text-center">{{form.formName}}</td>
+                <td class="text-center">{{form.researcherArName}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer pt-0" style="border-top: none">
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="closePopup">
+            {{'shared.button.close' |translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end modal -->
 </div>
-<!--end modal -->

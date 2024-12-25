@@ -109,7 +109,7 @@ export class ResearcherDetailsComponent implements OnInit {
     Open: true
   };
   isAllSelected: boolean = false;
-
+  savedLang: string = '';
   constructor(private renderer: Renderer2, private topScreenServices: TopScreenService, private authService: LoginService,
     private formServices: FormService, private activeRouter: ActivatedRoute, private researcherServices: ResearcherHomeService,
     private formBuilder: FormBuilder, private sharedServices: SharedService, private messageService: HomemessagesService
@@ -118,6 +118,7 @@ export class ResearcherDetailsComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
     this.researcherId = this.activeRouter.snapshot.paramMap.get('researcherId')!;
     this.topScreenServices.setResearcherId(this.researcherId);
     this.GetResearcherById(+this.researcherId,1,'');

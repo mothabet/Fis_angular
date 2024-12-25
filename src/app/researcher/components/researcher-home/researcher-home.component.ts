@@ -92,6 +92,7 @@ export class ResearcherHomeComponent {
     Close: true, 
     Open: true
   };
+  savedLang: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
@@ -101,6 +102,7 @@ export class ResearcherHomeComponent {
     private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
     this.researcherForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required],
@@ -541,6 +543,7 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
+          debugger
           this.formStatics = res.Data;
           this.filteredFormStatics = this.formStatics;
         }

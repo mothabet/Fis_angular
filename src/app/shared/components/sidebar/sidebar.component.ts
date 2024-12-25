@@ -15,12 +15,14 @@ export class SidebarComponent implements OnInit {
   id: number = 0;
   isAuditingRules: boolean = false;
   permissions: IGetPermissionDto[] = [];
+  savedLang: string = '';
   constructor(private authService: LoginService, private router: Router
     , private permissionsService: PermissionsService, private sharedService: SharedService
   ) { }
 
   ngOnInit(): void {
-    
+    this.savedLang = localStorage.getItem('language') || 'ar';
+
     const isLoggedIn = this.authService.getToken();
     let res = this.authService.decodedToken(isLoggedIn);
     this.role = res.roles;

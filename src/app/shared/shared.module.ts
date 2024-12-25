@@ -31,8 +31,11 @@ import { QuarterTableRepComponent } from './components/ReportTables/quarter-tabl
 import { SharedOneYearWithPartsAndTotalComponent } from './components/Tables/shared-one-year-with-parts-and-total/shared-one-year-with-parts-and-total.component';
 import { PercentageWithoutTransRepComponent } from './components/ReportTables/percentage-without-trans-rep/percentage-without-trans-rep.component';
 import { OneYearWithPartsAndTotalRepComponent } from './components/ReportTables/one-year-with-parts-and-total-rep/one-year-with-parts-and-total-rep.component';
-import { GeneralIndicatorsComponent } from '../home-setting/Components/general-indicators/general-indicators.component';
 
+// import ngx-translate and the http loader
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
     SidebarComponent,
@@ -70,7 +73,14 @@ import { GeneralIndicatorsComponent } from '../home-setting/Components/general-i
     ReactiveFormsModule,
     HttpClientModule,
     NgxEditorModule,
-    FormsModule
+    FormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   exports: [
     SharedFormCoverComponent,
@@ -105,6 +115,13 @@ import { GeneralIndicatorsComponent } from '../home-setting/Components/general-i
     QuarterTableRepComponent,
     PercentageWithoutTransRepComponent,
     OneYearWithPartsAndTotalRepComponent,
+    TranslateModule // Export TranslateModule for use in other modules
+
   ]
 })
 export class SharedModule { }
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http);
+}
+

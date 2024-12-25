@@ -2,26 +2,26 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card ">
 
-  <app-top-screen [title]="'الرئيسيه'"></app-top-screen>
+  <app-top-screen [title]="'homePage.title' |translate" ></app-top-screen>
   <!-- tabs -->
   <div class="tabs">
     <ul class="nav nav-pills mb-3">
       <li class="nav-item">
         <a routerLink="/Home" class="nav-link ms-0 active d-flex" type="button">
           <i class="fa-solid fa-square-poll-vertical icon"></i>
-          المؤشرات العامة
+          {{'homePage.generalIndicators' |translate}}
         </a>
       </li>
       <li class="nav-item">
         <a routerLink="/HomeMap" class="nav-link ms-0 d-flex" type="button">
           <i class="fa-regular fa-map icon"></i>
-          خريطة عمان
+          {{'homePage.omanMap' |translate}}
         </a>
       </li>
       <li class="nav-item">
         <a routerLink="/Audit" class="nav-link ms-0 d-flex" type="button">
           <i class="fa-solid fa-table icon"></i>
-          تدقيق
+          {{'homePage.audit' |translate}}
         </a>
       </li>
     </ul>

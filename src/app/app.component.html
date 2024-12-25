@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout" [ngClass]="{'rtl-layout': savedLang === 'ar', 'ltr-layout': savedLang === 'en'}">
   <app-sidebar *ngIf="showSidebar"></app-sidebar>
   <main>
     <router-outlet></router-outlet>

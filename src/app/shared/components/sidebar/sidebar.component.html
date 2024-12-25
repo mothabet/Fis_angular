@@ -1,8 +1,9 @@
 <!-- menu -->
-<div class="home" style="height: 100% !important;">
+<div class="home" style="height: 100% !important;" >
   <aside id="sidebar" class="expand">
     <!-- logo -->
-    <div class="px-2 mt-3 d-flex justify-content-between align-items-center">
+    <div class="px-2 mt-3 d-flex justify-content-between align-items-center" 
+    [ngClass]="{'rtl-layout': savedLang === 'en', 'ltr-layout': savedLang === 'ar'}">
       <div class="sidebar-logo" id="logo">
         <img src="../../../../assets/images/NationalCenterStatisticsLogoList.png" class="img-fluid" alt="" />
       </div>
@@ -25,74 +26,79 @@
               </div>
           </li> -->
 
-      <li class="sidebar-item" routerLink="/Home" routerLinkActive="active" *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Home'))">
+      <li class="sidebar-item" routerLink="/Home" routerLinkActive="active"
+        *ngIf="role === 'Admin' || (role === 'User' && checkPermission('Home'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
-          <span class="">الرئيسية</span>
+          <span class="">{{ 'shared.sidebar.home' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" [routerLink]="['/Companies-Details',id]" routerLinkActive="active"
         *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-house icon"></i>
-          <span class="">الرئيسية</span>
+          <span class="">{{ 'shared.sidebar.home' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" [routerLink]="['/CompanyHome',0]" routerLinkActive="active" *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-file-lines icon"></i>
-          <span class="">الاستمارات الحاليه</span>
+          <span class="">{{ 'shared.sidebar.currentForms' |translate }}</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Researcher'))">
+      <li class="sidebar-item" routerLink="/Researcher" routerLinkActive="active"
+        *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Researcher'))">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
-          <span>الباحثين او المشرف</span>
+          <span>{{'shared.sidebar.researchersAndSupervisor' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" [routerLink]="['/Researcher-Details',id]" routerLinkActive="active"
         *ngIf="role === 'Researchers'">
         <a class="sidebar-link">
           <i class="fa-solid fa-magnifying-glass-chart fa-flip-horizontal icon"></i>
-          <span>ملف الباحث</span>
+          <span>{{'shared.sidebar.researcherProfile' |translate }}</span>
         </a>
       </li>
-      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Companies'))">
+      <li class="sidebar-item" routerLink="/Companies" routerLinkActive="active"
+        *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Companies'))">
         <a class="sidebar-link" routerLink="/Companies">
           <i class="fa-solid fa-building icon"></i>
-          <span>الشركات</span>
+          <span>{{'shared.sidebar.companies' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" [routerLink]="['/Companies-Researcher',id]" routerLinkActive="active"
         *ngIf="role === 'Researchers'">
         <a class="sidebar-link" [routerLink]="['/Companies-Researcher',id]">
           <i class="fa-solid fa-building icon"></i>
-          <span>شركات الباحث</span>
+          <span>{{'shared.sidebar.researcherCompanies' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/Reports" routerLinkActive="active" *ngIf="role === 'Admin'">
         <a class="sidebar-link">
           <i class="fa-solid fa-chart-line icon"></i>
-          <span>التقارير</span>
+          <span>{{'shared.sidebar.reports' |translate }}</span>
         </a>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('none'))">
+      <li class="sidebar-item"
+        *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('none'))">
         <a routerLink="/DataMaximize" class="sidebar-link">
           <i class="fa-solid fa-chart-simple icon"></i>
-          <span>تكبير البيانات</span>
+          <span>{{'shared.sidebar.dataMaximize' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" routerLink="/PrevForm" routerLinkActive="active" *ngIf="role === 'Company'">
         <a class="sidebar-link">
           <i class="fa-solid fa-file-lines icon"></i>
-          <span class="">الاستمارات السابقه</span>
+          <span>{{'shared.sidebar.PrevForm' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  || role==='Researchers' ">
         <div class="has-dropdown">
-          <a routerLink="Forms" class="sidebar-link" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Forms'))">
+          <a routerLink="Forms" class="sidebar-link"
+            *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Forms'))">
             <i class="fa-solid fa-file-lines icon"></i>
-            <span>تصميم الاستمارات</span>
+            <span>{{'shared.sidebar.Form' |translate }}</span>
           </a>
           <!-- <span class="fa-solid fa-caret-down drop-dowm-icon collapsed" data-bs-toggle="collapse" data-bs-target="#forms" aria-expanded="false" aria-controls="forms"></span> -->
 
@@ -101,21 +107,22 @@
           <li class="sidebar-item">
             <a href="#" class="sidebar-link">
               <i class="fa-solid fa-file-lines icon"> </i>
-              <span>استمارات سنوية</span>
+              <span>{{'shared.sidebar.annualForms' |translate }}</span>
             </a>
           </li>
           <li class="sidebar-item">
             <a href="#" class="sidebar-link">
               <i class="fa-solid fa-file-lines icon"> </i>
-              <span>استمارات ربعية</span>
+              <span>{{'shared.sidebar.quarterlyForms' |translate }}</span>
             </a>
           </li>
         </ul>
       </li>
-      <li class="sidebar-item" *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Auditing-Rules'))">
+      <li class="sidebar-item"
+        *ngIf="role === 'Admin' || ((role === 'User' ||role==='Researchers') && checkPermission('Auditing-Rules'))">
         <a routerLink="Auditing-Rules" class="sidebar-link">
           <i class="fa-solid fa-database icon"></i>
-          <span>قواعد التدقيق</span>
+          <span>{{'shared.sidebar.auditingRules' |translate }}</span>
         </a>
       </li>
       <li class="sidebar-item" *ngIf="role === 'Admin' || role === 'User'  ||role==='Researchers'">
@@ -123,7 +130,7 @@
           aria-controls="setting">
           <a class="sidebar-link" id="setting-icon">
             <i class="fa-solid fa-gear icon"></i>
-            <span class="">الإعدادات</span>
+            <span>{{'shared.sidebar.setting' |translate }}</span>
           </a>
           <!-- <span class="drop-dowm-icon fa-solid fa-caret-down collapsed" data-bs-toggle="collapse" data-bs-target="#setting" aria-expanded="false" aria-controls="setting"></span> -->
         </div>
@@ -131,40 +138,42 @@
           <li class="sidebar-item" *ngIf="checkPermission('Codes')">
             <a routerLink="/Codes" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>
-              <span>محتوي الاستماره</span>
+              <span>{{'shared.sidebar.codes' |translate }}</span>
             </a>
           </li>
           <li class="sidebar-item" *ngIf="checkPermission('none')">
             <a routerLink="/Profile" class="sidebar-link inactive">
               <i class="fa-solid fa-file-lines icon inactive"></i>
-              <span>الإعدادات الشخصيه</span>
+              <span>{{'shared.sidebar.settingProfile' |translate }}</span>
             </a>
           </li>
           <li class="sidebar-item" *ngIf="checkPermission('Messages')">
             <a routerLink="/Messages" class="sidebar-link inactive">
               <i class="fa-solid fa-envelope icon inactive"></i>
-              <span>الرسائل</span>
+              <span>{{'shared.sidebar.Messages' |translate }}</span>
             </a>
           </li>
-          <li class="sidebar-item" *ngIf="checkPermission('SettingsAuth')" routerLink="/SettingsAuth" routerLinkActive="active">
+          <li class="sidebar-item" *ngIf="checkPermission('SettingsAuth')" routerLink="/SettingsAuth"
+            routerLinkActive="active">
             <a class="sidebar-link inactive">
               <i class="fa-solid fa-address-card icon inactive"></i>
-              <span>الصلاحيات</span>
+              <span>{{'shared.sidebar.permissions' |translate }}</span>
             </a>
           </li>
           <li class="sidebar-item">
             <a routerLink="/Sectors" *ngIf="checkPermission('Sectors')" class="sidebar-link inactive">
               <i class="fa-solid fa-address-card icon inactive"></i>
-              <span>الانشطة و القطاعات</span>
+              <span>{{'shared.sidebar.activitiesAndSectors' |translate }}</span>
             </a>
           </li>
           <li class="sidebar-item">
-            <a [routerLink]="'/GeneralIndicators'" *ngIf="checkPermission('GeneralIndicators')" class="sidebar-link inactive">
+            <a [routerLink]="'/GeneralIndicators'" *ngIf="checkPermission('GeneralIndicators')"
+              class="sidebar-link inactive">
               <i class="fa-solid fa-file-pen icon inactive"></i>
-              <span>الصفحة الرئيسية</span>
+              <span>{{'shared.sidebar.generalIndicators' |translate }}</span>
             </a>
           </li>
-          
+
         </ul>
       </li>
     </ul>

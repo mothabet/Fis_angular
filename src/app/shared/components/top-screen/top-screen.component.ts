@@ -10,6 +10,7 @@ import { ResearcherHomeService } from 'src/app/researcher/services/researcher-ho
 import { environment } from 'src/environments/environment.development';
 import { ProfileService } from 'src/app/profile/Services/profile.service';
 import { NotificationsService } from 'src/app/notifications/Services/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-top-screen',
@@ -24,13 +25,16 @@ export class TopScreenComponent implements OnInit {
   arName: string = "";
   Loader = false;
   selectedImageUrl!: string;
-  notificationCount:number = 0;
+  notificationCount: number = 0;
+  savedLang: string = '';
   constructor(private topScreenServices: TopScreenService, private loginService: LoginService, private router: Router,
     private sharedService: SharedService, private profileService: ProfileService, private formBuilder: FormBuilder
-    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService, private notificationsService: NotificationsService,
+    , private companyServices: CompanyHomeService, private researcherServices: ResearcherHomeService, private notificationsService: NotificationsService, private translate: TranslateService
   ) { }
   ngOnInit(): void {
-    
+    this.savedLang = localStorage.getItem('language') || 'ar';
+    this.translate.setDefaultLang(this.savedLang);
+    this.translate.use(this.savedLang);
     this.Loader = true
     const isLoggedIn = this.loginService.getToken();
     let result = this.loginService.decodedToken(isLoggedIn);
@@ -47,7 +51,7 @@ export class TopScreenComponent implements OnInit {
       this.Loader = true;
       this.GetProfileResearcherByUserId();
     }
-    else if(this.role == 'Admin'){
+    else if (this.role == 'Admin') {
       this.Loader = true;
       this.GetProfileByUserId();
     }
@@ -65,10 +69,24 @@ export class TopScreenComponent implements OnInit {
     this.loginService.deleteToken();
     this.router.navigate(['/Login']);
   }
+  changeLang(lang: string) {
+    // تخزين اللغة في localStorage
+    localStorage.setItem('language', lang);
+  
+    // تعيين اللغة المحفوظة
+    this.savedLang = localStorage.getItem('language') || 'ar';
+  
+    // تطبيق اللغة باستخدام ngx-translate
+    this.translate.use(this.savedLang);
+  
+    // إعادة تحميل الصفحة لتطبيق التغييرات
+    window.location.reload();
+  }
+  
   GetNotificationsCountByUserId(): void {
     const observer = {
       next: (res: any) => {
-        
+
         this.notificationCount = res.Data;
       },
       error: (err: any) => {
@@ -87,14 +105,14 @@ export class TopScreenComponent implements OnInit {
   }
   updatePassword(): void {
     if (this.passwordForm.get('password')?.invalid) {
-          Swal.fire({
-            icon: 'error',
-            title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
-            showConfirmButton: true,
-            confirmButtonText: 'اغلاق'
-          });
-          return;
-        }
+      Swal.fire({
+        icon: 'error',
+        title: 'يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل',
+        showConfirmButton: true,
+        confirmButtonText: 'اغلاق'
+      });
+      return;
+    }
     this.Loader = true;
     if (this.passwordForm.valid) {
       const formData = new FormData();
@@ -165,10 +183,10 @@ export class TopScreenComponent implements OnInit {
     this.researcherServices.GetProfileResearcherByUserId().subscribe(observer);
   }
   GetProfileByUserId() {
-    
+
     const observer = {
       next: (res: any) => {
-        
+
         if (res.Data) {
           this.selectedImageUrl = `${environment.dirUrl}imageProfile/${res.Data.imageDto}`;
         }

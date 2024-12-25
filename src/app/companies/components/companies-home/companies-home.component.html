@@ -1,59 +1,33 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'الشركة'"></app-top-screen>
+  <app-top-screen [title]="'companyPage.title' |translate"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة الشركات</div>
+      <div class="title">{{'companyPage.ListCompanies' |translate}}</div>
       <div class="btns d-flex">
         <div class="search">
-          <input
-            (keydown.enter)="companiesSearch()"
-            [(ngModel)]="searchText"
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
-          <i
-            (click)="companiesSearch()"
-            class="fa fa-search icon"
-            id="search-icon"
-            aria-hidden="true"
-          ></i>
+          <input (keydown.enter)="companiesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
+            name="search" placeholder="{{'shared.words.search' |translate}}" />
+          <i (click)="companiesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex flex-grow-1 gap-1">
-          <button
-            type="button"
-            class="btn btn-add"
-            data-bs-toggle="modal"
-            (click)="popAddCompany()"
-            data-bs-target="#addCompany"
-            *ngIf="permission.add"
-          >
-            <img
-              id="addCompanyBtn"
-              src="../../../../assets/images/briefcase-plus-outli.png"
-              alt=""
-            />
-            إضافة شركة
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" (click)="popAddCompany()"
+            data-bs-target="#addCompany" *ngIf="permission.add">
+            <img id="addCompanyBtn" src="../../../../assets/images/briefcase-plus-outli.png" alt="" />
+            {{'companyPage.addCompany' |translate}}
           </button>
           <button (click)="printPdf()" type="button" class="btn btn-download" *ngIf="permission.download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            تنزيل PDF
+            {{'shared.button.downloadPdf' |translate}}
           </button>
-          <button type="button" class="btn btn-download" (click)="triggerFileInput()" *ngIf="permission.addCompaniesGroup">
+          <button type="button" class="btn btn-download" (click)="triggerFileInput()"
+            *ngIf="permission.addCompaniesGroup">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            اضافة مجموعة شركات
+            {{'companyPage.addGroupCompany' |translate}}
           </button>
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileChange($event)"
-            accept=".xlsx, .xls"
-            style="display: none;"
-          />
+          <input type="file" #fileInput (change)="onFileChange($event)" accept=".xlsx, .xls" style="display: none;" />
         </div>
       </div>
     </div>
@@ -62,16 +36,14 @@
         <table class="table table-borderless">
           <thead>
             <tr class="t-header">
-              <th class="text-center" scope="col">اسم الشركة</th>
-              <th class="text-center" scope="col">رقم السجل التجاري</th>
-              <th class="text-center" scope="col">رقم الشركة</th>
-              <th class="text-center" scope="col">رمز النشاط</th>
-              <th class="text-center" scope="col">النشاط</th>
-              <th class="text-center" scope="col">عنوان الشركة</th>
-              <th class="text-center" scope="col">رقم الهاتف</th>
-              <th style="min-width: 150px" class="text-center" scope="col">
-                الحالة
-              </th>
+              <th class="text-center" scope="col">{{'companyPage.companyName' |translate}}</th>
+              <th class="text-center" scope="col">{{'companyPage.commercialRegistrationNumber' |translate}}</th>
+              <th class="text-center" scope="col">{{'companyPage.companyNumber' |translate}}</th>
+              <th class="text-center" scope="col">{{'activity.activityCode' |translate}}</th>
+              <th class="text-center" scope="col">{{'activity.activity' |translate}}</th>
+              <th class="text-center" scope="col">{{'companyPage.companyAddress' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.phoneNumber' |translate}}</th>
+              <th class="text-center" scope="col">{{'shared.words.status' |translate}}</th>
               <th style="min-width: 150px" class="text-center" scope="col"></th>
             </tr>
           </thead>
@@ -86,29 +58,25 @@
               <td class="text-center">{{ company.arActivityName }}</td>
               <td class="text-center">{{ company.address }}</td>
               <td class="text-center">{{ company.phoneNumber }}</td>
-              <td class="text-center" *ngIf="company.status">
-                <div class="status-active">نشط</div>
-            </td>
-            <td class="text-center" *ngIf="!company.status"><div class="Gnotactive"> غير نشط </div></td>
-            <td class="text-center">
-                <a routerLink="/Companies-Details/{{company.id}}" class="icon" *ngIf="permissionCompaniesDetails.isName">
+
+              <td class="text-center">
+                <ng-container *ngIf="company.status; else inactive">
+                  <div class="status-active"> {{ savedLang === 'ar' ? 'نشط' : 'Active' }} </div>
+                </ng-container>
+                <ng-template #inactive>
+                  <div class="Gnotactive"> {{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }} </div>
+                </ng-template>
+              </td>
+              <td class="text-center">
+                <a routerLink="/Companies-Details/{{company.id}}" class="icon"
+                  *ngIf="permissionCompaniesDetails.isName">
                   <img src="../../../../assets/images/eye-outline.png" alt="" />
                 </a>
                 <button class="icon" (click)="showAlert(company.id)" *ngIf="permission.delete">
-                  <img
-                    src="../../../../assets/images/trash-can-outline.png"
-                    alt=""
-                  />
+                  <img src="../../../../assets/images/trash-can-outline.png" alt="" />
                 </button>
-                <button *ngIf="permission.edit"
-                  class="icon"
-                  (click)="editCompany(company.id)"
-                  data-bs-toggle="modal"
-                >
-                  <img
-                    src="../../../../assets/images/pencil-outline.png"
-                    alt=""
-                  />
+                <button *ngIf="permission.edit" class="icon" (click)="editCompany(company.id)" data-bs-toggle="modal">
+                  <img src="../../../../assets/images/pencil-outline.png" alt="" />
                 </button>
               </td>
             </tr>
@@ -119,7 +87,7 @@
                 <div class="alert alert-warning">
                   <i class="fa-solid fa-triangle-exclamation"></i>
                   <br />
-                  <span> لا يوجد بيانات </span>
+                  <span> {{'shared.words.notData' |translate}} </span>
                 </div>
               </th>
             </tr>
@@ -129,41 +97,30 @@
     </div>
   </div>
   <!-- end content -->
-  <app-pagination
-    [pageNumber]="currentPage"
-    [lastPage]="isLastPage"
-    [pagesCount]="totalPages"
-    (pageChange)="onPageChange($event)"
-  ></app-pagination>
+  <app-pagination [pageNumber]="currentPage" [lastPage]="isLastPage" [pagesCount]="totalPages"
+    (pageChange)="onPageChange($event)"></app-pagination>
 </div>
 <!--start add company modal -->
-<div
-  class="modal company-modal fade"
-  id="addCompany"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
->
+<div class="modal company-modal fade" id="addCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true"
+  data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 80%;">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add">إضافة شركة</h5>
+        <h5 class="modal-title" id="add">{{'companyPage.addCompany' |translate}}</h5>
       </div>
       <form [formGroup]="companyForm">
         <div class="modal-body">
           <div class="row">
             <div class="col-12 row m-auto p-0">
               <div class="form-group col-12 col-lg-6 mb-2">
-                <input required class="form-control input-modal" type="text" [(ngModel)]="username" formControlName="userName"
-                  name="username" />
-                <label for="inputField" class="text-danger">اسم المستخدم <span>*</span></label>
+                <input required class="form-control input-modal" type="text" [(ngModel)]="username"
+                  formControlName="userName" name="username" />
+                <label for="inputField" class="text-danger">{{'shared.form.username' |translate}} <span>*</span></label>
               </div>
               <div class="form-group col-12 col-lg-6 mb-2" id="researcherPass">
-                <input required class="form-control input-modal" type="text" [(ngModel)]="password" formControlName="password"
-                  name="password" />
-                <label for="inputField" class="text-danger">كلمة المرور <span>*</span></label>
+                <input required class="form-control input-modal" type="text" [(ngModel)]="password"
+                  formControlName="password" name="password" />
+                <label for="inputField" class="text-danger">{{'shared.form.password' |translate}} <span>*</span></label>
                 <button type="button" id="reload" (click)="generateRandomCredentials()">
                   <img src="../../../../assets/images/refresh.png" alt="" />
                 </button>
@@ -180,150 +137,153 @@
             <div class="col-12 col-lg-6 row m-auto p-0">
               <div class="form-group col-4 mb-2">
                 <input class="form-control input-modal" disabled type="text" value="{{ CompanyCode }}" />
-                <label for="inputField">رقم الشركه</label>
+                <label for="inputField">{{'companyPage.companyNumber' |translate}}</label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="sectorCode" class="form-control input-modal" type="text" [(ngModel)]="sectorCode" />
-                <label for="inputField" class="text-danger">رمز القطاع <span>*</span></label>
+                <input formControlName="sectorCode" class="form-control input-modal" type="text" [disabled]="true"
+                  [(ngModel)]="sectorCode" />
+                <label for="inputField" class="text-danger">{{'sector.sectorCode' |translate}} <span>*</span></label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="sectorName" class="form-control input-modal" type="text" [(ngModel)]="sectorName" />
-                <label for="inputField" class="text-danger">اسم القطاع <span>*</span></label>
+                <input formControlName="sectorName" class="form-control input-modal" type="text" [disabled]="true"
+                  [(ngModel)]="sectorName" />
+                <label for="inputField" class="text-danger">{{'sector.sectorName' |translate}} <span>*</span></label>
               </div>
-              
-              <div class="form-group col-sm-6 mb-2" [formGroup]="companyForm"  #dropdownContainer>
+
+              <div class="form-group col-sm-6 mb-2" [formGroup]="companyForm" #dropdownContainer>
                 <div class="dropdown" [class.show]="isDropdownOpen">
-                  <input 
-                    type="text" 
-                    id="searchableDropdown" 
-                    class="form-control input-modal" 
-                    placeholder="ابحث..."
-                    (click)="toggleDropdown()"
-                    formControlName="activityCode"
-                    (input)="filterActivities()" />
-                  
+                  <input type="text" id="searchableDropdown" class="form-control input-modal"
+                    placeholder="{{'shared.words.search' |translate}}" (click)="toggleDropdown()"
+                    formControlName="activityCode" (input)="filterActivities()" />
+
                   <ul class="dropdown-menu" [class.show]="isDropdownOpen" style="padding: 0 9px; width: 100%; text-align: right;max-height: 350px;
                       overflow-y: auto;">
-                    <li *ngFor="let activity of filteredACtivity" class="dropdown-item" (click)="selectActivities(activity)">
+                    <li *ngFor="let activity of filteredACtivity" class="dropdown-item"
+                      (click)="selectActivities(activity)">
                       {{ activity.code }}_{{ activity.arName }}
                     </li>
                   </ul>
                 </div>
-                <label for="inputField" class="text-danger" style="font-size: 15px; right: 25px;">رمز النشاط الرئيسي <span>*</span></label>
+                <label for="inputField" class="text-danger"
+                  style="font-size: 15px; right: 25px;">{{'activity.activityMainCode' |translate}}
+                  <span>*</span></label>
               </div>
-              
+
               <div class="form-group col-6 mb-2" hidden>
-                <input formControlName="activityId" class="form-control input-modal" type="text" [(ngModel)]="activityId" />
-                <label for="inputField" class="text-danger">رقم النشاط الرئيسي<span>*</span></label>
+                <input formControlName="activityId" [disabled]="true" class="form-control input-modal" type="text"
+                  [(ngModel)]="activityId" />
+                <label for="inputField" class="text-danger">{{'activity.activityMainNumber'
+                  |translate}}<span>*</span></label>
               </div>
               <div class="form-group col-6 mb-2">
-                <input formControlName="activityName" class="form-control input-modal" type="text" [(ngModel)]="activityName" />
-                <label for="inputField" class="text-danger">النشاط الرئيسي <span>*</span></label>
+                <input formControlName="activityName" [disabled]="true" class="form-control input-modal" type="text"
+                  [(ngModel)]="activityName" />
+                <label for="inputField">{{'activity.activityMain' |translate}} <span>*</span></label>
               </div>
               <div class="form-group col-sm-6 mb-2" [formGroup]="companyForm" #dropdownContainerSub>
                 <div class="dropdown" [class.show]="isDropdownOpenSubActivities">
-                  <input 
-                    type="text" 
-                    id="searchableDropdown" 
-                    class="form-control input-modal" 
-                    placeholder="ابحث..."
-                    (click)="toggleDropdownSubActivities()" 
-                    formControlName="subActivityCode" 
-                    (input)="filterSubActivities()" />
-                  
+                  <input type="text" id="searchableDropdown" class="form-control input-modal"
+                    placeholder="{{'shared.words.search' |translate}}" (click)="toggleDropdownSubActivities()"
+                    formControlName="subActivityCode" (input)="filterSubActivities()" />
+
                   <ul class="dropdown-menu" [class.show]="isDropdownOpenSubActivities" style="padding: 0 9px; width: 100%; text-align: right;max-height: 350px;
                       overflow-y: auto;">
-                    <li *ngFor="let subActivity of filteredSubACtivity" class="dropdown-item" (click)="selectSubActivities(subActivity)">
+                    <li *ngFor="let subActivity of filteredSubACtivity" class="dropdown-item"
+                      (click)="selectSubActivities(subActivity)">
                       {{ subActivity.code }}_{{ subActivity.arName }}
                     </li>
                   </ul>
                 </div>
-                <label for="inputField" class="text-danger" style="font-size: 15px; right: 25px;">رمز النشاط الثانوى </label>
+                <label for="inputField" class="text-danger"
+                  style="font-size: 15px; right: 25px;">{{'activity.secondaryActivityCode' |translate}}</label>
               </div>
               <div class="form-group col-6 mb-2" hidden>
-                <input formControlName="subActivityId" class="form-control input-modal" type="text" [(ngModel)]="subActivityId" />
-                <label for="inputField">رقم النشاط الثانوى</label>
+                <input formControlName="subActivityId" class="form-control input-modal" type="text"
+                  [(ngModel)]="subActivityId" />
+                <label for="inputField">{{'activity.secondaryActivityNumber' |translate}}</label>
               </div>
               <div class="form-group col-6 mb-2">
-                <input formControlName="subActivityName" class="form-control input-modal" type="text"
+                <input formControlName="subActivityName" [disabled]="true" class="form-control input-modal" type="text"
                   [(ngModel)]="subActivityName" />
-                <label for="inputField">النشاط الثانوى</label>
+                <label for="inputField">{{'activity.secondaryActivity' |translate}}</label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="municipalityNumber" class="form-control input-modal" type="text" />
-                <label for="inputField">الترخيص البلدي</label>
+                <label for="inputField">{{'companyPage.municipalLicense' |translate}}</label>
               </div>
               <div class="form-group col-6 mb-2">
                 <input formControlName="compRegNumber" class="form-control input-modal" type="text"
                   (keypress)="validateInput($event)" />
-                <label for="inputField" class="text-danger"> السجل التجاري <span>*</span></label>
+                <label for="inputField" class="text-danger"> {{'companyPage.commercialRegistrationNumber' |translate}}
+                  <span>*</span></label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="phoneNumber" class="form-control input-modal" type="text"
-                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
-                <label for="inputField" class="text-danger">رقم الهاتف <span>*</span></label>
+                <input formControlName="phoneNumber" class="form-control input-modal" type="text" maxlength="8"
+                  minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
+                <label for="inputField" class="text-danger">{{'shared.words.phoneNumber' |translate}}
+                  <span>*</span></label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="telNumber" class="form-control input-modal" type="text"
-                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
-                <label for="inputField">الهاتف الثابت</label>
+                <input formControlName="telNumber" class="form-control input-modal" type="text" maxlength="8"
+                  minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
+                <label for="inputField">{{'shared.words.landline' |translate}}</label>
               </div>
               <div class="form-group col-4 mb-2">
-                <input formControlName="fax" class="form-control input-modal" type="text" 
-                maxlength="8" minlength="8" pattern="[0-9]*" (keypress)="validateInput($event)" />
-                <label for="inputField">فاكس</label>
+                <input formControlName="fax" class="form-control input-modal" type="text" maxlength="8" minlength="8"
+                  pattern="[0-9]*" (keypress)="validateInput($event)" />
+                <label for="inputField">{{'companyPage.fax' |translate}}</label>
               </div>
               <div class="form-group col-sm-12 col-lg-6 mb-2">
                 <input formControlName="mailBox" class="form-control input-modal" type="text" />
-                <label for="inputField">صندوق البريد</label>
+                <label for="inputField">{{'companyPage.mailbox' |translate}}</label>
               </div>
               <div class="form-group col-sm-12 col-lg-6 mb-2">
                 <input formControlName="postalCode" class="form-control input-modal" type="text" />
-                <label for="inputField">الرمز البريدي</label>
+                <label for="inputField">{{'companyPage.zipCode' |translate}}</label>
               </div>
             </div>
             <div class="col-12 col-lg-6 row m-auto p-0">
-              
+
               <div class="form-group col-sm-12 col-lg-6 mb-2">
                 <select formControlName="governoratesId" class="form-control" style="width: 100%">
-                  <option selected value="0">--اختر المحافظه--</option>
+                  <option selected value="0">--{{'companyPage.zipCode' |translate}}--</option>
                   <option *ngFor="let governorate of Governorates" value="{{ governorate.id }}">
                     {{ governorate.arName }}
                   </option>
                 </select>
-                <label for="inputField" class="text-danger">المحافظه <span>*</span></label>
+                <label for="inputField" class="text-danger">{{'companyPage.zipCode' |translate}} <span>*</span></label>
               </div>
               <div class="form-group col-sm-12 col-lg-6 mb-2">
                 <select formControlName="wilayatId" class="form-control" style="width: 100%">
-                  <option selected value="0">--اختر الولاية--</option>
+                  <option selected value="0">--{{'companyPage.zipCode' |translate}}--</option>
                   <option *ngFor="let wilaya of Wilayat" value="{{ wilaya.id }}">
                     {{ wilaya.arName }}
                   </option>
                 </select>
-                <label for="inputField" class="text-danger">الولاية <span>*</span></label>
+                <label for="inputField" class="text-danger">{{'companyPage.zipCode' |translate}} <span>*</span></label>
               </div>
               <div class="form-group col-sm-12 mb-2">
                 <input formControlName="address" class="form-control input-modal" type="text" />
-                <label for="inputField">العنوان</label>
+                <label for="inputField">{{'shared.words.address' |translate}}</label>
               </div>
               <div class="form-group col-sm-6 mb-2">
                 <input formControlName="institutionHeadquarters" class="form-control input-modal" type="text" />
-                <label for="inputField">مقر اقامة المؤسسه</label>
+                <label for="inputField">{{'companyPage.InstitutionsResidence' |translate}}</label>
               </div>
               <div class="form-group col-sm-6 mb-2">
                 <select formControlName="dateOfWork" name="search" class="form-control">
-                  <option value="" disabled selected>اختر السنة</option>
+                  <option value="" disabled selected>{{'companyPage.chooseYear' |translate}}</option>
                   <option *ngFor="let year of years" [value]="year">{{ year }}</option>
                 </select>
-                <label for="inputField">تاريخ مزاولة العمل</label>
+                <label for="inputField">{{'companyPage.DateCommencementWork' |translate}}</label>
               </div>
               <div class="form-group col-sm-12 mb-2">
                 <input formControlName="webSite" class="form-control input-modal" type="email" />
-                <label for="inputField">الموقع الإلكتروني</label>
+                <label for="inputField">{{'companyPage.Website' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <select class="form-control" style="width: 100%" formControlName="legalType">
-                  <option value="">--اختر الشكل القانوني--</option>
+                  <option value="">--{{'companyPage.SelectLegalForm' |translate}}--</option>
                   <option [ngValue]="1">منشاة فردية</option>
                   <option [ngValue]="2">تضامنية</option>
                   <option [ngValue]="3">توصية</option>
@@ -333,32 +293,32 @@
                   <option [ngValue]="7">فرع شركة اجنبية</option>
                   <option [ngValue]="8">أخرى (حدد)</option>
                 </select>
-                <label for="inputField">الشكل القانوني</label>
+                <label for="inputField">{{'companyPage.LegalForm' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="institutionVlaue" class="form-control input-modal" type="text"
                   (keypress)="validateInput($event)" />
-                <label for="inputField">قيمة رأس المال</label>
+                <label for="inputField">{{'companyPage.CapitalValue' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="facilityType" class="form-control input-modal" type="text" />
-                <label for="inputField">تصنيف المنشأه</label>
+                <label for="inputField">{{'companyPage.ClassificationEstablishment' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="accountingPeriod" class="form-control input-modal" type="date" />
-                <label for="inputField">بداية السنة المالية</label>
+                <label for="inputField">{{'companyPage.StartFiscalYear' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <input formControlName="completionAccPeriod" class="form-control input-modal" type="date" />
-                <label for="inputField">نهاية السنة المالية</label>
+                <label for="inputField">{{'companyPage.EndFiscalYear' |translate}}</label>
               </div>
               <div class="form-group col-sm-4 mb-2">
                 <select class="form-control" style="width: 100%" formControlName="status">
-                  <option [ngValue]="true">نشط</option>
-                  <option [ngValue]="false">غير نشط</option>
+                  <option [ngValue]="true">{{ savedLang === 'ar' ? 'نشط' : 'Active' }}</option>
+                  <option [ngValue]="false">{{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }}</option>
                 </select>
-                <label for="inputField" class="text-danger">الحاله <span>*</span></label>
-            
+                <label for="inputField" class="text-danger">{{'shared.words.status' |translate}} <span>*</span></label>
+
               </div>
             </div>
             <div class="col-sm-12 mb-2">
@@ -366,7 +326,7 @@
                 <div *ngFor="let email of compEmails.controls; let i = index" class="col-6 mb-2" [formGroupName]="i">
                   <div class="d-flex align-items-center">
                     <input formControlName="Email" class="form-control input-modal me-2" type="email"
-                      placeholder="*البريد الإلكتروني">
+                      placeholder="*{{'shared.words.email' |translate}}">
                     <button class="icon btn text-white" (click)="removeEmailField(i)">
                       <img src="../../../../assets/images/trash-can-outline.png" alt="">
                     </button>
@@ -384,33 +344,20 @@
           </div>
         </div>
         <div class="modal-footer pt-0" style="border-top: none">
-          <button
-            type="button"
-            class="btn btn-cancel"
-            data-bs-dismiss="modal"
-            id="btnCancel"
-            (click)="resetFormWithAdd()"
-          >
-            إلغاء
+          <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
+            (click)="resetFormWithAdd()">
+            {{'shared.button.close' |translate}}
           </button>
           <button type="button" class="btn btn-reset" (click)="resetForm()">
-            إعادة ملء
+            {{'shared.button.Refill' |translate}}
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="saveCompany()"
-            *ngIf="add"
-          >
-            حفظ
+          <button type="button" class="btn btn-save" (click)="saveCompany()" *ngIf="add">
+            {{'shared.button.save' |translate}}
+
           </button>
-          <button
-            type="button"
-            class="btn btn-save"
-            (click)="updateCompany()"
-            *ngIf="!add"
-          >
-            تعديل
+          <button type="button" class="btn btn-save" (click)="updateCompany()" *ngIf="!add">
+            {{'shared.button.edit' |translate}}
+
           </button>
         </div>
       </form>
@@ -420,29 +367,16 @@
 <!--end add company modal -->
 
 <!--start send form company modal -->
-<div
-  class="modal company-modal fade"
-  id="sendFormCompany"
-  tabindex="-1"
-  aria-labelledby="add"
-  aria-hidden="true"
->
+<div class="modal company-modal fade" id="sendFormCompany" tabindex="-1" aria-labelledby="add" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header pb-1">
         <h5 class="modal-title" id="sendForm">إرسال استمارة</h5>
       </div>
-      <div
-        class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0"
-      >
+      <div class="modal-subtitle modal-header d-flex justify-content-between align-items-center pt-0">
         <h6 class="m-0" style="width: calc(100% - 130px)">الشركات</h6>
         <div class="search">
-          <input
-            class="form-control"
-            type="text"
-            name="search"
-            placeholder="البحث"
-          />
+          <input class="form-control" type="text" name="search" placeholder="البحث" />
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
       </div>
@@ -501,16 +435,8 @@
           <div class="row">
             <div class="col-sm-12 mb-2">
               <div class="input-floating-label mb-0">
-                <select
-                  class="form-form send-company-select"
-                  style="width: 100%"
-                >
-                  <option
-                    selected
-                    value="0"
-                    id="messageType"
-                    name="messageType"
-                  >
+                <select class="form-form send-company-select" style="width: 100%">
+                  <option selected value="0" id="messageType" name="messageType">
                     النشاط الاقتصادي الرئيسي
                   </option>
                   <option value="1">One</option>
@@ -521,18 +447,10 @@
               </div>
             </div>
             <div class="col-sm-12 mb-2">
-              <input
-                class="form-control input-modal"
-                type="text"
-                placeholder="عنوان الرسالة"
-              />
+              <input class="form-control input-modal" type="text" placeholder="عنوان الرسالة" />
             </div>
             <div class="col-sm-12 mb-2">
-              <textarea
-                class="form-control input-modal"
-                rows="2"
-                placeholder="نص الرسالة"
-              ></textarea>
+              <textarea class="form-control input-modal" rows="2" placeholder="نص الرسالة"></textarea>
             </div>
           </div>
         </div>
