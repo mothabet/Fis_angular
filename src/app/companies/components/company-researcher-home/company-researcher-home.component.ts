@@ -761,7 +761,7 @@ export class CompanyResearcherHomeComponent {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    debugger
+    
     if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',

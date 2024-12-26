@@ -1158,7 +1158,7 @@ export class ReportContentsComponent implements OnInit {
   }
   saveReport() {
     this.errorMessage = '';
-    debugger
+    
     if (this.tables.length == 0) {
       this.isTableError = true;
       this.errorMessage = 'يجب تحديد جدول للتقرير'

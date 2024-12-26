@@ -85,6 +85,7 @@ export class SettingsAuthHomeComponent {
   ];
   searchTerm: string = '';
 filteredPermissions: any[] = [];
+filteredStaticPermissions: any[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -93,6 +94,8 @@ filteredPermissions: any[] = [];
     private permissionsService: PermissionsService
   ) { }
   ngOnInit(): void {
+    this.filteredStaticPermissions = this.staticPermissions;
+    console.log(this.filteredPermissions)
     this.initializeForm();
     this.GetAllSettingsAuths(1, '');
     this.generateRandomCredentials();
@@ -174,15 +177,12 @@ filteredPermissions: any[] = [];
     this.filteredPermissions = this.permissions.controls;
   }
   filterPermissions() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredPermissions = this.permissions.controls.filter((control, index) => {
-      const arName = this.staticPermissions[index].arName.toLowerCase();
-      var x =  arName.includes(term);
-        return x;
-    });
-    this.filteredPermissions = this.filteredPermissions;
-    
-}
+    debugger 
+    this.staticPermissions = this.filteredStaticPermissions.filter(permission => 
+      permission.arName.includes(this.searchTerm)
+    );
+  }
+  
   get permissions(): FormArray {
     return this.settingsAuthForm.get('permissions') as FormArray;
   }
@@ -356,7 +356,6 @@ filteredPermissions: any[] = [];
     });
     
     this.filteredPermissions = this.permissions.controls;
-    this.searchTerm = "";
     // Additional actions
     this.add = true;
     this.generateRandomCredentials();

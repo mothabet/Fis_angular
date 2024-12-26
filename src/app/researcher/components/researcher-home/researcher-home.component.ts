@@ -543,7 +543,7 @@ export class ResearcherHomeComponent {
       next: (res: any) => {
         this.showLoader = false;
         if (res.Data) {
-          debugger
+          
           this.formStatics = res.Data;
           this.filteredFormStatics = this.formStatics;
         }

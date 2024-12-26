@@ -898,7 +898,7 @@ export class CompaniesHomeComponent implements OnInit {
           const button = document.getElementById('addCompanyBtn');
           if (button) {
             button.click();
-            debugger
+            
             this.companyForm.patchValue({
               arName: this.company.arName,
               enName: this.company.enName,
@@ -982,7 +982,7 @@ export class CompaniesHomeComponent implements OnInit {
     this.showLoader = true;
     const emailArray = this.companyForm.value.compEmails;
     const emailProvided = emailArray.some((email: any) => email.Email && email.Email.trim() !== '');
-    debugger
+    
     if (this.companyForm.value.sectorId == 0) {
       Swal.fire({
         icon: 'error',

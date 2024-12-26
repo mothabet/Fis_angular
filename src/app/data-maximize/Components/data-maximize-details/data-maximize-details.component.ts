@@ -40,7 +40,7 @@ export class DataMaximizeDetailsComponent implements OnInit {
     this.type = type;
     const observer = {
       next: (res: any) => {
-        debugger
+        
         if (res.Data) {
 
           if (res.Data.dataMazimizeYearDtos[0].dataMaximizeDetailsItemsDtos && res.Data.dataMazimizeYearDtos[1].dataMaximizeDetailsItemsDtos) {
