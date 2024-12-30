@@ -201,6 +201,8 @@ export class ReportContentsComponent implements OnInit {
   isContenterror: boolean = false;
   isReportNameError: boolean = false;
   reviewType: number = 0;
+  savedLang: string = '';
+  lang:number = 2;
   constructor(private sharedService: SharedService, private sectorsAndActivitiesServices: SectorAndActivitiesService,
     private reportServices: ReportService, private companyService: CompanyHomeService
     , private formServices: FormService,
@@ -208,6 +210,8 @@ export class ReportContentsComponent implements OnInit {
     private activeRouter: ActivatedRoute) { }
   ngOnInit(): void {
     this.reportId = this.activeRouter.snapshot.paramMap.get('reportId')!;
+    this.savedLang = localStorage.getItem('language') || 'ar';
+    this.lang = this.savedLang === 'ar' ? 2 : 1;
     this.GetReports();
   }
   getTotal(report: any): number {

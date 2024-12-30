@@ -1,47 +1,25 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card " style="flex: 1;">
     <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            تكبير اليانات
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
+    <app-top-screen [title]="'DataMaximize.Title' |translate"></app-top-screen>
     <!-- end-header -->
     <!-- start content -->
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
             <div class="title">
-                قائمة تكبير البيانات
+                {{'DataMaximize.DataMaximizeList' |translate}}
             </div>
             <div class="btns d-flex">
                 <div class="search">
                     <input (keydown.enter)="dataMaximizeSearch()" [(ngModel)]="searchText" class="form-control"
-                        type="text" name="search" placeholder="البحث">
+                        type="text" name="search" placeholder="{{'shared.words.search' |translate}}">
                     <i (click)="dataMaximizeSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
                     <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher"
                         (click)="openPopup()">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-                        اضافة تكبير بيانات
+                        {{'DataMaximize.AddDataMaximize' |translate}}
                     </button>
 
                 </div>
@@ -52,16 +30,16 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">اسم تكبير البيانات</th>
-                        <th class="text-center" scope="col">اسم المؤشر</th>
-                        <th class="text-center" scope="col">السنة</th>
+                        <th class="text-center" scope="col">{{'DataMaximize.DataMaximizeName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximize.CodeName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximize.Year' |translate}}</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of dataMaximized">
-                        <td class="text-center">{{item.arName}}</td>
-                        <td class="text-center">{{item.codeName}}</td>
+                        <td class="text-center">{{ savedLang === 'ar' ? item.arName : item.enName }}</td>
+                        <td class="text-center">{{ savedLang === 'ar' ? item.codeName : item.codeNameEn }}</td>
                         <td class="text-center">{{item.reviewYear}}</td>
                         <td class="text-center">
                             <a class="icon" routerLink="/DataMaximizeDetails/{{item.id}}">
@@ -131,8 +109,7 @@
                                     {{ code.arName }}
                                 </li>
                             </ul>
-                            <label for="searchableDropdown" style="right: 18px; top: 0px; font-size: small;">اختر
-                                المؤشر</label>
+                            <label for="searchableDropdown" style="right: 18px; top: 0px; font-size: small;">{{'DataMaximize.SelectCode' |translate}}</label>
                             
                         </div>
                     </div>
@@ -144,29 +121,29 @@
                             <option value="" disabled selected>Select Year</option>
                             <option *ngFor="let year of years" [value]="year">{{ year }}</option>
                         </select>
-                        <label style="top: 200px; right: 18px">سنة المسح</label>
+                        <label style="top: 200px; right: 18px">{{'DataMaximize.ReviewYear' |translate}}</label>
                         
                     </div>
 
                     <!-- Survey Type -->
                     <div class="col-sm-12 mb-4">
                         <select class="form-control" formControlName="type">
-                            <option value="" disabled>نوع المسح</option>
-                            <option value="1">سنوي</option>
-                            <option value="2">ربعي</option>
+                            <option value="" disabled>{{'DataMaximize.DataMaximizeList' |translate}}</option>
+                            <option value="1">{{'DataMaximize.ReviewTypeYearly' |translate}}</option>
+                            <option value="2">{{'DataMaximize.ReviewTypeQuarterly' |translate}}</option>
                         </select>
-                        <label style="top: 260px; right: 18px">نوع المسح</label>
+                        <label style="top: 260px; right: 18px">{{'DataMaximize.ReviewType' |translate}}</label>
                         
                     </div>
                 </div>
 
                 <div class="modal-footer pt-0">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">اغلاق</button>
-                    <button type="reset" class="btn btn-reset" (click)="dataMaximizeForm.reset()">إعادة ملء</button>
-                    <button type="submit" class="btn btn-save" *ngIf="!isUpdate">حفظ</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">{{'shared.button.close' |translate}}</button>
+                    <button type="reset" class="btn btn-reset" (click)="dataMaximizeForm.reset()">{{'shared.button.Refill' |translate}}</button>
+                    <button type="submit" class="btn btn-save" *ngIf="!isUpdate">{{'shared.button.save' |translate}}</button>
                     <button (click)="updateDataMaximize()" type="button" class="btn btn-save" *ngIf="isUpdate"
                         type="button" class="btn btn-save">
-                        تعديل
+                        {{'shared.button.edit' |translate}}
                     </button>
                 </div>
             </form>

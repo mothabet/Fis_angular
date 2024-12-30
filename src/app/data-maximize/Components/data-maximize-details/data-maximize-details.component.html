@@ -1,33 +1,12 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card " style="flex: 1;" style="flex: 1; font-family: 'Arial', sans-serif;">
     <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            تفاصيل تكبير البيانات
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
+    <app-top-screen [title]="'DataMaximizeDetails.Title' |translate"></app-top-screen>
+
     <!-- end-header -->
     <div class="header d-flex  justify-content-between align-items-center">
         <h4 class="">
-            قائمة التقارير
+            {{'DataMaximizeDetails.DataMaximizeList' |translate}}
         </h4>
         <div class="btns d-flex">
 
@@ -35,7 +14,7 @@
                 <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download"
                     (click)="printExcel()">
                     <img src="../../../../assets/images/list-box-outline.png" alt="" />
-                    استخراج تقرير
+                    {{'DataMaximizeDetails.ExportReport' |translate}}
                 </button>
             </div>
         </div>
@@ -44,8 +23,8 @@
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
             <div class="title text-center col-sm-12">
-                <h2>المؤشر / ({{dataMaximizeDetails.codeName}})</h2>
-                <h2>السنة / ({{dataMaximizeDetails.reviewYear}})</h2>
+                <h2>{{'DataMaximizeDetails.Code' |translate}} / ({{ savedLang === 'ar' ? dataMaximizeDetails.codeName : dataMaximizeDetails.codeNameEn }})</h2>
+                <h2>{{'DataMaximizeDetails.Year' |translate}} / ({{dataMaximizeDetails.reviewYear}})</h2>
             </div>
         </div>
     </div>
@@ -54,38 +33,38 @@
         <div class="header-nav companies-details" style="padding: 11px;color: black;">
             <ul>
                 <li [class.active]="type === 1" (click)="GetDataMaximizeDetails(1)">
-                    <a>تكبير بالقطاعات</a>
+                    <a>{{'DataMaximizeDetails.MaximizeBySector' |translate}}</a>
                 </li>
                 <li [class.active]="type === 2" (click)="GetDataMaximizeDetails(2)">
-                    <a>تكبير بالشركات</a>
+                    <a>{{'DataMaximizeDetails.MaximizeByCompany' |translate}}</a>
                 </li>
                 <li [class.active]="type === 3" (click)="GetDataMaximizeDetails(3)">
-                    <a>تكبير بالأنشطة</a>
+                    <a>{{'DataMaximizeDetails.MaximizeByActivity' |translate}}</a>
                 </li>
             </ul>
         </div>
         <div class="header d-flex mb-0">
             <div class="title col-sm-12">
-                <h2>بيانات سنة {{dataMaximizeDetails.reviewYear}}</h2>
+                <h2>{{'DataMaximizeDetails.Year' |translate}} {{dataMaximizeDetails.reviewYear}}</h2>
             </div>
         </div>
         <div class="table-responsive company-table research-table">
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col" *ngIf="type == 1">رمز القطاع</th>
-                        <th class="text-center" scope="col" *ngIf="type == 1">اسم القطاع</th>
-                        <th class="text-center" scope="col" *ngIf="type == 3">رمز النشاط</th>
-                        <th class="text-center" scope="col" *ngIf="type == 3">اسم النشاط</th>
-                        <th class="text-center" scope="col" *ngIf="type == 2">اسم الشركة</th>
-                        <th class="text-center" scope="col">اجمالي قبل التكبير</th>
-                        <th class="text-center" scope="col">اجمالي بعد التكبير</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">{{'DataMaximizeDetails.SectionCode' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">{{'DataMaximizeDetails.SectionName' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">{{'DataMaximizeDetails.ActivityCode' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">{{'DataMaximizeDetails.ActivityName' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 2">{{'DataMaximizeDetails.CompanyName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximizeDetails.TotalBeforeMaximize' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximizeDetails.TotalAfterMaximize' |translate}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[1].dataMaximizeDetailsItemsDtos">
                         <td class="text-center" *ngIf="type == 1 || type == 3">{{ item.sectorCode }}</td>
-                        <td class="text-center">{{ item.sectorName }}</td>
+                        <td class="text-center">{{ savedLang === 'ar' ? item.sectorName : item.sectorNameEn }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>
                         <td class="text-center">{{ item.totalAfter }}</td>
                     </tr>
@@ -107,26 +86,26 @@
     <div class="content companies researcher mt-5" *ngIf="!noData">
         <div class="header d-flex mb-0">
             <div class="title col-sm-12">
-                <h2>بيانات سنة {{dataMaximizeDetails.reviewYear - 1}}</h2>
+                <h2>{{'DataMaximizeDetails.Year' |translate}} {{dataMaximizeDetails.reviewYear - 1}}</h2>
             </div>
         </div>
         <div class="table-responsive company-table research-table">
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col" *ngIf="type == 1">رمز القطاع</th>
-                        <th class="text-center" scope="col" *ngIf="type == 1">اسم القطاع</th>
-                        <th class="text-center" scope="col" *ngIf="type == 3">رمز النشاط</th>
-                        <th class="text-center" scope="col" *ngIf="type == 3">اسم النشاط</th>
-                        <th class="text-center" scope="col" *ngIf="type == 2">اسم الشركة</th>
-                        <th class="text-center" scope="col">اجمالي قبل التكبير</th>
-                        <th class="text-center" scope="col">اجمالي بعد التكبير</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">{{'DataMaximizeDetails.SectionCode' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 1">{{'DataMaximizeDetails.SectionName' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">{{'DataMaximizeDetails.ActivityCode' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 3">{{'DataMaximizeDetails.ActivityName' |translate}}</th>
+                        <th class="text-center" scope="col" *ngIf="type == 2">{{'DataMaximizeDetails.CompanyName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximizeDetails.TotalBeforeMaximize' |translate}}</th>
+                        <th class="text-center" scope="col">{{'DataMaximizeDetails.TotalAfterMaximize' |translate}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of dataMaximizeDetails.dataMazimizeYearDtos[0].dataMaximizeDetailsItemsDtos">
                         <td class="text-center" *ngIf="type == 1 || type == 3">{{ item.sectorCode }}</td>
-                        <td class="text-center">{{ item.sectorName }}</td>
+                        <td class="text-center">{{ savedLang === 'ar' ? item.sectorName : item.sectorNameEn }}</td>
                         <td class="text-center">{{ item.totalBefore }}</td>
                         <td class="text-center">{{ item.totalAfter }}</td>
                     </tr>
@@ -149,7 +128,7 @@
         <div class="alert alert-warning">
             <i class="fa-solid fa-triangle-exclamation"></i>
             <br />
-            <span> لا يوجد بيانات </span>
+            <span>{{'DataMaximizeDetails.noData' |translate}}</span>
         </div>
     </div>
     <!-- end content -->

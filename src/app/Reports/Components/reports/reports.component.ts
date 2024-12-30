@@ -18,10 +18,14 @@ export class ReportsComponent implements OnInit {
   report!: IGetReportDto;
   isUpdate: boolean = false;
   id:number=0;
+  savedLang: string = '';
+  lang:number = 2;
   constructor(private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private reportServices: ReportService) { }
 
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
+    this.lang = this.savedLang === 'ar' ? 2 : 1;
     this.reportForm = this.fb.group({
       arName: ['fe', Validators.required],
       enName: ['', Validators.required],
