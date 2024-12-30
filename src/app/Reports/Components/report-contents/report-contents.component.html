@@ -2,32 +2,11 @@
 
 <div class="main-content p-4 main card reports-content" style="flex: 1;">
     <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center report-main-header">
-        <h4 class="title">
-            التقارير
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <i class="fa-solid fa-bell"></i>
-            <div class="user-img">
-                <img src="../../../../assets//images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
+    <app-top-screen [title]="'ReportDetails.Title' |translate"></app-top-screen>
     <!-- end-header -->
     <div class="header d-flex  justify-content-between align-items-center">
         <h4 class="">
-            قائمة التقارير
+            {{'ReportDetails.ReportsList' |translate}}
         </h4>
         <div class="btns d-flex">
 
@@ -36,12 +15,12 @@
                 <button (click)="onTableSelect()" type="button" class="btn btn-add add-report" data-bs-toggle="modal"
                     data-bs-target="#addReportDetails">
                     <i class="fa-solid fa-plus mx-1"></i>
-                    إنشاء تفاصيل التقرير
+                    {{'ReportDetails.AddReport' |translate}}
                 </button>
                 <button style="background-color: #133C8B;color: white;" type="button" class="btn btn-download"
                     (click)="printExcel()">
                     <img src="../../../../assets/images/list-box-outline.png" alt="" />
-                    استخراج تقرير
+                    {{'ReportDetails.ExportReport' |translate}}
                 </button>
             </div>
         </div>
@@ -71,21 +50,21 @@
                     <ng-container *ngIf="report.reportType == 'FormContent' || report.reportType == 'TablesReport'">
                         <div class="mb-2" *ngFor="let detail of report.reportDetails">
                             <ng-container *ngIf="detail.EnTableName != 'Years'">
-                                {{ detail.ArTableName }} / (
+                                {{ savedLang === 'ar' ? detail.ArTableName : detail.EnTableName }} / (
                                 <span *ngFor="let field of detail.Fields; let i = index">
                                     {{ field.name }}<span *ngIf="i < detail.Fields.length - 1"> , </span>
                                 </span>
                                 <span *ngIf="detail.Fields.length == 0">
-                                    كل {{ detail.ArTableName }}
+                                    {{'ReportDetails.All' |translate}} {{ savedLang === 'ar' ? detail.ArTableName : detail.EnTableName }}
                                 </span>
                                 )
                             </ng-container>
                             <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length > 1">
-                                السنه / (من {{detail.Fields[0].name}} إلى {{detail.Fields[(detail.Fields.length -
+                                {{'ReportDetails.Year' |translate}} / ({{'ReportDetails.From' |translate}} {{detail.Fields[0].name}} {{'ReportDetails.To' |translate}} {{detail.Fields[(detail.Fields.length -
                                 1)].name}})
                             </ng-container>
                             <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length == 1">
-                                السنه / ({{detail.Fields[0].name}})
+                                {{'ReportDetails.Year' |translate}} / ({{detail.Fields[0].name}})
                             </ng-container>
                         </div>
                     </ng-container>
@@ -96,11 +75,11 @@
                         </div>
                         <div *ngFor="let detail of report.reportDetails">
                             <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length > 1">
-                                السنه / (من {{detail.Fields[0].name}} إلى {{detail.Fields[(detail.Fields.length -
+                                {{'ReportDetails.Year' |translate}} / ({{'ReportDetails.From' |translate}} {{detail.Fields[0].name}} {{'ReportDetails.To' |translate}} {{detail.Fields[(detail.Fields.length -
                                 1)].name}})
                             </ng-container>
                             <ng-container *ngIf="detail.EnTableName == 'Years' && detail.Fields.length == 1">
-                                السنه / ({{detail.Fields[0].name}})
+                                {{'ReportDetails.Year' |translate}} / ({{detail.Fields[0].name}})
                             </ng-container>
                         </div>
                     </ng-container>
@@ -111,7 +90,7 @@
                     <button type="button" class="btn btn-send d-flex align-items-center"
                         (click)="DeleteReportContent(report.id)">
                         <i class="fa-solid fa-trash me-2"></i>
-                        حذف
+                        {{'shared.button.delete' |translate}}
                     </button>
                 </div>
             </div>

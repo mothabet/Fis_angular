@@ -41,9 +41,13 @@ export class DataMaximizeComponent {
   isError = false;
   errorMessage = '';
   launchYear = 0;
+  savedLang: string = '';
+  lang:number = 2;
   constructor(private sharedService: SharedService, private fb: FormBuilder, private codeHomeService: CodeHomeService,
     private toastr: ToastrService, private dataMaximizeServices: MaximizeService, private launchYearServices: LaunchYearService) { }
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
+    this.lang = this.savedLang === 'ar' ? 2 : 1;
     this.dataMaximizeForm = this.fb.group({
       arName: ['', Validators.required],
       enName: ['', Validators.required],
@@ -98,7 +102,7 @@ export class DataMaximizeComponent {
     formData.codeId = this.codes.find(c => c.arName === this.dataMaximizeForm.value.codeName)?.Id;
     // Submit data to the server
     this.showLoader = true;
-    this.dataMaximizeServices.AddDataMaxmize(formData).subscribe({
+    this.dataMaximizeServices.AddDataMaxmize(formData,this.lang).subscribe({
       next: (res: any) => {
         document.getElementById('btnCancel')?.click();
         this.GetDataMaxmizes(1, '');
@@ -117,7 +121,6 @@ export class DataMaximizeComponent {
     });
   }
   GetDataMaxmizes(page: number, textSearch: string = ''): void {
-
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
@@ -140,7 +143,7 @@ export class DataMaximizeComponent {
         this.showLoader = false;
       },
     };
-    this.dataMaximizeServices.GetDataMaxmizes(page, textSearch).subscribe(observer);
+    this.dataMaximizeServices.GetDataMaxmizes(page, textSearch , this.lang).subscribe(observer);
   }
   onReset(add: number = 0): void {
     this.dataMaximizeForm = this.fb.group({
@@ -177,7 +180,7 @@ export class DataMaximizeComponent {
             this.showLoader = false;
           },
         };
-        this.dataMaximizeServices.DeleteDataMaxmize(id).subscribe(observer);
+        this.dataMaximizeServices.DeleteDataMaxmize(id,this.lang).subscribe(observer);
       }
     });
   }
@@ -324,7 +327,7 @@ export class DataMaximizeComponent {
       }
     };
 
-    this.dataMaximizeServices.UpdateDataMaxmize(this.id, Model).subscribe(observer);
+    this.dataMaximizeServices.UpdateDataMaxmize(this.id, Model, this.lang).subscribe(observer);
   }
 
 }

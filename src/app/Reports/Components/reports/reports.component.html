@@ -1,46 +1,23 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card " style="flex: 1;">
-    <!-- header -->
-    <div class="header d-flex flex-wrap justify-content-between align-items-center">
-        <h4 class="title">
-            التقارير
-        </h4>
-        <div class="user d-flex justify-content-between align-items-center">
-            <div class="dropdown">
-                <button type="button" class="btn lang" id="dropdownlang" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="current-lang">عربى</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownlang">
-                    <li><a class="dropdown-item second-lang" href="#">En</a></li>
-                </ul>
-            </div>
-            <a href="./notification.html" class="notification  active">
-                <i class="fa-solid fa-bell"></i>
-            </a>
-            <div class="user-img">
-                <img src="../../../../assets/images/avatar.PNG" class="img-fluid">
-            </div>
-        </div>
-    </div>
-    <!-- end-header -->
+    <app-top-screen [title]="'Report.Reports' |translate"></app-top-screen>
+    
     <!-- start content -->
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
             <div class="title">
-                قائمة التقارير
+                {{'Report.ReportsList' |translate}}
             </div>
             <div class="btns d-flex">
                 <div class="search" id="research-search">
-                    <input class="form-control" type="text" name="search" placeholder="البحث">
+                    <input class="form-control" type="text" name="search" placeholder="{{'shared.words.search' |translate}}">
                     <i class="fa fa-search  icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
                     <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addResearcher"
                         (click)="onReset(1)">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-                        اضافة تقرير
+                        {{'Report.AddReport' |translate}}
                     </button>
 
                 </div>
@@ -51,21 +28,21 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">اسم التقرير</th>
-                        <th class="text-center" scope="col">تاريخ انشاءه</th>
-                        <th class="text-center" scope="col">الحالة</th>
+                        <th class="text-center" scope="col">{{'Report.ReportName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'Report.CreatedOn' |translate}}</th>
+                        <th class="text-center" scope="col">{{'shared.words.status' |translate}}</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let report of reports">
-                        <td class="text-center">{{report.arName}}</td>
+                        <td class="text-center">{{ savedLang === 'ar' ? report.arName : report.enName }}</td>
                         <td class="text-center">{{report.createdOn | date:'yyyy-MM-dd'}}</td>
                         <td class="text-center" *ngIf="+report.status == 1">
-                            <div class="Gactive">نشط</div>
+                            <div class="Gactive">{{ savedLang === 'ar' ? 'نشط' : 'Active' }}</div>
                         </td>
                         <td class="text-center" *ngIf="+report.status == 0">
-                            <div class="Gnotactive">غير نشط</div>
+                            <div class="Gnotactive">{{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }}</div>
                         </td>
                         <td class="text-center">
                             <a [routerLink]="['/ReportContents', report.id]" target="_blank" class="icon">
@@ -92,7 +69,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
         <div class="modal-content" style="width: 50%;">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة نشاط</h5>
+                <h5 class="modal-title" id="add"></h5>
             </div>
             <form [formGroup]="reportForm" (ngSubmit)="onSave()">
                 <div class="row" style="padding: 10px;">
@@ -111,17 +88,17 @@
                     <!-- Status -->
                     <div class="col-sm-12 mb-2">
                         <select class="form-control input-modal" formControlName="status">
-                            <option value="1" selected>نشط</option>
-                            <option value="2">غير نشط</option>
+                            <option value="1" selected>{{ savedLang === 'ar' ? 'نشط' : 'Active' }}</option>
+                            <option value="2">{{ savedLang === 'ar' ? 'غير نشط' : 'Inactive' }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="modal-footer pt-0">
-                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">إلغاء</button>
-                    <button type="button" class="btn btn-reset" (click)="onReset()">إعادة ملء</button>
-                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">حفظ</button>
-                    <button *ngIf="isUpdate" (click)="updateReport()" type="button" class="btn btn-save">تعديل</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel">{{'shared.button.close' |translate}}</button>
+                    <button type="button" class="btn btn-reset" (click)="onReset()">{{'shared.button.Refill' |translate}}</button>
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-save">{{'shared.button.save' |translate}}</button>
+                    <button *ngIf="isUpdate" (click)="updateReport()" type="button" class="btn btn-save">{{'shared.button.edit' |translate}}</button>
                 </div>
             </form>
         </div>

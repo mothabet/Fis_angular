@@ -27,11 +27,15 @@ export class DataMaximizeDetailsComponent implements OnInit {
       }
     ]
   };
+  savedLang: string = '';
+  lang:number = 2;
   constructor(private sharedService: SharedService, private fb: FormBuilder,
     private toastr: ToastrService, private dataMaximizeServices: MaximizeService,
     private activeRouter: ActivatedRoute) {
   }
   ngOnInit(): void {
+    this.savedLang = localStorage.getItem('language') || 'ar';
+    this.lang = this.savedLang === 'ar' ? 2 : 1;
     this.id = +this.activeRouter.snapshot.paramMap.get('id')!;
     this.GetDataMaximizeDetails(1);
   }
@@ -62,7 +66,7 @@ export class DataMaximizeDetailsComponent implements OnInit {
         this.showLoader = false;
       },
     };
-    this.dataMaximizeServices.GetDataMaximizeDetails(this.id, type).subscribe(observer);
+    this.dataMaximizeServices.GetDataMaximizeDetails(this.id, type,this.lang).subscribe(observer);
   }
   printExcel() {
     // تحضير ملف العمل وأسماء التابات
