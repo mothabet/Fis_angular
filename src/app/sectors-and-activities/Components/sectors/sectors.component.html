@@ -1,13 +1,13 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card  " style="flex: 1;">
     <!-- header -->
-    <app-top-screen [title]="'القطاعات'"></app-top-screen>
+    <app-top-screen [title]="'sector.sectors' |translate"></app-top-screen>
     <!-- end-header -->
     <div class="header-nav companies-details">
         <div class="card-box mb-3">
             <ul>
                 <li routerLinkActive="active" *ngIf="permissionSectors.isName">
-                    <a routerLink="/Sectors">القطاعات</a>
+                    <a routerLink="/Sectors">{{'sector.sectors' |translate}}</a>
                   </li>
                   <li routerLinkActive="active" *ngIf="permissionSections.isName">
                     <a routerLink="/Sections">القسم</a>
@@ -37,19 +37,19 @@
     <div class="content companies researcher">
         <div class="header d-flex mb-0">
             <div class="title">
-                قائمة القطاعات
+                {{'sector.sectorsList' |translate}}
             </div>
             <div class="btns d-flex">
                 <div class="search">
                     <input (keydown.enter)="countriesSearch()" [(ngModel)]="searchText" class="form-control" type="text"
-                        name="search" placeholder="البحث">
+                        name="search" placeholder="{{'shared.words.search' |translate}}">
                     <i (click)="countriesSearch()" class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
                 </div>
                 <div class="d-flex gap-1 flex-grow-1" id="research-btns">
                     <button (click)="onReset()" type="button" class="btn btn-add" data-bs-toggle="modal" *ngIf="permissionSectors.add"
                         data-bs-target="#addSector">
                         <img src="../../../../assets/images/briefcase-plus-outli.png" alt="">
-                        اضافة قطاع
+                        {{'sector.addSector' |translate}}
                     </button>
 
                 </div>
@@ -60,8 +60,8 @@
             <table class="table table-borderless">
                 <thead>
                     <tr class="t-header">
-                        <th class="text-center" scope="col">اسم القطاع</th>
-                        <th class="text-center" scope="col">الرمز</th>
+                        <th class="text-center" scope="col">{{'sector.sectorName' |translate}}</th>
+                        <th class="text-center" scope="col">{{'shared.words.code' |translate}}</th>
                         <th style="width: 150px;" class="text-center" scope="col"> </th>
                     </tr>
                 </thead>
@@ -86,7 +86,7 @@
                             <div class="alert alert-warning">
                                 <i class="fa-solid fa-triangle-exclamation"></i>
                                 <br />
-                                <span> لا يوجد بيانات </span>
+                                <span>{{'shared.words.notData' |translate}}</span>
                             </div>
                         </th>
                     </tr>
@@ -102,7 +102,8 @@
     <div class="modal-dialog modal-dialog-centered modal-lg d-flex justify-content-center align-items-center">
         <div class="modal-content" style="width: 50%;">
             <div class="modal-header pb-0">
-                <h5 class="modal-title" id="add">إضافة قطاع</h5>
+                <h5 class="modal-title" id="add" *ngIf="isUpdate">{{'sector.addSector' |translate}}</h5>
+                <h5 class="modal-title" id="add" *ngIf="!isUpdate">{{'sector.updateSector' |translate}}</h5>
             </div>
             <form [formGroup]="sectorForm" (ngSubmit)="onSave()">
                 <div class="modal-body pb-1">
@@ -119,21 +120,21 @@
                         </div>
                         <div class="form-group col-sm-12 mb-2">
                             <input class="form-control input-modal" type="text" formControlName="code" name="code" />
-                            <label for="inputField">رمز القطاع</label>
+                            <label for="inputField">{{'sector.sectorCode' |translate}}</label>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer pt-0">
                     <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
                         (click)="onReset()">
-                        إلغاء
+                        {{'shared.button.close' |translate}}
                     </button>
                     <button type="button" class="btn btn-save" *ngIf="!isUpdate" type="submit">
-                        حفظ
+                        {{'shared.button.save' |translate}}
                     </button>
                     <button type="button" class="btn btn-save" *ngIf="isUpdate" (click)="updateCountry()" type="button"
                         class="btn btn-save">
-                        تعديل
+                        {{'shared.button.edit' |translate}}
                     </button>
                 </div>
             </form>

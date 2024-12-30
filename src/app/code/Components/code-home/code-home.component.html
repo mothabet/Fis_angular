@@ -1,26 +1,26 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
 <div class="p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'محتوي الاستماره'"></app-top-screen>
+  <app-top-screen [title]="'formContent.title' |translate"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة محتوي الاستماره</div>
+      <div class="title">{{'formContent.formContentList' |translate}}</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
-          <input class="form-control" type="text" name="search" placeholder="البحث" (keydown.enter)="codeSearch()"
+          <input class="form-control" type="text" name="search" placeholder="{{'shared.words.search' |translate}}" (keydown.enter)="codeSearch()"
             [(ngModel)]="searchText" />
           <i class="fa fa-search icon" (click)="codeSearch()" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
           <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode" *ngIf="permission.add">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addCodeBtn" />
-            إضافة محتوي استماره
+            {{'formContent.addFormContent' |translate}}
           </button>
           <button type="button" (click)="printPdf()" class="btn btn-download" *ngIf="permission.download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            تنزيل PDF
+            {{'shared.button.downloadPdf' |translate}}
           </button>
         </div>
       </div>
@@ -30,9 +30,9 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
-            <th scope="col">رقم</th>
-            <th class="text-center" scope="col">القسم</th>
-            <th class="text-center" scope="col">الرمز</th>
+            <th scope="col">{{'shared.words.number' |translate}}</th>
+            <th class="text-center" scope="col">{{'formContent.section' |translate}}</th>
+            <th class="text-center" scope="col">{{'shared.words.code' |translate}}</th>
             <th class="text-center" scope="col">الاسم</th>
             <th class="text-center" scope="col">Name</th>
             <th class="text-center" scope="col" style="width: 200px;"></th>
@@ -67,7 +67,7 @@
               <div class="alert alert-warning">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <br />
-                <span> لا يوجد بيانات </span>
+                <span>{{'shared.words.notData' |translate}}</span>
               </div>
             </th>
           </tr>
@@ -87,9 +87,9 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: 70%;">
     <div class="modal-content">
       <div class="modal-header pb-0">
-        <h5 class="modal-title" id="add" *ngIf="add">إضافة محتوي استماره</h5>
+        <h5 class="modal-title" id="add" *ngIf="add">{{'formContent.updateFormContent' |translate}}</h5>
         <h5 class="modal-title" id="edit" *ngIf="!add">
-          تعديل محتوي الاستماره
+          {{'formContent.updateFormContent' |translate}}
         </h5>
       </div>
       <form [formGroup]="codeForm">
@@ -128,26 +128,26 @@
             <div class="form-group col-sm-6 mb-2">
               <input class="form-control input-modal" type="text" id="inputField" formControlName="QuestionCode"
                 (input)="onlyNumber($event)" [(ngModel)]="QuestionCode" />
-              <label for="inputField">الرمز</label>
+              <label for="inputField">{{'shared.words.code' |translate}}</label>
             </div>
             <div class="form-group col-sm-6 mb-2">
               <select formControlName="TypeId" id="inputField" class="form-control" [(ngModel)]="typeId">
-                <option selected value="1">عادي</option>
-                <option value="2">انشطه</option>
-                <option value="3">بلاد</option>
-                <option value="6">بلاد (بدون مصدر المال)</option>
-                <option value="4">نعم ام لا</option>
-                <option value="5">حدد</option>
+                <option selected value="1">{{'shared.words.normal' |translate}}</option>
+                <option value="2">{{'activity.activities' |translate}}</option>
+                <option value="3">{{'formContent.countries' |translate}}</option>
+                <option value="6">{{'formContent.countriesWithoutMoneySource' |translate}}</option>
+                <option value="4">{{'formContent.yesNo' |translate}}</option>
+                <option value="5">{{'formContent.select' |translate}}</option>
               </select>
-              <label for="inputField">نوع محتوي الاستماره</label>
+              <label for="inputField">{{'formContent.formContentType' |translate}}</label>
             </div>
             <div class="form-group col-sm-9 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
               <select formControlName="connectedWith" id="inputField" class="form-control">
-                <option selected value="">--اختر الرمز المرتبط به--</option>
+                <option selected value="">--{{'formContent.selectAssociatedCode' |translate}}--</option>
                 <option *ngFor="let item of codesAndSub" [value]="item.id + '_' + item.Level">{{ item.arName
                   }}_{{item.Code}}</option>
               </select>
-              <label for="inputField">الرمز المرتبط به</label>
+              <label for="inputField">{{'formContent.associatedCode' |translate}}</label>
             </div>
             <div class="form-group col-sm-3 mb-2" *ngIf="codeForm.get('QuestionCode')?.value">
               <select formControlName="connectedWithType" id="inputField" class="form-control">
@@ -155,25 +155,25 @@
                 <option value=">"><</option>
                 <option value="<">></option>
               </select>
-              <label for="inputField">نوع ارتباط الرموز</label>
+              <label for="inputField">{{'formContent.codeRelationType' |translate}}</label>
             </div>
             <hr *ngIf="typeId == 1" />
             <div class="table-responsive company-table research-table table-border" *ngIf="typeId == 1">
               <button (click)="addRow()" class="btn btn-save" [disabled]="!areAllFieldsFilled()">
-                اضافة سطر
+                {{'shared.button.addLine' |translate}}
               </button>
               <table class="table table-borderless">
                 <thead>
                   <tr class="t-header">
-                    <th scope="col">رقم</th>
+                    <th scope="col">{{'shared.words.number' |translate}}</th>
                     <th class="text-center" scope="col">الاسم بالكامل</th>
                     <th class="text-center" scope="col">English Full Name</th>
-                    <th class="text-center" scope="col">النوع نعم ام لا</th>
-                    <th class="text-center" scope="col">النوع حدد</th>
-                    <th class="text-center" scope="col">ليس من ضمن التعاملات</th>
-                    <th class="text-center" scope="col">الرمز</th>
-                    <th class="text-center" scope="col">الرمز المرتبط به</th>
-                    <th class="text-center" scope="col">نوع ارتباط الرموز</th>
+                    <th class="text-center" scope="col">{{'formContent.yesNo' |translate}}</th>
+                    <th class="text-center" scope="col">{{'formContent.select' |translate}}</th>
+                    <th class="text-center" scope="col">{{'formContent.notInTransactions' |translate}}</th>
+                    <th class="text-center" scope="col">{{'shared.words.code' |translate}}</th>
+                    <th class="text-center" scope="col">{{'formContent.associatedCode' |translate}}</th>
+                    <th class="text-center" scope="col">{{'formContent.codeRelationType' |translate}}</th>
                     <th class="text-center" scope="col"></th>
                   </tr>
                 </thead>
@@ -237,16 +237,16 @@
         </div>
         <div class="modal-footer pt-0">
           <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel" (click)="resetForm()">
-            إلغاء
+            {{'shared.button.close' |translate}}
           </button>
           <button type="button" class="btn btn-reset" (click)="resetForm()">
-            إعادة ملء
+            {{'shared.button.Refill' |translate}}
           </button>
           <button type="button" class="btn btn-save" (click)="saveCode()" *ngIf="add">
-            حفظ
+            {{'shared.button.save' |translate}}
           </button>
           <button type="button" class="btn btn-save" (click)="updateCode()" *ngIf="!add">
-            تعديل
+            {{'shared.button.edit' |translate}}
           </button>
         </div>
       </form>
@@ -254,76 +254,3 @@
   </div>
 </div>
 <!--end add researcher modal -->
-
-<!--start linked company modal -->
-<div class="modal company-modal fade" id="companyLink" tabindex="-1" aria-labelledby="add" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-title pt-3 modal-header d-flex justify-content-between pt-0">
-        <h5>ربط بالشركة</h5>
-        <div class="search">
-          <input class="form-control" type="text" name="search" placeholder="البحث" />
-          <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
-        </div>
-      </div>
-      <div class="table-responsive company-modal-table mx-2">
-        <table class="table table-borderless">
-          <thead>
-            <tr class="t-header">
-              <th scope="col">اسم الشركة</th>
-              <th class="text-center" scope="col">رقم السجل التجاري</th>
-              <th class="text-center" scope="col">رقم الشركة</th>
-              <th class="text-center" scope="col">رمز النشاط</th>
-              <th class="text-center" scope="col">النشاط</th>
-              <th class="text-center" scope="col">عنوان الشركة</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input type="checkbox" name="companyName1" id="companyName1" />
-                <label for="companyName1">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr>
-              <td>
-                <input type="checkbox" name="companyName2" id="companyName2" />
-                <label for="companyName2">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-            <tr class="last">
-              <td>
-                <input type="checkbox" name="companyName3" id="companyName3" />
-                <label for="companyName3">شركة الابداع</label>
-              </td>
-              <td class="text-center">021124444</td>
-              <td class="text-center">86431</td>
-              <td class="text-center">184510</td>
-              <td class="text-center">الترفيه</td>
-              <td class="text-center">الخوير، مسقط</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">
-          إلغاء
-        </button>
-        <button type="button" class="btn btn-add">حفظ</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--end linked company modal -->
-
-<!--end modal -->

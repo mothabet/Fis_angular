@@ -15,7 +15,7 @@
             "quarterlyForms": "استمارات ربعيه",
             "auditingRules": "قواعد التدقيق",
             "setting": "الاعدادات",
-            "codes": "محتوي الاستماره",
+            "formContent": "محتوي الاستماره",
             "settingProfile": "الاعدادات الشخصيه",
             "messages": "الرسائل",
             "permissions": "الصلاحيات",
@@ -35,7 +35,13 @@
             "notData": "لا يوجد بيانات",
             "adminData": "بيانات المسؤول",
             "adminName": "اسم المسؤول",
-            "address": "العنوان"
+            "address": "العنوان",
+            "chooseValue":"اختر قيمة",
+            "yearly":"سنوي",
+            "quarterly":"ربعي",
+            "creationDate":"تاريخ الإنشاء",
+            "code":"الرمز",
+            "normal":"عادي"
         },
         "form": {
             "username": "اسم المستخدم",
@@ -47,8 +53,11 @@
             "save": "حفظ",
             "edit": "تعديل",
             "delete": "حذف",
+            "add": "اضافه",
             "downloadPdf": "تنزيل PDF",
-            "Refill": "اعادة الملء"
+            "Refill": "اعادة الملء",
+            "download": "تحميل",
+            "addLine":"اضافة سطر"
         }
     },
     "homePage": {
@@ -100,6 +109,12 @@
         "StartFiscalYear":"بداية السنة المالية",
         "EndFiscalYear":"نهاية السنة المالية"
     },
+    "companyDetails":{
+        "title": "تفاصيل الشركه",
+        "attachments":"المرفقات",
+        "fileName":"اسم الملف",
+        "map":"الخريطه"
+    },
     "formsPage": {
         "forms": "الاستمارات",
         "formName": "اسم الاستماره",
@@ -110,8 +125,12 @@
         "message": "الرساله"
     },
     "sector": {
+        "sectors":"القطاعات",
+        "sectorsList":"فائمة القطاعات",
         "sectorCode": "رمز القطاع",
-        "sectorName": "اسم القطاع"
+        "sectorName": "اسم القطاع",
+        "addSector": "اضافة القطاع",
+        "updateSector": "تعديل القطاع"
     },
     "activity": {
         "activityCode": "كود النشاط",
@@ -121,7 +140,8 @@
         "activityMain": "النشاط الرئيسي",
         "secondaryActivityCode": "رمز النشاط الثانوى",
         "secondaryActivityNumber": "رقم النشاط الثانوى",
-        "secondaryActivity": "النشاط الثانوى"
+        "secondaryActivity": "النشاط الثانوى",
+        "activities":"انشطه"
     },
     "Governorate": {
         "chooseGovernorate": "اختر المحافظه",
@@ -130,5 +150,75 @@
     "State": {
         "State": "ولايه",
         "chooseState": "اختر الولايه"
+    },
+    "auditRules":{
+        "title":"قواعد التدقيق",
+        "auditRule":"قاعدة التدقيق",
+        "addAuditRule":"اضافة قاعدة التدقيق",
+        "updateAuditRule":"تعديل قاعدة التدقيق",
+        "auditRulesList":"قائمة قواعد التدقيق"
+    },
+    "formContent":{
+        "title":"محتوي الاستماره",
+        "formContentList":"قائمة محتوي الاستمارة",
+        "addFormContent":"إضافة محتوى استمارة",
+        "updateFormContent":"تعديل محتوى استمارة",
+        "section":"القسم",
+        "countriesWithoutMoneySource":"بلاد (بدون مصدر المال)",
+        "countries":"بلاد",
+        "yesNo":"نعم أم لا",
+        "select":"حدد",
+        "formContentType":"نوع محتوى الاستمارة",
+        "selectAssociatedCode":"اختر الرمز المرتبط به",
+        "associatedCode":"الرمز المرتبط به",
+        "codeRelationType":"نوع ارتباط الرموز",
+        "notInTransactions":"ليس من ضمن التعاملات"
+    },
+    "Report": {
+        "ReportName": "اسم التقرير",
+        "CreatedOn": "تاريخ إنشاءه",
+        "Reports":"التقارير",
+        "ReportsList":"قائمة التقارير",
+        "AddReport":"إضافة تقرير"
+    },
+    "DataMaximize": {
+        "DataMaximizeName": "اسم تكبير البيانات",
+        "CodeName": "اسم المؤشر",
+        "Year": "السنة",
+        "Title":"تكبير البيانات",
+        "DataMaximizeList":"قائمة تكبير البيانات",
+        "AddDataMaximize":"إضافة تكبير بيانات",
+        "SelectCode":"اختر المؤشر",
+        "ReviewYear":"سنة المسح",
+        "ReviewType":"نوع المسح",
+        "ReviewTypeYearly":"سنوي",
+        "ReviewTypeQuarterly":"ربعي"
+    },
+    "DataMaximizeDetails": {
+        "Title":"تفاصيل تكبير البيانات",
+        "DataMaximizeList":"قائمة التقارير",
+        "ExportReport":"استخراج تقرير",
+        "MaximizeBySector":"تكبير بالقطاعات",
+        "MaximizeByCompany":"تكبير بالشركات",
+        "MaximizeByActivity":"تكبير بالأنشطة",
+        "TotalBeforeMaximize":"إجمالي قبل التكبير",
+        "TotalAfterMaximize":"إجمالي بعد اتكبير",
+        "SectionCode":"رمز القطاع",
+        "SectionName":"اسم القطاع",
+        "CompanyName":"اسم الشركة",
+        "ActivityCode":"رمز النشاط",
+        "ActivityName":"اسم النشاط",
+        "Code":"اسم المؤشر",
+        "Year":"السنة"
+    },
+    "ReportDetails":{
+        "Title":"التقارير",
+        "ReportsList":"Reports List",
+        "AddReport":"إنشاء تفاصيل التقرير",
+        "ExportReport":"إستخراج تقرير",
+        "Year":"السنة",
+        "From":"من",
+        "To":"إلى",
+        "All":"كل"
     }
 }

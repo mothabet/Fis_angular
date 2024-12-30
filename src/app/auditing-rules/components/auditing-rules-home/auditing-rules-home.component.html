@@ -1,25 +1,25 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <!-- main content -->
 <div class="p-4 main card" style="flex: 1">
-  <app-top-screen [title]="'قواعد التدقيق'"></app-top-screen>
+  <app-top-screen [title]="'auditRules.title' |translate"></app-top-screen>
 
   <!-- start content -->
   <div class="content companies researcher">
     <div class="header d-flex mb-0">
-      <div class="title">قائمة قواعد التدقيق</div>
+      <div class="title">{{'auditRules.auditRulesList' |translate}}</div>
       <div class="btns d-flex">
         <div class="search" id="research-search">
-          <input class="form-control" type="text" name="search" placeholder="البحث" />
+          <input class="form-control" type="text" name="search" placeholder="{{'shared.words.search' |translate}}" />
           <i class="fa fa-search icon" id="search-icon" aria-hidden="true"></i>
         </div>
         <div class="d-flex gap-1 flex-grow-1" id="research-btns">
           <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addCode" *ngIf="permission.add">
             <img src="../../../../assets/images/briefcase-plus-outli.png" alt="" id="addAuditRulesBtn" />
-            إضافة قاعدة تدقيق
+            {{'auditRules.auditRulesList' |translate}}
           </button>
           <button type="button" class="btn btn-download" (click)="printPdf()" *ngIf="permission.download">
             <img src="../../../../assets/images/list-box-outline.png" alt="" />
-            تنزيل PDF
+            {{'shared.button.downloadPdf' |translate}}
           </button>
         </div>
       </div>
@@ -29,9 +29,9 @@
       <table class="table table-borderless">
         <thead>
           <tr class="t-header">
-            <th scope="col">رقم</th>
-            <th class="text-center" scope="col">قاعدة التدقيق</th>
-            <th class="text-center" scope="col">تاريخ الانشاء</th>
+            <th scope="col">{{'shared.words.number' |translate}}</th>
+            <th class="text-center" scope="col">{{'auditRules.auditRule' |translate}}</th>
+            <th class="text-center" scope="col">{{'shared.words.creationDate' |translate}}</th>
             <th class="text-center" scope="col"></th>
           </tr>
         </thead>
@@ -62,7 +62,7 @@
               <div class="alert alert-warning">
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <br />
-                <span> لا يوجد بيانات </span>
+                <span> {{'shared.words.notData' |translate}} </span>
               </div>
             </th>
           </tr>
@@ -83,13 +83,13 @@
     <div class="modal-content">
       <div class="modal-header pb-0">
         <div class="header-right">
-          <h5 class="modal-title" id="add" *ngIf="add">إضافة قاعدة تدقيق</h5>
-          <h5 class="modal-title" id="add" *ngIf="!add">تعديل قاعدة التدقيق</h5>
+          <h5 class="modal-title" id="add" *ngIf="add">{{'auditRules.addAuditRule' |translate}}</h5>
+          <h5 class="modal-title" id="add" *ngIf="!add">{{'auditRules.updateAuditRule' |translate}}</h5>
         </div>
         <div class="header-left">
           <button (click)="addNegative($event)" class="btn btn-save ms-1" [disabled]="isLastCharacterValidPlus()">-</button>
           <button (click)="addPlus($event)" class="btn btn-save ms-1"[disabled]="isLastCharacterValidNegative()">+</button>
-          <button (click)="addSelect()" class="btn btn-save" [disabled]="!isLastCharacterValid()">اضافه</button>
+          <button (click)="addSelect()" class="btn btn-save" [disabled]="!isLastCharacterValid()">{{'shared.button.add' |translate}}</button>
         </div>
       </div>
       <form [formGroup]="auditForm">
@@ -102,7 +102,7 @@
                   <div class="d-flex align-items-center">
                     
                     <select class="form-control ml-2" [disabled]="select.disabled" (change)="onSelectChange($event, i)">
-                      <option value="" disabled selected>اختر قيمة</option>
+                      <option value="" disabled selected>{{'shared.words.chooseValue' |translate}}</option>
                       <option *ngFor="let option of select.options" [value]="option.QuestionCode">{{ option.QuestionCode
                         }}</option>
                     </select>
@@ -115,13 +115,13 @@
               </div>
             </div>
             <div class="col-sm-8 mb-2">
-              <input class="form-control input-modal" type="text" placeholder="قاعدة الندقيق"
+              <input class="form-control input-modal" type="text" placeholder="{{'auditRules.auditRule' |translate}}"
                 formControlName="Rule" />
             </div>
             <div class="col-sm-4 mb-2">
                 <select formControlName="Type" class="form-control" id="">
-                  <option value="1">سنوي</option>
-                  <option value="2">ربعي</option>
+                  <option value="1">{{'shared.words.yearly' |translate}}</option>
+                  <option value="2">{{'shared.words.quarterly' |translate}}</option>
                 </select>
             </div>
           </div>
@@ -129,15 +129,15 @@
         <div class="modal-footer pt-0">
           <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" id="btnCancel"
             (click)="resetAuditRules()">
-            إلغاء
+            {{'shared.button.close' |translate}}
           </button>
           <button type="button" class="btn btn-save" id="saveButton" [disabled]="isSaveDisabled()" (click)="SaveAuditRule()"
             *ngIf="add">
-            حفظ
+            {{'shared.button.save' |translate}}
           </button>
           <button type="button" class="btn btn-save" id="saveButton" [disabled]="isSaveDisabled()" (click)="UpdateAuditRule()"
             *ngIf="!add">
-            تعديل
+            {{'shared.button.edit' |translate}}
           </button>
         </div>
       </form>

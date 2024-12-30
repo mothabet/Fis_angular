@@ -177,7 +177,7 @@ filteredStaticPermissions: any[] = [];
     this.filteredPermissions = this.permissions.controls;
   }
   filterPermissions() {
-    debugger 
+     
     this.staticPermissions = this.filteredStaticPermissions.filter(permission => 
       permission.arName.includes(this.searchTerm)
     );
@@ -219,6 +219,7 @@ filteredStaticPermissions: any[] = [];
   }
   AddSettingsAuth(): void {
     this.showLoader = true;
+    
     if (this.settingsAuthForm.valid) {
       this.addPermissionDtoList = [];
       for (let index = 0; index < this.settingsAuthForm.value.permissions.length; index++) {
@@ -402,6 +403,7 @@ filteredStaticPermissions: any[] = [];
     this.showLoader = true;
     const observer = {
       next: (res: any) => {
+        
         if (res.Data) {
           
           this.settingsAuthDto = res.Data;
@@ -497,7 +499,9 @@ filteredStaticPermissions: any[] = [];
             phone: this.settingsAuthDto.phone,
             email: this.settingsAuthDto.email,
           });
-
+          if (!(res.Data.researcherId > 0 && !(this.settingsAuthDto.permissions.length>0))) {
+            this.staticPermissions = this.settingsAuthDto.permissions;
+          }
           this.showLoader = false;
           this.add = false;
           const button = document.getElementById('addAuthModalBtn');
@@ -515,6 +519,7 @@ filteredStaticPermissions: any[] = [];
     this.settingsAuthService.GetSettingsAuthById(id).subscribe(observer);
   }
   UpdateSettingsAuth(): void {
+    
     this.showLoader = true;
     if (this.settingsAuthForm.valid) {
       this.addPermissionDtoList = [];
@@ -541,6 +546,8 @@ filteredStaticPermissions: any[] = [];
         }
         this.addPermissionDtoList.push(permission);
       }
+    
+
       const addSettingAuth: IAddSettingsAuth = {
         userName: this.settingsAuthForm.value.userName,
         password: this.settingsAuthForm.value.password,

@@ -2,7 +2,7 @@
 <app-loader *ngIf="showLoader"></app-loader>
 <div class="main-content p-4 main card " style="flex: 1;">
 
-    <app-top-screen [title]="'عرض تفاصيل الشركة'"></app-top-screen>
+    <app-top-screen [title]="'companyDetails.title' |translate"></app-top-screen>
 
 
     <!-- start content -->
@@ -44,27 +44,27 @@
                     <h4 class="title">{{company.arName}}</h4>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/deskphone.png" alt="">
-                        <p class="m-0 mx-2 name">رقم الشركه :</p>
+                        <p class="m-0 mx-2 name">{{'companyPage.companyNumber' |translate}} :</p>
                         <p class="data m-0">{{company.id}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/deskphone.png" alt="">
-                        <p class="m-0 mx-2 name">رقم الهاتف :</p>
+                        <p class="m-0 mx-2 name">{{'shared.words.phoneNumber' |translate}} :</p>
                         <p class="data m-0">{{company.phoneNumber}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/deskphone.png" alt="">
-                        <p class="m-0 mx-2 name">رقم الهاتف الثابت:</p>
+                        <p class="m-0 mx-2 name">{{'shared.words.landline' |translate}}:</p>
                         <p class="data m-0">{{company.telNumber}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/fax.png" alt="">
-                        <p class="m-0 mx-2 name">فاكس :</p>
+                        <p class="m-0 mx-2 name">{{'companyPage.fax' |translate}} :</p>
                         <p class="data m-0">{{company.fax}}</p>
                     </div>
                     <div class="detail-box flex-nowrap d-flex">
                         <img src="../../../../assets/images/email-outline.png" alt="">
-                        <p class="m-0 mx-2 name">البريد الإلكترونى :</p>
+                        <p class="m-0 mx-2 name">{{'shared.words.email' |translate}} :</p>
                         <p class="data m-0">{{companyEmails}}</p>
                     </div>
                 </div>
@@ -76,13 +76,13 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
-                                <p class="m-0 mx-2 name">عنوان :</p>
+                                <p class="m-0 mx-2 name">{{'companyPage.companyAddress' |translate}} :</p>
                                 <p class="data text-nowrap m-0">{{company.address}}</p>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="detail-box flex-wrap d-flex">
-                                <p class="m-0 mx-2 name">مقر اقامة المؤسسه :</p>
+                                <p class="m-0 mx-2 name">{{'companyPage.InstitutionsResidence' |translate}} :</p>
                                 <p class="data text-nowrap m-0">{{company.institutionHeadquarters}}</p>
                             </div>
                         </div>
@@ -90,7 +90,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/archive-marker-outli.png" alt="">
-                                    <p class="m-0 mx-2 name">صندوق البريد :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.mailbox' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.mailBox}}</p>
                             </div>
@@ -99,7 +99,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/printer-pos-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">الرمز البريدي :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.zipCode' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.postalCode}}</p>
                             </div>
@@ -109,7 +109,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/select-marker.png" alt="">
-                                    <p class="m-0 mx-2 name">الولاية :</p>
+                                    <p class="m-0 mx-2 name">{{'State.State' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.wilayat}}</p>
                             </div>
@@ -118,7 +118,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/domain.png" alt="">
-                                    <p class="m-0 mx-2 name">المحافظة: :</p>
+                                    <p class="m-0 mx-2 name">{{'Governorate.Governorate' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.governorates}}</p>
                             </div>
@@ -127,7 +127,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/bulletin-board.png" alt="">
-                                    <p class="m-0 mx-2 name">رقم البلدية :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.municipalLicense' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.municipalityNumber}}</p>
                             </div>
@@ -136,7 +136,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/briefcase-variant-ou.png" alt="">
-                                    <p class="m-0 mx-2 name">رقم تسجيل الشركة :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.commercialRegistrationNumber' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.compRegNumber}}</p>
                             </div>
@@ -145,39 +145,39 @@
                             <div class="detail-box flex-nowrap d-flex col-6">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
-                                    <p class="m-0 mx-2 name">مدة المحاسبة :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.StartFiscalYear' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{getDateOnly(company.accountingPeriod)}}</p>
                             </div>
                             <div class="detail-box flex-nowrap d-flex col-6">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
-                                    <p class="m-0 mx-2 name">الانتهاء من مدة المحاسبة :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.EndFiscalYear' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{getDateOnly(company.completionAccPeriod)}}</p>
                             </div>
                             <div class="detail-box flex-nowrap d-flex col-6">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
-                                    <p class="m-0 mx-2 name">تاريخ مزاولة العمل :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.DateCommencementWork' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{getDateOnly(company.dateOfWork)}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex col-6">
                                 <img src="../../../../assets/images/briefcase-outline.png" alt="">
-                                <p class="m-0 mx-2 name">النوع القانوني :</p>
+                                <p class="m-0 mx-2 name">{{'companyPage.LegalForm' |translate}} :</p>
                                 <p class="data text-nowrap m-0">{{legalTypeName}}</p>
                             </div>
                             <div class="detail-box flex-nowrap d-flex col-6">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/calculator-variant-o.png" alt="">
-                                    <p class="m-0 mx-2 name">قيمة المؤسسه :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.CapitalValue' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.institutionVlaue}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex col-6">
                                 <img src="../../../../assets/images/briefcase-outline.png" alt="">
-                                <p class="m-0 mx-2 name">مقر اقامة المؤسسه :</p>
+                                <p class="m-0 mx-2 name">{{'companyPage.InstitutionsResidence' |translate}} :</p>
                                 <p class="data text-nowrap m-0">{{company.institutionHeadquarters}}</p>
                             </div>
                         </div>
@@ -192,14 +192,14 @@
                             <div class="detail-box flex-nowrap d-flex col-12">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/book-account-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">رمز القطاع :</p>
+                                    <p class="m-0 mx-2 name">{{'sector.sectorCode' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.sectorCode}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex col-12">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/book-account-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">القطاع :</p>
+                                    <p class="m-0 mx-2 name">{{'sector.sectorName' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.sectorName}}</p>
                             </div>
@@ -209,14 +209,14 @@
                             <div class="detail-box flex-nowrap d-flex col-12">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/book-cog-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">رمز النشاط الاقتصادي الرئيسي :</p>
+                                    <p class="m-0 mx-2 name">{{'activity.activityMainCode' |translate}} :</p>
                                 </div>
                                 <p class="data text-wrap m-0">{{company.activityCode}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex col-12">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src=" ../../../../assets/images/notebook-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الرئيسي :</p>
+                                    <p class="m-0 mx-2 name">{{'activity.activityMain' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.arActivityName}}</p>
                             </div>
@@ -226,14 +226,14 @@
                             <div class="detail-box flex-nowrap d-flex col-12">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src="../../../../assets/images/book-cog-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">رمز النشاط الاقتصادي الثانوي :</p>
+                                    <p class="m-0 mx-2 name">{{'activity.secondaryActivityCode' |translate}} :</p>
                                 </div>
                                 <p class="data text-wrap m-0">{{company.subActivityCode}}</p>
                             </div>
                             <div class="detail-box flex-wrap d-flex col-12">
                                 <div class="d-flex align-items-center flex-nowrap">
                                     <img src=" ../../../../assets/images/notebook-outline.png" alt="">
-                                    <p class="m-0 mx-2 name">النشاط الاقتصادي الثانوي :</p>
+                                    <p class="m-0 mx-2 name">{{'activity.secondaryActivity' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.subActivityName}}</p>
                             </div>
@@ -244,7 +244,7 @@
                             <div class="detail-box flex-wrap d-flex">
                                 <div class="d-flex flex-nowrap align-items-center">
                                     <img src="../../../../assets/images/domain.png" alt="">
-                                    <p class="m-0 mx-2 name">الموقع الإلكتروني: :</p>
+                                    <p class="m-0 mx-2 name">{{'companyPage.Website' |translate}} :</p>
                                 </div>
                                 <p class="data text-nowrap m-0">{{company.webSite}}</p>
                             </div>
@@ -255,7 +255,7 @@
             <div class="col-md-6 box-details mb-3">
                 <div class="card-box file">
                     <div class="header">
-                        <h4 class="title">المرفقات</h4>
+                        <h4 class="title">{{'companyDetails.attachments' |translate}}</h4>
                         <input type="file" (change)="onFilesSelected($event)"  multiple hidden id="fileInput" *ngIf="permission.download" >
                         <button class="btn upload-btn" (click)="triggerFileInput()"  *ngIf="permission.download">
                             <img src="../../../../assets/images/tray-arrow-up.png" alt="">
@@ -265,8 +265,8 @@
                         <table class="table table-borderless">
                             <thead>
                                 <tr class="t-header">
-                                    <th scope="col">رقم</th>
-                                    <th class="text-center" scope="col">اسم الملف</th>
+                                    <th scope="col">{{'shared.words.number' |translate}}</th>
+                                    <th class="text-center" scope="col">{{'companyDetails.attachments' |translate}}</th>
                                     <th class="text-center" scope="col"></th>
                                 </tr>
                             </thead>
@@ -283,14 +283,14 @@
                                         font-size: 15px;
                                         font-weight: bold;
                                         font-style: normal;
-                                        width: 70px;'(click)="showAlert(pdf.id)" *ngIf="permission.download"><span>حذف</span></a>
+                                        width: 70px;'(click)="showAlert(pdf.id)" *ngIf="permission.download"><span>{{'shared.button.delete' |translate}}</span></a>
                                         <a class="btn btn-download" style='border-radius: 6px;
                                         background: #133b8b44;
                                         font-family: "SST Arabic";
                                         font-size: 15px;
                                         font-weight: bold;
                                         font-style: normal;
-                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)" *ngIf="permission.download">تحميل</a>
+                                        color: #133c8b; width: 70px;' (click)="downloadPdf(pdf.path)" *ngIf="permission.download">{{'shared.button.download' |translate}}</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -301,7 +301,7 @@
             <div class="col-md-6 box-details mb-3">
                 <div class="card-box">
                     <div class="header">
-                        <h4 class="title">الخريطة</h4>
+                        <h4 class="title">{{'companyDetails.map' |translate}}</h4>
                     </div>
                     <div style="text-align: center;" [innerHTML]="sanitizedEmbededContent"></div>
                 </div>

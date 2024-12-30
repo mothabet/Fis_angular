@@ -36,7 +36,13 @@
             "notData": "No data available.",
             "adminData": "Admin's Data",
             "adminName": "Admin's Name",
-            "address": "Address"
+            "address": "Address",
+            "chooseValue": "Choose Value",
+            "yearly": "Yearly",
+            "quarterly": "Quarterly",
+            "creationDate": "Creation Date",
+            "code": "Code",
+            "normal": "Normal"
         },
         "form": {
             "username": "User Name",
@@ -48,8 +54,11 @@
             "save": "Save",
             "edit": "Update",
             "delete": "Delete",
+            "add": "Add",
             "downloadPdf": "Download PDF",
-            "Refill": "Refill"
+            "Refill": "Refill",
+            "download": "Download",
+            "addLine": "Add Line"
         }
     },
     "homePage": {
@@ -91,15 +100,21 @@
         "mailbox": "Mailbox",
         "zipCode": "Zip Code",
         "InstitutionsResidence": "Institution's Residence",
-        "chooseYear":"Choose Year",
-        "DateCommencementWork":"Date of commencement of work",
-        "Website":"Website",
-        "SelectLegalForm":"Select the legal form",
-        "LegalForm":"Legal form",
-        "CapitalValue":"Capital value",
-        "ClassificationEstablishment":"Classification of the establishment",
-        "StartFiscalYear":"Start of the fiscal year",
-        "EndFiscalYear":"End of the fiscal year"
+        "chooseYear": "Choose Year",
+        "DateCommencementWork": "Date of commencement of work",
+        "Website": "Website",
+        "SelectLegalForm": "Select the legal form",
+        "LegalForm": "Legal form",
+        "CapitalValue": "Capital value",
+        "ClassificationEstablishment": "Classification of the establishment",
+        "StartFiscalYear": "Start of the fiscal year",
+        "EndFiscalYear": "End of the fiscal year"
+    },
+    "companyDetails": {
+        "title": "Company Details",
+        "attachments": "Attachments",
+        "fileName": "File's Name",
+        "map": "Map"
     },
     "formsPage": {
         "forms": "Forms",
@@ -111,8 +126,12 @@
         "message": "Message"
     },
     "sector": {
+        "sectors": "Sectors",
+        "sectorsList": "Sectors List",
         "sectorCode": "Sector Code",
-        "sectorName": "Sector Name"
+        "sectorName": "Sector Name",
+        "addSector": "Add Sector",
+        "updateSector": "Update Sector"
     },
     "activity": {
         "activityCode": "Activity Code",
@@ -122,14 +141,85 @@
         "activityMain": "Activity Main",
         "secondaryActivityCode": "Secondary Activity Code",
         "secondaryActivityNumber": "Secondary Activity Number",
-        "secondaryActivity": "Secondary Activity"
+        "secondaryActivity": "Secondary Activity",
+        "activities": "Activities"
     },
     "Governorate": {
-        "chooseGovernorate": "اختر المحافظه",
-        "Governorate": "المحافظه"
+        "chooseGovernorate": "Choose Governorate",
+        "Governorate": "Governorate"
     },
     "State": {
-        "State": "ولايه",
-        "chooseState": "اختر الولايه"
+        "State": "State",
+        "chooseState": "Choose State"
+    },
+    "auditRules": {
+        "title": "Audit Rules",
+        "auditRule": "Audit Rule",
+        "addAuditRule": "Add Audit Rule",
+        "updateAuditRule": "Update Audit Rule",
+        "auditRulesList": "Audit Rule List"
+    },
+    "formContent": {
+        "title": "Form Content",
+        "formContentList": "Form Content List",
+        "addFormContent": "Add Form Content",
+        "updateFormContent": "Update Form Content",
+        "section": "Section",
+        "countriesWithoutMoneySource": "Countries (Without Money Source)",
+        "countries": "Countries",
+        "yesNo": "Yes or No",
+        "select": "Select",
+        "formContentType": "Form Content Type",
+        "selectAssociatedCode": "Select the associated code",
+        "associatedCode": "Associated Code",
+        "codeRelationType": "Code Relation Type",
+        "notInTransactions": "Not in Transactions"
+    },
+    "Report": {
+        "ReportName": "Report Name",
+        "CreatedOn": "Created On",
+        "Reports":"Reports",
+        "ReportsList":"Reports List",
+        "AddReport":"Add Report"
+    },
+    "DataMaximize": {
+        "DataMaximizeName": "Data Maximize Name",
+        "CodeName": "Code Name",
+        "Year": "Year",
+        "Title":"Data Maximize",
+        "DataMaximizeList":"Data Maximize List",
+        "AddDataMaximize":"Add Data Maximize",
+        "SelectCode":"Select Code",
+        "ReviewYear":"Review Year",
+        "ReviewType":"Review Type",
+        "ReviewTypeYearly":"Yearly",
+        "ReviewTypeQuarterly":"Quarterly"
+    },
+    "DataMaximizeDetails": {
+        "Title":"Data Maximize Details",
+        "DataMaximizeList":"Reports List",
+        "ExportReport":"Export Report",
+        "MaximizeBySector":"Maximize By Sector",
+        "MaximizeByCompany":"Maximize By Company",
+        "MaximizeByActivity":"Maximize By Activity",
+        "TotalBeforeMaximize":"Total Before Maximize",
+        "TotalAfterMaximize":"Total After Maximize",
+        "SectionCode":"Sector Code",
+        "SectionName":"Sector Name",
+        "CompanyName":"Company Name",
+        "ActivityCode":"Activity Code",
+        "ActivityName":"Activity Name",
+        "Code":"Code Name",
+        "Year":"Year"
+    },
+    "ReportDetails":{
+        "Title":"Reports",
+        "ReportsList":"Reports List",
+        "AddReport":"Add Report",
+        "ExportReport":"Export Report",
+        "Year":"Year",
+        "From":"From",
+        "To":"To",
+        "All":"All"
     }
 }
